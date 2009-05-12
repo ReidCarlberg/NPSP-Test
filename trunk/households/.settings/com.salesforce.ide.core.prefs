@@ -1,0 +1,13 @@
+#Mon May 11 15:30:02 PDT 2009
+eclipse.preferences.version=1
+endpointApiVersion=15.0
+endpointEnvironment=Production/Developer Edition
+endpointServer=www.salesforce.com
+httpsProtocol=true
+ideVersion=15.0
+keependpoint=false
+metadataFormatVersion=15.0
+namespacePrefix=npo02
+packageName=unpackaged
+readTimeout=400
+username=steve.andersen@npsp2.org
