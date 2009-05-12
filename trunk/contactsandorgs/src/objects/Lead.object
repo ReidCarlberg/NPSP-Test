@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <fullName>SystemAccountProcessor__c</fullName>
+        <label>_SYSTEM: ACCOUNT PROCESSOR</label>
+        <picklist>
+            <picklistValues>
+                <fullName>One-to-One</fullName>
+                <default>true</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Individual</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>SystemOpportunityProcessor__c</fullName>
+        <label>_SYSTEM: OPPORTUNITY PROCESSOR</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Never Create</fullName>
+                <default>true</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Always Create</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <type>Picklist</type>
+    </fields>
+</CustomObject>

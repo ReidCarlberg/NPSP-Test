@@ -1,0 +1,16 @@
+<apex:page controller="transactionHistory">
+    <apex:form >
+        <apex:pageBlock >
+            <apex:pageBlockSection columns="2" showHeader="false">
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Last Transaction Date " for="lastTransactionDate"/>
+                    <apex:outputText value="{!lastTransactionDate}"></apex:outputText>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Lifetime Transaction Total " for="lifetimeTransactionTotal"/>
+                    <apex:outputText value="{!lifetimeTransactionTotal}"></apex:outputText>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>
