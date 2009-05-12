@@ -1,0 +1,4 @@
+<apex:page standardController="Contact" extensions="npe01.ContactDeleteOverride" action="{!if(deleteAccount==true,urlFor($Action.Account.Delete, contact.AccountId, null, true), urlFor($Action.Contact.Delete, contact.id, null, true))}">
+<apex:outputField value="{!contact.AccountId}" />
+
+</apex:page>
