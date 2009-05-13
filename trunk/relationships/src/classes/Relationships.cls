@@ -178,7 +178,8 @@ public class Relationships {
 
 		for(Relationship__c r : Relationships) 
 		{
-			if ((r.Status__c != oldRelationships[counter].Status__c || r.Type__c != oldRelationships[counter].Type__c || r.Status__c != oldRelationships[counter].Status__c || r.Description__c != oldRelationships[counter].Description__c)&& r.ReciprocalRelationship__c != null)
+			//SWA 2009-05-13 removed a duplicate check for change to Status__c from this OR statement
+			if ((r.Status__c != oldRelationships[counter].Status__c || r.Type__c != oldRelationships[counter].Type__c || r.Description__c != oldRelationships[counter].Description__c)&& r.ReciprocalRelationship__c != null)
 			{
 				Relationship__c copy = new Relationship__c(Id=r.ReciprocalRelationship__c);
 				
