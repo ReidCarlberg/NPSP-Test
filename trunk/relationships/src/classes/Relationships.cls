@@ -181,7 +181,11 @@ public class Relationships {
 			if ((r.Status__c != oldRelationships[counter].Status__c || r.Type__c != oldRelationships[counter].Type__c || r.Status__c != oldRelationships[counter].Status__c || r.Description__c != oldRelationships[counter].Description__c)&& r.ReciprocalRelationship__c != null)
 			{
 				Relationship__c copy = new Relationship__c(Id=r.ReciprocalRelationship__c);
-				copy.Contact__c = r.RelatedContact__c;
+				
+				//SWA 2009-05-13 - only attempt to modify the Contact field if the Related Contact  has changed
+				if(oldRelationships[counter].RelatedContact__c!=r.RelatedContact__c){
+					copy.Contact__c = r.RelatedContact__c;
+				}
 				copy.Status__c = r.Status__c;
 				copy.Type__c = r.Type__c;
 				copy.Description__c = r.Description__c;
@@ -217,7 +221,14 @@ public class Relationships {
 		r.Description__c = 'Test Description';
 		insert r;
 
-		Relationship__c r2 = new Relationship__c(Id=r.Id,Status__c='Test2');
+		//Relationship__c r2 = new Relationship__c(Id=r.Id,Status__c='Test2');
+		//update r2;
+		
+		Relationship__c[] rList = [select Id,Contact__c from Relationship__c where Id = :r.Id];
+		System.assert(rList.size()>0);
+		Relationship__c r2 = rList[0];
+		r2.Status__c='Test2';
+		
 		update r2;
 	}
 
