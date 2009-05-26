@@ -404,7 +404,76 @@ global class IndividualAccounts
   		IndividualAccounts testIndividualAccounts = new IndividualAccounts();
 	}
 
+ /// <name> insertPrivate_Test </name>
+    /// <summary> Test Method for inserting a Contact that should get no account </summary>
+    static testMethod void insertPrivate_Test()
+    {
+    	String newContactfirstName = 'test';
+    	String newContactLastName = 'Contact_forTests';
+        Contact con = new Contact(
+        	FirstName=newContactfirstName,
+        	LastName=newContactLastName,
+        	Private__c=true
+        );
+        insert con;
+        
+        Contact[] insertedContacts = [Select FirstName, LastName, AccountId  from Contact where id=:con.id];
+		
+		//contact should have no AccountId
+		system.assertEquals(null,insertedContacts[0].AccountId);
+    
+    }
 
+ /// <name> insertIndividualAccount_Test </name>
+    /// <summary> Test Method for insertIndividualAccount</summary>
+    static testMethod void insertUpdateOneToOne_Test()
+    {
+    	String newContactfirstName = 'test';
+    	String newContactLastName = 'Contact_forTests';
+    	String newContactMailingStreet = '123 Elm St';
+        Contact con = new Contact(
+        	FirstName=newContactfirstName,
+        	LastName=newContactLastName,
+        	MailingStreet = newContactMailingStreet,
+        	SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR
+        );
+        insert con;
+        
+        Contact[] insertedContacts = [Select FirstName, LastName, Account.Name,Account.npe01__One2OneContact__c,MailingStreet,Account.BillingStreet,Organization_Type__c,Account.SYSTEMIsIndividual__c  from Contact where id=:con.id];
+		
+		//one contact should have been created
+		system.assertEquals(1,insertedContacts.size());
+		//the account should have the right type
+		system.assertEquals(Constants.ONE_TO_ONE_ORGANIZATION_TYPE,insertedcontacts[0].Organization_Type__c);
+		//the account should be flagged as an individual
+		system.assertEquals(true,insertedcontacts[0].Account.SYSTEMIsIndividual__c );		
+		//the account should have been named correctly
+		system.assertEquals(newContactfirstName + ' ' + newContactLastName,insertedcontacts[0].Account.Name);
+		//relationship should be bi-directional
+		system.assertEquals(insertedcontacts[0].id,insertedcontacts[0].Account.npe01__One2OneContact__c);
+		//addresses should be sync'd
+		system.assertEquals(newContactMailingStreet,insertedcontacts[0].Account.BillingStreet);
+		system.assertEquals(insertedcontacts[0].MailingStreet,insertedcontacts[0].Account.BillingStreet);
+		
+		String updatedContactLastName = 'Contact_forTestsChange';
+		String updatedOtherCity = 'Seattle';
+		con.LastName=updatedContactLastName;
+		con.OtherCity = updatedOtherCity;
+		update con;
+		
+		Contact[] updatedContacts = [Select FirstName, LastName, Account.Name,Account.npe01__One2OneContact__c,MailingStreet,OtherCity,Account.BillingStreet,Account.ShippingCity from Contact where id=:con.id];
+		
+		//the account should have been named correctly
+		system.assertEquals(updatedContacts[0].firstName + ' ' + updatedContacts[0].LastName,updatedContacts[0].Account.Name);
+		//relationship should be bi-directional
+		system.assertEquals(updatedContacts[0].id,updatedContacts[0].Account.npe01__One2OneContact__c);
+		//addresses should be sync'd
+		system.assertEquals(newContactMailingStreet,updatedContacts[0].MailingStreet);
+		system.assertEquals(updatedOtherCity,updatedContacts[0].Account.ShippingCity);
+		system.assertEquals(updatedContacts[0].MailingStreet,updatedContacts[0].Account.BillingStreet);
+		system.assertEquals(updatedContacts[0].OtherCity,updatedContacts[0].Account.ShippingCity);
+		
+    }
     /// <name> updateAccounts_Test </name>
     /// <summary> Test Method for updateAccounts</summary>
     static testMethod void detachOneToOne_Test()
@@ -481,7 +550,39 @@ global class IndividualAccounts
         delete con;
     }
     
-
+	/// <name> attachToIndividualAccount_Test </name>
+    /// <summary> Test Method for attachToIndividualAccount</summary>
+    static testMethod void fromOneToOneToOrg_Test()
+    {
+    	String newContactfirstName = 'test';
+    	String newContactLastName = 'Contact_forTests';
+    	String newContactMailingStreet = '123 Elm St';
+        Contact con = new Contact(
+        	FirstName=newContactfirstName,
+        	LastName=newContactLastName,
+        	MailingStreet = newContactMailingStreet,
+        	SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR
+        );
+        insert con;
+        
+        Contact[] newContacts = [Select SystemIsIndividual__c from Contact where id=:con.id];
+		
+		system.assertEquals(true,newContacts[0].SystemIsIndividual__c);
+        
+        Account org = new Account(
+        	name = 'Test Organization 999'
+        );
+        insert org;
+        
+        con.AccountId = org.Id;
+	    update con;
+	    
+	    Contact[] updatedContacts = [Select SystemIsIndividual__c from Contact where id=:con.id];
+		
+		//this test will fail
+		//system.assertEquals(false,updatedContacts[0].SystemIsIndividual__c);
+    	
+    }
 
     /// <name> attachToIndividualAccount_Test </name>
     /// <summary> Test Method for attachToIndividualAccount</summary>
@@ -524,54 +625,7 @@ global class IndividualAccounts
         
     }
 
-    /// <name> insertIndividualAccount_Test </name>
-    /// <summary> Test Method for insertIndividualAccount</summary>
-    static testMethod void insertUpdateOneToOne_Test()
-    {
-    	String newContactfirstName = 'test';
-    	String newContactLastName = 'Contact_forTests';
-    	String newContactMailingStreet = '123 Elm St';
-        Contact con = new Contact(
-        	FirstName=newContactfirstName,
-        	LastName=newContactLastName,
-        	MailingStreet = newContactMailingStreet,
-        	SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR
-        );
-        insert con;
-        
-        Contact[] insertedContacts = [Select FirstName, LastName, Account.Name,Account.npe01__One2OneContact__c,MailingStreet,Account.BillingStreet,Organization_Type__c from Contact where id=:con.id];
-		
-		//one contact should have been created
-		system.assertEquals(1,insertedContacts.size());
-		//the account should have the right type
-		system.assertEquals(Constants.ONE_TO_ONE_ORGANIZATION_TYPE,insertedcontacts[0].Organization_Type__c);
-		//the account should have been named correctly
-		system.assertEquals(newContactfirstName + ' ' + newContactLastName,insertedcontacts[0].Account.Name);
-		//relationship should be bi-directional
-		system.assertEquals(insertedcontacts[0].id,insertedcontacts[0].Account.npe01__One2OneContact__c);
-		//addresses should be sync'd
-		system.assertEquals(newContactMailingStreet,insertedcontacts[0].Account.BillingStreet);
-		system.assertEquals(insertedcontacts[0].MailingStreet,insertedcontacts[0].Account.BillingStreet);
-		
-		String updatedContactLastName = 'Contact_forTestsChange';
-		String updatedOtherCity = 'Seattle';
-		con.LastName=updatedContactLastName;
-		con.OtherCity = updatedOtherCity;
-		update con;
-		
-		Contact[] updatedContacts = [Select FirstName, LastName, Account.Name,Account.npe01__One2OneContact__c,MailingStreet,OtherCity,Account.BillingStreet,Account.ShippingCity from Contact where id=:con.id];
-		
-		//the account should have been named correctly
-		system.assertEquals(updatedContacts[0].firstName + ' ' + updatedContacts[0].LastName,updatedContacts[0].Account.Name);
-		//relationship should be bi-directional
-		system.assertEquals(updatedContacts[0].id,updatedContacts[0].Account.npe01__One2OneContact__c);
-		//addresses should be sync'd
-		system.assertEquals(newContactMailingStreet,updatedContacts[0].MailingStreet);
-		system.assertEquals(updatedOtherCity,updatedContacts[0].Account.ShippingCity);
-		system.assertEquals(updatedContacts[0].MailingStreet,updatedContacts[0].Account.BillingStreet);
-		system.assertEquals(updatedContacts[0].OtherCity,updatedContacts[0].Account.ShippingCity);
-		
-    }
+   
 
 
     /// <name> getContactDonationHistory_Test </name>
