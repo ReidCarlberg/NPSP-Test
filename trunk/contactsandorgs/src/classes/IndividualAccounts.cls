@@ -37,6 +37,8 @@ global class IndividualAccounts
     /// <name> triggerAction </name>
     /// <summary> contains possible actions for a trigger </summary>
     public enum triggerAction {beforeInsert, beforeUpdate, beforeDelete, afterInsert, afterUpdate, afterDelete, afterUndelete}
+    
+   
 
     /// <name> IndividualAccounts </name>
     /// <summary> Overloads the IndividualAccounts object constructor to handle Contact processing </summary>
@@ -45,6 +47,7 @@ global class IndividualAccounts
     /// <param name="ta"> Trigger action that is occuring </param>
     public IndividualAccounts(Contact[] contacts, Contact[] oldContacts, triggerAction ta)
     {
+    	
         List<Contact> individualInserts = new List<Contact>();
         List<Contact> individualUpdates = new List<Contact>();
         List<Contact> contactDeletes = new List<Contact>();
@@ -62,7 +65,7 @@ global class IndividualAccounts
             		2. The Private__c checkbox isn't set by the user
             		3. The one-to-one model is chosen in the SystemAccountProcessor__c
             	*/
-                if (c.AccountId == null && c.Private__c != true && c.SystemAccountProcessor__c == 'One-to-One')
+                if (c.AccountId == null && c.Private__c != true && c.SystemAccountProcessor__c == Constants.ONE_TO_ONE_PROCESSOR)
                 {
                 	//flag this contact as an indivudual--Why?
                     c.SystemIsIndividual__c = true;
@@ -73,7 +76,7 @@ global class IndividualAccounts
             		2. The Private__c checkbox isn't set by the user
             		3. The Individual model is chosen in the SystemAccountProcessor__c
             	*/
-                if (c.AccountId == null && c.Private__c != true && c.SystemAccountProcessor__c == 'Individual')
+                if (c.AccountId == null && c.Private__c != true && c.SystemAccountProcessor__c == Constants.BUCKET_PROCESSOR)
                 {
                     c.SystemIsIndividual__c = true;
                     bucketContacts.add(c);
@@ -88,7 +91,7 @@ global class IndividualAccounts
             		2. The Contact is flagged as an individual
             		3. The one-to-one model is chosen in the SystemAccountProcessor__c
             	*/
-                if ( c.AccountId != null && c.SystemIsIndividual__c == true && c.SystemAccountProcessor__c == 'One-to-One')
+                if ( c.AccountId != null && c.SystemIsIndividual__c == true && c.SystemAccountProcessor__c == Constants.ONE_TO_ONE_PROCESSOR)
                 {
                 	//contacts are connected to Accounts, make the connection in the other direction
                     accountUpdates.put(c.AccountId, c.Id);
@@ -105,7 +108,7 @@ global class IndividualAccounts
             		2. The Private__c checkbox isn't set by the user
             		3. The one-to-one model is chosen in the SystemAccountProcessor__c
             	*/
-                if (c.AccountId == null && c.Private__c != true && c.SystemAccountProcessor__c == 'One-to-One')
+                if (c.AccountId == null && c.Private__c != true && c.SystemAccountProcessor__c == Constants.ONE_TO_ONE_PROCESSOR)
                 {
                     individualInserts.add(c);
                 }          
@@ -114,7 +117,7 @@ global class IndividualAccounts
             		2. The Private__c checkbox isn't set by the user
             		3. The Individual model is chosen in the SystemAccountProcessor__c
             	*/ 
-                if (c.AccountId == null && c.Private__c != true && c.SystemAccountProcessor__c == 'Individual')
+                if (c.AccountId == null && c.Private__c != true && c.SystemAccountProcessor__c == Constants.BUCKET_PROCESSOR)
                 {
                     c.SystemIsIndividual__c = true;
                     bucketContacts.add(c);
@@ -127,7 +130,8 @@ global class IndividualAccounts
             	/*if the contact is in the one-to-one model, changes to fields on the Contact
 	            will require data changes on the Account to keep some fields in sync
             	*/
-                if (c.Organization_Type__c == 'One-to-One Individual')
+            	
+                if (c.Organization_Type__c == Constants.ONE_TO_ONE_ORGANIZATION_TYPE)
                 {
                     if (
                         c.FirstName != oldContacts[i].FirstName ||
@@ -198,7 +202,7 @@ global class IndividualAccounts
     public static void attachToIndividualAccount(Contact[] contacts)
     {
     	//grab the first Account that is named Individual
-		List<Account> individuals = [Select Id from Account where name = 'Individual' ORDER BY CreatedDate Desc Limit 1];
+		List<Account> individuals = [Select Id from Account where name = :Constants.BUCKET_ACCOUNT_NAME ORDER BY CreatedDate Desc Limit 1];
 		if (individuals.size() > 0)
 		{
 			for(Contact c : contacts)
@@ -210,10 +214,10 @@ global class IndividualAccounts
 		{
 			//if there is no bucket Account, the bucket model won't function unless we create one
             Account individual = new Account();
-   	        individual.Name = 'Individual';
+   	        individual.Name = Constants.BUCKET_ACCOUNT_NAME;
    	        //flag the account as an individual account
    	        individual.SYSTEMISINDIVIDUAL__c = true;
-           	individual.Type = 'Bucket Individual';
+           	individual.Type = Constants.BUCKET_ORGANICATION_TYPE;
             insert individual;
 
             for(Contact c : contacts)
@@ -256,6 +260,7 @@ global class IndividualAccounts
 			{
 				//if a user has blanked out the Account for a Contact, this will put it right back
 				c.AccountId = conAccMap.get(c.Id);
+				
 			} else
 			{
 				//construct the individul account for the Contact
@@ -284,7 +289,7 @@ global class IndividualAccounts
         	    a.ShippingState = c.OtherState;
             	a.ShippingCountry = c.OtherCountry;
             	//flag the account as an individual account
-	            a.Type = 'One-to-One Individual';
+	            a.Type = Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
     	        a.SYSTEMISINDIVIDUAL__c = true;
         	    accountInserts.add(a);
 	        }
@@ -317,7 +322,7 @@ global class IndividualAccounts
 
 		}
 		//get the corresponding Accounts
-		List<Account> accts = [Select a.ShippingStreet, a.ShippingState, a.ShippingPostalCode, a.ShippingCountry, 
+		List<Account> accts = [Select a.name,a.ShippingStreet, a.ShippingState, a.ShippingPostalCode, a.ShippingCountry, 
         a.ShippingCity, a.BillingStreet, a.BillingState, a.BillingPostalCode, a.BillingCountry, a.BillingCity
         From Account a where a.Id IN :accConMap.keyset()];
     	
@@ -337,7 +342,8 @@ global class IndividualAccounts
 	            c.OtherCity != a.ShippingCity ||
 	            c.OtherState != a.ShippingState ||
 	            c.OtherPostalCode != a.ShippingPostalCode ||
-	            c.OtherCountry != a.ShippingCountry)
+	            c.OtherCountry != a.ShippingCountry ||
+	            c.FirstName + ' ' + c.LastName != a.Name)
             ) {
             	// Update Account fields
                 a.BillingStreet = c.MailingStreet;
@@ -350,9 +356,11 @@ global class IndividualAccounts
                 a.ShippingState = c.OtherState;
                 a.ShippingPostalCode = c.OtherPostalCode;
                 a.ShippingCountry = c.OtherCountry;
+                a.Name = c.FirstName + ' ' + c.LastName;
             	
             	accountUpdates.add(a);
             }
+           
 		}	
 
         if ( accountUpdates.size() > 0 )
@@ -399,75 +407,178 @@ global class IndividualAccounts
 
     /// <name> updateAccounts_Test </name>
     /// <summary> Test Method for updateAccounts</summary>
-    static testMethod void updateAccounts_Test()
+    static testMethod void detachOneToOne_Test()
     {
-        Contact con = new Contact(FirstName='test', LastName='contact');
+    	String newContactfirstName = 'test';
+    	String newContactLastName = 'Contact_forTests';
+        Contact con = new Contact(
+        	FirstName=newContactfirstName,
+        	LastName=newContactLastName,
+        	SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR
+        );
         insert con;
         
+        Contact[] insertedContacts = [Select AccountId from Contact where id=:con.id];		
+        
+        Id originalAccountId = insertedContacts[0].AccountId;
+        
+        String updatedContactLastName = 'Contact_forTestsChange';
+        
         con.AccountId = null;
+        con.LastName = updatedContactLastName;
         update con;
+        
+        Contact[] updatedContacts = [Select FirstName, LastName, AccountId,Account.Name,Account.npe01__One2OneContact__c from Contact where id=:con.id];
+		
+		//AccountId of updated contact should match the orignial Account
+		system.assertEquals(originalAccountId,updatedContacts[0].AccountId);
+		
+        delete con;
+    }
+    
+    /// <name> updateAccounts_Test </name>
+    /// <summary> Test Method for updateAccounts</summary>
+    static testMethod void editContactDuringDetachOneToOne_Test()
+    {
+    	String newContactfirstName = 'test';
+    	String newContactLastName = 'Contact_forTests';
+    	String newContactMailingStreet = '123 Elm St';
+        Contact con = new Contact(
+        	FirstName=newContactfirstName,
+        	LastName=newContactLastName,
+        	MailingStreet = newContactMailingStreet,
+        	SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR
+        );
+        insert con;
+        
+        Contact[] insertedContacts = [Select AccountId from Contact where id=:con.id];		
+        
+        Id originalAccountId = insertedContacts[0].AccountId;
+        
+        String updatedContactLastName = 'Contact_forTestsChange';
+        String updateContactMailingStreet = '234 Oak St';
+        
+        con.AccountId = null;
+        con.LastName = updatedContactLastName;
+        con.MailingStreet = updateContactMailingStreet;
+        update con;
+        
+        Contact[] updatedContacts = [Select FirstName, LastName, AccountId,Account.Name,Account.npe01__One2OneContact__c,MailingStreet,Organization_Type__c,Account.BillingStreet from Contact where id=:con.id];
+		
+		//AccountId of updated contact should match the orignial Account
+		system.assertEquals(originalAccountId,updatedContacts[0].AccountId);
+		
+		//org type should be set correctly
+		system.assertEquals(Constants.ONE_TO_ONE_ORGANIZATION_TYPE,updatedContacts[0].Organization_Type__c);
+		
+		//the account should have been named correctly
+		system.assertEquals(updatedContacts[0].FirstName + ' ' + updatedContacts[0].LastName,updatedContacts[0].Account.Name);
+		
+		//addresses should be sync'd
+		system.assertEquals(updateContactMailingStreet,updatedContacts[0].MailingStreet);
+		system.assertEquals(updatedContacts[0].MailingStreet,updatedContacts[0].Account.BillingStreet);
         
         delete con;
     }
+    
 
 
     /// <name> attachToIndividualAccount_Test </name>
     /// <summary> Test Method for attachToIndividualAccount</summary>
     static testMethod void attachToIndividualAccount_Test()
     {
-        Contact con = new Contact(FirstName='test', LastName='contact', SystemAccountProcessor__c = 'Individual');
-        insert con;
-    }
-
-    /// <name> insertIndividualAccount_Test </name>
-    /// <summary> Test Method for insertIndividualAccount</summary>
-    static testMethod void insertIndividualAccount_Test()
-    {
-        Contact con = new Contact(FirstName='test', LastName='contact', SystemAccountProcessor__c = 'One-to-One');
-        insert con;
-
-		con.LastName='Doe';
-		update con;
-    }
-
-    /// <name> updateIndividualAccount_Test </name>
-    /// <summary> Test Method for updateIndividualAccount</summary>
-    static testMethod void updateIndividualAccount_Test()
-    {
-        Contact con = new Contact(FirstName='test', LastName='contact', SystemAccountProcessor__c = 'Individual');
+        Contact con = new Contact(FirstName='test', LastName='contact', SystemAccountProcessor__c = Constants.BUCKET_PROCESSOR);
         insert con;
         
-        con.MailingCity = 'San Francisco';       
-        con.AccountId = null;
-        update con;
+        Contact[] insertedContacts = [Select Account.Name,AccountId,Organization_Type__c from Contact where id=:con.id];
+		//the contact should have the right type
+		system.assertEquals(Constants.BUCKET_ORGANICATION_TYPE,insertedcontacts[0].Organization_Type__c);
+		//the account should have been named correctly
+		system.assertEquals(Constants.BUCKET_ACCOUNT_NAME,insertedcontacts[0].Account.Name);
         
     }
     
     /// <name> updateIndividualAccount_Test </name>
     /// <summary> Test Method for updateIndividualAccount</summary>
-    static testMethod void updateIndividualAccountAddress_Test()
+    static testMethod void detachIndividualAccount_Test()
     {
-        Contact con = new Contact(FirstName='test', LastName='contact', SystemAccountProcessor__c = 'One-to-One');
+        Contact con = new Contact(FirstName='test', LastName='contact', SystemAccountProcessor__c = Constants.BUCKET_PROCESSOR);
         insert con;
         
+        Contact[] insertedContacts = [Select Account.Name,AccountId,Organization_Type__c from Contact where id=:con.id];
+		
+		Id AccountId = insertedContacts[0].AccountId;
+		
         con.MailingCity = 'San Francisco';       
+        con.AccountId = null;
         update con;
         
-        List<Account> acct = [Select a.ShippingStreet, a.ShippingState, a.ShippingPostalCode, a.ShippingCountry, 
-        a.ShippingCity, a.BillingStreet, a.BillingState, a.BillingPostalCode, a.BillingCountry, a.BillingCity
-        From Account a where a.One2OneContact__c = :con.Id];
+        Contact[] updatedContacts = [Select Account.Name,AccountId,Organization_Type__c from Contact where id=:con.id];
         
-        if(acct.size() > 0 && acct[0].BillingCity.equals('San Francisco'))acct[0].BillingCity = 'Atlanta';
-        update acct;
-        
+        //the contact should have the right type
+		system.assertEquals(Constants.BUCKET_ORGANICATION_TYPE,updatedContacts[0].Organization_Type__c);
+		//the account should have been named correctly
+		system.assertEquals(Constants.BUCKET_ACCOUNT_NAME,updatedContacts[0].Account.Name);
+		//the account should have the correct AccountId
+		system.assertEquals(AccountId,updatedContacts[0].AccountId);        
         
     }
+
+    /// <name> insertIndividualAccount_Test </name>
+    /// <summary> Test Method for insertIndividualAccount</summary>
+    static testMethod void insertUpdateOneToOne_Test()
+    {
+    	String newContactfirstName = 'test';
+    	String newContactLastName = 'Contact_forTests';
+    	String newContactMailingStreet = '123 Elm St';
+        Contact con = new Contact(
+        	FirstName=newContactfirstName,
+        	LastName=newContactLastName,
+        	MailingStreet = newContactMailingStreet,
+        	SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR
+        );
+        insert con;
+        
+        Contact[] insertedContacts = [Select FirstName, LastName, Account.Name,Account.npe01__One2OneContact__c,MailingStreet,Account.BillingStreet,Organization_Type__c from Contact where id=:con.id];
+		
+		//one contact should have been created
+		system.assertEquals(1,insertedContacts.size());
+		//the account should have the right type
+		system.assertEquals(Constants.ONE_TO_ONE_ORGANIZATION_TYPE,insertedcontacts[0].Organization_Type__c);
+		//the account should have been named correctly
+		system.assertEquals(newContactfirstName + ' ' + newContactLastName,insertedcontacts[0].Account.Name);
+		//relationship should be bi-directional
+		system.assertEquals(insertedcontacts[0].id,insertedcontacts[0].Account.npe01__One2OneContact__c);
+		//addresses should be sync'd
+		system.assertEquals(newContactMailingStreet,insertedcontacts[0].Account.BillingStreet);
+		system.assertEquals(insertedcontacts[0].MailingStreet,insertedcontacts[0].Account.BillingStreet);
+		
+		String updatedContactLastName = 'Contact_forTestsChange';
+		String updatedOtherCity = 'Seattle';
+		con.LastName=updatedContactLastName;
+		con.OtherCity = updatedOtherCity;
+		update con;
+		
+		Contact[] updatedContacts = [Select FirstName, LastName, Account.Name,Account.npe01__One2OneContact__c,MailingStreet,OtherCity,Account.BillingStreet,Account.ShippingCity from Contact where id=:con.id];
+		
+		//the account should have been named correctly
+		system.assertEquals(updatedContacts[0].firstName + ' ' + updatedContacts[0].LastName,updatedContacts[0].Account.Name);
+		//relationship should be bi-directional
+		system.assertEquals(updatedContacts[0].id,updatedContacts[0].Account.npe01__One2OneContact__c);
+		//addresses should be sync'd
+		system.assertEquals(newContactMailingStreet,updatedContacts[0].MailingStreet);
+		system.assertEquals(updatedOtherCity,updatedContacts[0].Account.ShippingCity);
+		system.assertEquals(updatedContacts[0].MailingStreet,updatedContacts[0].Account.BillingStreet);
+		system.assertEquals(updatedContacts[0].OtherCity,updatedContacts[0].Account.ShippingCity);
+		
+    }
+
 
     /// <name> getContactDonationHistory_Test </name>
     /// <summary> Test Method for getContactDonationHistory</summary>
     static testMethod void getContactDonationHistory_Test()
     {
-        Contact con = new Contact(FirstName='test', LastName='contact', SystemAccountProcessor__c = 'One-to-One');
+        Contact con = new Contact(FirstName='test', LastName='contact', SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR);
         insert con;
 
 		Opportunity o = new Opportunity(Amount=500,Name='test',StageName='Closed/Won',CloseDate=System.today());
@@ -483,7 +594,7 @@ global class IndividualAccounts
     /// <summary> Test Method for getContactLastDonation</summary>
     static testMethod void getContactLastDonation_Test()
     {
-        Contact con = new Contact(FirstName='test', LastName='contact', SystemAccountProcessor__c = 'One-to-One');
+        Contact con = new Contact(FirstName='test', LastName='contact', SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR);
         insert con;
 
 		Opportunity o = new Opportunity(Amount=500,Name='test',StageName='Closed/Won',CloseDate=System.today());
