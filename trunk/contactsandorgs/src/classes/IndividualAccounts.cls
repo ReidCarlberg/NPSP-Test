@@ -1,3 +1,32 @@
+/*
+	Copyright (c) 2009, Salesforce.com Foundation
+	All rights reserved.
+	
+	Redistribution and use in source and binary forms, with or without
+	modification, are permitted provided that the following conditions are met:
+	
+	* Redistributions of source code must retain the above copyright
+	  notice, this list of conditions and the following disclaimer.
+	* Redistributions in binary form must reproduce the above copyright
+	  notice, this list of conditions and the following disclaimer in the
+	  documentation and/or other materials provided with the distribution.
+	* Neither the name of the Salesforce.com Foundation nor the names of
+	  its contributors may be used to endorse or promote products derived
+  	  from this software without specific prior written permission.
+
+	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+	"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+	LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
+	FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
+	COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
+	INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+	BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+	LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+	CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
+	LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
+	ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+	POSSIBILITY OF SUCH DAMAGE.
+*/
 global class IndividualAccounts
 {
 
@@ -28,11 +57,22 @@ global class IndividualAccounts
             //BEFORE INSERT
             if ( ta==triggerAction.beforeInsert )
             {
+            	/*one-to-one account should be created if:
+            		1. The account isn't set by the user
+            		2. The Private__c checkbox isn't set by the user
+            		3. The one-to-one model is chosen in the SystemAccountProcessor__c
+            	*/
                 if (c.AccountId == null && c.Private__c != true && c.SystemAccountProcessor__c == 'One-to-One')
                 {
+                	//flag this contact as an indivudual--Why?
                     c.SystemIsIndividual__c = true;
                     individualInserts.add(c);
                 }
+                /*contact should be connected to the bucket account if:
+            		1. The account isn't set by the user
+            		2. The Private__c checkbox isn't set by the user
+            		3. The Individual model is chosen in the SystemAccountProcessor__c
+            	*/
                 if (c.AccountId == null && c.Private__c != true && c.SystemAccountProcessor__c == 'Individual')
                 {
                     c.SystemIsIndividual__c = true;
@@ -43,19 +83,37 @@ global class IndividualAccounts
             //AFTER INSERT
             if ( ta==triggerAction.afterInsert )
             {
+            	/*grab the Accounts that need to have the newly assigned Contact Id to them if:
+            		1. If the contact is connected to an Account
+            		2. The Contact is flagged as an individual
+            		3. The one-to-one model is chosen in the SystemAccountProcessor__c
+            	*/
                 if ( c.AccountId != null && c.SystemIsIndividual__c == true && c.SystemAccountProcessor__c == 'One-to-One')
                 {
+                	//contacts are connected to Accounts, make the connection in the other direction
                     accountUpdates.put(c.AccountId, c.Id);
                 }
+                
+                //there is no after insert processing for the bucket account model
             }
 
             //BEFORE UPDATE
             if ( ta==triggerAction.beforeUpdate )
             {
+            	/*one-to-one account should be created if:
+            		1. The account has been blanked out by the user
+            		2. The Private__c checkbox isn't set by the user
+            		3. The one-to-one model is chosen in the SystemAccountProcessor__c
+            	*/
                 if (c.AccountId == null && c.Private__c != true && c.SystemAccountProcessor__c == 'One-to-One')
                 {
                     individualInserts.add(c);
-                }           
+                }          
+                /*contact should be connected to the bucket account if:
+            		1. The account has been blanked out by the user
+            		2. The Private__c checkbox isn't set by the user
+            		3. The Individual model is chosen in the SystemAccountProcessor__c
+            	*/ 
                 if (c.AccountId == null && c.Private__c != true && c.SystemAccountProcessor__c == 'Individual')
                 {
                     c.SystemIsIndividual__c = true;
@@ -66,6 +124,9 @@ global class IndividualAccounts
             //AFTER UPDATE
             if ( ta==triggerAction.afterUpdate )
             {
+            	/*if the contact is in the one-to-one model, changes to fields on the Contact
+	            will require data changes on the Account to keep some fields in sync
+            	*/
                 if (c.Organization_Type__c == 'One-to-One Individual')
                 {
                     if (
@@ -92,18 +153,22 @@ global class IndividualAccounts
         }
         if (individualInserts.size() > 0)
         {
+        	//add the newly created or updated Contacts that need a new individual account
             insertIndividualAccount(individualInserts);
         }
         if (bucketContacts.size() > 0)
         {
+        	//add the newly created or updated Contact to the bucket account
             attachToIndividualAccount(bucketContacts);
         }
         if (individualUpdates.size() > 0)
         {
+        	//contacts in the one-to-one model that are changing for syncing with account
             updateIndividualAccount(individualUpdates);
         }
         if (accountUpdates.size() > 0)
         {
+        	//update Accounts that have newly created Contacts connected to them
             updateAccounts(accountUpdates);
         }
 
@@ -132,23 +197,28 @@ global class IndividualAccounts
     /// <param name="contacts"> Contacts meeting the trigger criteria</param>
     public static void attachToIndividualAccount(Contact[] contacts)
     {
+    	//grab the first Account that is named Individual
 		List<Account> individuals = [Select Id from Account where name = 'Individual' ORDER BY CreatedDate Desc Limit 1];
 		if (individuals.size() > 0)
 		{
 			for(Contact c : contacts)
 			{
+				//connect all Contacts to the bucket Account
 				c.AccountId = individuals[0].Id;
 			}
 		} else
 		{
+			//if there is no bucket Account, the bucket model won't function unless we create one
             Account individual = new Account();
    	        individual.Name = 'Individual';
+   	        //flag the account as an individual account
    	        individual.SYSTEMISINDIVIDUAL__c = true;
            	individual.Type = 'Bucket Individual';
             insert individual;
 
             for(Contact c : contacts)
    	        {
+   	        	//connect Contact to bucket Account
        	        c.AccountId = individual.Id;
            	}
     	}
@@ -164,11 +234,13 @@ global class IndividualAccounts
     	Map<Id,Id> conAccMap = new Map<Id,Id>();
 		for (Contact c : contacts)
 		{
+			//make sure we're only working with Contacts that have already been inserted
 			if (c.Id != null)
 			{
 				contactIds.add(c.Id);
 			}
 		}
+		//get all the Accounts that are connected to the Contacts
     	for (Account acc : [Select Id, One2OneContact__c from Account where One2OneContact__c in :contactIds])
     	{
     		conAccMap.put(acc.One2OneContact__c,acc.Id);
@@ -179,11 +251,14 @@ global class IndividualAccounts
 
         for(Contact c : contacts)
         {
+        	//if we found an Account already connected to this Contact, connect the Contact to that Account
 			if (conAccMap.containsKey(c.Id))
 			{
+				//if a user has blanked out the Account for a Contact, this will put it right back
 				c.AccountId = conAccMap.get(c.Id);
 			} else
 			{
+				//construct the individul account for the Contact
 	            Account a = new Account();
     	        String aName = '';
         	    if (c.FirstName != null)
@@ -193,6 +268,7 @@ global class IndividualAccounts
         	    }
 	            aName += c.LastName; 
     	        a.Name = aName;
+    	        //connect the Account to the Contact
         	    if (c.Id != null) {
 	        	    a.One2OneContact__c = c.Id;
 	            }
@@ -207,6 +283,7 @@ global class IndividualAccounts
     	        a.ShippingCity = c.OtherCity;
         	    a.ShippingState = c.OtherState;
             	a.ShippingCountry = c.OtherCountry;
+            	//flag the account as an individual account
 	            a.Type = 'One-to-One Individual';
     	        a.SYSTEMISINDIVIDUAL__c = true;
         	    accountInserts.add(a);
@@ -217,6 +294,7 @@ global class IndividualAccounts
             Integer i = 0;
             for (Contact c : contacts)
             {
+            	//for each success, write the new AccountId to the Contact. These 
                 if (lsr[i].isSuccess() == true)
                 {
                     c.AccountId = lsr[i].getId();
@@ -238,7 +316,7 @@ global class IndividualAccounts
 			accConMap.put(c.AccountId,c);
 
 		}
-		
+		//get the corresponding Accounts
 		List<Account> accts = [Select a.ShippingStreet, a.ShippingState, a.ShippingPostalCode, a.ShippingCountry, 
         a.ShippingCity, a.BillingStreet, a.BillingState, a.BillingPostalCode, a.BillingCountry, a.BillingCity
         From Account a where a.Id IN :accConMap.keyset()];
@@ -247,33 +325,34 @@ global class IndividualAccounts
         
         for(Account a : accts){     	
 			Contact c = accConMap.get(a.Id);
-		                if (
-		                c != null && (
-                        c.MailingStreet != a.BillingStreet ||
-                        c.MailingCity != a.BillingCity ||
-                        c.MailingState != a.BillingState ||
-                        c.MailingPostalCode != a.BillingPostalCode ||
-                        c.MailingCountry != a.BillingCountry ||
-                        c.OtherStreet != a.ShippingStreet ||
-                        c.OtherCity != a.ShippingCity ||
-                        c.OtherState != a.ShippingState ||
-                        c.OtherPostalCode != a.ShippingPostalCode ||
-                        c.OtherCountry != a.ShippingCountry)
-                        ) {
-                        	// Update contact fields
-	                        a.BillingStreet = c.MailingStreet;
-	                        a.BillingCity = c.MailingCity;
-	                        a.BillingState = c.MailingState;
-	                        a.BillingPostalCode = c.MailingPostalCode;
-	                        a.BillingCountry = c.MailingCountry;
-	                        a.ShippingStreet = c.OtherStreet;
-	                        a.ShippingCity = c.OtherCity;
-	                        a.ShippingState = c.OtherState;
-	                        a.ShippingPostalCode = c.OtherPostalCode;
-	                        a.ShippingCountry = c.OtherCountry;
-	                    	
-	                    	accountUpdates.add(a);
-                    }
+			//if any address data has changed on the contact, push it all to the Account
+            if (
+	            c != null && (
+	            c.MailingStreet != a.BillingStreet ||
+	            c.MailingCity != a.BillingCity ||
+	            c.MailingState != a.BillingState ||
+	            c.MailingPostalCode != a.BillingPostalCode ||
+	            c.MailingCountry != a.BillingCountry ||
+	            c.OtherStreet != a.ShippingStreet ||
+	            c.OtherCity != a.ShippingCity ||
+	            c.OtherState != a.ShippingState ||
+	            c.OtherPostalCode != a.ShippingPostalCode ||
+	            c.OtherCountry != a.ShippingCountry)
+            ) {
+            	// Update Account fields
+                a.BillingStreet = c.MailingStreet;
+                a.BillingCity = c.MailingCity;
+                a.BillingState = c.MailingState;
+                a.BillingPostalCode = c.MailingPostalCode;
+                a.BillingCountry = c.MailingCountry;
+                a.ShippingStreet = c.OtherStreet;
+                a.ShippingCity = c.OtherCity;
+                a.ShippingState = c.OtherState;
+                a.ShippingPostalCode = c.OtherPostalCode;
+                a.ShippingCountry = c.OtherCountry;
+            	
+            	accountUpdates.add(a);
+            }
 		}	
 
         if ( accountUpdates.size() > 0 )
@@ -283,7 +362,7 @@ global class IndividualAccounts
     }
 
 	/// <name> getContactDonationHistory </name>
-	/// <summary> Called by sControl </summary>
+	/// <summary> Called by sControl to display total giving amount </summary>
 	webservice static decimal getContactDonationHistory(Id contactId){
 		Decimal sum = 0;
 		for (OpportunityContactRole o : [Select Opportunity.Amount, OpportunityId From OpportunityContactRole where Opportunity.IsWon = true and Opportunity.Amount != null and ContactId = :contactId]) 
@@ -295,7 +374,7 @@ global class IndividualAccounts
 
 
 	/// <name> getContactLastDonation </name>
-	/// <summary> Called by sControl </summary>
+	/// <summary> Called by sControl to display last donation date </summary>
 		webservice static String getContactLastDonation(Id contactId){
 		Date lastDonation = null;
 		List<OpportunityContactRole> ocr = [Select Opportunity.CloseDate, OpportunityId From OpportunityContactRole where Opportunity.IsWon = true and Opportunity.Amount != null and ContactId = :contactId ORDER BY Opportunity.CloseDate DESC Limit 100]; 
@@ -309,6 +388,7 @@ global class IndividualAccounts
 		}
 	}
 
+/* TESTS -------------------------------------------------------------------------------*/
 
 	/// <name> IndividualAccounts_Test </name>
 	/// <summary> test default constructor </summary>
