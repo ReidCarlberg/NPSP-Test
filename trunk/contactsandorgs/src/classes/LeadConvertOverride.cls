@@ -11,7 +11,8 @@ public class LeadConvertOverride
 	{
 		String lId = ApexPages.currentPage().getParameters().get('id');  
 		PageReference pageRef;
-		if ( l.company == 'Individual' || l.company == null || l.company == '' || l.company == 'Self' || l.company == l.name)
+
+		if ( l.company == 'Individual' || l.company == null || l.company == '' || l.company == 'Self' || l.company == l.firstName + ' ' + l.lastname)
 		{
 			Database.LeadConvert lc = new database.LeadConvert();
 			lc.setLeadId(lId);
@@ -42,17 +43,68 @@ public class LeadConvertOverride
 		
     private final ApexPages.StandardController controller;   
 
-	public static testMethod void testMyController() {
-		Lead l = new Lead();
-		l.FirstName = 'test';
-		l.LastName = 'lead';
+	public static testMethod void newLeadConversion_Test() {
+
+        
+        Test.setCurrentPageReference(new PageReference('Page.LeadConvertOverride'));
+        
+        String leadFirstName = 'test';
+        String leadLastName = 'lead for tests_987';
+        Lead l = new Lead();
+		l.FirstName = leadFirstName;
+		l.LastName = leadLastName;
 		l.Company = 'self';
 		insert l;
-        PageReference pageRef = Page.LeadConvertOverride;
-        Test.setCurrentPage(pageRef);
+		
+		system.currentPageReference().getParameters().put('id', l.id);
+		
+		//pass contact into the controller
+		ApexPages.StandardController sc = new ApexPages.standardController(l);
+		//pass the controller into the extension
+		LeadConvertOverride ext = new LeadConvertOverride(sc); 
+		
+		ext.convertLead();
+		
+		Contact[] convertedContacts = [select id, firstname, lastname,systemisindividual__c,Account.Systemisindividual__c from Contact where lastname = :leadLastName];
+		//one contact should have been created
+		system.assertEquals(1,convertedContacts.size());
+		//that contact should be flagged as an individual
+		system.assert(convertedContacts[0].systemisindividual__c);
+		//the account for this contact should be an individual account, no matter the model
+		system.assertEquals(true,convertedContacts[0].Account.Systemisindividual__c);
 
     }
+    public static testMethod void newLeadConversionNamedCompany_Test() {
 
+        
+        Test.setCurrentPageReference(new PageReference('Page.LeadConvertOverride'));
+        
+        String leadFirstName = 'test';
+        String leadLastName = 'lead for tests_989';
+        Lead l = new Lead();
+		l.FirstName = leadFirstName;
+		l.LastName = leadLastName;
+		l.Company = leadFirstName + ' ' + leadLastName;
+		insert l;
+		
+		system.currentPageReference().getParameters().put('id', l.id);
+		
+		//pass contact into the controller
+		ApexPages.StandardController sc = new ApexPages.standardController(l);
+		//pass the controller into the extension
+		LeadConvertOverride ext = new LeadConvertOverride(sc); 
+		
+		ext.convertLead();
+		
+		Contact[] convertedContacts = [select id, firstname, lastname,systemisindividual__c,Account.Systemisindividual__c from Contact where lastname = :leadLastName];
+		//one contact should have been created
+		system.assertEquals(1,convertedContacts.size());
+		//that contact should be flagged as an individual
+		system.assert(convertedContacts[0].systemisindividual__c);
+		//the account for this contact should be an individual account, no matter the model
+		system.assertEquals(true,convertedContacts[0].Account.Systemisindividual__c);
+
+    }
 
 
 
