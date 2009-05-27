@@ -404,7 +404,7 @@ global class IndividualAccounts
   		IndividualAccounts testIndividualAccounts = new IndividualAccounts();
 	}
 
- /// <name> insertPrivate_Test </name>
+ 	/// <name> insertPrivate_Test </name>
     /// <summary> Test Method for inserting a Contact that should get no account </summary>
     static testMethod void insertPrivate_Test()
     {
@@ -424,8 +424,8 @@ global class IndividualAccounts
     
     }
 
- /// <name> insertIndividualAccount_Test </name>
-    /// <summary> Test Method for insertIndividualAccount</summary>
+ 	/// <name> insertUpdateOneToOne_Test </name>
+    /// <summary> Test Method for inserting and updating a Contact in the One-to-One model</summary>
     static testMethod void insertUpdateOneToOne_Test()
     {
     	String newContactfirstName = 'test';
@@ -474,8 +474,8 @@ global class IndividualAccounts
 		system.assertEquals(updatedContacts[0].OtherCity,updatedContacts[0].Account.ShippingCity);
 		
     }
-    /// <name> updateAccounts_Test </name>
-    /// <summary> Test Method for updateAccounts</summary>
+    /// <name> detachOneToOne_Test </name>
+    /// <summary> Test Method for separating a Contact from it's One-to-One account</summary>
     static testMethod void detachOneToOne_Test()
     {
     	String newContactfirstName = 'test';
@@ -505,8 +505,8 @@ global class IndividualAccounts
         delete con;
     }
     
-    /// <name> updateAccounts_Test </name>
-    /// <summary> Test Method for updateAccounts</summary>
+    /// <name> editContactDuringDetachOneToOne_Test </name>
+    /// <summary> Test Method for editing a contact while it is being detached from it's One-to-One Account. This was a bug (#37)</summary>
     static testMethod void editContactDuringDetachOneToOne_Test()
     {
     	String newContactfirstName = 'test';
@@ -550,8 +550,8 @@ global class IndividualAccounts
         delete con;
     }
     
-	/// <name> attachToIndividualAccount_Test </name>
-    /// <summary> Test Method for attachToIndividualAccount</summary>
+	/// <name> fromOneToOneToOrg_Test </name>
+    /// <summary> Test Method for switching from a One-to-One account to a regular account </summary>
     static testMethod void fromOneToOneToOrg_Test()
     {
     	String newContactfirstName = 'test';
@@ -585,7 +585,7 @@ global class IndividualAccounts
     }
 
     /// <name> attachToIndividualAccount_Test </name>
-    /// <summary> Test Method for attachToIndividualAccount</summary>
+    /// <summary> Test Method for a new Contact in the Bucket Individual model </summary>
     static testMethod void attachToIndividualAccount_Test()
     {
         Contact con = new Contact(FirstName='test', LastName='contact', SystemAccountProcessor__c = Constants.BUCKET_PROCESSOR);
@@ -599,8 +599,8 @@ global class IndividualAccounts
         
     }
     
-    /// <name> updateIndividualAccount_Test </name>
-    /// <summary> Test Method for updateIndividualAccount</summary>
+    /// <name> detachIndividualAccount_Test </name>
+    /// <summary> Test Method for detaching a Contact from the bucket individual account </summary>
     static testMethod void detachIndividualAccount_Test()
     {
         Contact con = new Contact(FirstName='test', LastName='contact', SystemAccountProcessor__c = Constants.BUCKET_PROCESSOR);
@@ -609,8 +609,7 @@ global class IndividualAccounts
         Contact[] insertedContacts = [Select Account.Name,AccountId,Organization_Type__c from Contact where id=:con.id];
 		
 		Id AccountId = insertedContacts[0].AccountId;
-		
-        con.MailingCity = 'San Francisco';       
+		     
         con.AccountId = null;
         update con;
         
