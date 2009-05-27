@@ -207,6 +207,7 @@ global class IndividualAccounts
 		{
 			for(Contact c : contacts)
 			{
+				c.SystemIsIndividual__c = true;
 				//connect all Contacts to the bucket Account
 				c.AccountId = individuals[0].Id;
 			}
@@ -255,11 +256,13 @@ global class IndividualAccounts
 
         for(Contact c : contacts)
         {
+        	c.SystemIsIndividual__c = true;
         	//if we found an Account already connected to this Contact, connect the Contact to that Account
 			if (conAccMap.containsKey(c.Id))
 			{
 				//if a user has blanked out the Account for a Contact, this will put it right back
 				c.AccountId = conAccMap.get(c.Id);
+				
 				
 			} else
 			{
@@ -303,6 +306,7 @@ global class IndividualAccounts
                 if (lsr[i].isSuccess() == true)
                 {
                     c.AccountId = lsr[i].getId();
+                    
                 }
                 i += 1;
             }
