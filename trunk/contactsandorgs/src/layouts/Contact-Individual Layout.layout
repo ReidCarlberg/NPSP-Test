@@ -174,6 +174,7 @@
     </layoutSections>
     <layoutSections>
         <detailHeading>true</detailHeading>
+        <label>Custom Links</label>
         <layoutColumns/>
         <layoutColumns/>
         <layoutColumns/>

@@ -198,8 +198,17 @@ if(ISPICKVAL(Secondary_Address_Type__c,&quot;Other&quot;),
     <fields>
         <fullName>SystemIsIndividual__c</fullName>
         <defaultValue>false</defaultValue>
-        <label>_SYSTEM: IsIndividual</label>
+        <inlineHelpText>This field is no longer used and should not be referenced. It has been replaced by Type_of_Account__c</inlineHelpText>
+        <label>_SYSTEM: IsIndividual - DEPRECATED</label>
         <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Type_of_Account__c</fullName>
+        <formula>IF(Account.SYSTEMIsIndividual__c,&quot;Individual&quot;,&quot;Organization&quot;)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Shows the type of Account this Contact is connected to.</inlineHelpText>
+        <label>Type of Account</label>
+        <type>Text</type>
     </fields>
     <fields>
         <fullName>WorkEmail__c</fullName>

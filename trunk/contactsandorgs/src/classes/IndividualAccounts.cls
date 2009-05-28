@@ -67,8 +67,7 @@ global class IndividualAccounts
             	*/
                 if (c.AccountId == null && c.Private__c != true && c.SystemAccountProcessor__c == Constants.ONE_TO_ONE_PROCESSOR)
                 {
-                	//flag this contact as an indivudual--Why?
-                    c.SystemIsIndividual__c = true;
+
                     individualInserts.add(c);
                 }
                 /*contact should be connected to the bucket account if:
@@ -78,7 +77,7 @@ global class IndividualAccounts
             	*/
                 if (c.AccountId == null && c.Private__c != true && c.SystemAccountProcessor__c == Constants.BUCKET_PROCESSOR)
                 {
-                    c.SystemIsIndividual__c = true;
+
                     bucketContacts.add(c);
                 }
             }
@@ -91,7 +90,7 @@ global class IndividualAccounts
             		2. The Contact is flagged as an individual
             		3. The one-to-one model is chosen in the SystemAccountProcessor__c
             	*/
-                if ( c.AccountId != null && c.SystemIsIndividual__c == true && c.SystemAccountProcessor__c == Constants.ONE_TO_ONE_PROCESSOR)
+                if ( c.AccountId != null && c.Private__c != true && c.SystemAccountProcessor__c == Constants.ONE_TO_ONE_PROCESSOR && c.Type_of_Account__c=='Individual')
                 {
                 	//contacts are connected to Accounts, make the connection in the other direction
                     accountUpdates.put(c.AccountId, c.Id);
@@ -119,7 +118,7 @@ global class IndividualAccounts
             	*/ 
                 if (c.AccountId == null && c.Private__c != true && c.SystemAccountProcessor__c == Constants.BUCKET_PROCESSOR)
                 {
-                    c.SystemIsIndividual__c = true;
+
                     bucketContacts.add(c);
                 }
             }
@@ -207,7 +206,6 @@ global class IndividualAccounts
 		{
 			for(Contact c : contacts)
 			{
-				c.SystemIsIndividual__c = true;
 				//connect all Contacts to the bucket Account
 				c.AccountId = individuals[0].Id;
 			}
@@ -256,7 +254,6 @@ global class IndividualAccounts
 
         for(Contact c : contacts)
         {
-        	c.SystemIsIndividual__c = true;
         	//if we found an Account already connected to this Contact, connect the Contact to that Account
 			if (conAccMap.containsKey(c.Id))
 			{
@@ -450,7 +447,7 @@ global class IndividualAccounts
 		//the account should have the right type
 		system.assertEquals(Constants.ONE_TO_ONE_ORGANIZATION_TYPE,insertedcontacts[0].Organization_Type__c);
 		//the account should be flagged as an individual
-		system.assertEquals(true,insertedcontacts[0].Account.SYSTEMIsIndividual__c );		
+		system.assertEquals(true,insertedcontacts[0].Account.SYSTEMIsIndividual__c );
 		//the account should have been named correctly
 		system.assertEquals(newContactfirstName + ' ' + newContactLastName,insertedcontacts[0].Account.Name);
 		//relationship should be bi-directional
@@ -553,40 +550,6 @@ global class IndividualAccounts
         
         delete con;
     }
-    
-	/// <name> fromOneToOneToOrg_Test </name>
-    /// <summary> Test Method for switching from a One-to-One account to a regular account </summary>
-    static testMethod void fromOneToOneToOrg_Test()
-    {
-    	String newContactfirstName = 'test';
-    	String newContactLastName = 'Contact_forTests';
-    	String newContactMailingStreet = '123 Elm St';
-        Contact con = new Contact(
-        	FirstName=newContactfirstName,
-        	LastName=newContactLastName,
-        	MailingStreet = newContactMailingStreet,
-        	SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR
-        );
-        insert con;
-        
-        Contact[] newContacts = [Select SystemIsIndividual__c from Contact where id=:con.id];
-		
-		system.assertEquals(true,newContacts[0].SystemIsIndividual__c);
-        
-        Account org = new Account(
-        	name = 'Test Organization 999'
-        );
-        insert org;
-        
-        con.AccountId = org.Id;
-	    update con;
-	    
-	    Contact[] updatedContacts = [Select SystemIsIndividual__c from Contact where id=:con.id];
-		
-		//this test will fail
-		//system.assertEquals(false,updatedContacts[0].SystemIsIndividual__c);
-    	
-    }
 
     /// <name> attachToIndividualAccount_Test </name>
     /// <summary> Test Method for a new Contact in the Bucket Individual model </summary>
@@ -628,6 +591,75 @@ global class IndividualAccounts
         
     }
 
+	/// <name> detachFromNormalAccountToBucket_Test </name>
+    /// <summary> Test Method for detaching a Contact from a normal account. It should land in the bucket account. </summary>
+    static testMethod void detachFromNormalAccountToBucket_Test()
+    {
+        Account acct = new Account(Name='Test Account 876');
+        insert acct;
+        
+        Account[] insertedAccount = [select SystemIsIndividual__c from Account where id = :acct.id];
+        
+        //the account should not be an individual one
+        system.assert(!insertedAccount[0].SystemIsIndividual__c);
+        
+        Contact con = new Contact(FirstName='test', LastName='contact678', AccountId = acct.id,SystemAccountProcessor__c = Constants.BUCKET_PROCESSOR);
+        insert con;
+        
+        Contact[] insertedContacts = [Select Account.Name,Account.SystemIsIndividual__c,AccountId,Organization_Type__c from Contact where id=:con.id];
+		
+		//the contact should be connected to the account
+		system.assertEquals(acct.id,insertedContacts[0].AccountId);
+		//the account should not be an individual account
+		system.assert(!insertedContacts[0].Account.SystemIsIndividual__c);
+		     
+        con.AccountId = null;
+        update con;
+        
+        Contact[] updatedContacts = [Select Account.Name,AccountId,Account.SystemIsIndividual__c,Organization_Type__c from Contact where id=:con.id];
+        
+        //the account should be an individual account
+		system.assert(updatedContacts[0].Account.SystemIsIndividual__c);
+		//the account should not be the one we started with
+		system.assertNotEquals(acct.id,updatedContacts[0].AccountId);  
+		      
+        
+    }
+    
+    /// <name> detachFromNormalAccountToOneToOne_Test </name>
+    /// <summary> Test Method for detaching a Contact from a normal account. It should land in a one-to-one account. </summary>
+    static testMethod void detachFromNormalAccountToOneToOne_Test()
+    {
+        Account acct = new Account(Name='Test Account 876');
+        insert acct;
+        
+        Account[] insertedAccount = [select SystemIsIndividual__c from Account where id = :acct.id];
+        
+        //the account should not be an individual one
+        system.assert(!insertedAccount[0].SystemIsIndividual__c);
+        
+        Contact con = new Contact(FirstName='test', LastName='contact678', AccountId = acct.id,SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR);
+        insert con;
+        
+        Contact[] insertedContacts = [Select Account.Name,Account.SystemIsIndividual__c,AccountId,Organization_Type__c from Contact where id=:con.id];
+		
+		//the contact should be connected to the account
+		system.assertEquals(acct.id,insertedContacts[0].AccountId);
+		//the account should not be an individual account
+		system.assert(!insertedContacts[0].Account.SystemIsIndividual__c);
+		     
+        con.AccountId = null;
+        update con;
+        
+        Contact[] updatedContacts = [Select Account.Name,AccountId,Account.SystemIsIndividual__c,Organization_Type__c from Contact where id=:con.id];
+        
+        //the account should be an individual account
+		//system.assert(updatedContacts[0].Account.SystemIsIndividual__c);
+		//the account should not be the one we started with
+		system.assertNotEquals(acct.id,updatedContacts[0].AccountId);  
+		      
+        
+    }
    
 
 

@@ -53,8 +53,14 @@
         <name>SystemAccountProcessor__c</name>
     </fields>
     <fields>
-        <label><!-- _SYSTEM: IsIndividual --></label>
+        <help><!-- This field is no longer used and should not be referenced. It has been replaced by Type_of_Account__c --></help>
+        <label><!-- _SYSTEM: IsIndividual - DEPRECATED --></label>
         <name>SystemIsIndividual__c</name>
+    </fields>
+    <fields>
+        <help><!-- Shows the type of Account this Contact is connected to. --></help>
+        <label><!-- Type of Account --></label>
+        <name>Type_of_Account__c</name>
     </fields>
     <fields>
         <label>E-mail professionnel</label>

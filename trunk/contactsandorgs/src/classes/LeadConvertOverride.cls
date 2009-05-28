@@ -11,27 +11,30 @@ public class LeadConvertOverride
 	{
 		String lId = ApexPages.currentPage().getParameters().get('id');  
 		PageReference pageRef;
-
-		if ( l.company == 'Individual' || l.company == null || l.company == '' || l.company == 'Self' || l.company == l.firstName + ' ' + l.lastname)
+		system.debug('SWA Company Name: ' + l.company);
+		if ( l.company == 'Individual' || l.company == null || l.company == '' || l.company.toUpperCase() == 'SELF' || l.company == l.firstName + ' ' + l.lastname)
 		{
+			system.debug('SWA Got into conditional');
 			Database.LeadConvert lc = new database.LeadConvert();
 			lc.setLeadId(lId);
 			lc.setDoNotCreateOpportunity(true);
 			LeadStatus convertStatus = [Select Id, MasterLabel from LeadStatus where IsConverted=true limit 1];
 			lc.setConvertedStatus(convertStatus.MasterLabel);
 			Database.LeadConvertResult lcr = Database.convertLead(lc);
-			
+			//should check results here
+			system.debug('SWA: ' + lcr);
 			Contact c = new Contact(Id=lcr.getContactId());
 			c.AccountId = null;
 			update c;
-
+			Contact[] myconvertedContact = [select id,firstname, lastname, accountid,account.name, SystemAccountProcessor__c from contact where id=:c.Id];
+			system.debug('SWA: contact: ' + myconvertedContact[0]);
+			system.debug('SWA: contact: ' + myconvertedContact[0].account);
+			
 			if (lcr.getAccountId() != null)
 			{
 				Account a = new Account(Id=lcr.getAccountId());
 				Database.DeleteResult d = Database.delete(a);
 			}
-
-			
 			pageRef = new PageReference('/' + c.Id);
 			pageRef.setRedirect(true);
 		} else {
@@ -65,11 +68,9 @@ public class LeadConvertOverride
 		
 		ext.convertLead();
 		
-		Contact[] convertedContacts = [select id, firstname, lastname,systemisindividual__c,Account.Systemisindividual__c from Contact where lastname = :leadLastName];
+		Contact[] convertedContacts = [select id, firstname, lastname,Account.Systemisindividual__c from Contact where lastname = :leadLastName];
 		//one contact should have been created
 		system.assertEquals(1,convertedContacts.size());
-		//that contact should be flagged as an individual
-		system.assert(convertedContacts[0].systemisindividual__c);
 		//the account for this contact should be an individual account, no matter the model
 		system.assertEquals(true,convertedContacts[0].Account.Systemisindividual__c);
 
@@ -96,11 +97,9 @@ public class LeadConvertOverride
 		
 		ext.convertLead();
 		
-		Contact[] convertedContacts = [select id, firstname, lastname,systemisindividual__c,Account.Systemisindividual__c from Contact where lastname = :leadLastName];
+		Contact[] convertedContacts = [select id, firstname, lastname,Account.Systemisindividual__c from Contact where lastname = :leadLastName];
 		//one contact should have been created
 		system.assertEquals(1,convertedContacts.size());
-		//that contact should be flagged as an individual
-		system.assert(convertedContacts[0].systemisindividual__c);
 		//the account for this contact should be an individual account, no matter the model
 		system.assertEquals(true,convertedContacts[0].Account.Systemisindividual__c);
 
