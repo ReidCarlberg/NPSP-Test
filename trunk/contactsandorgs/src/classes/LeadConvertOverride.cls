@@ -38,7 +38,7 @@ public class LeadConvertOverride
 			pageRef = new PageReference('/' + c.Id);
 			pageRef.setRedirect(true);
 		} else {
-			pageRef = new PageReference('/lead/leadconvert.jsp?retURL=%2F' + lId + '&id=' + lId);
+			pageRef = new PageReference('/lead/leadconvert.jsp?retURL=%2F' + lId + '&id=' + lId + '&nooverride=1');
 		}
 		pageRef.setRedirect(true);
 		return pageRef;
