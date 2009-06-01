@@ -38,7 +38,6 @@ global class IndividualAccounts
     /// <summary> contains possible actions for a trigger </summary>
     public enum triggerAction {beforeInsert, beforeUpdate, beforeDelete, afterInsert, afterUpdate, afterDelete, afterUndelete}
     
-   
 
     /// <name> IndividualAccounts </name>
     /// <summary> Overloads the IndividualAccounts object constructor to handle Contact processing </summary>
@@ -399,6 +398,8 @@ global class IndividualAccounts
 
 /* TESTS -------------------------------------------------------------------------------*/
 
+/* TESTING CONTACT AND ACCOUNT PLUMBING ------------------------------------------------*/
+
 	/// <name> IndividualAccounts_Test </name>
 	/// <summary> test default constructor </summary>
 	static testMethod void IndividualAccounts_Test() {
@@ -660,8 +661,403 @@ global class IndividualAccounts
 		      
         
     }
-   
+    
+/* TESTING PHONE NUMBER WORKFLOW -------------------------------------------------------*/
+ 
+    /// <name> createContactWithPhoneNoPref_Test </name>
+    /// <summary> Test Method for creating a contact with a phone number and no preferences set. </summary>
+    static testMethod void createContactWithPhoneNoPref_Test()
+    {
+    	//with no other prefs, phone should land in workphone__c and set PreferredPhone__c to 'work'.
+    	String newPhone = '206-777-7777';
+    	String preferredPhone = null;
+    	String workPhoneString = 'Work';
+    	Contact con = new Contact(FirstName='test', LastName='contact678',phone=newPhone,PreferredPhone__c=preferredPhone);
+        insert con;
+        
+        Contact[] insertedContacts = [Select phone,workPhone__c,PreferredPhone__c from Contact where id=:con.id];
+        
+        system.assertEquals(newPhone,insertedContacts[0].Phone);
+        system.assertEquals(newPhone,insertedContacts[0].WorkPhone__c);
+        system.assertEquals(workPhoneString,insertedContacts[0].PreferredPhone__c);
+        
+    }
+    
+    /// <name> createContactWithPhoneNoPrefAlsoHomePhone_Test </name>
+    /// <summary> Test Method for creating a contact with a phone number and a home number. </summary>
+    static testMethod void createContactWithPhoneNoPrefAlsoHomePhone_Test()
+    {
+    	//with pref set to Home, HomePhone should land in Phone and set PreferredPhone__c to 'home'.
+    	//currently Phone data is lost. See issue #46
+    	String newPhone = '206-777-7777';
+    	String newHomePhone = '888-898-9999';
+    	String preferredPhone = 'Home';
+    	Contact con = new Contact(FirstName='test', LastName='contact678',phone=newPhone,HomePhone=newHomePhone,PreferredPhone__c=preferredPhone);
+        insert con;
+        
+        Contact[] insertedContacts = [Select phone,workPhone__c,HomePhone,PreferredPhone__c from Contact where id=:con.id];
+        
+        system.assertEquals(newPhone,insertedContacts[0].Phone);
+        system.assertEquals(newHomePhone,insertedContacts[0].HomePhone);
+        system.assertEquals(null,insertedContacts[0].WorkPhone__c);
+        system.assertEquals(preferredPhone,insertedContacts[0].PreferredPhone__c);
+        
+    }
+    
+    /// <name> createContactWithPhonePrefSet_Test </name>
+    /// <summary> Test Method for creating a contact with a phone number in Phone and the preferred phone set. </summary>
+    static testMethod void createContactWithPhonePrefSet_Test()
+    {
+    	//with pref set to Home, HomePhone should land in Phone and set PreferredPhone__c to 'home'.
+    	//these are currently commented out because it's not supported. See #47.
+    	String newPhone = '206-777-7777';
+    	String preferredPhone = 'Home';
+    	Contact con = new Contact(FirstName='test', LastName='contact678',phone=newPhone,PreferredPhone__c=preferredPhone);
+        insert con;
+        
+        Contact[] insertedContacts = [Select phone,HomePhone,PreferredPhone__c from Contact where id=:con.id];
+        
+        system.assertEquals(newPhone,insertedContacts[0].Phone);
+       //system.assertEquals(newPhone,insertedContacts[0].HomePhone);
+        system.assertEquals(preferredPhone,insertedContacts[0].PreferredPhone__c);
+        
+        //test work phone
+        preferredPhone = 'Work';
+        
+        Contact con1 = new Contact(FirstName='test', LastName='contact678',phone=newPhone,PreferredPhone__c=preferredPhone);
+        insert con1;
+        
+        Contact[] insertedContacts1 = [Select phone,WorkPhone__c,PreferredPhone__c from Contact where id=:con1.id];
+        
+        system.assertEquals(newPhone,insertedContacts1[0].Phone);
+        //system.assertEquals(newPhone,insertedContacts1[0].WorkPhone__c);
+        system.assertEquals(preferredPhone,insertedContacts1[0].PreferredPhone__c);
+        
+        //test mobile phone
+        preferredPhone = 'Mobile';
+        
+        Contact con2 = new Contact(FirstName='test', LastName='contact678',phone=newPhone,PreferredPhone__c=preferredPhone);
+        insert con2;
+        
+        Contact[] insertedContacts2 = [Select phone,MobilePhone,PreferredPhone__c from Contact where id=:con2.id];
+        
+        system.assertEquals(newPhone,insertedContacts2[0].Phone);
+        //system.assertEquals(newPhone,insertedContacts2[0].MobilePhone);
+        system.assertEquals(preferredPhone,insertedContacts2[0].PreferredPhone__c);
+        
+        //test other phone
+        preferredPhone = 'Other';
+        
+        Contact con3 = new Contact(FirstName='test', LastName='contact678',phone=newPhone,PreferredPhone__c=preferredPhone);
+        insert con3;
+        
+        Contact[] insertedContacts3 = [Select phone,OtherPhone,PreferredPhone__c from Contact where id=:con3.id];
+        
+        system.assertEquals(newPhone,insertedContacts3[0].Phone);
+        //system.assertEquals(newPhone,insertedContacts3[0].OtherPhone);
+        system.assertEquals(preferredPhone,insertedContacts3[0].PreferredPhone__c);
+        
+    }
+    
+    /// <name> createContactWithNumberAndPrefSet_Test </name>
+    /// <summary> Test Method for creating a contact with a phone number in the correct field
+    /// and the preferred phone set. </summary>
+    static testMethod void createContactWithNumberAndPrefSet_Test()
+    {
+    	//with pref set to Home, HomePhone should land in Phone and set PreferredPhone__c to 'home'.
+    	//these are currently commented out because it's not supported. See #47.
+    	String newPhone = '206-777-7777';
+    	String preferredPhone = 'Home';
+    	Contact con = new Contact(FirstName='test', LastName='contact678',HomePhone=newPhone,PreferredPhone__c=preferredPhone);
+        insert con;
+        
+        Contact[] insertedContacts = [Select phone,HomePhone,PreferredPhone__c from Contact where id=:con.id];
+        
+        //system.assertEquals(newPhone,insertedContacts[0].Phone);
+		system.assertEquals(newPhone,insertedContacts[0].HomePhone);
+        system.assertEquals(preferredPhone,insertedContacts[0].PreferredPhone__c);
+        
+        //test work phone
+        preferredPhone = 'Work';
+        
+        Contact con1 = new Contact(FirstName='test', LastName='contact678',WorkPhone__c=newPhone,PreferredPhone__c=preferredPhone);
+        insert con1;
+        
+        Contact[] insertedContacts1 = [Select phone,WorkPhone__c,PreferredPhone__c from Contact where id=:con1.id];
+        
+        //system.assertEquals(newPhone,insertedContacts1[0].Phone);
+        system.assertEquals(newPhone,insertedContacts1[0].WorkPhone__c);
+        system.assertEquals(preferredPhone,insertedContacts1[0].PreferredPhone__c);
+        
+        //test mobile phone
+        preferredPhone = 'Mobile';
+        
+        Contact con2 = new Contact(FirstName='test', LastName='contact678',MobilePhone=newPhone,PreferredPhone__c=preferredPhone);
+        insert con2;
+        
+        Contact[] insertedContacts2 = [Select phone,MobilePhone,PreferredPhone__c from Contact where id=:con2.id];
+        
+       // system.assertEquals(newPhone,insertedContacts2[0].Phone);
+        system.assertEquals(newPhone,insertedContacts2[0].MobilePhone);
+        system.assertEquals(preferredPhone,insertedContacts2[0].PreferredPhone__c);
+        
+        //test other phone
+        preferredPhone = 'Other';
+        
+        Contact con3 = new Contact(FirstName='test', LastName='contact678',OtherPhone=newPhone,PreferredPhone__c=preferredPhone);
+        insert con3;
+        
+        Contact[] insertedContacts3 = [Select phone,OtherPhone,PreferredPhone__c from Contact where id=:con3.id];
+        
+       // system.assertEquals(newPhone,insertedContacts3[0].Phone);
+        system.assertEquals(newPhone,insertedContacts3[0].OtherPhone);
+        system.assertEquals(preferredPhone,insertedContacts3[0].PreferredPhone__c);
+        
+    }
+    
+    /// <name> updateContactWithNumberAndPref_Test </name>
+    /// <summary> Test Method for updating a contact with a phone number in the correct field
+    /// and the preferred phone set. </summary>
+    static testMethod void updateContactWithNumberAndPref_Test()
+    {
+    	//with pref set to Home, HomePhone should land in Phone and set PreferredPhone__c to 'home'.
+    	//these are currently commented out because it's not supported. See #47.
+    	String newPhone = '206-777-7777';
+    	String preferredPhone = 'Home';
+    	Contact con = new Contact(FirstName='test', LastName='contact678',HomePhone=newPhone,PreferredPhone__c=preferredPhone);
+        insert con;
+        
+        Contact[] insertedContacts = [Select phone,HomePhone,PreferredPhone__c from Contact where id=:con.id];
+        
+        //test work phone
+        preferredPhone = 'Work';
+        String workPhone = '206-888-8888';
+        
+        con.WorkPhone__c = workPhone;
+        con.PreferredPhone__c = preferredPhone;
+        update con;
+        
+        Contact[] insertedContacts1 = [Select phone,HomePhone,WorkPhone__c,PreferredPhone__c from Contact where id=:con.id];
+        
+        system.assertEquals(workPhone,insertedContacts1[0].Phone);
+        system.assertEquals(workPhone,insertedContacts1[0].WorkPhone__c);
+        system.assertEquals(newPhone,insertedContacts1[0].HomePhone);
+        system.assertEquals(preferredPhone,insertedContacts1[0].PreferredPhone__c);
+        
+        //test mobile phone
+        preferredPhone = 'Mobile';
+        String mobilePhone = '206-999-9999';
+        
+        con.MobilePhone = mobilePhone;
+        con.PreferredPhone__c = preferredPhone;
+        update con;
+        
+        Contact[] insertedContacts2 = [Select phone,HomePhone,WorkPhone__c,MobilePhone,PreferredPhone__c from Contact where id=:con.id];
+        
+       	system.assertEquals(mobilePhone,insertedContacts2[0].Phone);
+       	system.assertEquals(mobilePhone,insertedContacts2[0].MobilePhone);
+       	system.assertEquals(workPhone,insertedContacts2[0].WorkPhone__c);
+        system.assertEquals(newPhone,insertedContacts2[0].HomePhone);
+        system.assertEquals(preferredPhone,insertedContacts2[0].PreferredPhone__c);
+        
+        //test other phone
+        preferredPhone = 'Other';
+        String otherPhone = '206-666-6666';
+        
+        con.OtherPhone = otherPhone;
+        con.PreferredPhone__c = preferredPhone;
+        update con;
+        
+        Contact[] insertedContacts3 = [Select phone,HomePhone,WorkPhone__c,MobilePhone,OtherPhone,PreferredPhone__c from Contact where id=:con.id];
+        
+       	system.assertEquals(otherPhone,insertedContacts3[0].Phone);
+       	system.assertEquals(otherPhone,insertedContacts3[0].OtherPhone);
+       	system.assertEquals(mobilePhone,insertedContacts3[0].MobilePhone);
+       	system.assertEquals(workPhone,insertedContacts3[0].WorkPhone__c);
+        system.assertEquals(newPhone,insertedContacts3[0].HomePhone);
+        system.assertEquals(preferredPhone,insertedContacts3[0].PreferredPhone__c);
+        
+    }
+    
 
+/* TESTING EMAIL WORKFLOW --------------------------------------------------------------*/
+    /// <name> createContactWithEmailNoPref_Test </name>
+    /// <summary> Test Method for creating a contact with an email and no preferences set. </summary>
+    static testMethod void createContactWithEmailNoPref_Test()
+    {
+    	//with no other prefs, email should land in workemail__c and set Preferred_Email__c to 'work'.
+    	String newEmail = 'joe@testforemail.com';
+    	String preferredEmail = null;
+    	String workEmailString = 'Work';
+    	Contact con = new Contact(FirstName='test', LastName='contact678',email=newEmail,Preferred_Email__c=preferredEmail);
+        insert con;
+        
+        Contact[] insertedContacts = [Select email,workEmail__c,Preferred_Email__c from Contact where id=:con.id];
+        
+        system.assertEquals(newEmail,insertedContacts[0].email);
+        system.assertEquals(newEmail,insertedContacts[0].workEmail__c);
+        system.assertEquals(workEmailString,insertedContacts[0].Preferred_Email__c);
+        
+    }
+    
+    /// <name> createContactWithEmailNoPrefAlsoPersonalEmail_Test </name>
+    /// <summary> Test Method for creating a contact with a email and a personal email. </summary>
+    static testMethod void createContactWithEmailNoPrefAlsoPersonalEmail_Test()
+    {
+    	//with pref set to Home, Personal email should land in email and set Preferred_Email__c to 'home'.
+
+    	String newEmail = 'joe@testforemail.com';
+    	String newPersonalEmail = 'j@testemail.net';
+    	String preferredEmail = 'Personal';
+    	Contact con = new Contact(FirstName='test', LastName='contact678',email=newEmail,HomeEmail__c=newPersonalEmail,Preferred_Email__c=preferredEmail);
+        insert con;
+        
+        Contact[] insertedContacts = [Select email,workEmail__c,HomeEmail__c,Preferred_Email__c from Contact where id=:con.id];
+        
+        system.assertEquals(newEmail,insertedContacts[0].email);
+        system.assertEquals(newPersonalEmail,insertedContacts[0].HomeEmail__c);
+        system.assertEquals(null,insertedContacts[0].workEmail__c);
+        system.assertEquals(preferredEmail,insertedContacts[0].Preferred_Email__c);
+        
+    }
+    
+    /// <name> createContactWithEmailPrefSet_Test </name>
+    /// <summary> Test Method for creating a contact with an email in email and the preferred email set. </summary>
+    static testMethod void createContactWithEmailPrefSet_Test()
+    {
+    	//with pref set to Home, Personal Email should land in email and set Preferred_Email__c to 'Personal'.
+		//commented out until #49 is fixed
+    	String newEmail = 'joe@testforemail.com';
+    	String preferredEmail = 'Personal';
+    	Contact con = new Contact(FirstName='test', LastName='contact678',email=newEmail,Preferred_Email__c=preferredEmail);
+        insert con;
+        
+        Contact[] insertedContacts = [Select email,HomeEmail__c,Preferred_Email__c from Contact where id=:con.id];
+        
+        system.assertEquals(newEmail,insertedContacts[0].email);
+       	//system.assertEquals(newEmail,insertedContacts[0].HomeEmail__c);
+        system.assertEquals(preferredEmail,insertedContacts[0].Preferred_Email__c);
+        
+        //test work email
+        preferredEmail = 'Work';
+        
+        Contact con1 = new Contact(FirstName='test', LastName='contact678',email=newEmail,Preferred_Email__c=preferredEmail);
+        insert con1;
+        
+        Contact[] insertedContacts1 = [Select email,workEmail__c,Preferred_Email__c from Contact where id=:con1.id];
+        
+        system.assertEquals(newEmail,insertedContacts1[0].email);
+        //system.assertEquals(newEmail,insertedContacts1[0].workEmail__c);
+        system.assertEquals(preferredEmail,insertedContacts1[0].Preferred_Email__c);
+        
+        //test alternate email
+        preferredEmail = 'Alternate';
+        
+        Contact con2 = new Contact(FirstName='test', LastName='contact678',email=newEmail,Preferred_Email__c=preferredEmail);
+        insert con2;
+        
+        Contact[] insertedContacts2 = [Select email,AlternateEmail__c,Preferred_Email__c from Contact where id=:con2.id];
+        
+        system.assertEquals(newEmail,insertedContacts2[0].email);
+        //system.assertEquals(newEmail,insertedContacts2[0].AlternateEmail__c);
+        system.assertEquals(preferredEmail,insertedContacts2[0].Preferred_Email__c);
+      
+    }
+    
+    /// <name> createContactWithEmailAndPrefSet_Test </name>
+    /// <summary> Test Method for creating a contact with a email in the correct field
+    /// and the preferred email set. </summary>
+    static testMethod void createContactWithEmailAndPrefSet_Test()
+    {
+    	//with pref set to Home, Personal Email should land in email and set Preferred_Email__c to 'Personal'.
+    	//these are currently commented out because it's not supported. See #47.
+    	String newEmail = 'joe@testforemail.com';
+    	String preferredEmail = 'Personal';
+    	Contact con = new Contact(FirstName='test', LastName='contact678',HomeEmail__c=newEmail,Preferred_Email__c=preferredEmail);
+        insert con;
+        
+        Contact[] insertedContacts = [Select email,HomeEmail__c,Preferred_Email__c from Contact where id=:con.id];
+        
+        system.assertEquals(newEmail,insertedContacts[0].email);
+		system.assertEquals(newEmail,insertedContacts[0].HomeEmail__c);
+        system.assertEquals(preferredEmail,insertedContacts[0].Preferred_Email__c);
+        
+        //test work email
+        preferredEmail = 'Work';
+        
+        Contact con1 = new Contact(FirstName='test', LastName='contact678',workEmail__c=newEmail,Preferred_Email__c=preferredEmail);
+        insert con1;
+        
+        Contact[] insertedContacts1 = [Select email,workEmail__c,Preferred_Email__c from Contact where id=:con1.id];
+        
+        system.assertEquals(newEmail,insertedContacts1[0].email);
+        system.assertEquals(newEmail,insertedContacts1[0].workEmail__c);
+        system.assertEquals(preferredEmail,insertedContacts1[0].Preferred_Email__c);
+        
+        //test mobile email
+        preferredEmail = 'Alternate';
+        
+        Contact con2 = new Contact(FirstName='test', LastName='contact678',AlternateEmail__c=newEmail,Preferred_Email__c=preferredEmail);
+        insert con2;
+        
+        Contact[] insertedContacts2 = [Select email,AlternateEmail__c,Preferred_Email__c from Contact where id=:con2.id];
+        
+       	system.assertEquals(newEmail,insertedContacts2[0].email);
+        system.assertEquals(newEmail,insertedContacts2[0].AlternateEmail__c);
+        system.assertEquals(preferredEmail,insertedContacts2[0].Preferred_Email__c);
+       
+        
+    }
+    
+    /// <name> updateContactWithEmailAndPref_Test </name>
+    /// <summary> Test Method for updating a contact with a email in the correct field
+    /// and the preferred email set. </summary>
+    static testMethod void updateContactWithEmailAndPref_Test()
+    {
+    	//with pref set to Personal, Personal email should land in email and set Preferred_Email__c to 'Personal'.
+    	
+    	String newEmail = 'joe@testforemail.com';
+    	String preferredEmail = 'Personal';
+    	Contact con = new Contact(FirstName='test', LastName='contact678',HomeEmail__c=newEmail,Preferred_Email__c=preferredEmail);
+        insert con;
+        
+        Contact[] insertedContacts = [Select email,HomeEmail__c,Preferred_Email__c from Contact where id=:con.id];
+        
+        //test work email
+        preferredEmail = 'Work';
+        String workEmail = 'jd@email.net';
+        
+        con.workEmail__c = workEmail;
+        con.Preferred_Email__c = preferredEmail;
+        update con;
+        
+        Contact[] insertedContacts1 = [Select email,HomeEmail__c,workEmail__c,Preferred_Email__c from Contact where id=:con.id];
+        
+        system.assertEquals(workEmail,insertedContacts1[0].email);
+        system.assertEquals(workEmail,insertedContacts1[0].workEmail__c);
+        system.assertEquals(newEmail,insertedContacts1[0].HomeEmail__c);
+        system.assertEquals(preferredEmail,insertedContacts1[0].Preferred_Email__c);
+        
+        //test mobile email
+        preferredEmail = 'Alternate';
+        String alternateEmail = 'jdc@testemail.net';
+        
+        con.alternateEmail__c = alternateEmail;
+        con.Preferred_Email__c = preferredEmail;
+        update con;
+        
+        Contact[] insertedContacts2 = [Select email,HomeEmail__c,workEmail__c,alternateEmail__c,Preferred_Email__c from Contact where id=:con.id];
+        
+       	system.assertEquals(alternateEmail,insertedContacts2[0].email);
+       	system.assertEquals(alternateEmail,insertedContacts2[0].alternateEmail__c);
+       	system.assertEquals(workEmail,insertedContacts2[0].workEmail__c);
+        system.assertEquals(newEmail,insertedContacts2[0].HomeEmail__c);
+        system.assertEquals(preferredEmail,insertedContacts2[0].Preferred_Email__c);
+      
+        
+    }
+
+/* TESTING DONATION HISTORY WEBSERVICES ------------------------------------------------*/
 
     /// <name> getContactDonationHistory_Test </name>
     /// <summary> Test Method for getContactDonationHistory</summary>
