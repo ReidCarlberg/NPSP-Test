@@ -1,0 +1,86 @@
+<apex:page controller="templateConversion_WebServices" title="Nonprofit Template Converter" tabStyle="Account">
+	<apex:sectionHeader title="One-to-One Account Creation" subtitle="Select your Individual Account" />
+    <!-- Place holder for error messages logged by the controller -->
+    <apex:messages style="color:red; font-weight:bold;" />
+    <apex:form >
+        <apex:pageBlock title="Individual Organization (Account) Selection" >
+            <apex:pageBlockSection title="Search" collapsible="false" columns="1">
+                <apex:panelGrid columns="2" width="25%" >
+                    <apex:inputText id="queryTerm" value="{!queryTerm}" tabIndex="1" maxlength="255" />
+                    <apex:commandButton tabIndex="2" value="Search" action="{!query}" rerender="results,noresults,accountDetails" status="searchStatus" />
+                </apex:panelGrid>
+                <apex:panelGrid columns="1" width="80%">
+                    <apex:outputText >To search, type in the name of the Organization (Account) used to store 
+                    	Individuals. and click on the 'Search' button.</apex:outputText>
+                </apex:panelGrid>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+		<apex:outputPanel id="results" rendered="{!accountNotSelected}">
+          	<apex:actionStatus id="searchStatus">
+          		<apex:facet name="start">
+          			<!-- Working indicator -->
+          			<apex:pageBlock title="Searching">
+						<apex:image value="https://na6.salesforce.com/servlet/servlet.ImageServer?id=01580000000dFzs&oid=00D80000000L1Wv" alt="Working..."/>
+					</apex:pageBlock>
+          		</apex:facet>
+          		<!-- Display search results if records found on AJAX stop -->
+          		<apex:facet name="stop">
+          			<apex:panelGrid width="100%" rendered="{!showTable}">
+          				<apex:pageBlock title="Search Results" >
+	           				<apex:pageBlockSection title="Accounts" columns="1" showHeader="false">
+	           					<apex:pageBlockTable value="{!searchResults}" var="a" columns="5">
+	      							<apex:column headerValue="Action">
+		      							<apex:commandLink action="{!selectAccount}">Select
+	    	  								<apex:param name="accountId" value="{!a.id}" />
+	    	  								<apex:param name="accountName" value="{!a.name}" />
+	      								</apex:commandLink>
+	      							</apex:column>
+		            				<apex:column headerValue="Name">
+		            					<apex:outputLink value="../{!a.id}" target="_top">{!a.name}</apex:outputLink>
+		            				</apex:column>
+		            				<apex:column headerValue="Owner" value="{!a.Owner.Name}" />
+	           					</apex:pageBlockTable>
+	            			</apex:pageBlockSection>
+           				</apex:pageBlock>
+					</apex:panelGrid>
+				</apex:facet>
+			</apex:actionStatus>
+		</apex:outputPanel>
+		<apex:outputPanel id="noresults">
+          	<apex:actionStatus id="searchStatus2">
+          		<!-- Display not search results found message if no records found on AJAX stop -->
+          		<apex:facet name="stop">
+           			<apex:pageBlock title="Search Results" rendered="{!showNoRecFound}">
+           				<apex:outputText rendered="{!showNoRecFound}">No Records Found</apex:outputText>
+           			</apex:pageBlock>
+           		</apex:facet>
+          	</apex:actionStatus>
+   		</apex:outputPanel>
+		<apex:pageBlock title="Selected Organization (Account) Details" rendered="{!accountSelected}">
+   			<apex:commandButton action="{!convertContacts}" value="Convert Contacts" rendered="{!cCount > 0 && accountSelected}" rerender="accountDetails" />
+   			<apex:commandButton action="{!convertOpptys}" value="Update Opportunities" rendered="{!oCount > 0 && cCount == 0 && accountSelected}" rerender="accountDetails" />
+   			<apex:outputText >This process can take several minutes</apex:outputText>
+			<apex:outputPanel id="accountDetails" >
+				<apex:pageBlockSection title="AccountDetails" columns="4" showHeader="false">
+					<apex:outputText value="Account Name : {!accountName}" />
+					<apex:outputText value=" " />
+					<apex:outputText value=" " />
+					<apex:outputText value=" " />
+					<apex:outputText value="Step 1" />
+					<apex:outputText value="# of Contacts remaining to convert" />
+					<apex:outputText value="{!contactCount}" />
+					<apex:outputText value="Complete" rendered="{!cCount == 0}"/>
+					<apex:outputText value="Pending" rendered="{!cCount != 0}"/>
+					<apex:outputText value="Step 2" />
+					<apex:outputText value="# of Donations (Opportunities) to update" />
+					<apex:outputText value="{!opptyCount}" />
+					<apex:outputText value="Complete" rendered="{!oCount == 0}"/>
+					<apex:outputText value="Pending" rendered="{!oCount != 0}"/>
+	    		</apex:pageBlockSection>
+			</apex:outputPanel>
+			<apex:pageBlockSection title="Warnings" columns="1" showHeader="false">
+				<apex:outputText style="font-style:bold" value="{!tooManyWarning}" />
+			</apex:pageBlockSection>
+		</apex:pageBlock>
+	</apex:form>
+</apex:page>
