@@ -53,11 +53,15 @@ global class Households {
             //AFTER INSERT
             if ( ta==triggerAction.afterInsert )
             {
+            	//If the user has chosen for all Contacts to have households, add them all to the list
+            	//for Household creation
                 if (c.Household__c == null && c.SystemHouseholdProcessor__c == 'All New or Edited Contacts')
                 {
                     householdInserts.add(c);
-                } else
-                if (c.Household__c == null && c.SystemHouseholdProcessor__c == 'All Individual Contacts')
+                }
+                //If the user has chosen for only Contacts connected to Individual Accounts to have Households
+                //add them all to a list for evaluation
+                else if (c.Household__c == null && c.SystemHouseholdProcessor__c == 'All Individual Contacts')
                 {
 					contactEvaluations.add(c);
 	            }
@@ -116,6 +120,7 @@ global class Households {
 			String hName = c.LastName;
 			hName += ' Household';
 			h.Name = hName;
+			//sync the primary address block
 			h.MailingStreet__c = c.MailingStreet;
 			h.MailingCity__c = c.MailingCity;
 			h.MailingState__c = c.MailingState;
@@ -134,6 +139,7 @@ global class Households {
             {
                 if (lsr[i].isSuccess() == true)
                 {
+                	//write the new Household Ids to the Contacts
                     Contact clone = c.Clone(true,false);
                     clone.Household__c = lsr[i].getId();
                     contactUpdates.add(clone);
@@ -163,13 +169,14 @@ global class Households {
 	            accountIds.add(c.AccountId);
         	}
         }
-
+		//get all the Accounts so we can test to see if they are individuals
         Map<Id,Account> contactAccountMap = new Map<Id,Account>([Select Id, npe01__SYSTEMIsIndividual__c, Name from Account where Id in :accountIds]);
         for(Contact c : contacts)
         {
             if (c.AccountId != null)
             {
                 Account acc = contactAccountMap.get(c.AccountId);
+                //check the system field on Account to see if the account is an individual
                 if (acc.npe01__SYSTEMIsIndividual__c == true)
                 {
                     householdInserts.add(c);
@@ -182,6 +189,7 @@ global class Households {
         }
 		if ( householdInserts.size() > 0)
 		{
+			//hand any Contacts that need Households over to the insert method
         	insertHousehold(householdInserts);
 		}
     }
@@ -273,87 +281,5 @@ global class Households {
 		totalString += totalFormat;
 		return String.valueOf(totalString);
 	}
-
-
-///////////////////////////// TEST METHODS /////////////////////////////
-
-
-    /// <name> Households_Test </name>
-    /// <summary> test default constructor </summary>
-    static testMethod void Households_Test() {
-        Households testHouseholds = new Households();
-    }
-
-
-    /// <name> insertHousehold_Test </name>
-    /// <summary> test method for InsertHousehold function </summary>
-    static testMethod void insertHousehold_Test() {
-        Contact con = new Contact(FirstName='test', LastName='contact', SystemHouseholdProcessor__c = 'test');
-        insert con;
-
-		con.Household__c = null;
-		update con;
-
-		Account acc = new Account(Name='test');
-		insert acc;
-
-        Contact con2 = new Contact(FirstName='test', LastName='contact', AccountId=acc.Id, SystemHouseholdProcessor__c = 'All Individual Contacts');
-        insert con2;
-        
-        con2.Household__c = null;
-        con2.SystemHouseholdProcessor__c = 'All New or Edited Contacts';
-        update con2;
-    }
-
-
-    /// <name> evaluateContacts_Test </name>
-    /// <summary> test method for evaluateContacts function </summary>
-    static testMethod void evaluateContacts_Test() {
-		Account a = new Account(Name='test',npe01__SYSTEMIsIndividual__c = true);
-		insert a;
-		
-		//AccountId = null
-		Contact c = new Contact(LastName='test',Household__c=null,npe01__SystemAccountProcessor__c='None',SystemHouseholdProcessor__c='All Individual Contacts');
-		insert c;
-		
-		c.Household__c = null;
-		update c;
-
-		//AccountId != null
-		Contact c2 = new Contact(LastName='test',Household__c=null,AccountId=a.Id,SystemHouseholdProcessor__c='All Individual Contacts');
-		insert c2;
-
-    }
-
-    /// <name> deleteHousehold_Test </name>
-    /// <summary> test method for deleteHousehold function </summary>
-    static testMethod void deleteOldHousehold_Test() {
-		Household__c h = new Household__c(Name='test');
-
-        Contact con = new Contact(FirstName='test', LastName='contact', SystemHouseholdProcessor__c = 'All New or Edited Contacts', Household__c=h.Id);
-        insert con;
-        
-        Contact con2 = new Contact(FirstName='test', LastName='contact', SystemHouseholdProcessor__c = 'All New or Edited Contacts', Household__c=h.Id);
-        insert con2;
-
-		delete con2;
-		delete con;
-    }
-
-
-    /// <name> getHouseholdTransactionTotal </name>
-    /// <summary>  </summary>
-	static testMethod void getHouseholdTransactionTotal_test()
-	{
-		Household__c h = new Household__c(Name='Test Household');
-		insert h;
-		Contact c = new Contact(FirstName='test',LastName='test',Household__c=h.Id);
-		insert c;
-		Opportunity o = new Opportunity(Name='test oppty',CloseDate=System.Today(),StageName='Closed Won',Amount=100);
-		insert o;
-		OpportunityContactRole ocr = new OpportunityContactRole(OpportunityId=o.Id,ContactId=c.Id,Role='Test');
-		insert ocr;
-	}
-
 
 }
