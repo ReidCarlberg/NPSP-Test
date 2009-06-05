@@ -35,7 +35,6 @@ public class Affiliations {
     {
     }
 
-
     /// <name> triggerAction </name>
     /// <summary> contains possible actions for a trigger </summary>
     public enum triggerAction {beforeInsert, beforeUpdate, beforeDelete, afterInsert, afterUpdate, afterDelete, afterUndelete}
@@ -56,6 +55,7 @@ public class Affiliations {
             // AFTER INSERT
             if ( ta==triggerAction.afterInsert )
             {
+            	//insert affiliations for contacts with an Account
                 if ( c.AccountId != null )
                 {
                     affiliationInserts.add(c);
@@ -100,7 +100,7 @@ public class Affiliations {
         {
             accountIds.add(c.AccountId);
         }
-
+		//get all the accounts associated wth these contacts
         Map<Id,Account> accountMap = new Map<Id,Account>([Select Id, Name from Account where Id in :accountIds]);
 
         List<Affiliation__c> affiliationInserts = new List<Affiliation__c>();
@@ -109,6 +109,8 @@ public class Affiliations {
 			String cName = c.FirstName;
 			cName += ' ';
 			cName += c.LastName;
+			//check to see if this account isn't an individual. Can't use the real systemisindividual field on account
+			//because that would make this dependent on the Contacts and Organizations package
             if ( accountMap.get(c.AccountId).Name != cName && accountMap.get(c.AccountId).Name != 'Individual' )
             {
                 Affiliation__c a = new Affiliation__c();
@@ -116,6 +118,7 @@ public class Affiliations {
                 a.Organization__c = c.AccountId;
                 a.Status__c = 'Current';
                 a.StartDate__c = System.Today();
+                //user title as Role
                 if (c.Title != null)
                 {
                 	a.Role__c = c.Title;
@@ -150,6 +153,7 @@ public class Affiliations {
             List<Affiliation__c> existingAffiliations = [Select Id, Contact__c, Organization__c from Affiliation__c where EndDate__c = null and Contact__c in :contactIds and Organization__c in :accountIds];
             for(Affiliation__c a : existingAffiliations)
             {
+            	//concatenate the contact and account id for a unique string we can access later
                 String unique = a.Contact__c;
                 unique += a.Organization__c;
                 conAccMap.put(unique,a.Id);
@@ -164,8 +168,10 @@ public class Affiliations {
         {
             String u = c.Id;
             u += c.AccountId;
+            //get the affiliation based on that unique string
             if (conAccMap.containsKey(u))
             {
+            	//flag it as former ending today
                 Affiliation__c a = new Affiliation__c(Id=conAccMap.get(u));
                 a.Status__c = 'Former';
                 a.EndDate__c = System.Today();
@@ -178,41 +184,4 @@ public class Affiliations {
             Database.SaveResult[] lsr = Database.update(affiliationUpdates, false);
         }
     }
-
-
-    /// <name> Affiliations_Test </name>
-    /// <summary> test default constructor </summary>
-    static testMethod void Affiliations_Test() {
-        Affiliations testAffiliations = new Affiliations();
-    }
-
-
-    /// <name> createAffiliation_Test </name>
-    /// <summary> test method for createAffiliation_Test function </summary>
-    static testMethod void createAffiliation_Test() {
-        Account acc = new Account(Name='test');
-        insert acc;
-        
-        Contact con = new Contact(FirstName='test', LastName='contact', AccountId = acc.Id);
-        insert con;
-    
-    }
-
-
-    /// <name> updateAffiliation_Test </name>
-    /// <summary> test method for updateAffiliation function </summary>
-    static testMethod void updateAffiliation_Test() {
-        Account acc1 = new Account(Name='test1');
-        insert acc1;
-
-        Account acc2 = new Account(Name='test2');
-        insert acc2;
-        
-        Contact con = new Contact(FirstName='test', LastName='contact', AccountId = acc1.Id);
-        insert con;
-
-        con.AccountId = acc2.Id;
-        update con;
-    }
-
 }
