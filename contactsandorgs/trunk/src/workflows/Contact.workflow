@@ -154,8 +154,14 @@ OtherPhone
         </actions>
         <active>true</active>
         <formula>AND(
-ISCHANGED( Email ),
-ISPICKVAL( Preferred_Email__c ,&quot;Alternate&quot;)
+     ISPICKVAL( Preferred_Email__c ,&quot;Alternate&quot;),
+     OR(
+          AND(
+               ISNEW(),
+               LEN(Email)&gt;0
+          ),
+          ISCHANGED( Email )
+     )
 )</formula>
         <triggerType>onAllChanges</triggerType>
     </rules>
@@ -167,8 +173,14 @@ ISPICKVAL( Preferred_Email__c ,&quot;Alternate&quot;)
         </actions>
         <active>true</active>
         <formula>AND(
-ISCHANGED( Email ),
-ISPICKVAL( Preferred_Email__c ,&quot;Personal&quot;)
+     ISPICKVAL( Preferred_Email__c ,&quot;Personal&quot;),
+     OR(
+          AND(
+               ISNEW(),
+               LEN(Email)&gt;0
+          ),
+          ISCHANGED( Email )
+     )
 )</formula>
         <triggerType>onAllChanges</triggerType>
     </rules>
@@ -180,8 +192,14 @@ ISPICKVAL( Preferred_Email__c ,&quot;Personal&quot;)
         </actions>
         <active>true</active>
         <formula>AND(
-ISCHANGED( Email ),
-ISPICKVAL( Preferred_Email__c ,&quot;Work&quot;)
+     ISPICKVAL( Preferred_Email__c ,&quot;Work&quot;),
+     OR(
+          AND(
+               ISNEW(),
+               LEN(Email)&gt;0
+          ),
+          ISCHANGED( Email )
+     )
 )</formula>
         <triggerType>onAllChanges</triggerType>
     </rules>
@@ -193,8 +211,14 @@ ISPICKVAL( Preferred_Email__c ,&quot;Work&quot;)
         </actions>
         <active>true</active>
         <formula>AND(
-ISCHANGED( Phone),
-ISPICKVAL( PreferredPhone__c ,&quot;Home&quot;)
+     ISPICKVAL( PreferredPhone__c ,&quot;Home&quot;),
+     OR(
+          AND(
+               ISNEW(),
+               LEN(Phone)&gt;0
+          ),
+          ISCHANGED( Phone )
+     )
 )</formula>
         <triggerType>onAllChanges</triggerType>
     </rules>
@@ -206,8 +230,14 @@ ISPICKVAL( PreferredPhone__c ,&quot;Home&quot;)
         </actions>
         <active>true</active>
         <formula>AND(
-ISCHANGED( Phone),
-ISPICKVAL( PreferredPhone__c ,&quot;Mobile&quot;)
+     ISPICKVAL( PreferredPhone__c ,&quot;Mobile&quot;),
+     OR(
+          AND(
+               ISNEW(),
+               LEN(Phone)&gt;0
+          ),
+          ISCHANGED( Phone )
+     )
 )</formula>
         <triggerType>onAllChanges</triggerType>
     </rules>
@@ -219,8 +249,14 @@ ISPICKVAL( PreferredPhone__c ,&quot;Mobile&quot;)
         </actions>
         <active>true</active>
         <formula>AND(
-ISCHANGED( Phone),
-ISPICKVAL( PreferredPhone__c ,&quot;Other&quot;)
+     ISPICKVAL( PreferredPhone__c ,&quot;Other&quot;),
+     OR(
+          AND(
+               ISNEW(),
+               LEN(Phone)&gt;0
+          ),
+          ISCHANGED( Phone )
+     )
 )</formula>
         <triggerType>onAllChanges</triggerType>
     </rules>
@@ -232,8 +268,14 @@ ISPICKVAL( PreferredPhone__c ,&quot;Other&quot;)
         </actions>
         <active>true</active>
         <formula>AND(
-ISCHANGED( Phone),
-ISPICKVAL( PreferredPhone__c ,&quot;Work&quot;)
+     ISPICKVAL( PreferredPhone__c ,&quot;Work&quot;),
+     OR(
+          AND(
+               ISNEW(),
+               LEN(Phone)&gt;0
+          ),
+          ISCHANGED( Phone )
+     )
 )</formula>
         <triggerType>onAllChanges</triggerType>
     </rules>
@@ -262,16 +304,13 @@ ISCHANGED(AlternateEmail__c)
         </actions>
         <active>true</active>
         <description>This workflow OVERWRITES the existing value in the standard Phone field based on the Preferred Phone field value.  This rule needs to be turned on manually after an Upgrade to this package.</description>
-        <formula>AND( 
-NOT(ISPICKVAL(PreferredPhone__c,&quot;&quot;)), 
-
-OR( 
+        <formula>OR( 
+LEN(Phone)=0,
 ISCHANGED(PreferredPhone__c) , 
 ISCHANGED(WorkPhone__c) , 
 ISCHANGED(HomePhone) , 
 ISCHANGED(MobilePhone) ,
 ISCHANGED(OtherPhone) 
-) 
 )</formula>
         <triggerType>onAllChanges</triggerType>
     </rules>
