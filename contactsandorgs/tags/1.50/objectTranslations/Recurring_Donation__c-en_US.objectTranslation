@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <value>Recurring Donation</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Recurring Donations</value>
+    </caseValues>
+    <fields>
+        <label><!-- Amount --></label>
+        <name>Amount__c</name>
+    </fields>
+    <fields>
+        <label><!-- Date Established --></label>
+        <name>Date_Established__c</name>
+    </fields>
+    <fields>
+        <label><!-- Installment Amount --></label>
+        <name>Installment_Amount__c</name>
+    </fields>
+    <fields>
+        <label><!-- Installment Period --></label>
+        <name>Installment_Period__c</name>
+    </fields>
+    <fields>
+        <label><!-- # of Installments --></label>
+        <name>Installments__c</name>
+    </fields>
+    <fields>
+        <label><!-- Organization --></label>
+        <name>Organization__c</name>
+        <relationshipLabel><!-- Recurring Donations --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Schedule Type --></label>
+        <name>Schedule_Type__c</name>
+    </fields>
+    <fields>
+        <label><!-- Total --></label>
+        <name>Total__c</name>
+    </fields>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>
