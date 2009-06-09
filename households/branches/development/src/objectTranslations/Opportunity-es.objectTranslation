@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <label>Generador actual</label>
+        <name>CurrentGenerators__c</name>
+    </fields>
+    <fields>
+        <label>Estado de envío/instalación</label>
+        <name>DeliveryInstallationStatus__c</name>
+        <picklistValues>
+            <masterLabel>Completed</masterLabel>
+            <translation>Completo</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>In progress</masterLabel>
+            <translation>En progreso</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Yet to begin</masterLabel>
+            <translation>A comenzar</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label>Competidor principal</label>
+        <name>MainCompetitors__c</name>
+    </fields>
+    <fields>
+        <label>Número de orden</label>
+        <name>OrderNumber__c</name>
+    </fields>
+    <fields>
+        <label>Número de seguimiento</label>
+        <name>TrackingNumber__c</name>
+    </fields>
+    <webLinks>
+        <label>Agregar donación contrapartida</label>
+        <name>npe01__Add_Matching_Donation</name>
+    </webLinks>
+    <webLinks>
+        <label>Nueva donación de contacto</label>
+        <name>npe01__New_Contact_Donation</name>
+    </webLinks>
+    <webLinks>
+        <label>Nueva donación de cuenta</label>
+        <name>npe01__New_Organization_Donation</name>
+    </webLinks>
+</CustomObjectTranslation>
