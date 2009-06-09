@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Translations xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customPageWebLinks>
+        <label>Rapports de l&apos;Edition Nonprofit</label>
+        <name>Nonprofit_Edition_Reports</name>
+    </customPageWebLinks>
+    <customTabs>
+        <label>A propos des Nonprofit Starter Pack</label>
+        <name>About_Nonprofit_Edition</name>
+    </customTabs>
+    <customTabs>
+        <label>Convertisseur de modèles</label>
+        <name>Template_Converter</name>
+    </customTabs>
+    <scontrols>
+        <label>SubstituerVueCompte</label>
+        <name>AccountViewOverride</name>
+    </scontrols>
+    <scontrols>
+        <label>CréditsDonsContact</label>
+        <name>ContactDonationCredit</name>
+    </scontrols>
+    <scontrols>
+        <label>ConvertirPiste</label>
+        <name>LeadConvert</name>
+    </scontrols>
+    <scontrols>
+        <label>SubstituerCréationPiste</label>
+        <name>LeadCreateOverride</name>
+    </scontrols>
+    <scontrols>
+        <label>NPO_PageAccueil</label>
+        <name>NPO_HomePageComponent</name>
+    </scontrols>
+    <scontrols>
+        <label>CréerOpportunitéMatching</label>
+        <name>OpportunityCreateMatching</name>
+    </scontrols>
+    <scontrols>
+        <label>CréerOpportunitéRécurrent</label>
+        <name>OpportunityCreateRecurring</name>
+    </scontrols>
+    <scontrols>
+        <label>ConversionModèle</label>
+        <name>TemplateConversion</name>
+    </scontrols>
+</Translations>
