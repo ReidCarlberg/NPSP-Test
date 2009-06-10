@@ -47,40 +47,44 @@ public class ContactDeleteOverride
     { 
 		PageReference newPage; 
 		Boolean canDelete = true;
-        if ( c.AccountId != null )
-        {
-        	Account a = [Select Id, Type from Account where Id = :c.AccountId limit 1];
-        	if ( a.Type == 'One-to-One Individual')
-        	{
-        		//one-to-one accounts can be deleted
-        		
-        		//if there are Opportunities for this Account, don't delete it
-        		for (Opportunity o : [Select Id, AccountId from Opportunity where AccountId = :a.Id limit 1])
-        		{
-        			canDelete = false;
-        		}
-        	} else
-        	{
-        		//don't delete a regular account or the bucket account
-        		canDelete = false;
-        	}
-        } else
-        {
-        	//don't delete a null account
-        	canDelete = false;
-        }
-        if ( canDelete == false)
-        {	
-			return false;  
-        } else
-        {
-			return true;
-        }
+		system.debug('contact record: ' + c);
+		//we need to requery c to get AccountId
+		Contact[] pulledC = [select id, accountid from Contact where id=:c.id];
+		if (pulledC.size()>0){
+	        if ( pulledC[0].AccountId != null )
+	        {
+	        	Account a = [Select Id, Type from Account where Id = :pulledC[0].AccountId limit 1];
+	        	system.debug('account record: ' + a);
+	        	if ( a.Type == Constants.ONE_TO_ONE_ORGANIZATION_TYPE)
+	        	{
+	        		//one-to-one accounts can be deleted
+	        		
+	        		//if there are Opportunities for this Account, don't delete it
+	        		for (Opportunity o : [Select Id, AccountId from Opportunity where AccountId = :a.Id limit 1])
+	        		{
+	        			canDelete = false;
+	        		}
+	        	} else
+	        	{
+	        		//don't delete a regular account or the bucket account
+	        		canDelete = false;
+	        	}
+	        } else
+	        {
+	        	//don't delete a null account
+	        	canDelete = false;
+	        }
+	        
+		} else {
+			canDelete= false;
+		}
+		
+        return canDelete;
     }
 
     private final ApexPages.StandardController controller;   
-    
-    
+    /*
+    THESE TESTS ARE ASSUMING THE CODE IS TRIGGER BASED - MAY COME IN HELPFUL WHEN THAT IS CHANGED
     /// <name> deleteContactOneToOne </name>
     /// <summary> Test Method for deleting a Contact in the One-to-One model</summary>
     static testMethod void deleteContactOneToOne()
@@ -144,6 +148,76 @@ public class ContactDeleteOverride
 		//the account should be gone
 		system.assertEquals(1,oneToOneAccount.size());
 		
+    }
+    */
+    public static testMethod void deleteContactNoOpp() {
+
+        
+        Test.setCurrentPageReference(new PageReference('Page.ContactDeleteOverride'));
+        
+        String newContactfirstName = 'test';
+    	String newContactLastName = 'Contact_forTests';
+    	String newContactMailingStreet = '123 Elm St';
+        Contact con = new Contact(
+        	FirstName=newContactfirstName,
+        	LastName=newContactLastName,
+        	MailingStreet = newContactMailingStreet,
+        	SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR
+        );
+        insert con;
+        
+        Contact[] insertedContacts = [Select FirstName, LastName, AccountId  from Contact where id=:con.id];
+		
+		Id createdAccountId = insertedContacts[0].AccountId;
+       
+       
+		
+		//system.currentPageReference().getParameters().put('id', con.id);
+		
+		//pass contact into the controller
+		ApexPages.StandardController sc = new ApexPages.standardController(con);
+		//pass the controller into the extension
+		ContactDeleteOverride ext = new ContactDeleteOverride(sc); 
+		
+		system.assert(ext.getDeleteAccount());
+
+    }
+    public static testMethod void deleteContactWithOpp() {
+
+        
+        Test.setCurrentPageReference(new PageReference('Page.ContactDeleteOverride'));
+        
+        String newContactfirstName = 'test';
+    	String newContactLastName = 'Contact_forTests';
+    	String newContactMailingStreet = '123 Elm St';
+        Contact con = new Contact(
+        	FirstName=newContactfirstName,
+        	LastName=newContactLastName,
+        	MailingStreet = newContactMailingStreet,
+        	SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR
+        );
+        insert con;
+        
+        Contact[] insertedContacts = [Select FirstName, LastName, AccountId  from Contact where id=:con.id];
+		
+		Id createdAccountId = insertedContacts[0].AccountId;
+       
+       Opportunity opp = new Opportunity(
+			Amount=500,
+			AccountId=createdAccountId,
+			Name='test',
+			StageName='Closed/Won',
+			CloseDate=System.today()
+		);
+		insert opp;
+		
+		//pass contact into the controller
+		ApexPages.StandardController sc = new ApexPages.standardController(con);
+		//pass the controller into the extension
+		ContactDeleteOverride ext = new ContactDeleteOverride(sc); 
+		
+		system.assert(!ext.getDeleteAccount());
+
     }
     
 
