@@ -219,6 +219,38 @@ public class ContactDeleteOverride
 		system.assert(!ext.getDeleteAccount());
 
     }
-    
+    public static testMethod void deleteContactNormalAccount() {
+
+        
+        Test.setCurrentPageReference(new PageReference('Page.ContactDeleteOverride'));
+        
+        Account orgAccount = new Account(
+        	Name='Fake account'
+        );
+        insert orgAccount;
+        
+        String newContactfirstName = 'test';
+    	String newContactLastName = 'Contact_forTests';
+    	String newContactMailingStreet = '123 Elm St';
+        Contact con = new Contact(
+        	FirstName=newContactfirstName,
+        	LastName=newContactLastName,
+        	MailingStreet = newContactMailingStreet,
+        	AccountId=orgAccount.id
+        );
+        insert con;
+        
+        Contact[] insertedContacts = [Select FirstName, LastName, AccountId  from Contact where id=:con.id];
+		
+		Id createdAccountId = insertedContacts[0].AccountId;
+       		
+		//pass contact into the controller
+		ApexPages.StandardController sc = new ApexPages.standardController(con);
+		//pass the controller into the extension
+		ContactDeleteOverride ext = new ContactDeleteOverride(sc); 
+		
+		system.assert(!ext.getDeleteAccount());
+
+    }
 
 }
