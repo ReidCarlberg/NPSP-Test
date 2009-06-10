@@ -79,5 +79,72 @@ public class ContactDeleteOverride
     }
 
     private final ApexPages.StandardController controller;   
+    
+    
+    /// <name> deleteContactOneToOne </name>
+    /// <summary> Test Method for deleting a Contact in the One-to-One model</summary>
+    static testMethod void deleteContactOneToOne()
+    {
+    	String newContactfirstName = 'test';
+    	String newContactLastName = 'Contact_forTests';
+    	String newContactMailingStreet = '123 Elm St';
+        Contact con = new Contact(
+        	FirstName=newContactfirstName,
+        	LastName=newContactLastName,
+        	MailingStreet = newContactMailingStreet,
+        	SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR
+        );
+        insert con;
+        
+        Contact[] insertedContacts = [Select FirstName, LastName, AccountId  from Contact where id=:con.id];
+		
+		Id createdAccountId = insertedContacts[0].AccountId;
+	
+		delete con;
+		
+		Account[] oneToOneAccount = [Select Id from Account where id=:createdAccountId];
+		
+		//the account should be gone
+		system.assertEquals(0,oneToOneAccount.size());
+		
+    }
+    
+        /// <name> deleteContactOneToOneWithOpp </name>
+    /// <summary> Test Method for deleting a Contact in the One-to-One model when the Account has an Opp</summary>
+    static testMethod void deleteContactOneToOneWithOpp()
+    {
+    	String newContactfirstName = 'test';
+    	String newContactLastName = 'Contact_forTests';
+    	String newContactMailingStreet = '123 Elm St';
+        Contact con = new Contact(
+        	FirstName=newContactfirstName,
+        	LastName=newContactLastName,
+        	MailingStreet = newContactMailingStreet,
+        	SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR
+        );
+        insert con;
+        
+        Contact[] insertedContacts = [Select FirstName, LastName, AccountId  from Contact where id=:con.id];
+		
+		Id createdAccountId = insertedContacts[0].AccountId;
+		
+		Opportunity opp = new Opportunity(
+			Amount=500,
+			AccountId=createdAccountId,
+			Name='test',
+			StageName='Closed/Won',
+			CloseDate=System.today()
+		);
+		insert opp;
+	
+		delete con;
+		
+		Account[] oneToOneAccount = [Select Id from Account where id=:createdAccountId];
+		
+		//the account should be gone
+		system.assertEquals(1,oneToOneAccount.size());
+		
+    }
+    
 
 }
