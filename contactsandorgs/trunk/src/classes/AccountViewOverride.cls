@@ -49,5 +49,36 @@ public class AccountViewOverride {
     {
         return account;
     }
+    //can't test very well because of the way the page redirect is built
+    public static testMethod void accountViewOverride() {
+
+        
+        Test.setCurrentPageReference(new PageReference('Page.AccountViewOverride'));
+        
+        String newContactfirstName = 'test';
+    	String newContactLastName = 'Contact_forTests';
+    	String newContactMailingStreet = '123 Elm St';
+        Contact con = new Contact(
+        	FirstName=newContactfirstName,
+        	LastName=newContactLastName,
+        	MailingStreet = newContactMailingStreet,
+        	SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR
+        );
+        insert con;
+        
+        Contact[] insertedContacts = [Select FirstName, LastName, AccountId  from Contact where id=:con.id];
+		
+		Account newAccount = [select id from Account where id=:insertedContacts[0].AccountId];
+       
+       
+		
+		//system.currentPageReference().getParameters().put('id', con.id);
+		
+		//pass contact into the controller
+		ApexPages.StandardController sc = new ApexPages.standardController(newAccount);
+		//pass the controller into the extension
+		AccountViewOverride ext = new AccountViewOverride(sc); 
+
+    }
 
 }
