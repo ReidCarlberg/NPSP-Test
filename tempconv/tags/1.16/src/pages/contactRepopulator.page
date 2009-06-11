@@ -1,0 +1,20 @@
+<apex:page standardController="Contact" extensions="contactRepopulator" id="thePage">
+	<apex:sectionHeader title="Contacts" subtitle="Populate or Purge"/>
+	<apex:form > 
+		<apex:pageBlock >
+	        <apex:pageBlockButtons location="bottom">
+       		    <apex:commandButton action="{!doPopulate}" value="Populate" status="status" rerender="thePage"/>
+       		    <apex:commandButton action="{!doPurge}" value="Purge" status="status" rerender="thePage"/>
+				<apex:commandButton action="{!cancel}" value="Done"/>
+			</apex:pageBlockButtons>
+		    <apex:pageBlockSection title="Enter number of Contacts to Populate or Purge Contacts (1000 at a time)"
+		    	collapsible="false" columns="2">
+				<apex:pageBlockSectionItem >
+					<apex:outputLabel value="Enter a number between 1-1000:" for="inputContacts"/>
+			        <apex:inputText id="inputContacts" value="{!inputContacts}"/> 
+			    </apex:pageBlockSectionItem>
+		    </apex:pageBlockSection>
+	        <apex:actionStatus id="status" startText="(processing...)"/>
+		</apex:pageBlock>
+	</apex:form>
+</apex:page>
