@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <label>Générateur actuel</label>
+        <name>CurrentGenerators__c</name>
+    </fields>
+    <fields>
+        <label>Statut de l&apos;envoi/installation</label>
+        <name>DeliveryInstallationStatus__c</name>
+    </fields>
+    <fields>
+        <label>Concurrent(s) principal(ux)</label>
+        <name>MainCompetitors__c</name>
+    </fields>
+    <fields>
+        <label>Numéro de commande</label>
+        <name>OrderNumber__c</name>
+    </fields>
+    <fields>
+        <label>Numéro de suivi</label>
+        <name>TrackingNumber__c</name>
+    </fields>
+</CustomObjectTranslation>
