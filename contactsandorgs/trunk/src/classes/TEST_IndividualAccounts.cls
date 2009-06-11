@@ -284,7 +284,7 @@ private class TEST_IndividualAccounts {
     }
    
     
-/* TESTING PHONE NUMBER WORKFLOW -------------------------------------------------------*/
+/* TESTING PHONE NUMBER WORKFLOW -------------------------------------------------------
  
     /// <name> createContactWithPhoneNoPref </name>
     /// <summary> Test Method for creating a contact with a phone number and no preferences set. </summary>
@@ -500,9 +500,9 @@ private class TEST_IndividualAccounts {
         system.assertEquals(preferredPhone,insertedContacts3[0].PreferredPhone__c);
         
     }
-    
+   */
 
-/* TESTING EMAIL WORKFLOW --------------------------------------------------------------*/
+/* TESTING EMAIL WORKFLOW --------------------------------------------------------------
     /// <name> createContactWithEmailNoPref </name>
     /// <summary> Test Method for creating a contact with an email and no preferences set. </summary>
     static testMethod void createContactWithEmailNoPref()
@@ -522,12 +522,11 @@ private class TEST_IndividualAccounts {
         
     }
     
-    /// <name> createContactWithEmailNoPrefAlsoPersonalEmail </name>
+    /// <name> createContactWithEmailPersonalPrefAlsoPersonalEmail </name>
     /// <summary> Test Method for creating a contact with a email and a personal email. </summary>
-    static testMethod void createContactWithEmailNoPrefAlsoPersonalEmail()
+    static testMethod void createContactWithEmailPersonalPrefAlsoPersonalEmail()
     {
-    	//with pref set to Home, Personal email should land in email and set Preferred_Email__c to 'home'.
-		//currently Homeemail is lost
+    	//with pref set to Personal, Personal email should land in email and set Preferred_Email__c to 'Personal'.
     	String newEmail = 'joe@testforemail.com';
     	String newPersonalEmail = 'j@testemail.net';
     	String preferredEmail = 'Personal';
@@ -678,7 +677,7 @@ private class TEST_IndividualAccounts {
       
         
     }
-
+*/
 /* TESTING DONATION HISTORY WEBSERVICES ------------------------------------------------*/
 
     /// <name> getContactDonationHistory </name>
