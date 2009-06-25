@@ -1,5 +1,5 @@
 #summary Thoughts about a Contact Merge interface for the one-to-one model
-#labels Featured
+#labels Featured,Phase-Design
 
 = Introduction =
 
@@ -30,3 +30,7 @@ This interface and functionality is fairly well defined, and not overly complex.
 = Drawbacks = 
 
 We would not have the paint your perfect record interface of standard Salesforce.com.
+
+= Deployment =
+
+This could be included in the Contacts and Organizations package. Because it is called from a Tab, it is easily hidden.
