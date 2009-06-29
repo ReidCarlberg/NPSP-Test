@@ -5,7 +5,7 @@
 
 Contact merging is not easy to do in the One-to-one model. In Salesforce.com Contact merge is initiated from the Account record, which you can't get to in the one-to-one model.
 
-Also, merging Contacts won't deal with the one-to-one Accounts. Those Accounts need to be merged as well. Issue 42 addresses the existing problem.
+Also, merging Contacts won't deal with the one-to-one Accounts. Those Accounts need to be merged as well. Issue 42 addresses the existing problem. Issue 41, is a related problem--in the one-to-one model Lead Conversion doesn't allow for merging to existing Contacts.
 
 = Proposal =
 
