@@ -143,7 +143,7 @@ public class RecurringDonations {
 					Contact c = contactMap.get(r.Contact__c);
 					opp.AccountId = c.AccountId;
 				}
-				
+				//add the remainder to the last installment, otherwise use the amount
 				if (j + 1 == installments && installments * r.Installment_Amount__c != r.Total__c)
 				{
 					opp.Amount = r.Total__c - (j * r.Installment_Amount__c);
@@ -253,65 +253,5 @@ public class RecurringDonations {
 			}
 		}
 	}
-		
 	
-	/// <name> RecurringDonations_Test </name>
-	/// <summary> test default constructor </summary>
-	static testMethod void RecurringDonations_Test()
-	{
-  		RecurringDonations testRecurringDonations = new RecurringDonations();
-	}
-
-
-	/// <name> insertOpportunities_Test </name>
-	/// <summary> test method for insertOpportunities function </summary>
-	static testMethod void insertOpportunities_Test()
-	{
-        Account a = new Account();
-        a.Name = 'test Individual';
-        insert a;
-        
-        Contact c = new Contact();
-        c.FirstName = 'test';
-        c.LastName = 'contact';
-        c.AccountId = a.Id;
-        insert c;
-
-		Recurring_Donation__c r0 = new Recurring_Donation__c();
-		r0.Name = 'test';
-		r0.Installments__c = 3;
-		r0.Amount__c = 100;
-		r0.Installment_Period__c = 'Yearly';
-		r0.Date_Established__c = System.today();
-		r0.Schedule_Type__c = 'Multiply By';
-		try {
-			insert r0;
-		} catch (exception e) {}
-
-		Recurring_Donation__c r1 = new Recurring_Donation__c();
-		r1.Name = 'test';
-		r1.Installments__c = 1;
-		r1.Contact__c = c.Id;
-		r1.Amount__c = 100;
-		r1.Installment_Period__c = 'Yearly';
-		r1.Date_Established__c = System.today();
-		r1.Schedule_Type__c = 'Multiply By';
-		insert r1;
-
-		Recurring_Donation__c r2 = new Recurring_Donation__c();
-		r2.Name = 'test';
-		r2.Installments__c = 3;
-		r2.Organization__c = a.Id;
-		r2.Amount__c = 100;
-		r2.Installment_Period__c = 'Yearly';
-		r2.Date_Established__c = System.today();
-		r2.Schedule_Type__c = 'Multiply By';
-		insert r2;
-		
-		try{
-			delete r2;
-		} catch (exception e1) {}
-	}
-
-
 }
