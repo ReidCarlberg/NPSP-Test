@@ -1,0 +1,23 @@
+#summary A roadmap for the future of the Nonprofit Starter Pack
+#labels Featured,Phase-Design
+
+= Roadmap =
+
+This is a draft plan for future development of the Nonprofit Starter Pack.
+
+= Release #1 - released =
+ * Open Sourcing
+ * New wiki
+ * Test coverage improvements
+
+= Release #2 - planning =
+ * Test coverage improvements
+ * Tests for bulk data scenarios
+ * Minimize pre/post install steps
+
+= Release #3 = 
+ * Contact merge for the 1-to-1 model
+ * Technical documentation v.2
+
+= Release #4 = 
+ * Lead convert 1-to-1 model, v.2
