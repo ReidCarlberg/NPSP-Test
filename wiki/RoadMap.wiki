@@ -11,13 +11,13 @@ This is a draft plan for future development of the Nonprofit Starter Pack.
  * Test coverage improvements
 
 = Release #2 - planning =
- * [http://code.google.com/p/npsp/issues/list?q=label:Sprint-Summer09 Issues]
+ * [http://code.google.com/p/npsp/issues/list?q=label:Milestone-Summer09 Issues]
  * Test coverage improvements
  * Tests for bulk data scenarios
  * Minimize pre/post install steps
 
 = Release #3 = 
- * [http://code.google.com/p/npsp/issues/list?q=label:Sprint-Fall09 Issues]
+ * [http://code.google.com/p/npsp/issues/list?q=label:Milestone-Fall09 Issues]
  * Contact merge for the 1-to-1 model
  * Technical documentation v.2
 
