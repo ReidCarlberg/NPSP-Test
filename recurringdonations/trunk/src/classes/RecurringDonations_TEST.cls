@@ -78,10 +78,35 @@ private class RecurringDonations_TEST {
 		r1.Schedule_Type__c = 'Multiply By';
 		insert r1;
 		
-		Opportunity[] installments1 = [select amount from Opportunity where Recurring_Donation__c = :r1.id];
+		Opportunity[] installments1 = [select amount,accountid from Opportunity where Recurring_Donation__c = :r1.id];
 		system.assertEquals(1,installments1.size());
 		system.assertEquals(100,installments1[0].Amount);
-
+		system.assertEquals(a.id,installments1[0].AccountId);
+		
+		
+		Recurring_Donation__c r3 = new Recurring_Donation__c();
+		r3.Name = 'test';
+		r3.Installments__c = 55;
+		r3.Organization__c = a.Id;
+		r3.Amount__c = 100;
+		r3.Installment_Period__c = 'Weekly';
+		r3.Date_Established__c = System.today();
+		r3.Schedule_Type__c = 'Multiply By';
+		try {
+			insert r3;
+		} catch (exception e) {
+			
+		}
+		//insert should fail because there is no Contact
+		system.assertEquals(null,r3.id);
+	}
+	
+	static testMethod void deleteRecurringDonation()
+	{
+		Account a = new Account();
+        a.Name = 'test Individual';
+        insert a;
+        
 		Recurring_Donation__c r2 = new Recurring_Donation__c();
 		r2.Name = 'test';
 		r2.Installments__c = 3;
@@ -100,22 +125,6 @@ private class RecurringDonations_TEST {
 		Opportunity[] installments2 = [select amount from Opportunity where Recurring_Donation__c = :r2.id];
 		system.assertEquals(3,installments2.size());
 		system.assertEquals(33.33,installments2[0].Amount);
-		
-		Recurring_Donation__c r3 = new Recurring_Donation__c();
-		r3.Name = 'test';
-		r3.Installments__c = 55;
-		r3.Organization__c = a.Id;
-		r3.Amount__c = 100;
-		r3.Installment_Period__c = 'Weekly';
-		r3.Date_Established__c = System.today();
-		r3.Schedule_Type__c = 'Multiply By';
-		try {
-			insert r3;
-		} catch (exception e) {
-			
-		}
-		//insert should fail because there is no Contact
-		system.assertEquals(null,r3.id);
 	}
 	
 	
