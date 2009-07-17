@@ -27,7 +27,7 @@ private class bulkTests2 {
         
         system.assertEquals(conCount,updatedContacts.size());
         //the contact should have the right type
-		system.assertEquals(Constants.BUCKET_ORGANICATION_TYPE,updatedContacts[0].Organization_Type__c);
+		system.assertEquals(Constants.BUCKET_ORGANIZATION_TYPE,updatedContacts[0].Organization_Type__c);
 		//the account should have been named correctly
 		system.assertEquals(Constants.BUCKET_ACCOUNT_NAME,updatedContacts[0].Account.Name);
 		//the account should have the correct AccountId

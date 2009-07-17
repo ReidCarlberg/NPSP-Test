@@ -215,7 +215,7 @@ global class IndividualAccounts
    	        individual.Name = Constants.BUCKET_ACCOUNT_NAME;
    	        //flag the account as an individual account
    	        individual.SYSTEMISINDIVIDUAL__c = true;
-           	individual.Type = Constants.BUCKET_ORGANICATION_TYPE;
+           	individual.Type = Constants.BUCKET_ORGANIZATION_TYPE;
             insert individual;
 
             for(Contact c : contacts)

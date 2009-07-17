@@ -227,7 +227,7 @@ private class bulkTests {
 		
 		system.assertEquals(conCount,insertedContacts.size());
 		//the contact should have the right type
-		system.assertEquals(Constants.BUCKET_ORGANICATION_TYPE,insertedcontacts[0].Organization_Type__c);
+		system.assertEquals(Constants.BUCKET_ORGANIZATION_TYPE,insertedcontacts[0].Organization_Type__c);
 		//the account should have been named correctly
 		system.assertEquals(Constants.BUCKET_ACCOUNT_NAME,insertedcontacts[0].Account.Name);
         

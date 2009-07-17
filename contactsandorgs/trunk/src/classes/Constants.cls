@@ -40,7 +40,7 @@ global class Constants {
     //Bucket value for system processor field
     public static String BUCKET_PROCESSOR = 'Individual';
     //Buck org type value
-    public static String BUCKET_ORGANICATION_TYPE = 'Bucket Individual';
+    public static String BUCKET_ORGANIZATION_TYPE = 'Bucket Individual';
     //Bucket Account name
     public static String BUCKET_ACCOUNT_NAME = 'Individual';
 

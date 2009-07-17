@@ -182,7 +182,7 @@ private class TEST_IndividualAccounts {
         
         Contact[] insertedContacts = [Select Account.Name,AccountId,Organization_Type__c from Contact where id=:con.id];
 		//the contact should have the right type
-		system.assertEquals(Constants.BUCKET_ORGANICATION_TYPE,insertedcontacts[0].Organization_Type__c);
+		system.assertEquals(Constants.BUCKET_ORGANIZATION_TYPE,insertedcontacts[0].Organization_Type__c);
 		//the account should have been named correctly
 		system.assertEquals(Constants.BUCKET_ACCOUNT_NAME,insertedcontacts[0].Account.Name);
         
@@ -205,7 +205,7 @@ private class TEST_IndividualAccounts {
         Contact[] updatedContacts = [Select Account.Name,AccountId,Organization_Type__c from Contact where id=:con.id];
         
         //the contact should have the right type
-		system.assertEquals(Constants.BUCKET_ORGANICATION_TYPE,updatedContacts[0].Organization_Type__c);
+		system.assertEquals(Constants.BUCKET_ORGANIZATION_TYPE,updatedContacts[0].Organization_Type__c);
 		//the account should have been named correctly
 		system.assertEquals(Constants.BUCKET_ACCOUNT_NAME,updatedContacts[0].Account.Name);
 		//the account should have the correct AccountId
@@ -276,7 +276,7 @@ private class TEST_IndividualAccounts {
         Contact[] updatedContacts = [Select Account.Name,AccountId,Account.SystemIsIndividual__c,Organization_Type__c from Contact where id=:con.id];
         
         //the account should be an individual account
-		//system.assert(updatedContacts[0].Account.SystemIsIndividual__c);
+		system.assert(updatedContacts[0].Account.SystemIsIndividual__c);
 		//the account should not be the one we started with
 		system.assertNotEquals(acct.id,updatedContacts[0].AccountId);  
 		      
