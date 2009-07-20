@@ -78,11 +78,11 @@ private class RecurringDonations_TEST {
 		r1.Schedule_Type__c = 'Multiply By';
 		insert r1;
 		
-		Opportunity[] installments1 = [select amount,accountid from Opportunity where Recurring_Donation__c = :r1.id];
+		Opportunity[] installments1 = [select Name,amount,accountid from Opportunity where Recurring_Donation__c = :r1.id];
 		system.assertEquals(1,installments1.size());
 		system.assertEquals(100,installments1[0].Amount);
 		system.assertEquals(a.id,installments1[0].AccountId);
-		
+		system.debug(installments1);
 		
 		Recurring_Donation__c r3 = new Recurring_Donation__c();
 		r3.Name = 'test';

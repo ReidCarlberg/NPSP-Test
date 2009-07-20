@@ -27,7 +27,7 @@
 	ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
 	POSSIBILITY OF SUCH DAMAGE.
 */
-public class RecurringDonations {
+global class RecurringDonations {
 
 	/// <name> RecurringDonations </name>
 	/// <summary> Default Constructor </summary>
@@ -56,11 +56,11 @@ public class RecurringDonations {
 			{
 				if (r.Organization__c == null && r.Contact__c == null)
 				{
-					r.addError('You must select an Organization or Contact');
+					r.addError(System.Label.RecurringDonationMissingDataError);
 				}
 				if ( r.Installments__c > 50 )
 				{
-					r.addError('You must specify fewer than 50 installments.');
+					r.addError(System.Label.RecurringDonationTooManyInstallmentsError);
 				}
 			}
 			if ( ta==triggerAction.afterInsert )
@@ -92,12 +92,14 @@ public class RecurringDonations {
 			deleteRecDonations(recDonationDeletes);
 		}
 	}
-
+	
 	/// <name> insertContactOpportunities </name>
 	/// <summary> Creates new Opportunities when a RecurringDonation is inserted </summary>
 	/// <param name="recurringDonations"> RecurringDonation objects that are being triggered </param>
 	public static void insertOpptys( Recurring_Donation__c[] recurringDonations, String donorType )
 	{
+		
+		
 		//Lists used for final Insert
 		List<Opportunity> opportunityInserts = new List<Opportunity>();
 		List<OpportunityContactRole> contactRoleInserts = new List<OpportunityContactRole>();
@@ -173,19 +175,17 @@ public class RecurringDonations {
 				
 				String oName = '';
 				oName += r.Donor_Name__c; 
-				oName += ' Donation (';
+				oName += ' ';
+				oName += System.Label.RecurringDonationPrefix;
+				oName += ' (';
 				oName += j+1;
 				oName += ' of ';
 				oName += installments;
 				oName += ') ';
-				oName += (opp.CloseDate).Month();
-				oName += '/';
-				oName += (opp.CloseDate).Day();
-				oName += '/';
-				oName += (opp.CloseDate).Year();
+				oName += opp.CloseDate.format();
 				opp.Name = oName;
 				
-				opp.StageName = 'Pledged';
+				opp.StageName = System.Label.RecurringDonationStageName;
 				opp.Recurring_Donation__c = r.Id;
 				opportunityInserts.add(opp);
 				if ( opportunityInserts.size() == 100 )
@@ -206,7 +206,7 @@ public class RecurringDonations {
    	        	{
        	    		OpportunityContactRole ocr = new OpportunityContactRole();
            			ocr.OpportunityId = s.getId();
-           			ocr.Role = 'Donor';
+           			ocr.Role = System.Label.RecurringDonationContactRole;
             		ocr.IsPrimary = true;
 					if ( recConMap.containsKey(opportunityInserts[i].Recurring_Donation__c) )
 					{
@@ -227,7 +227,7 @@ public class RecurringDonations {
 			}
 		}
 	}
-
+	
 
 	/// <name> deleteRecDonations </name>
 	/// <summary> Validates that a Recurring Donation can be deleted </summary>
@@ -249,7 +249,7 @@ public class RecurringDonations {
 		{
 			if(recDonationMap.containsKey(r.Id))
 			{
-				r.addError('You must delete the related Donations before you can delete this recurring donation');
+				r.addError(System.Label.RecurringDonationCantDeleteError);
 			}
 		}
 	}
