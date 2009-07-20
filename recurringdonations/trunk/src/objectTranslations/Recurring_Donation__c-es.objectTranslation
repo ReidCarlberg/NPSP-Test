@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
-        <value><!-- Recurring Donation/Pledge --></value>
+        <value>Donación recurrente</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- Recurring Donation/Pledge --></value>
+        <value>Donaciones recurrentes</value>
     </caseValues>
     <fields>
         <label>Monto</label>
@@ -41,7 +41,7 @@
         </picklistValues>
         <picklistValues>
             <masterLabel>Quarterly</masterLabel>
-            <translation>Cuatrimestral</translation>
+            <translation>Trimestral</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Yearly</masterLabel>
@@ -73,8 +73,8 @@
         <label>Total</label>
         <name>Total__c</name>
     </fields>
-    <gender><!-- Feminine --></gender>
-    <nameFieldLabel><!-- Recurring Donation Name --></nameFieldLabel>
+    <gender>Feminine</gender>
+    <nameFieldLabel>Nombre Donación recurrente</nameFieldLabel>
     <webLinks>
         <label>Nueva donación recurrente</label>
         <name>New_Recurring_Acct_Donation</name>
