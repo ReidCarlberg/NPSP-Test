@@ -29,7 +29,7 @@ public class bulkTests {
         
         system.assertEquals(conCount,createdAffiliations.size());
         
-        system.assertEquals('Current', createdAffiliations[0].Status__c);
+        system.assertEquals(system.label.DefaultCurrentStatus, createdAffiliations[0].Status__c);
         system.assertEquals(newContactTitle, createdAffiliations[0].Role__c);
         system.assertEquals(System.Today(), createdAffiliations[0].StartDate__c);
         
@@ -45,7 +45,7 @@ public class bulkTests {
         
         system.assertEquals(conCount,createdAffiliations2.size());
         
-        system.assertEquals('Current', createdAffiliations2[0].Status__c);
+        system.assertEquals(system.label.DefaultCurrentStatus, createdAffiliations2[0].Status__c);
         system.assertEquals(newContactTitle, createdAffiliations2[0].Role__c);
         system.assertEquals(System.Today(), createdAffiliations2[0].StartDate__c);
         
@@ -139,9 +139,9 @@ public class bulkTests {
         
         system.assertEquals(conCount,createdAffiliations3.size());
         
-        system.assertEquals('Current', createdAffiliations3[0].Status__c);
-        system.assertEquals('Former', createdAffiliations[0].Status__c);
-        system.assertEquals('Former', createdAffiliations2[0].Status__c);
+        system.assertEquals(system.label.DefaultCurrentStatus, createdAffiliations3[0].Status__c);
+        system.assertEquals(system.label.DefaultFormerStatus, createdAffiliations[0].Status__c);
+        system.assertEquals(system.label.DefaultFormerStatus, createdAffiliations2[0].Status__c);
         
     }
 }

@@ -116,7 +116,7 @@ public class Affiliations {
                 Affiliation__c a = new Affiliation__c();
                 a.Contact__c = c.Id;
                 a.Organization__c = c.AccountId;
-                a.Status__c = 'Current';
+                a.Status__c = system.label.DefaultCurrentStatus;
                 a.StartDate__c = System.Today();
                 //user title as Role
                 if (c.Title != null)
@@ -173,7 +173,7 @@ public class Affiliations {
             {
             	//flag it as former ending today
                 Affiliation__c a = new Affiliation__c(Id=conAccMap.get(u));
-                a.Status__c = 'Former';
+                a.Status__c = system.label.DefaultFormerStatus;
                 a.EndDate__c = System.Today();
                 affiliationUpdates.add(a);
             }

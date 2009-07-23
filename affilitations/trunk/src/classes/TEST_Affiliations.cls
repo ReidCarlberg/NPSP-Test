@@ -49,7 +49,7 @@ private class TEST_Affiliations {
         
         firstAffiliationId = createdAffiliations[0].Id;
         
-        system.assertEquals('Current', createdAffiliations[0].Status__c);
+        system.assertEquals(system.label.DefaultCurrentStatus, createdAffiliations[0].Status__c);
         system.assertEquals(title, createdAffiliations[0].Role__c);
         system.assertEquals(System.Today(), createdAffiliations[0].StartDate__c);
         
@@ -61,13 +61,13 @@ private class TEST_Affiliations {
         
         Affiliation__c[] createdAffiliations2 = [select id, Status__c, StartDate__c, Role__c, Organization__c, EndDate__c, Contact__c from Affiliation__c where Contact__c=:con.id AND Organization__c = :acc2.id];
         
-        system.assertEquals('Current', createdAffiliations2[0].Status__c);
+        system.assertEquals(system.label.DefaultCurrentStatus, createdAffiliations2[0].Status__c);
         system.assertEquals(title, createdAffiliations2[0].Role__c);
         system.assertEquals(System.Today(), createdAffiliations2[0].StartDate__c);
         
         createdAffiliations = [select id, Status__c, StartDate__c, Role__c, Organization__c, EndDate__c, Contact__c from Affiliation__c where id=:firstAffiliationId];
         
-        system.assertEquals('Former', createdAffiliations[0].Status__c);
+        system.assertEquals(system.label.DefaultFormerStatus, createdAffiliations[0].Status__c);
         system.assertEquals(System.Today(), createdAffiliations[0].EndDate__c);
         
     }
@@ -132,9 +132,9 @@ private class TEST_Affiliations {
         createdAffiliations = [select id, Status__c, StartDate__c, Role__c, Organization__c, EndDate__c, Contact__c from Affiliation__c where Contact__c=:con.id AND Organization__c = :acc.id];
         createdAffiliations2 = [select id, Status__c, StartDate__c, Role__c, Organization__c, EndDate__c, Contact__c from Affiliation__c where Contact__c=:con.id AND Organization__c = :acc2.id];
         
-        system.assertEquals('Current', createdAffiliations3[0].Status__c);
-        system.assertEquals('Former', createdAffiliations[0].Status__c);
-        system.assertEquals('Former', createdAffiliations2[0].Status__c);
+        system.assertEquals(system.label.DefaultCurrentStatus, createdAffiliations3[0].Status__c);
+        system.assertEquals(system.label.DefaultFormerStatus, createdAffiliations[0].Status__c);
+        system.assertEquals(system.label.DefaultFormerStatus, createdAffiliations2[0].Status__c);
         
     }
 }
