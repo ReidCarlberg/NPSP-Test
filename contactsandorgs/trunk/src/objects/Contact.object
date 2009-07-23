@@ -44,6 +44,33 @@ null
         <type>Date</type>
     </fields>
     <fields>
+        <fullName>LeadSource</fullName>
+        <picklist>
+            <picklistValues>
+                <fullName>Web</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Phone Inquiry</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Partner Referral</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Purchased List</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Other</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <type>Picklist</type>
+    </fields>
+    <fields>
         <fullName>Lifetime_Giving_History_Amount__c</fullName>
         <description>This field is only used with the one-to-one Organization to Contact model.</description>
         <formula>IF( Account.One2OneContact__c = Id ,
@@ -58,10 +85,7 @@ null
     </fields>
     <fields>
         <fullName>Organization_Type__c</fullName>
-        <formula>CASE(Account.Type,
-&quot;One-to-One Individual&quot;,&quot;One-to-One Individual&quot;,
-&quot;Bucket Individual&quot;,&quot;Bucket Individual&quot;,
-&quot;Organization&quot;)</formula>
+        <formula>NULLVALUE(IF( Account.SYSTEM_AccountType__c==&quot;&quot;, TEXT(Account.Type),Account.SYSTEM_AccountType__c),&quot;Organization&quot; )</formula>
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
         <label>Organization Type</label>
         <type>Text</type>

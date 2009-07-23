@@ -54,124 +54,143 @@ global class IndividualAccounts
         Map<Id,Id> accountUpdates = new Map<Id,Id>();
         
         Integer i = 0;
-        for(Contact c : contacts)
-        {
-            //BEFORE INSERT
-            if ( ta==triggerAction.beforeInsert )
-            {
-            	/*one-to-one account should be created if:
-            		1. The account isn't set by the user
-            		2. The Private__c checkbox isn't set by the user
-            		3. The one-to-one model is chosen in the SystemAccountProcessor__c
-            	*/
-                if (c.AccountId == null && c.Private__c != true && c.SystemAccountProcessor__c == Constants.ONE_TO_ONE_PROCESSOR)
-                {
-
-                    individualInserts.add(c);
-                }
-                /*contact should be connected to the bucket account if:
-            		1. The account isn't set by the user
-            		2. The Private__c checkbox isn't set by the user
-            		3. The Individual model is chosen in the SystemAccountProcessor__c
-            	*/
-                if (c.AccountId == null && c.Private__c != true && c.SystemAccountProcessor__c == Constants.BUCKET_PROCESSOR)
-                {
-
-                    bucketContacts.add(c);
-                }
-            }
-
-            //AFTER INSERT
-            if ( ta==triggerAction.afterInsert )
-            {
-            	/*grab the Accounts that need to have the newly assigned Contact Id to them if:
-            		1. If the contact is connected to an Account
-            		2. The Contact is flagged as an individual
-            		3. The one-to-one model is chosen in the SystemAccountProcessor__c
-            	*/
-                if ( c.AccountId != null && c.Private__c != true && c.SystemAccountProcessor__c == Constants.ONE_TO_ONE_PROCESSOR && c.Type_of_Account__c=='Individual')
-                {
-                	//contacts are connected to Accounts, make the connection in the other direction
-                    accountUpdates.put(c.AccountId, c.Id);
-                }
-                
-                //there is no after insert processing for the bucket account model
-            }
-
-            //BEFORE UPDATE
-            if ( ta==triggerAction.beforeUpdate )
-            {
-            	/*one-to-one account should be created if:
-            		1. The account has been blanked out by the user
-            		2. The Private__c checkbox isn't set by the user
-            		3. The one-to-one model is chosen in the SystemAccountProcessor__c
-            	*/
-                if (c.AccountId == null && c.Private__c != true && c.SystemAccountProcessor__c == Constants.ONE_TO_ONE_PROCESSOR)
-                {
-                    individualInserts.add(c);
-                }          
-                /*contact should be connected to the bucket account if:
-            		1. The account has been blanked out by the user
-            		2. The Private__c checkbox isn't set by the user
-            		3. The Individual model is chosen in the SystemAccountProcessor__c
-            	*/ 
-                if (c.AccountId == null && c.Private__c != true && c.SystemAccountProcessor__c == Constants.BUCKET_PROCESSOR)
-                {
-
-                    bucketContacts.add(c);
-                }
-            }
-
-            //AFTER UPDATE
-            if ( ta==triggerAction.afterUpdate )
-            {
-            	/*if the contact is in the one-to-one model, changes to fields on the Contact
-	            will require data changes on the Account to keep some fields in sync
-            	*/
-            	
-                if (c.Organization_Type__c == Constants.ONE_TO_ONE_ORGANIZATION_TYPE)
-                {
-                    if (
-                        c.FirstName != oldContacts[i].FirstName ||
-                        c.LastName != oldContacts[i].LastName ||
-                        c.MailingStreet != oldContacts[i].MailingStreet ||
-                        c.MailingCity != oldContacts[i].MailingCity ||
-                        c.MailingState != oldContacts[i].MailingState ||
-                        c.MailingPostalCode != oldContacts[i].MailingPostalCode ||
-                        c.MailingCountry != oldContacts[i].MailingCountry ||
-                        c.OtherStreet != oldContacts[i].OtherStreet ||
-                        c.OtherCity != oldContacts[i].OtherCity ||
-                        c.OtherState != oldContacts[i].OtherState ||
-                        c.OtherPostalCode != oldContacts[i].OtherPostalCode ||
-                        c.OtherCountry != oldContacts[i].OtherCountry ||
-                        c.Phone != oldContacts[i].Phone ||
-                        c.Fax != oldContacts[i].Fax
-                    ) {
-                        individualUpdates.add(c);
-                    }
-                }
-            }
-            i += 1;
-        }
-        if (individualInserts.size() > 0)
-        {
-        	//add the newly created or updated Contacts that need a new individual account
-            insertIndividualAccount(individualInserts);
-        }
-        if (bucketContacts.size() > 0)
-        {
-        	//add the newly created or updated Contact to the bucket account
-            attachToIndividualAccount(bucketContacts);
-        }
-        if (individualUpdates.size() > 0)
-        {
-        	//contacts in the one-to-one model that are changing for syncing with account
-            updateIndividualAccount(individualUpdates);
-        }
-        if (accountUpdates.size() > 0)
-        {
-        	//update Accounts that have newly created Contacts connected to them
-            updateAccounts(accountUpdates);
+        //if this is after a delete
+        if(ta==triggerAction.afterDelete){
+        	
+        	for(Contact c : oldContacts) {
+				contactDeletes.add(c);
+        	}
+        	//only process if batch size is 1. We are replacing a VF override of the delete button
+        	//that override, by default, only worked with a batch size of one, so we aren't taking
+        	//any functionality away. Would like to to large batches, but it becomes difficult to
+        	//check for opps on the accounts when an account could have a large number of opps
+	        if (contactDeletes.size()==1)
+	        {
+	        	deleteContactAccounts(contactDeletes);
+	        }
+        } else {
+	        	
+	        for(Contact c : contacts)
+	        {
+	            //BEFORE INSERT
+	            if ( ta==triggerAction.beforeInsert )
+	            {
+	            	/*one-to-one account should be created if:
+	            		1. The account isn't set by the user
+	            		2. The Private__c checkbox isn't set by the user
+	            		3. The one-to-one model is chosen in the SystemAccountProcessor__c
+	            	*/
+	                if (c.AccountId == null && c.Private__c != true && c.SystemAccountProcessor__c == Constants.ONE_TO_ONE_PROCESSOR)
+	                {
+	
+	                    individualInserts.add(c);
+	                }
+	                /*contact should be connected to the bucket account if:
+	            		1. The account isn't set by the user
+	            		2. The Private__c checkbox isn't set by the user
+	            		3. The Individual model is chosen in the SystemAccountProcessor__c
+	            	*/
+	                if (c.AccountId == null && c.Private__c != true && c.SystemAccountProcessor__c == Constants.BUCKET_PROCESSOR)
+	                {
+	
+	                    bucketContacts.add(c);
+	                }
+	            }
+	
+	            //AFTER INSERT
+	            if ( ta==triggerAction.afterInsert )
+	            {
+	            	/*grab the Accounts that need to have the newly assigned Contact Id to them if:
+	            		1. If the contact is connected to an Account
+	            		2. The Contact is flagged as an individual
+	            		3. The one-to-one model is chosen in the SystemAccountProcessor__c
+	            	*/
+	                if ( c.AccountId != null && c.Private__c != true && c.SystemAccountProcessor__c == Constants.ONE_TO_ONE_PROCESSOR && c.Type_of_Account__c=='Individual')
+	                {
+	                	//contacts are connected to Accounts, make the connection in the other direction
+	                    accountUpdates.put(c.AccountId, c.Id);
+	                }
+	                
+	                //there is no after insert processing for the bucket account model
+	            }
+	
+	            //BEFORE UPDATE
+	            if ( ta==triggerAction.beforeUpdate )
+	            {
+	            	/*one-to-one account should be created if:
+	            		1. The account has been blanked out by the user
+	            		2. The Private__c checkbox isn't set by the user
+	            		3. The one-to-one model is chosen in the SystemAccountProcessor__c
+	            	*/
+	                if (c.AccountId == null && c.Private__c != true && c.SystemAccountProcessor__c == Constants.ONE_TO_ONE_PROCESSOR)
+	                {
+	                    individualInserts.add(c);
+	                }          
+	                /*contact should be connected to the bucket account if:
+	            		1. The account has been blanked out by the user
+	            		2. The Private__c checkbox isn't set by the user
+	            		3. The Individual model is chosen in the SystemAccountProcessor__c
+	            	*/ 
+	                if (c.AccountId == null && c.Private__c != true && c.SystemAccountProcessor__c == Constants.BUCKET_PROCESSOR)
+	                {
+	
+	                    bucketContacts.add(c);
+	                }
+	            }
+	
+	            //AFTER UPDATE
+	            if ( ta==triggerAction.afterUpdate )
+	            {
+	            	/*if the contact is in the one-to-one model, changes to fields on the Contact
+		            will require data changes on the Account to keep some fields in sync
+	            	*/
+	            	
+	                if (c.Organization_Type__c == Constants.ONE_TO_ONE_ORGANIZATION_TYPE)
+	                {
+	                    if (
+	                        c.FirstName != oldContacts[i].FirstName ||
+	                        c.LastName != oldContacts[i].LastName ||
+	                        c.MailingStreet != oldContacts[i].MailingStreet ||
+	                        c.MailingCity != oldContacts[i].MailingCity ||
+	                        c.MailingState != oldContacts[i].MailingState ||
+	                        c.MailingPostalCode != oldContacts[i].MailingPostalCode ||
+	                        c.MailingCountry != oldContacts[i].MailingCountry ||
+	                        c.OtherStreet != oldContacts[i].OtherStreet ||
+	                        c.OtherCity != oldContacts[i].OtherCity ||
+	                        c.OtherState != oldContacts[i].OtherState ||
+	                        c.OtherPostalCode != oldContacts[i].OtherPostalCode ||
+	                        c.OtherCountry != oldContacts[i].OtherCountry ||
+	                        c.Phone != oldContacts[i].Phone ||
+	                        c.Fax != oldContacts[i].Fax
+	                    ) {
+	                        individualUpdates.add(c);
+	                    }
+	                }
+	            }
+	            i += 1;
+	        }
+	       
+	        
+	        if (individualInserts.size() > 0)
+	        {
+	        	//add the newly created or updated Contacts that need a new individual account
+	            insertIndividualAccount(individualInserts);
+	        }
+	        if (bucketContacts.size() > 0)
+	        {
+	        	//add the newly created or updated Contact to the bucket account
+	            attachToIndividualAccount(bucketContacts);
+	        }
+	        if (individualUpdates.size() > 0)
+	        {
+	        	//contacts in the one-to-one model that are changing for syncing with account
+	            updateIndividualAccount(individualUpdates);
+	        }
+	        if (accountUpdates.size() > 0)
+	        {
+	        	//update Accounts that have newly created Contacts connected to them
+	            updateAccounts(accountUpdates);
+	        }
         }
 
     }
@@ -215,7 +234,8 @@ global class IndividualAccounts
    	        individual.Name = Constants.BUCKET_ACCOUNT_NAME;
    	        //flag the account as an individual account
    	        individual.SYSTEMISINDIVIDUAL__c = true;
-           	individual.Type = Constants.BUCKET_ORGANIZATION_TYPE;
+           	//individual.Type = Constants.BUCKET_ORGANIZATION_TYPE;
+           	individual.SYSTEM_AccountType__c = Constants.BUCKET_ORGANIZATION_TYPE;
             insert individual;
 
             for(Contact c : contacts)
@@ -288,7 +308,9 @@ global class IndividualAccounts
         	    a.ShippingState = c.OtherState;
             	a.ShippingCountry = c.OtherCountry;
             	//flag the account as an individual account
-	            a.Type = Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
+	            //a.Type = Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
+	            a.SYSTEM_AccountType__c = Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
+	            
     	        a.SYSTEMISINDIVIDUAL__c = true;
         	    accountInserts.add(a);
 	        }
@@ -368,7 +390,49 @@ global class IndividualAccounts
             Database.SaveResult[] lsr = Database.update(accountUpdates, false);
         }
     }
-
+	//delete the accounts for contacts that have been deleted
+	public void deleteContactAccounts(Contact[] contacts)
+	{
+		Boolean canDelete = true;
+		List<Account> accountsForDeletion = new List<Account>();
+		
+		if (contacts.size()>0){
+	        if ( contacts[0].AccountId != null )
+	        {
+	        	accountsForDeletion = [Select Id, Type,SYSTEM_AccountType__c from Account where Id = :contacts[0].AccountId limit 1];
+	        	system.debug('account record: ' + accountsForDeletion);
+	        	//if the legacy or current type field show it's not a one-to-one record, don't delete the account
+	        	if ( accountsForDeletion[0].Type == Constants.ONE_TO_ONE_ORGANIZATION_TYPE || accountsForDeletion[0].SYSTEM_AccountType__c == Constants.ONE_TO_ONE_ORGANIZATION_TYPE)
+	        	
+	        	{
+	        		//one-to-one accounts can be deleted
+	        		
+	        		//if there are Opportunities for this Account, don't delete it
+	        		for (Opportunity o : [Select Id, AccountId from Opportunity where AccountId IN :accountsForDeletion limit 1])
+	        		{
+	        			canDelete = false;
+	        		}
+	        	} else
+	        	{
+	        		//don't delete a regular account or the bucket account
+	        		canDelete = false;
+	        	}
+	        } else
+	        {
+	        	//don't delete a null account
+	        	canDelete = false;
+	        }
+	        
+		} else {
+			canDelete= false;
+		}
+		//delete the accounts
+		if(canDelete){
+			
+			delete accountsForDeletion;
+		}
+		
+	}
 	/// <name> getContactDonationHistory </name>
 	/// <summary> Called by sControl to display total giving amount </summary>
 	webservice static decimal getContactDonationHistory(Id contactId){

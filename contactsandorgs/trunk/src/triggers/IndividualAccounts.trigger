@@ -27,7 +27,7 @@
 	ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
 	POSSIBILITY OF SUCH DAMAGE.
 */
-trigger IndividualAccounts on Contact (before insert, before update, after insert, after update) {
+trigger IndividualAccounts on Contact (before insert, before update, after insert, after update,after delete) {
 
     /// <name> triggerAction </name>
     /// <summary> contains possible actions for a trigger </summary>
@@ -44,5 +44,8 @@ trigger IndividualAccounts on Contact (before insert, before update, after inser
     }
     if( Trigger.isAfter && Trigger.isUpdate ){
         IndividualAccounts process = new IndividualAccounts(Trigger.new, Trigger.old, triggerAction.afterUpdate);
+    }
+    if( Trigger.isAfter && Trigger.isDelete ){
+        IndividualAccounts process = new IndividualAccounts(Trigger.new, Trigger.old, triggerAction.afterDelete);
     }
 }

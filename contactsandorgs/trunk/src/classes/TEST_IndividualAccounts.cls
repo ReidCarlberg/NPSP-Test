@@ -282,7 +282,100 @@ private class TEST_IndividualAccounts {
 		      
         
     }
-   
+    
+     public static testMethod void deleteContactNoOpp() {
+
+        
+        
+        String newContactfirstName = 'test';
+    	String newContactLastName = 'Contact_forTests';
+    	String newContactMailingStreet = '123 Elm St';
+        Contact con = new Contact(
+        	FirstName=newContactfirstName,
+        	LastName=newContactLastName,
+        	MailingStreet = newContactMailingStreet,
+        	SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR
+        );
+        insert con;
+        Id contactId;
+        contactId = con.id;
+        
+        Contact[] insertedContacts = [Select FirstName, LastName, AccountId  from Contact where id=:contactId];
+		Id createdAccountId = insertedContacts[0].AccountId;
+		
+		delete con;
+		
+		insertedContacts = [Select FirstName, LastName, AccountId  from Contact where id=:contactId];
+		system.assertEquals(0,insertedContacts.size());
+		
+		Account[] missingAccount = [select id from Account where id=:createdAccountId];
+		system.assertEquals(0,missingAccount.size());
+
+
+    }
+    public static testMethod void deleteContactWithOpp() {
+
+        
+        String newContactfirstName = 'test';
+    	String newContactLastName = 'Contact_forTests';
+    	String newContactMailingStreet = '123 Elm St';
+        Contact con = new Contact(
+        	FirstName=newContactfirstName,
+        	LastName=newContactLastName,
+        	MailingStreet = newContactMailingStreet,
+        	SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR
+        );
+        insert con;
+        Id contactId;
+        contactId = con.id;
+        Id accountId;
+        Contact[] insertedContacts = [Select FirstName, LastName, AccountId  from Contact where id=:contactId];
+		
+		Id createdAccountId = insertedContacts[0].AccountId;
+       
+       Opportunity opp = new Opportunity(
+			Amount=500,
+			AccountId=createdAccountId,
+			Name='test',
+			StageName='Closed/Won',
+			CloseDate=System.today()
+		);
+		insert opp;
+		
+		delete con;
+		
+		Account[] missingAccount = [select id from Account where id=:createdAccountId];
+		system.assertEquals(1,missingAccount.size());
+
+    }
+    public static testMethod void deleteContactNormalAccount() {
+        
+        Account orgAccount = new Account(
+        	Name='Fake account'
+        );
+        insert orgAccount;
+        
+        String newContactfirstName = 'test';
+    	String newContactLastName = 'Contact_forTests';
+    	String newContactMailingStreet = '123 Elm St';
+        Contact con = new Contact(
+        	FirstName=newContactfirstName,
+        	LastName=newContactLastName,
+        	MailingStreet = newContactMailingStreet,
+        	AccountId=orgAccount.id
+        );
+        insert con;
+        
+        Contact[] insertedContacts = [Select FirstName, LastName, AccountId  from Contact where id=:con.id];
+		
+		Id createdAccountId = insertedContacts[0].AccountId;
+       		
+		delete con;
+		
+		Account[] missingAccount = [select id from Account where id=:createdAccountId];
+		system.assertEquals(1,missingAccount.size());
+
+    }
     
 /* TESTING PHONE NUMBER WORKFLOW -------------------------------------------------------
  
