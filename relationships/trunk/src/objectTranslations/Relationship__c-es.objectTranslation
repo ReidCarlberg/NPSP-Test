@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
-        <value><!-- Relationship --></value>
+        <value>Relación</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- Relationship --></value>
+        <value>Relaciones</value>
     </caseValues>
     <fields>
         <label>Contacto</label>
         <name>Contact__c</name>
-        <relationshipLabel>Relaciónes</relationshipLabel>
+        <relationshipLabel>Relaciones</relationshipLabel>
     </fields>
     <fields>
         <label>Descripción</label>
@@ -19,22 +19,46 @@
     <fields>
         <label>Relación Recíproca</label>
         <name>ReciprocalRelationship__c</name>
-        <relationshipLabel>Relaciónes</relationshipLabel>
+        <relationshipLabel>Relaciones</relationshipLabel>
     </fields>
     <fields>
-        <label>Relacionados con el Contacto</label>
+        <label>Contacto Relacionado</label>
         <name>RelatedContact__c</name>
         <relationshipLabel>Lista de Relación Ocultado</relationshipLabel>
     </fields>
     <fields>
         <label>Estatus</label>
         <name>Status__c</name>
+        <picklistValues>
+            <masterLabel>Current</masterLabel>
+            <translation>Actual</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Former</masterLabel>
+            <translation>Antiguo (ex)</translation>
+        </picklistValues>
     </fields>
     <fields>
         <label>Tipo</label>
         <name>Type__c</name>
+        <picklistValues>
+            <masterLabel>Acquaintance</masterLabel>
+            <translation>Conocido</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Coworker</masterLabel>
+            <translation>Compañero de Trabajo</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Family</masterLabel>
+            <translation>Familia</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Friend</masterLabel>
+            <translation>Amigo</translation>
+        </picklistValues>
     </fields>
-    <gender><!-- Feminine --></gender>
+    <gender>Feminine</gender>
     <layouts>
         <layout>Relationship Layout</layout>
         <sections>
@@ -42,5 +66,9 @@
             <section>Relationship Information</section>
         </sections>
     </layouts>
-    <nameFieldLabel><!-- Relationship Number --></nameFieldLabel>
+    <nameFieldLabel>Número Relación</nameFieldLabel>
+    <validationRules>
+        <errorMessage>En lugar de cambiar los contactos de una relación existente, borre esta relación y cree una nueva entre estos contactos</errorMessage>
+        <name>Related_Contact_Do_Not_Change</name>
+    </validationRules>
 </CustomObjectTranslation>
