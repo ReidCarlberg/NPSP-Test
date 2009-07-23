@@ -118,7 +118,7 @@ global class Households {
         {
 			Household__c h = new Household__c();
 			String hName = c.LastName;
-			hName += ' Household';
+			hName += ' ' + system.label.DefaultHouseholdName;
 			h.Name = hName;
 			//sync the primary address block
 			h.MailingStreet__c = c.MailingStreet;
@@ -276,7 +276,7 @@ global class Households {
 				total += ocr.Opportunity.Amount;
 			}
 		}
-		String totalString = '$';
+		String totalString = system.label.DefaultHouseholdTransactionCurrency;
 		Decimal totalFormat = Decimal.valueOf(total).setScale(2);
 		totalString += totalFormat;
 		return String.valueOf(totalString);
