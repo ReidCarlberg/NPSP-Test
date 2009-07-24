@@ -10,7 +10,7 @@ This is a draft plan for future development of the Nonprofit Starter Pack.
  * New wiki
  * Test coverage improvements
 
-= Release #2 - planning =
+= Release #2 - working =
  * [http://code.google.com/p/npsp/issues/list?can=1&q=milestone=Summer09&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary Issues]
  * Test coverage improvements
  * Tests for bulk data scenarios
@@ -20,6 +20,7 @@ This is a draft plan for future development of the Nonprofit Starter Pack.
 = Release #3 = 
  * [http://code.google.com/p/npsp/issues/list?can=1&q=milestone=Fall09&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary Issues]
  * Contact merge for the 1-to-1 model
+ * campaigns in recurring donations
  * Technical documentation v.2
 
 = Release #4 = 
