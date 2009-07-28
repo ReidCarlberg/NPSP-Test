@@ -34,3 +34,7 @@ We would not have the paint your perfect record interface of standard Salesforce
 = Deployment =
 
 This could be included in the Contacts and Organizations package. Because it is called from a Tab, it is easily hidden.
+
+Here is a screen movie of a prototype of the interface. Please watch and comment if you're interested.
+
+http://www.youtube.com/watch?v=5uslRBWPiB0&fmt=18
