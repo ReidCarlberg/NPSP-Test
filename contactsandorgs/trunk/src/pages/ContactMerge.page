@@ -1,0 +1,81 @@
+<apex:page controller="ContactMergeController" title="Merge Contacts" tabStyle="Contact">
+
+	<apex:outputPanel id="searchform" layout="block">
+		<apex:form >	
+			<apex:sectionHeader title="Contact Merge" subTitle="Merge Duplicate Contact Records">
+				<description>
+					<ol>
+						<li>Enter a search string to find duplicate Contacts</li>
+						<li>Pick up to 3 Contacts to Merge</li>
+						<li>Pick the winning Contact</li>
+						<li>Merge the Contacts</li>
+					</ol>
+				</description>
+			</apex:sectionHeader>
+	        <apex:inputText value="{!searchText}" id="searchText"/> 
+
+    		<apex:commandButton action="{!search}"  rerender="searchresults,selectedContacts" value="Search"/>  
+    		<br/><br/>
+
+	    </apex:form>
+    </apex:outputPanel>
+    
+    <apex:outputPanel id="searchresults" layout="block">
+	    <apex:form >
+	    	<apex:pageBlock title="Found Contacts"> 
+				<apex:pageBlockTable value="{!searchResults}" var="item">
+					<apex:column >
+						<apex:inputCheckbox value="{!item.selected}" id="checkedone">
+							<apex:actionSupport event="onclick" action="{!GetSelected}"/>
+						</apex:inputCheckbox>
+					</apex:column>
+					<apex:column value="{!item.con.name}"/>	
+					<apex:column value="{!item.con.email}"/>
+					<apex:column value="{!item.con.phone}"/>	
+				</apex:pageBlockTable>		
+			</apex:pageBlock> 
+    	</apex:form>
+    </apex:outputPanel>
+     
+	<apex:pageMessages /> 
+	
+	
+
+    <apex:outputPanel id="selectedContacts" layout="block">
+	    <apex:outputPanel id="selectedContactsBlock" rendered="{!displaySelected}" layout="block">
+	    	<apex:form >
+		    	<apex:pageBlock title="Selected Contacts"> 
+		    		<apex:pageBlockSection columns="3">
+		    			<apex:outputPanel layout="block" id="firstContactPanel" >
+				    		<apex:outputPanel layout="block" id="checkfirstcontact">
+					    		<apex:inputCheckbox value="{!thisMerge.firstIsWinner}">
+									<apex:actionSupport event="onclick" action="{!thisMerge.selectFirstContact}"/>
+								</apex:inputCheckbox>
+								<c:ContactMergeContactDisplay thisContact="{!thisMerge.firstContact}"/> 
+							</apex:outputPanel>
+						</apex:outputPanel>
+						<apex:outputPanel layout="block" id="secondContactPanel">
+							<apex:outputPanel layout="block">
+								<apex:inputCheckbox value="{!thisMerge.secondIsWinner}" id="checksecondcontact">
+									<apex:actionSupport event="onclick" action="{!thisMerge.selectSecondContact}"/>
+								</apex:inputCheckbox>
+								<c:ContactMergeContactDisplay thisContact="{!thisMerge.secondContact}"/> 
+							</apex:outputPanel>
+						</apex:outputPanel>
+						<apex:outputPanel layout="block" id="thirdContactPanel">
+							<apex:outputPanel layout="block">
+								<apex:inputCheckbox value="{!thisMerge.thirdIsWinner}" id="checkthirdcontact">
+									<apex:actionSupport event="onclick" action="{!thisMerge.selectThirdContact}"/>
+								</apex:inputCheckbox>
+								<c:ContactMergeContactDisplay thisContact="{!thisMerge.thirdContact}"/> 
+							</apex:outputPanel>
+						</apex:outputPanel>
+					</apex:pageBlockSection>
+					<apex:pageBlockButtons >
+						<apex:commandButton action="{!mergeContacts}"  rerender="selectedContacts" value="Merge"/> 
+					</apex:pageBlockButtons>
+				</apex:pageBlock> 
+	    	</apex:form>
+    	</apex:outputPanel>
+    </apex:outputPanel>
+</apex:page>
