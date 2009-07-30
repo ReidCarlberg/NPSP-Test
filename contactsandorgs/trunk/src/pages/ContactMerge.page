@@ -1,4 +1,4 @@
-<apex:page controller="ContactMergeController" title="Merge Contacts" tabStyle="Contact">
+<apex:page controller="ContactMergeController" title="Merge Contacts">
 
 	<apex:outputPanel id="searchform" layout="block">
 		<apex:form >	
@@ -14,8 +14,10 @@
 			</apex:sectionHeader>
 	        <apex:inputText value="{!searchText}" id="searchText"/> 
 
-    		<apex:commandButton action="{!search}"  rerender="searchresults,selectedContacts" value="Search"/>  
+    		<apex:commandButton action="{!search}"  rerender="searchresults,selectedContacts,successfulMerge" value="Search" status="searchStatus"/> <apex:actionStatus startText="(searching...)" id="searchStatus"/> 
     		<br/><br/>
+    		
+    		
 
 	    </apex:form>
     </apex:outputPanel>
@@ -26,55 +28,70 @@
 				<apex:pageBlockTable value="{!searchResults}" var="item">
 					<apex:column >
 						<apex:inputCheckbox value="{!item.selected}" id="checkedone">
-							<apex:actionSupport event="onclick" action="{!GetSelected}"/>
+							<apex:actionSupport event="onclick" action="{!GetSelected}" rerender="selectedContacts,pagemessages" status="selectionStatus"/>
 						</apex:inputCheckbox>
 					</apex:column>
-					<apex:column value="{!item.con.name}"/>	
+					<apex:column headervalue="Name">
+						<apex:outputLink value="/{!item.con.Id}">
+							<apex:outputText >{!item.con.Name}</apex:outputText>
+						</apex:outputLink>
+					</apex:column>
+					<apex:column value="{!item.con.AccountId}"/>
 					<apex:column value="{!item.con.email}"/>
 					<apex:column value="{!item.con.phone}"/>	
 				</apex:pageBlockTable>		
 			</apex:pageBlock> 
     	</apex:form>
     </apex:outputPanel>
-     
-	<apex:pageMessages /> 
-	
-	
+    <apex:actionStatus startText="(selecting...)" id="selectionStatus"/>
+	<apex:pageMessages id="pagemessages"/> 
 
     <apex:outputPanel id="selectedContacts" layout="block">
 	    <apex:outputPanel id="selectedContactsBlock" rendered="{!displaySelected}" layout="block">
 	    	<apex:form >
-		    	<apex:pageBlock title="Selected Contacts"> 
+		    	<apex:pageBlock title="Selected Contacts">
+		    	<apex:outputText value="Select one Contact to keep."/>
 		    		<apex:pageBlockSection columns="3">
 		    			<apex:outputPanel layout="block" id="firstContactPanel" >
-				    		<apex:outputPanel layout="block" id="checkfirstcontact">
-					    		<apex:inputCheckbox value="{!thisMerge.firstIsWinner}">
-									<apex:actionSupport event="onclick" action="{!thisMerge.selectFirstContact}"/>
+				    		<apex:outputPanel layout="block" rendered="{!thisMerge.displayFirst}">
+					    		<apex:inputCheckbox value="{!thisMerge.firstIsWinner}" id="checkfirstcontact">
+									<apex:actionSupport event="onclick" action="{!selectFirstContact}"/>
 								</apex:inputCheckbox>
 								<c:ContactMergeContactDisplay thisContact="{!thisMerge.firstContact}"/> 
 							</apex:outputPanel>
 						</apex:outputPanel>
 						<apex:outputPanel layout="block" id="secondContactPanel">
-							<apex:outputPanel layout="block">
+							<apex:outputPanel layout="block" rendered="{!thisMerge.displaySecond}">
 								<apex:inputCheckbox value="{!thisMerge.secondIsWinner}" id="checksecondcontact">
-									<apex:actionSupport event="onclick" action="{!thisMerge.selectSecondContact}"/>
+									<apex:actionSupport event="onclick" action="{!selectSecondContact}"/>
 								</apex:inputCheckbox>
 								<c:ContactMergeContactDisplay thisContact="{!thisMerge.secondContact}"/> 
 							</apex:outputPanel>
 						</apex:outputPanel>
 						<apex:outputPanel layout="block" id="thirdContactPanel">
-							<apex:outputPanel layout="block">
+							<apex:outputPanel layout="block" rendered="{!thisMerge.displayThird}">
 								<apex:inputCheckbox value="{!thisMerge.thirdIsWinner}" id="checkthirdcontact">
-									<apex:actionSupport event="onclick" action="{!thisMerge.selectThirdContact}"/>
+									<apex:actionSupport event="onclick" action="{!selectThirdContact}"/>
 								</apex:inputCheckbox>
 								<c:ContactMergeContactDisplay thisContact="{!thisMerge.thirdContact}"/> 
 							</apex:outputPanel>
 						</apex:outputPanel>
 					</apex:pageBlockSection>
 					<apex:pageBlockButtons >
-						<apex:commandButton action="{!mergeContacts}"  rerender="selectedContacts" value="Merge"/> 
+						<apex:commandButton action="{!mergeContacts}"  rerender="selectedContacts,successfulMerge" value="Merge"/> 
 					</apex:pageBlockButtons>
 				</apex:pageBlock> 
+				<apex:outputPanel layout="block">
+					<apex:pageBlock title="Winner" rendered="{!successfulMerge}"> 
+						<apex:pageBlockTable value="{!thisMerge.winner}" var="item">
+							<apex:column >
+								<apex:outputLink value="/{!thisMerge.winner.Id}">
+								<apex:outputText >{!thisMerge.winner.Name}</apex:outputText>
+							</apex:outputLink>
+							</apex:column>
+						</apex:pageBlockTable>		
+					</apex:pageBlock>
+				</apex:outputPanel>
 	    	</apex:form>
     	</apex:outputPanel>
     </apex:outputPanel>
