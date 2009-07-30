@@ -1,3 +1,32 @@
+/*
+	Copyright (c) 2009, Salesforce.com Foundation
+	All rights reserved.
+	
+	Redistribution and use in source and binary forms, with or without
+	modification, are permitted provided that the following conditions are met:
+	
+	* Redistributions of source code must retain the above copyright
+	  notice, this list of conditions and the following disclaimer.
+	* Redistributions in binary form must reproduce the above copyright
+	  notice, this list of conditions and the following disclaimer in the
+	  documentation and/or other materials provided with the distribution.
+	* Neither the name of the Salesforce.com Foundation nor the names of
+	  its contributors may be used to endorse or promote products derived
+  	  from this software without specific prior written permission.
+
+	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+	"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+	LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
+	FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
+	COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
+	INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+	BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+	LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+	CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
+	LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
+	ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+	POSSIBILITY OF SUCH DAMAGE.
+*/
 public class ContactMergeController {
 	
 	public ContactMergeController(){
@@ -5,15 +34,24 @@ public class ContactMergeController {
 		searchResults = new List<contactWrapper>();
 		thisMerge = new mergeSet();
 		displaySelected = false;
+		tooManyContactsSelected = false;
+		tooFewContactsSelected = true;
+		displaySearchResults = false;
 		contactFields = Schema.SObjectType.Contact.fields.getMap();
 	}
 	public Boolean displaySelected { get { return displaySelected; } set { displaySelected = value; } }
+	public Boolean displaySearchResults { get { return displaySearchResults; } set { displaySearchResults = value; } }
+	
+	private Integer numberOfContactsSelected = 0;
+	public Boolean tooManyContactsSelected { get { return tooManyContactsSelected; } set { tooManyContactsSelected = value; } }
+	public Boolean tooFewContactsSelected { get { return tooFewContactsSelected; } set { tooFewContactsSelected = value; } }
 	
 	public String searchText { get { return searchText; } set { searchText = value; } }
 	
 	public List<contactWrapper> searchResults { get { return searchResults; } set { searchResults = value; } }
 	
-	private Integer mergeLimit = 3;
+	private final Integer MERGE_MINIMUM = 2;
+	private final Integer MERGE_LIMIT = 3;
 
 	public mergeSet thisMerge { get { return thisMerge; } set { thisMerge = value; } }
 	
@@ -93,21 +131,24 @@ public class ContactMergeController {
     }
     
     public void selectFirstContact() {
-		thisMerge.firstIsWinner = true;
-    	thisMerge.secondIsWinner = false;
-    	thisMerge.thirdIsWinner = false;
-    	thisMerge.winner = thisMerge.firstContact;
-    	thisMerge.losers.clear();
-    	if(thisMerge.secondContact.Id!=null){
-    		thisMerge.losers.add(thisMerge.secondContact);
+    	if(tooFewContactsSelected){
+    		ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.FATAL,'Please select at least ' + MERGE_MINIMUM + ' contacts to merge.');
+    		ApexPages.addMessage(myMsg);
+        	displayPopup = true;
+    	} else {
+			thisMerge.firstIsWinner = true;
+	    	thisMerge.secondIsWinner = false;
+	    	thisMerge.thirdIsWinner = false;
+	    	thisMerge.winner = thisMerge.firstContact;
+	    	thisMerge.losers.clear();
+	    	if(thisMerge.secondContact.Id!=null){
+	    		thisMerge.losers.add(thisMerge.secondContact);
+	    	}
+	    	if(thisMerge.thirdContact.Id!=null){
+	    		thisMerge.losers.add(thisMerge.thirdContact);
+	    	}
     	}
-    	if(thisMerge.thirdContact.Id!=null){
-    		thisMerge.losers.add(thisMerge.thirdContact);
-    	}
-    	system.debug('Winner: ' + thisMerge.winner);
-    	system.debug('Losers: ' + thisMerge.losers);
-    	system.debug('Winner: ' + thisMerge.winner.Id);
-    	system.debug('Losers: ' + thisMerge.losers[0].id);
+
 	}
 
 	public void selectSecondContact() {
@@ -171,42 +212,57 @@ public class ContactMergeController {
 				searchResults.add(thisResult);	
 			}
 		}
+		if (searchResults.size()>0){
+			displaySearchResults = true;
+		}
 	}
 	
 	public void getSelected()
     {
+        thisMerge.firstIsWinner = false;
+    	thisMerge.secondIsWinner = false;
+    	thisMerge.thirdIsWinner = false;
+        
         thisMerge.selectedContacts.clear();
         for(contactWrapper conWrapper : searchResults) {
         	if(conWrapper.selected == true) {
         		thisMerge.selectedContacts.add(conWrapper.con);
         	}
         }
-        if(thisMerge.selectedContacts.size()>mergeLimit){
+        numberOfContactsSelected = thisMerge.selectedContacts.size();
+        if(numberOfContactsSelected>MERGE_LIMIT){
         	//report an error that you can only select 3 or fewer
         	ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.FATAL,'You can only merge up to 3 contacts at a time.');
         	ApexPages.addMessage(myMsg);
-        	displaySelected = false;
+        	displayPopup = true;
+        	tooManyContactsSelected = true;
+        	tooFewContactsSelected = false;
         } else {
-        	
-        	if (thisMerge.selectedContacts.size()>0){
+        	tooManyContactsSelected = false;
+        	if(numberOfContactsSelected<MERGE_MINIMUM){
+        		tooFewContactsSelected = true;
+        	} else {
+        		tooFewContactsSelected = false;
+        	}
+        	if (numberOfContactsSelected>0){
         		displaySelected = true;
         	} else {
         		displaySelected = false;
         	}
         	
-        	if(thisMerge.selectedContacts.size()==0){
+        	if(numberOfContactsSelected==0){
         		thisMerge.displayFirst = false;
         		thisMerge.displaySecond = false;
         		thisMerge.displayThird = false;
-        	} else if(thisMerge.selectedContacts.size()==1){
+        	} else if(numberOfContactsSelected==1){
         		thisMerge.displayFirst = true;
         		thisMerge.displaySecond = false;
         		thisMerge.displayThird = false;
-        	} else if(thisMerge.selectedContacts.size()==2){
+        	} else if(numberOfContactsSelected==2){
         		thisMerge.displayFirst = true;
         		thisMerge.displaySecond = true;
         		thisMerge.displayThird = false;
-        	} else if(thisMerge.selectedContacts.size()==3){
+        	} else if(numberOfContactsSelected==3){
         		thisMerge.displayFirst = true;
         		thisMerge.displaySecond = true;
         		thisMerge.displayThird = true;
@@ -233,7 +289,7 @@ public class ContactMergeController {
 
 	
 	public void mergeContacts() {
-		
+		displayPopup = false;
 		system.debug('thisMergeWinner: ' + thisMerge.winner);
 		system.debug('thisMergeLosers: ' + thisMerge.losers);
 		
@@ -314,6 +370,24 @@ public class ContactMergeController {
 		
 		successfulMerge = true;
 	}
+	
+	
 
+	public boolean displayPopup {get; set;}
+ 
+    public void cancelPopup() {
+        displayPopup = false;
 
+    }
+ 
+    public void showPopup() {
+    	if(tooFewContactsSelected){
+    		ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.FATAL,'Please select at least ' + MERGE_MINIMUM + ' contacts to merge.');
+    		ApexPages.addMessage(myMsg);
+    	} else {
+	    	ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.WARNING,'Merging Contacts may result in the loss of data. Make sure the Contact you choose as the winner has all the data you want. You may need to copy data from one Contact to another before you merge the records.');
+	        ApexPages.addMessage(myMsg);
+    	}
+        displayPopup = true;
+    }
 }

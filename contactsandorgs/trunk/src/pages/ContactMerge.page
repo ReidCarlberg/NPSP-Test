@@ -1,5 +1,19 @@
 <apex:page controller="ContactMergeController" title="Merge Contacts">
-
+	<style type="text/css">
+        .popup{
+            background-color:white;
+            border-style:solid;
+            border-width:1px;
+            position: absolute;
+            z-index: 9999;
+            /* These are the 4 css properties you will need to tweak so the
+            popup displays in approximately the center of the screen. First
+            set the width and height then adjust the left and top.*/
+            width: 500px;
+            left:40%;
+            top:30%;
+        }
+    </style>
 	<apex:outputPanel id="searchform" layout="block">
 		<apex:form >	
 			<apex:sectionHeader title="Contact Merge" subTitle="Merge Duplicate Contact Records">
@@ -16,19 +30,16 @@
 
     		<apex:commandButton action="{!search}"  rerender="searchresults,selectedContacts,successfulMerge" value="Search" status="searchStatus"/> <apex:actionStatus startText="(searching...)" id="searchStatus"/> 
     		<br/><br/>
-    		
-    		
-
 	    </apex:form>
     </apex:outputPanel>
     
     <apex:outputPanel id="searchresults" layout="block">
 	    <apex:form >
-	    	<apex:pageBlock title="Found Contacts"> 
+	    	<apex:pageBlock title="Found Contacts" rendered="{!displaySearchResults}"> 
 				<apex:pageBlockTable value="{!searchResults}" var="item">
 					<apex:column >
 						<apex:inputCheckbox value="{!item.selected}" id="checkedone">
-							<apex:actionSupport event="onclick" action="{!GetSelected}" rerender="selectedContacts,pagemessages" status="selectionStatus"/>
+							<apex:actionSupport event="onclick" action="{!GetSelected}" rerender="selectedContacts,popup,pagemessages" status="selectionStatus"/>
 						</apex:inputCheckbox>
 					</apex:column>
 					<apex:column headervalue="Name">
@@ -44,7 +55,7 @@
     	</apex:form>
     </apex:outputPanel>
     <apex:actionStatus startText="(selecting...)" id="selectionStatus"/>
-	<apex:pageMessages id="pagemessages"/> 
+	
 
     <apex:outputPanel id="selectedContacts" layout="block">
 	    <apex:outputPanel id="selectedContactsBlock" rendered="{!displaySelected}" layout="block">
@@ -63,7 +74,7 @@
 						<apex:outputPanel layout="block" id="secondContactPanel">
 							<apex:outputPanel layout="block" rendered="{!thisMerge.displaySecond}">
 								<apex:inputCheckbox value="{!thisMerge.secondIsWinner}" id="checksecondcontact">
-									<apex:actionSupport event="onclick" action="{!selectSecondContact}"/>
+									<apex:actionSupport event="onclick" action="{!selectSecondContact}" />
 								</apex:inputCheckbox>
 								<c:ContactMergeContactDisplay thisContact="{!thisMerge.secondContact}"/> 
 							</apex:outputPanel>
@@ -78,7 +89,7 @@
 						</apex:outputPanel>
 					</apex:pageBlockSection>
 					<apex:pageBlockButtons >
-						<apex:commandButton action="{!mergeContacts}"  rerender="selectedContacts,successfulMerge" value="Merge"/> 
+						<apex:commandButton action="{!showPopup}"  rerender="popup" value="Merge"/> 
 					</apex:pageBlockButtons>
 				</apex:pageBlock> 
 				<apex:outputPanel layout="block">
@@ -92,6 +103,16 @@
 						</apex:pageBlockTable>		
 					</apex:pageBlock>
 				</apex:outputPanel>
+				<apex:outputPanel id="popup">
+		            <apex:outputPanel styleClass="popup" layout="block" rendered="{!displayPopUp}">
+		            	<apex:pageMessages id="pagemessages"/> 
+		            	<br/><br/>
+		                <apex:commandButton value="Continue and Merge Contacts" action="{!mergeContacts}" rendered="{!!(tooManyContactsSelected||tooFewContactsSelected)}" rerender="popup,selectedContacts,successfulMerge"/>
+		                <apex:commandButton value="Cancel" action="{!cancelPopup}" rendered="{!!(tooManyContactsSelected||tooFewContactsSelected)}" rerender="popup"/>
+		                <apex:commandButton value="Ok" action="{!cancelPopup}" rendered="{!tooManyContactsSelected||tooFewContactsSelected}" rerender="popup"/>
+		            	<br/><br/>
+		            </apex:outputPanel>
+		        </apex:outputPanel>
 	    	</apex:form>
     	</apex:outputPanel>
     </apex:outputPanel>
