@@ -1,13 +1,13 @@
 <apex:page controller="ContactMergeController" title="Merge Contacts">
 	<style type="text/css">
-        .popup{
+        .messagepopup{
             background-color:white;
             border-style:solid;
             border-width:1px;
             position: absolute;
             z-index: 9999;
             /* These are the 4 css properties you will need to tweak so the
-            popup displays in approximately the center of the screen. First
+            messagepopup displays in approximately the center of the screen. First
             set the width and height then adjust the left and top.*/
             width: 500px;
             left:40%;
@@ -19,10 +19,10 @@
 			<apex:sectionHeader title="Contact Merge" subTitle="Merge Duplicate Contact Records">
 				<description>
 					<ol>
-						<li>Enter a search string to find duplicate Contacts</li>
-						<li>Pick up to 3 Contacts to Merge</li>
-						<li>Pick the winning Contact</li>
-						<li>Merge the Contacts</li>
+						<li>{!$Label.Contact_Merge_Step1}</li>
+						<li>{!$Label.Contact_Merge_Step2}</li>
+						<li>{!$Label.Contact_Merge_Step3}</li>
+						<li>{!$Label.Contact_Merge_Step4}</li>
 					</ol>
 				</description>
 			</apex:sectionHeader>
@@ -39,7 +39,7 @@
 				<apex:pageBlockTable value="{!searchResults}" var="item">
 					<apex:column >
 						<apex:inputCheckbox value="{!item.selected}" id="checkedone">
-							<apex:actionSupport event="onclick" action="{!GetSelected}" rerender="selectedContacts,popup,pagemessages" status="selectionStatus"/>
+							<apex:actionSupport event="onclick" action="{!GetSelected}" rerender="selectedContacts,messagepopup,pagemessages" status="selectionStatus"/>
 						</apex:inputCheckbox>
 					</apex:column>
 					<apex:column headervalue="Name">
@@ -89,7 +89,7 @@
 						</apex:outputPanel>
 					</apex:pageBlockSection>
 					<apex:pageBlockButtons >
-						<apex:commandButton action="{!showPopup}"  rerender="popup" value="Merge"/> 
+						<apex:commandButton action="{!showMessagePopup}"  rerender="messagepopup" value="Merge"/> 
 					</apex:pageBlockButtons>
 				</apex:pageBlock> 
 				<apex:outputPanel layout="block">
@@ -103,13 +103,13 @@
 						</apex:pageBlockTable>		
 					</apex:pageBlock>
 				</apex:outputPanel>
-				<apex:outputPanel id="popup">
-		            <apex:outputPanel styleClass="popup" layout="block" rendered="{!displayPopUp}">
+				<apex:outputPanel id="messagepopup">
+		            <apex:outputPanel styleClass="messagepopup" layout="block" rendered="{!displayMessagePopup}">
 		            	<apex:pageMessages id="pagemessages"/> 
 		            	<br/><br/>
-		                <apex:commandButton value="Continue and Merge Contacts" action="{!mergeContacts}" rendered="{!!(tooManyContactsSelected||tooFewContactsSelected)}" rerender="popup,selectedContacts,successfulMerge"/>
-		                <apex:commandButton value="Cancel" action="{!cancelPopup}" rendered="{!!(tooManyContactsSelected||tooFewContactsSelected)}" rerender="popup"/>
-		                <apex:commandButton value="Ok" action="{!cancelPopup}" rendered="{!tooManyContactsSelected||tooFewContactsSelected}" rerender="popup"/>
+		                <apex:commandButton value="Continue and Merge Contacts" action="{!mergeContacts}" rendered="{!!(tooManyContactsSelected||tooFewContactsSelected)}" rerender="messagepopup,selectedContacts,successfulMerge"/>
+		                <apex:commandButton value="Cancel" action="{!cancelMessagePopup}" rendered="{!!(tooManyContactsSelected||tooFewContactsSelected)}" rerender="messagepopup"/>
+		                <apex:commandButton value="Ok" action="{!cancelMessagePopup}" rendered="{!tooManyContactsSelected||tooFewContactsSelected}" rerender="messagepopup"/>
 		            	<br/><br/>
 		            </apex:outputPanel>
 		        </apex:outputPanel>
