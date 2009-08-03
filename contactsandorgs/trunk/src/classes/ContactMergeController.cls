@@ -37,6 +37,7 @@ public class ContactMergeController {
 		tooManyContactsSelected = false;
 		tooFewContactsSelected = true;
 		displaySearchResults = false;
+		displayMergeButton = false;
 		contactFields = Schema.SObjectType.Contact.fields.getMap();
 	}
 	//boolean used to render the selected Contacts pane
@@ -44,6 +45,9 @@ public class ContactMergeController {
 	
 	//boolean used to render the search results pane
 	public Boolean displaySearchResults { get { return displaySearchResults; } set { displaySearchResults = value; } }
+	
+	//boolean used to render the display button
+	public Boolean displayMergeButton { get { return displayMergeButton; } set { displayMergeButton = value; } }
 	
 	//integer for recording how many contacts have been selected from the search results
 	private Integer numberOfContactsSelected = 0;
@@ -172,6 +176,7 @@ public class ContactMergeController {
     		ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.FATAL,system.label.Contact_Merge_Error_Too_Few_Contacts);
     		ApexPages.addMessage(myMsg);
         	displayMessagePopup = true;
+        	displayMergeButton = false;
     	} else {
     		//first is winner
 			thisMerge.firstIsWinner = true;
@@ -188,6 +193,7 @@ public class ContactMergeController {
 	    	if(thisMerge.thirdContact.Id!=null){
 	    		thisMerge.losers.add(thisMerge.thirdContact);
 	    	}
+	    	displayMergeButton = true;
     	}
 
 	}
@@ -208,6 +214,8 @@ public class ContactMergeController {
     	if(thisMerge.thirdContact!=null){
     		thisMerge.losers.add(thisMerge.thirdContact);
     	}
+    	
+    	displayMergeButton = true;
 	
 	}
 	//method for selecting third contact, called when user chooses the thirs as the winner
@@ -227,6 +235,8 @@ public class ContactMergeController {
     	if(thisMerge.secondContact!=null){
     		thisMerge.losers.add(thisMerge.secondContact);
     	}
+    	
+    	displayMergeButton = true;
 	}
 	//search for contacts
 	public void search() {
@@ -242,15 +252,15 @@ public class ContactMergeController {
 		Set<String> fields = contactFields.keySet(); 
 		Boolean firstField = true;               
 		for(String field : Fields){        	
-			if(!firstField) // if it's the last field don't append a comma        		
+			if(!firstField) // if it's not the first prepend a comma        		
 				fieldsForReturn += ',' + field;        	
 			else        		
 				fieldsForReturn += field;
 				firstField = false;
-		}                
- 
+		}             
+		 
 		//build the SOSL query and execute
-		String searchquery = 'FIND \'' + searchText + '\' IN ALL FIELDS RETURNING Contact(' + fieldsForReturn +') LIMIT ' + SOSL_LIMIT;
+		String searchquery = 'FIND \'' + searchText + '\' IN ALL FIELDS RETURNING Contact(' + fieldsForReturn +' ORDER BY LastName LIMIT ' + SOSL_LIMIT + ')';
 		
 		List<List<SObject>> searchList = search.query(searchquery);
 		
@@ -275,6 +285,8 @@ public class ContactMergeController {
         thisMerge.firstIsWinner = false;
     	thisMerge.secondIsWinner = false;
     	thisMerge.thirdIsWinner = false;
+    	
+    	displayMergeButton = false;
     	
         //empty the list of selected contacts so we can repopulate it
         thisMerge.selectedContacts.clear();

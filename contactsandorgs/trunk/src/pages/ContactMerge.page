@@ -39,7 +39,7 @@
 				<apex:pageBlockTable value="{!searchResults}" var="item">
 					<apex:column >
 						<apex:inputCheckbox value="{!item.selected}" id="checkedone">
-							<apex:actionSupport event="onclick" action="{!GetSelected}" rerender="selectedContacts,messagepopup,pagemessages" status="selectionStatus"/>
+							<apex:actionSupport event="onclick" action="{!GetSelected}" rerender="selectedContacts,messagepopup,pagemessages,mergebutton" status="selectionStatus"/>
 						</apex:inputCheckbox>
 					</apex:column>
 					<apex:column headervalue="Name">
@@ -88,8 +88,8 @@
 							</apex:outputPanel>
 						</apex:outputPanel>
 					</apex:pageBlockSection>
-					<apex:pageBlockButtons >
-						<apex:commandButton action="{!showMessagePopup}"  rerender="messagepopup" value="Merge"/> 
+					<apex:pageBlockButtons id="mergebutton">
+						<apex:commandButton action="{!showMessagePopup}" rendered="{!displayMergeButton}" rerender="messagepopup" value="Merge"/> 
 					</apex:pageBlockButtons>
 				</apex:pageBlock> 
 				<apex:outputPanel layout="block">
