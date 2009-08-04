@@ -208,10 +208,10 @@ public class ContactMergeController {
     	
 		thisMerge.losers.clear();
 		//add all non-empty contacts to losers
-    	if(thisMerge.firstContact!=null){
+    	if(thisMerge.firstContact.Id!=null){
     		thisMerge.losers.add(thisMerge.firstContact);
     	}
-    	if(thisMerge.thirdContact!=null){
+    	if(thisMerge.thirdContact.Id!=null){
     		thisMerge.losers.add(thisMerge.thirdContact);
     	}
     	
@@ -229,10 +229,10 @@ public class ContactMergeController {
     	
     	thisMerge.losers.clear();
     	//add all non-empty contacts to losers
-    	if(thisMerge.firstContact!=null){
+    	if(thisMerge.firstContact.Id!=null){
     		thisMerge.losers.add(thisMerge.firstContact);
     	}
-    	if(thisMerge.secondContact!=null){
+    	if(thisMerge.secondContact.Id!=null){
     		thisMerge.losers.add(thisMerge.secondContact);
     	}
     	
@@ -240,41 +240,45 @@ public class ContactMergeController {
 	}
 	//search for contacts
 	public void search() {
-		//empty any previous results
-		thisMerge.selectedContacts.clear();
-		searchResults.clear();
-		//reset booleans that control display of results elements
-		displaySelected = false;
-		successfulMerge = false;
-		
-		String fieldsForReturn = '';         
-		//get all fields from the Contact record and put in string for dynamic SOSL call
-		Set<String> fields = contactFields.keySet(); 
-		Boolean firstField = true;               
-		for(String field : Fields){        	
-			if(!firstField) // if it's not the first prepend a comma        		
-				fieldsForReturn += ',' + field;        	
-			else        		
-				fieldsForReturn += field;
-				firstField = false;
-		}             
-		 
-		//build the SOSL query and execute
-		String searchquery = 'FIND \'' + searchText + '\' IN ALL FIELDS RETURNING Contact(' + fieldsForReturn +' ORDER BY LastName LIMIT ' + SOSL_LIMIT + ')';
-		
-		List<List<SObject>> searchList = search.query(searchquery);
-		
-		//loop through the contacts putting them in an array of wrappers
-		for (SObject returnedObject : searchList[0]){
-			//if the returned object is a contact, add it to the Contact list
-			if(returnedObject.getSObjectType() == Contact.sObjectType){
-				contactWrapper thisResult = new contactWrapper((Contact) returnedObject);				
-				searchResults.add(thisResult);	
+		if(searchText.length()>0){
+			//empty any previous results
+			thisMerge.selectedContacts.clear();
+			searchResults.clear();
+			//reset booleans that control display of results elements
+			displaySelected = false;
+			successfulMerge = false;
+			
+			String fieldsForReturn = '';         
+			//get all fields from the Contact record and put in string for dynamic SOSL call
+			Set<String> fields = contactFields.keySet(); 
+			Boolean firstField = true;               
+			for(String field : Fields){        	
+				if(!firstField) // if it's not the first prepend a comma        		
+					fieldsForReturn += ',' + field;        	
+				else        		
+					fieldsForReturn += field;
+					firstField = false;
+			}             
+			 
+			//build the SOSL query and execute
+			String searchquery = 'FIND \'' + searchText + '\' IN ALL FIELDS RETURNING Contact(' + fieldsForReturn +' ORDER BY LastName LIMIT ' + SOSL_LIMIT + ')';
+			
+			List<List<SObject>> searchList = search.query(searchquery);
+			
+			//loop through the contacts putting them in an array of wrappers
+			for (SObject returnedObject : searchList[0]){
+				//if the returned object is a contact, add it to the Contact list
+				if(returnedObject.getSObjectType() == Contact.sObjectType){
+					contactWrapper thisResult = new contactWrapper((Contact) returnedObject);				
+					searchResults.add(thisResult);	
+				}
 			}
-		}
-		//if we got a result back, show the search results pane
-		if (searchResults.size()>0){
-			displaySearchResults = true;
+			//if we got a result back, show the search results pane
+			if (searchResults.size()>0){
+				displaySearchResults = true;
+			} else {
+				displaySearchResults = false;
+			}
 		}
 	}
 	//method that is run when a Contact checkbox is clicked in the search results.
@@ -353,7 +357,7 @@ public class ContactMergeController {
 		List<Account> loserAccounts = new List<Account>();
 		List<Account> loserAccountsToBeMerged = new List<Account>();
 		
-		Id winningAccountId;
+		Id winningAccountId = null;
 		
 		//get winner contact Account
 		if (thisMerge.winner.AccountId!=null){
@@ -362,6 +366,7 @@ public class ContactMergeController {
 		system.debug('Winner Account: ' + winnerAccount);
 		
 		if (winnerAccount.size()>0) {
+			winningAccountId = winnerAccount[0].Id;
 			for(Contact thisloserContact : thisMerge.losers){
 				//don't try to merge null Accounts or Accounts that are the same as the winner's Account
 				if (thisloserContact.id!=null && thisloserContact.AccountId!=thisMerge.winner.AccountId){
@@ -380,7 +385,7 @@ public class ContactMergeController {
 				system.debug('Loser Accounts: ' + loserAccountsToBeMerged);
 				
 				merge winnerAccount[0] loserAccountsToBeMerged;
-				winningAccountId = winnerAccount[0].Id;
+				
 			}
 		}	
 		//merge the contacts
@@ -392,36 +397,31 @@ public class ContactMergeController {
 		
 		//create new contacts for updating as the SOSL returned contacts have read-only fields on them
 		Contact winnerMakePrivate = new Contact();
-		winnerMakePrivate = new Contact(Id = thisMerge.winner.id);
+		winnerMakePrivate = new Contact(Id = thisMerge.winner.id,AccountId = null,Private__c=true);
 		
 		List<Contact> losersMakePrivate = new List<Contact>();
 		
 		for(Contact contactForUpdate : thisMerge.losers){			
-			Contact loserMakePrivate = new Contact(id=contactForUpdate.id);
+			Contact loserMakePrivate = new Contact(id=contactForUpdate.id,accountId=null,Private__c=true);
 			losersMakePrivate.add(loserMakePrivate);
 		}
 		system.debug('Loser Contacts before nulling: ' + losersMakePrivate);
 		
 		//set the account to null and mark private so that trigger won't reset the Account
 		if (winningAccountId!=null){
-			winnerMakePrivate.AccountId = null;
-			winnerMakePrivate.Private__c = true;
+			
 			update winnerMakePrivate;
 			
-			system.debug('Winner contact after nulling: ' + winnerMakePrivate);
-			//do the same for the losers
-			for(Contact contactForUpdateAgain : losersMakePrivate){
-				contactForUpdateAgain.AccountId = null;
-				contactForUpdateAgain.Private__c = true;
-			}
-			system.debug('Loser Contacts before nulling again: ' + losersMakePrivate);
+			system.debug('Winner contact after nulling inside: ' + winnerMakePrivate);
+			
+			system.debug('Loser Contacts before nulling again inside: ' + losersMakePrivate);
 			if(losersMakePrivate.size()>0){
 				update losersMakePrivate;
 			}
 		}
 		
-	//	system.debug('Winner contact after nulling: ' + winnerMakePrivate);
-	//	system.debug('Loser Contacts after nulling: ' + losersMakePrivate);
+		system.debug('Winner contact after nulling: ' + winnerMakePrivate);
+		system.debug('Loser Contacts after nulling: ' + losersMakePrivate);
 		merge winnerMakePrivate losersMakePrivate;
 		
 		//set the contact Account Id back to the winning Account Id
@@ -431,6 +431,8 @@ public class ContactMergeController {
 			update winnerMakePrivate;
 		}		
 		successfulMerge = true;
+		displaySearchResults = false;
+		displaySelected = false;
 	}
 	
 	public boolean displayMessagePopup {get; set;}

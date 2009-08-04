@@ -12,6 +12,7 @@
             width: 500px;
             left:40%;
             top:30%;
+            padding: 10px;
         }
     </style>
 	<apex:outputPanel id="searchform" layout="block">
@@ -28,12 +29,15 @@
 			</apex:sectionHeader>
 	        <apex:inputText value="{!searchText}" id="searchText"/> 
 
-    		<apex:commandButton action="{!search}"  rerender="searchresults,selectedContacts,successfulMerge" value="Search" status="searchStatus"/> <apex:actionStatus startText="(searching...)" id="searchStatus"/> 
+    		<apex:commandButton action="{!search}"  rerender="searchresults,selectedContacts,winnerpanel" value="Search" status="searchStatus"/> <apex:actionStatus startText="(searching...)" id="searchStatus"/> 
     		<br/><br/>
 	    </apex:form>
     </apex:outputPanel>
     
     <apex:outputPanel id="searchresults" layout="block">
+    	<apex:outputPanel id="nothingfound" layout="block" rendered="{!!displaySearchResults&&searchText!=''&&!successfulMerge}">
+    	{!$Label.Contact_Merge_Error_Confirm_Message_Nothing_Found}
+    	</apex:outputPanel>
 	    <apex:form >
 	    	<apex:pageBlock title="Found Contacts" rendered="{!displaySearchResults}"> 
 				<apex:pageBlockTable value="{!searchResults}" var="item">
@@ -92,22 +96,12 @@
 						<apex:commandButton action="{!showMessagePopup}" rendered="{!displayMergeButton}" rerender="messagepopup" value="Merge"/> 
 					</apex:pageBlockButtons>
 				</apex:pageBlock> 
-				<apex:outputPanel layout="block">
-					<apex:pageBlock title="Winner" rendered="{!successfulMerge}"> 
-						<apex:pageBlockTable value="{!thisMerge.winner}" var="item">
-							<apex:column >
-								<apex:outputLink value="/{!thisMerge.winner.Id}">
-								<apex:outputText >{!thisMerge.winner.Name}</apex:outputText>
-							</apex:outputLink>
-							</apex:column>
-						</apex:pageBlockTable>		
-					</apex:pageBlock>
-				</apex:outputPanel>
+				
 				<apex:outputPanel id="messagepopup">
 		            <apex:outputPanel styleClass="messagepopup" layout="block" rendered="{!displayMessagePopup}">
 		            	<apex:pageMessages id="pagemessages"/> 
 		            	<br/><br/>
-		                <apex:commandButton value="Continue and Merge Contacts" action="{!mergeContacts}" rendered="{!!(tooManyContactsSelected||tooFewContactsSelected)}" rerender="messagepopup,selectedContacts,successfulMerge"/>
+		                <apex:commandButton value="Continue and Merge Contacts" action="{!mergeContacts}" rendered="{!!(tooManyContactsSelected||tooFewContactsSelected)}" rerender="messagepopup,searchresults,selectedContacts,winnerpanel"/>
 		                <apex:commandButton value="Cancel" action="{!cancelMessagePopup}" rendered="{!!(tooManyContactsSelected||tooFewContactsSelected)}" rerender="messagepopup"/>
 		                <apex:commandButton value="Ok" action="{!cancelMessagePopup}" rendered="{!tooManyContactsSelected||tooFewContactsSelected}" rerender="messagepopup"/>
 		            	<br/><br/>
@@ -116,4 +110,15 @@
 	    	</apex:form>
     	</apex:outputPanel>
     </apex:outputPanel>
+    <apex:outputPanel id="winnerpanel" layout="block">
+		<apex:pageBlock title="Winner" rendered="{!successfulMerge}"> 
+			<apex:pageBlockTable value="{!thisMerge.winner}" var="item">
+				<apex:column >
+					<apex:outputLink value="/{!thisMerge.winner.Id}">
+					<apex:outputText >{!thisMerge.winner.Name}</apex:outputText>
+				</apex:outputLink>
+				</apex:column>
+			</apex:pageBlockTable>		
+		</apex:pageBlock>
+	</apex:outputPanel>
 </apex:page>
