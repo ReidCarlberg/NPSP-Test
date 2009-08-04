@@ -442,7 +442,7 @@ public class ContactMergeController {
  
     public void showMessagePopup() {
     	if(!tooFewContactsSelected){
-	    	ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.WARNING,system.label.Contact_Merge_Error_Confirm_Message);
+	    	ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.WARNING,system.label.Contact_Merge_Error_Confirm_Message + ' ' + system.label.Contact_Merge_Error_Confirm_Message_Households);
 	        ApexPages.addMessage(myMsg);
     	}
         displayMessagePopup = true;
