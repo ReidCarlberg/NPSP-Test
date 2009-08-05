@@ -32,7 +32,7 @@ public class ContactMergeController {
 	public ContactMergeController(){
 		searchText='';
 		searchResults = new List<contactWrapper>();
-		thisMerge = new mergeSet();
+		thisMerge = new ContactMerge();
 		displaySelected = false;
 		tooManyContactsSelected = false;
 		tooFewContactsSelected = true;
@@ -64,17 +64,11 @@ public class ContactMergeController {
 	//list of contactWrapper objects for display in search results pane
 	public List<contactWrapper> searchResults { get { return searchResults; } set { searchResults = value; } }
 	
-	//min number of contacts that can be merged
-	private final Integer MERGE_MINIMUM = 2;
-	
-	//max number of contacts that can be merged
-	private final Integer MERGE_LIMIT = 3;
-	
 	//max number of Contacts returned by a query
 	private final Integer SOSL_LIMIT = 20;
 	
 	//singleton to hold the merging contacts and relevant info
-	public mergeSet thisMerge { get { return thisMerge; } set { thisMerge = value; } }
+	public ContactMerge thisMerge { get { return thisMerge; } set { thisMerge = value; } }
 	
 	//field map for SOSLing so we can return all fields
 	public Map<String,Schema.SObjectField> contactFields = Schema.SObjectType.Contact.fields.getMap(); 
@@ -96,79 +90,7 @@ public class ContactMergeController {
             selected = false;
         }
     }
-    //class to hold the merging contacts and relevant info
-    public class mergeSet {
-    	//a list of all selected contacts for merging
-        public List<Contact> selectedContacts {get; set;}
-        
-        //booleans to flag which of the 3 contacts has been chosen as the users
-        public Boolean firstIsWinner {get; set;}
-        public Boolean secondIsWinner {get; set;}
-        public Boolean thirdIsWinner {get; set;}
-        
-        //booleans to control display of the contact panes
-        public Boolean displayFirst {get; set;}
-        public Boolean displaySecond {get; set;}
-        public Boolean displayThird {get; set;}
-        
-		//the first contact selected        
-        public Contact firstContact = new Contact();
-        
-        //getter for first contact
-        public Contact getfirstContact(){
-        	//always get it if at least one contact has been selected
-    		if(selectedContacts.size()>0){
-    			firstContact = selectedContacts[0];
-    			return firstContact;    			
-    		} else {
-    			return null;
-    		}
-        }
-        //the second contact selected
-        public Contact secondContact = new Contact();
-        
-        //getter for second contact
-        public Contact getSecondContact(){
-        	//always get it if at least two contacts have been selected
-    		if(selectedContacts.size()>1){
-    			secondContact = selectedContacts[1];
-    			return secondContact;
-    		} else {
-    			return null;
-    		}
-        }
-        //the third contact selected
-        public Contact thirdContact = new Contact();
-        
-        //getter for third contact
-        public Contact getThirdContact(){
-        	//always get it if at least three contacts have been selected
-    		if(selectedContacts.size()>2){
-    			thirdContact = selectedContacts[2];
-    			return thirdContact;
-    		} else {
-    			return null;
-    		}
-        }
-        
-        //contact for the winning record
-        public Contact winner {get; set;}
-        
-        //List for the losing records
-        public List<Contact> losers {get; set;}
-        
-        //constructor for mergeSet class
-        public mergeSet() {
-			selectedContacts = new List<Contact>();
-			losers = new List<Contact>();
-			winner = new Contact();
-			
-			//set all the winner booleans to false as none has been selected yet
-			firstIsWinner = false;
-        	secondIsWinner = false;
-        	thirdIsWinner = false;
-        }
-    }
+    
     //method for selecting first contact, called when user chooses the first as the winner
     public void selectFirstContact() {
     	//show error message if this is the only contact in the merge set
@@ -178,21 +100,7 @@ public class ContactMergeController {
         	displayMessagePopup = true;
         	displayMergeButton = false;
     	} else {
-    		//first is winner
-			thisMerge.firstIsWinner = true;
-			thisMerge.winner = thisMerge.firstContact;
-			//others are not
-	    	thisMerge.secondIsWinner = false;
-	    	thisMerge.thirdIsWinner = false;
-	    		    	
-	    	thisMerge.losers.clear();
-	    	//add all non-empty contacts to losers
-	    	if(thisMerge.secondContact.Id!=null){
-	    		thisMerge.losers.add(thisMerge.secondContact);
-	    	}
-	    	if(thisMerge.thirdContact.Id!=null){
-	    		thisMerge.losers.add(thisMerge.thirdContact);
-	    	}
+    		thisMerge.selectFirstContact();
 	    	displayMergeButton = true;
     	}
 
@@ -200,42 +108,14 @@ public class ContactMergeController {
 	//method for selecting second contact, called when user chooses the second as the winner
 	public void selectSecondContact() {
 		//second is winner
-		thisMerge.secondIsWinner = true;
-		thisMerge.winner = thisMerge.secondContact;
-		//others are not
-		thisMerge.firstIsWinner = false;    	
-    	thisMerge.thirdIsWinner = false;
-    	
-		thisMerge.losers.clear();
-		//add all non-empty contacts to losers
-    	if(thisMerge.firstContact.Id!=null){
-    		thisMerge.losers.add(thisMerge.firstContact);
-    	}
-    	if(thisMerge.thirdContact.Id!=null){
-    		thisMerge.losers.add(thisMerge.thirdContact);
-    	}
-    	
+		thisMerge.selectSecondContact();
     	displayMergeButton = true;
 	
 	}
 	//method for selecting third contact, called when user chooses the thirs as the winner
 	public void selectThirdContact() {
 		//third is winner
-		thisMerge.thirdIsWinner = true;
-		thisMerge.winner = thisMerge.thirdContact;
-		//others are not
-		thisMerge.firstIsWinner = false;
-    	thisMerge.secondIsWinner = false;    	
-    	
-    	thisMerge.losers.clear();
-    	//add all non-empty contacts to losers
-    	if(thisMerge.firstContact.Id!=null){
-    		thisMerge.losers.add(thisMerge.firstContact);
-    	}
-    	if(thisMerge.secondContact.Id!=null){
-    		thisMerge.losers.add(thisMerge.secondContact);
-    	}
-    	
+		thisMerge.selectThirdContact();    	
     	displayMergeButton = true;
 	}
 	//search for contacts
@@ -303,7 +183,7 @@ public class ContactMergeController {
         
         numberOfContactsSelected = thisMerge.selectedContacts.size();
         
-        if(numberOfContactsSelected>MERGE_LIMIT){
+        if(numberOfContactsSelected>thisMerge.MERGE_LIMIT){
         	//report an error that you can only select 3 or fewer
         	ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.FATAL,system.label.Contact_Merge_Error_Too_Many_Contacts);
         	ApexPages.addMessage(myMsg);
@@ -315,7 +195,7 @@ public class ContactMergeController {
         } else {
         	tooManyContactsSelected = false;
         	//set the boolean for potential error reporting if the Users tries to merge just one record
-        	if(numberOfContactsSelected<MERGE_MINIMUM){
+        	if(numberOfContactsSelected<thisMerge.MERGE_MINIMUM){
         		tooFewContactsSelected = true;
         	} else {
         		tooFewContactsSelected = false;
@@ -349,90 +229,11 @@ public class ContactMergeController {
 	//method to merge the winner and losers
 	public void mergeContacts() {
 		displayMessagePopup = false;
-		system.debug('thisMergeWinner: ' + thisMerge.winner);
-		system.debug('thisMergeLosers: ' + thisMerge.losers);
-		
-		List<Account> winnerAccount = new List<Account>();
-		Set<Id> loserAccountIds = new Set<Id>();
-		List<Account> loserAccounts = new List<Account>();
-		List<Account> loserAccountsToBeMerged = new List<Account>();
-		
-		Id winningAccountId = null;
-		
-		//get winner contact Account
-		if (thisMerge.winner.AccountId!=null){
-			winnerAccount = [Select Id,SYSTEMIsIndividual__c,Name from Account where SYSTEMIsIndividual__c=true and Name!=:Constants.BUCKET_ACCOUNT_NAME and Id=:thisMerge.winner.accountid];
+		if(thisMerge.mergeContacts()){
+			successfulMerge = true;
+			displaySearchResults = false;
+			displaySelected = false;
 		}
-		system.debug('Winner Account: ' + winnerAccount);
-		
-		if (winnerAccount.size()>0) {
-			winningAccountId = winnerAccount[0].Id;
-			for(Contact thisloserContact : thisMerge.losers){
-				//don't try to merge null Accounts or Accounts that are the same as the winner's Account
-				if (thisloserContact.id!=null && thisloserContact.AccountId!=thisMerge.winner.AccountId){
-					loserAccountIds.add(thisloserContact.AccountId);
-				}
-			}
-			
-			system.debug('Loser Account Ids: ' + loserAccountIds);
-			//get loser contact Accounts
-			loserAccountsToBeMerged = [Select Id,SYSTEMIsIndividual__c,Name from Account where Id IN :loserAccountIds and SYSTEMIsIndividual__c=true and Name<>:Constants.BUCKET_ACCOUNT_NAME];
-			system.debug('Loser Accounts to be merged: ' + loserAccountsToBeMerged);
-			//one-to-one contacts each have an Account, so when merging Contacts we have to merge Accounts as well
-			//we merge the Accounts first, if there are any one-to-one Accounts in the mix
-			if(loserAccountsToBeMerged.size()>0){
-				system.debug('Winner Account: ' + winnerAccount[0]);
-				system.debug('Loser Accounts: ' + loserAccountsToBeMerged);
-				
-				merge winnerAccount[0] loserAccountsToBeMerged;
-				
-			}
-		}	
-		//merge the contacts
-		system.debug('Winner contact: ' + thisMerge.winner);
-		system.debug('Loser Contacts: ' + thisMerge.losers);
-		//there is a Contact delete trigger that deletes the one-to-one Account of a Contact after it is deleted
-		//merge deletes the losing Contacts, so their Accounts get deleted, which causes errors
-		//to get around this, we detach the Contacts for their Accounts before we merge
-		
-		//create new contacts for updating as the SOSL returned contacts have read-only fields on them
-		Contact winnerMakePrivate = new Contact();
-		winnerMakePrivate = new Contact(Id = thisMerge.winner.id,AccountId = null,Private__c=true);
-		
-		List<Contact> losersMakePrivate = new List<Contact>();
-		
-		for(Contact contactForUpdate : thisMerge.losers){			
-			Contact loserMakePrivate = new Contact(id=contactForUpdate.id,accountId=null,Private__c=true);
-			losersMakePrivate.add(loserMakePrivate);
-		}
-		system.debug('Loser Contacts before nulling: ' + losersMakePrivate);
-		
-		//set the account to null and mark private so that trigger won't reset the Account
-		if (winningAccountId!=null){
-			
-			update winnerMakePrivate;
-			
-			system.debug('Winner contact after nulling inside: ' + winnerMakePrivate);
-			
-			system.debug('Loser Contacts before nulling again inside: ' + losersMakePrivate);
-			if(losersMakePrivate.size()>0){
-				update losersMakePrivate;
-			}
-		}
-		
-		system.debug('Winner contact after nulling: ' + winnerMakePrivate);
-		system.debug('Loser Contacts after nulling: ' + losersMakePrivate);
-		merge winnerMakePrivate losersMakePrivate;
-		
-		//set the contact Account Id back to the winning Account Id
-		if (winnerMakePrivate.Id != null){
-			winnerMakePrivate.AccountId = winningAccountId;
-			winnerMakePrivate.Private__c = false;
-			update winnerMakePrivate;
-		}		
-		successfulMerge = true;
-		displaySearchResults = false;
-		displaySelected = false;
 	}
 	
 	public boolean displayMessagePopup {get; set;}

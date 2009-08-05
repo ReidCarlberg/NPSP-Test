@@ -29,25 +29,9 @@
 */
 @isTest
 private class TEST_ContactMergeController {
-/*
-	Cases:
-	
-	Different kinds of contact+orgs:
-	* private
-	* one-to-one
-	* Individual
-	* Org
-	
-	that yields 16 different tests.
-	
-	Additional tests:
-	* three contacts
-	* UI
-		* merge button should be invisible until a winner from the selected contacts is chosen
-*/
-
+	//exercise the many UI variables
     static testMethod void exerciseUI() {
-
+		//set up 3 contacts for the merge interface to work with
     	String newContactfirstName = 'test';
     	String newContactLastName = 'Contact_forTests';
     	String newContactMailingStreet = '123 Elm St';
@@ -87,28 +71,45 @@ private class TEST_ContactMergeController {
 		
         controller.searchText = 'test';
         //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
+        
+		controller.search();
+		controller.getSelected();
+		//search results should not be displayed
+		system.assert(!controller.displaySearchResults);
+		
 		Id[] fixedSearchResults=new Id[3]; 
 		fixedSearchResults[0]=con.Id; 
 		fixedSearchResults[1]=con2.Id; 
 		fixedSearchResults[2]=con3.Id; 
 		
 		Test.setFixedSearchResults(fixedSearchResults); 
-		
+		//call the search method, which will return the bogus SOSL results
         controller.search();
-       
+        //search results should be displayed
+		system.assert(controller.displaySearchResults);
+        
+       	//there should be 3 Contacts returned
 		system.assertEquals(3,controller.searchResults.size());
+		//we haven't selected a contact yet		
+		system.assertEquals(null,controller.thisMerge.getFirstContact());
 		
-		controller.searchResults[0].selected = true;
-		controller.searchResults[1].selected = true;
+		controller.searchResults[0].selected = true;		
 		controller.getSelected();
-		//two contacts should be returned
-		system.assertEquals(2,controller.thisMerge.selectedContacts.size());
+		//one contact should be returned
+		system.assertEquals(1,controller.thisMerge.selectedContacts.size());
+		//we've only selected one contact
+		system.assertNotEquals(null,controller.thisMerge.getFirstContact());
+		system.assertEquals(null,controller.thisMerge.getSecondContact());
+		system.assertEquals(null,controller.thisMerge.getThirdContact());
 		
 		controller.searchResults[0].selected = false;
+		controller.searchResults[1].selected = true;
 		controller.searchResults[2].selected = true;
 		controller.getSelected();
 		//two contacts should be returned
 		system.assertEquals(2,controller.thisMerge.selectedContacts.size());
+		//there should be a second contact now
+		system.assertNotEquals(null,controller.thisMerge.getSecondContact());
 		
 		controller.searchResults[0].selected = true;
 		controller.getSelected();
@@ -117,9 +118,8 @@ private class TEST_ContactMergeController {
 		system.assert(!controller.tooManyContactsSelected);
 		system.assert(!controller.tooFewContactsSelected);
 		
-		
 		system.assertEquals(con.id,controller.thisMerge.selectedContacts[0].id);
-		
+		//the merge button should be visible
 		system.assert(!controller.displayMergeButton);
 		
 		controller.thisMerge.firstContact = controller.thisMerge.selectedContacts[0];
@@ -158,6 +158,131 @@ private class TEST_ContactMergeController {
 		
 		system.assertEquals(con.id,controller.thisMerge.firstContact.id);
 		
+		controller.showMessagePopup();
+		system.assert(controller.displayMessagePopup);
+		controller.cancelMessagePopup();
+		system.assert(!controller.displayMessagePopup);
+    }
+    static testMethod void tooFewContactsSelected() {
+    	//set up 3 contacts for the merge interface to work with
+    	String newContactfirstName = 'test';
+    	String newContactLastName = 'Contact_forTests';
+    	String newContactMailingStreet = '123 Elm St';
+        Contact con = new Contact(
+        	FirstName=newContactfirstName,
+        	LastName=newContactLastName,
+        	MailingStreet = newContactMailingStreet,
+        	SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR
+        );
+        insert con;
+        
+        Test.setCurrentPageReference(new PageReference('Page.ContactMerge'));
+        
+        ContactMergeController controller = new ContactMergeController();
+		
+        controller.searchText = 'test';
+        //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value		
+		Id[] fixedSearchResults=new Id[1]; 
+		fixedSearchResults[0]=con.Id; 
+		
+		Test.setFixedSearchResults(fixedSearchResults); 
+		//call the search method, which will return the bogus SOSL results
+        controller.search();
+        
+		controller.searchResults[0].selected = true;		
+		controller.getSelected();
+		
+		//selection of this contact should be a too few selected error
+		controller.selectFirstContact();
+		//should display selected contacts
+		system.assert(controller.displaySelected);
+		
+		system.assert(controller.tooFewContactsSelected);
+    }
+    static testMethod void tooManyContactsSelected() {
+		//set up 3 contacts for the merge interface to work with
+    	String newContactfirstName = 'test';
+    	String newContactLastName = 'Contact_forTests';
+    	String newContactMailingStreet = '123 Elm St';
+        Contact con = new Contact(
+        	FirstName=newContactfirstName,
+        	LastName=newContactLastName,
+        	MailingStreet = newContactMailingStreet,
+        	SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR
+        );
+        insert con;
+        
+        String secondContactfirstName = 'test';
+    	String secondContactLastName = 'Contact_forTests2';
+    	String secondContactMailingStreet = '123 Elm St';
+        Contact con2 = new Contact(
+        	FirstName=secondContactfirstName,
+        	LastName=secondContactLastName,
+        	MailingStreet = secondContactMailingStreet,
+        	SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR
+        );
+        insert con2;
+        
+        String thirdContactfirstName = 'test';
+    	String thirdContactLastName = 'Contact_forTests3';
+    	String thirdContactMailingStreet = '123 Elm St';
+        Contact con3 = new Contact(
+        	FirstName=thirdContactfirstName,
+        	LastName=thirdContactLastName,
+        	MailingStreet = thirdContactMailingStreet,
+        	SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR
+        );
+        insert con3;
+        
+        String fourthContactfirstName = 'test';
+    	String fourthContactLastName = 'Contact_forTests3';
+    	String fourthContactMailingStreet = '123 Elm St';
+        Contact con4 = new Contact(
+        	FirstName=fourthContactfirstName,
+        	LastName=fourthContactLastName,
+        	MailingStreet = fourthContactMailingStreet,
+        	SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR
+        );
+        insert con4;
+        
+        Test.setCurrentPageReference(new PageReference('Page.ContactMerge'));
+        
+        ContactMergeController controller = new ContactMergeController();
+		
+        controller.searchText = 'test';
+        
+		Id[] fixedSearchResults=new Id[4]; 
+		fixedSearchResults[0]=con.Id; 
+		fixedSearchResults[1]=con2.Id; 
+		fixedSearchResults[2]=con3.Id; 
+		fixedSearchResults[3]=con4.Id;
+		
+		Test.setFixedSearchResults(fixedSearchResults); 
+		//call the search method, which will return the bogus SOSL results
+        controller.search();
+        
+		controller.searchResults[0].selected = true;
+		controller.searchResults[1].selected = true;
+		controller.searchResults[2].selected = true;
+		controller.searchResults[3].selected = true;
+		
+		controller.getSelected();
+		//should be a too many selected error
+		system.assert(controller.tooManyContactsSelected);
+    }
+    //test the visibilty of the popup messages
+    static testMethod void popupVisibility() {
+		//point to the VF page
+        Test.setCurrentPageReference(new PageReference('Page.ContactMerge'));
+        //instantiate the controller
+        ContactMergeController controller = new ContactMergeController();
+		//call methods
+		controller.showMessagePopup();
+		//the popup should be displayed
+		system.assert(controller.displayMessagePopup);
+		controller.cancelMessagePopup();
+		//the popup should be hidden
+		system.assert(!controller.displayMessagePopup);
     }
     //merge two contacts that are both in the one-to-one account model
     //the second contact's org should be deleted
@@ -624,6 +749,8 @@ private class TEST_ContactMergeController {
 		controller.searchResults[1].selected = true;
 		controller.searchResults[2].selected = true;
 		controller.getSelected();
+		
+		system.assertNotEquals(null,controller.thisMerge.getThirdContact());
 		//put them in the contact records
 		controller.thisMerge.firstContact = controller.thisMerge.selectedContacts[0];
 		controller.thisMerge.secondContact = controller.thisMerge.selectedContacts[1];
@@ -715,6 +842,7 @@ private class TEST_ContactMergeController {
 		//merge them
 		controller.mergeContacts();
 		
+		system.assert(controller.successfulMerge);
 		//second contact should be deleted
 		system.assertEquals(0,[select count() from Contact where id=:secondId]);
 		system.assertEquals(1,[select count() from Contact where id=:firstId]);
