@@ -35,9 +35,9 @@ public class Relationships {
 	{
 	}
 	
-	/// <name> triggerAction </name>
+	/// <name> triggeredAction </name>
 	/// <summary> contains possible actions for a trigger </summary>
-	public enum triggerAction {beforeInsert, beforeUpdate, beforeDelete, afterInsert, afterUpdate, afterDelete, afterUndelete}
+	public enum triggeredAction {beforeInsert, beforeUpdate, beforeDelete, afterInsert, afterUpdate, afterDelete, afterUndelete}
 
 
 	/// <name> Relationships </name>
@@ -45,7 +45,7 @@ public class Relationships {
 	/// <param name="Relationships"> Relationship objects that are being triggered </param>
 	/// <param name="oldRelationships"> Relationships object values before trigger event </param>
 	/// <param name="ta"> Trigger action that is occuring </param>
-	public Relationships(Relationship__c[] Relationships, Relationship__c[] oldRelationships, triggerAction ta) 
+	public Relationships(Relationship__c[] Relationships, Relationship__c[] oldRelationships, triggeredAction ta) 
 	{	
 		// Relationship list for termination updates
 		List<Relationship__c> origrelationships = new List<Relationship__c>();
@@ -59,7 +59,7 @@ public class Relationships {
 		for(Relationship__c r : Relationships) 
 		{
 			// AFTER INSERT
-			if (ta==triggerAction.afterInsert) 
+			if (ta==triggeredAction.afterInsert) 
 			{
 				if (r.ReciprocalRelationship__c == null)
 				{
@@ -72,7 +72,7 @@ public class Relationships {
 			}
 			
 			// AFTER UPDATE
-			if (ta==triggerAction.afterUpdate) 
+			if (ta==triggeredAction.afterUpdate) 
 			{
 				if (r.ReciprocalRelationship__c == oldRelationships[i].ReciprocalRelationship__c && r.RelatedContact__c != null)
 				{
@@ -86,7 +86,7 @@ public class Relationships {
 			}
 
 			// AFTER DELETE
-			if (ta==triggerAction.afterDelete) 
+			if (ta==triggeredAction.afterDelete) 
 			{
 				if (r.ReciprocalRelationship__c != null)
 				{
