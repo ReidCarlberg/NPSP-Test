@@ -16,10 +16,10 @@ This is a draft plan for future development of the Nonprofit Starter Pack.
  * Tests for bulk data scenarios
  * Minimize pre/post install steps
  * Spanish Translations
+ * ContactMerge for the 1-to-1 model
 
 = Release #3 = 
  * [http://code.google.com/p/npsp/issues/list?can=1&q=milestone=Fall09&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary Issues]
- * ContactMerge for the 1-to-1 model
  * campaigns in recurring donations
  * Technical documentation v.2
 
