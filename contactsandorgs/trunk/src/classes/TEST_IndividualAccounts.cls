@@ -99,6 +99,8 @@ private class TEST_IndividualAccounts {
 		system.assertEquals(updatedContacts[0].OtherCity,updatedContacts[0].Account.ShippingCity);
 		
     }
+    
+    
     /// <name> detachOneToOne </name>
     /// <summary> Test Method for separating a Contact from it's One-to-One account</summary>
     static testMethod void detachOneToOne()
@@ -124,10 +126,16 @@ private class TEST_IndividualAccounts {
         
         Contact[] updatedContacts = [Select FirstName, LastName, AccountId,Account.Name,Account.npe01__One2OneContact__c from Contact where id=:con.id];
 		
+		//Original Account should still be there
+		Account[] originalAccount = [Select id from Account where Id=:originalAccountId];
+		
+		system.assertEquals(1,originalAccount.size());
+		
 		//AccountId of updated contact should match the orignial Account
 		system.assertEquals(originalAccountId,updatedContacts[0].AccountId);
 	
     }
+    
     
     /// <name> editContactDuringDetachOneToOne </name>
     /// <summary> Test Method for editing a contact while it is being detached from it's One-to-One Account. This was a bug (#37)</summary>

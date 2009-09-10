@@ -28,7 +28,7 @@
 	POSSIBILITY OF SUCH DAMAGE.
 */
 public class ContactMergeController {
-	
+	/*
 	public ContactMergeController(){
 		searchText='';
 		searchResults = new List<contactWrapper>();
@@ -38,10 +38,17 @@ public class ContactMergeController {
 		tooFewContactsSelected = true;
 		displaySearchResults = false;
 		displayMergeButton = false;
+		fieldsForReturn = getContactFields();
 		contactFields = Schema.SObjectType.Contact.fields.getMap();
 	}
 	//boolean used to render the selected Contacts pane
 	public Boolean displaySelected { get { return displaySelected; } set { displaySelected = value; } }
+	
+	//string for all the Contact fields
+	public String fieldsForReturn { get { return fieldsForReturn; } set { fieldsForReturn = value; } }
+	
+	//List for SOSL results
+	public List<List<SObject>> searchList { get { return searchList; } set { searchList = value; } }
 	
 	//boolean used to render the search results pane
 	public Boolean displaySearchResults { get { return displaySearchResults; } set { displaySearchResults = value; } }
@@ -120,46 +127,68 @@ public class ContactMergeController {
 	}
 	//search for contacts
 	public void search() {
+		
 		if(searchText.length()>0){
-			//empty any previous results
-			thisMerge.selectedContacts.clear();
-			searchResults.clear();
+			
 			//reset booleans that control display of results elements
 			displaySelected = false;
 			successfulMerge = false;
-			
-			String fieldsForReturn = '';         
-			//get all fields from the Contact record and put in string for dynamic SOSL call
-			Set<String> fields = contactFields.keySet(); 
-			Boolean firstField = true;               
-			for(String field : Fields){        	
-				if(!firstField) // if it's not the first prepend a comma        		
-					fieldsForReturn += ',' + field;        	
-				else        		
-					fieldsForReturn += field;
-					firstField = false;
-			}             
-			 
-			//build the SOSL query and execute
-			String searchquery = 'FIND \'' + searchText + '\' IN ALL FIELDS RETURNING Contact(' + fieldsForReturn +' ORDER BY LastName LIMIT ' + SOSL_LIMIT + ')';
-			
-			List<List<SObject>> searchList = search.query(searchquery);
-			
-			//loop through the contacts putting them in an array of wrappers
-			for (SObject returnedObject : searchList[0]){
+			displaySearchResults = false;
+
+			mySOSL();
+			searchResults = wrapSOSLResults(searchList);
+
+			//if we got a result back, show the search results pane
+			if(searchResults.size()>0){
+				displaySearchResults = true;
+			}
+		}
+	}
+	//separate method so these fields are only described once--called from constructor
+	public String getContactFields(){
+		String fieldString = '';
+		
+		//get all fields from the Contact record and put in string for dynamic SOSL call
+		Set<String> fields = contactFields.keySet(); 
+		Boolean firstField = true;               
+		for(String field : Fields){        	
+			if(!firstField) // if it's not the first prepend a comma        		
+				fieldString += ',' + field;        	
+			else        		
+				fieldString += field;
+				firstField = false;
+		}  
+		return fieldString;
+	}
+	//run the SOSL
+	public void mySOSL()
+	{
+		//empty any previous results
+		thisMerge.selectedContacts.clear();
+		searchResults.clear();    
+		
+		//build the SOSL query and execute
+		String searchquery = 'FIND \'' + searchText + '\' IN ALL FIELDS RETURNING Contact(' + fieldsForReturn +' ORDER BY LastName LIMIT ' + SOSL_LIMIT + ')';
+		
+		searchList = search.query(searchquery);
+		//List<List<SObject>> searchList = new List<List<SObject>>();
+		
+		
+	}
+	//wrap the SOSL results
+	public List<contactWrapper> wrapSOSLResults(List<List<SObject>> mySearchList){
+		
+		//loop through the contacts putting them in an array of wrappers
+		if(mySearchList.size()>0){
+			for (SObject returnedObject : mySearchList[0]){
 				//if the returned object is a contact, add it to the Contact list
 				if(returnedObject.getSObjectType() == Contact.sObjectType){
 					contactWrapper thisResult = new contactWrapper((Contact) returnedObject);				
 					searchResults.add(thisResult);	
 				}
 			}
-			//if we got a result back, show the search results pane
-			if (searchResults.size()>0){
-				displaySearchResults = true;
-			} else {
-				displaySearchResults = false;
-			}
 		}
+		return searchResults;		
 	}
 	//method that is run when a Contact checkbox is clicked in the search results.
 	//contacts are collected and put in the pane for display
@@ -225,6 +254,7 @@ public class ContactMergeController {
         		thisMerge.displayThird = true;
         	}
         }
+        
     }
 	//method to merge the winner and losers
 	public void mergeContacts() {
@@ -250,4 +280,5 @@ public class ContactMergeController {
     	}
         displayMessagePopup = true;
     }
+    */
 }

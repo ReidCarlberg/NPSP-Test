@@ -43,5 +43,23 @@ global class Constants {
     public static String BUCKET_ORGANIZATION_TYPE = 'Bucket Individual';
     //Bucket Account name
     public static String BUCKET_ACCOUNT_NAME = 'Individual';
+    
+    public static boolean ONE_TO_ONE_ACCOUNT_MODEL = isOneToOne();
+    
+     //method to tell which model we're currently in for Accounts
+    public static boolean isOneToOne() {
+    	boolean isOneToOneModel;
+    	isOneToOneModel = false;
+    	Schema.DescribeFieldResult F = Schema.sObjectType.Contact.fields.npe01__SystemAccountProcessor__c; 
+		List<Schema.PicklistEntry> P = F.getPicklistValues();
+		for(Schema.PicklistEntry pe : P){
+			if (pe.isDefaultValue()){
+				if(pe.getValue()==Constants.ONE_TO_ONE_PROCESSOR){ isOneToOneModel = true;}
+			}
+		}
+		
+    	return isOneToOneModel;
+    }
+    
 
 }

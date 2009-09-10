@@ -3,6 +3,7 @@
  */
 @isTest
 private class bulkTests2 {
+	/*
  static testMethod void detachIndividualAccount()
     {
         List<Contact> cons = new List<contact>();
@@ -116,4 +117,5 @@ private class bulkTests2 {
 		      
         
     }
+    */
 }

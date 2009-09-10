@@ -1,4 +1,5 @@
 <apex:page controller="ContactMergeController" title="Merge Contacts">
+<!-- 
 	<style type="text/css">
         .messagepopup{
             background-color:white;
@@ -53,7 +54,9 @@
 					</apex:column>
 					<apex:column value="{!item.con.AccountId}"/>
 					<apex:column value="{!item.con.email}"/>
-					<apex:column value="{!item.con.phone}"/>	
+					<apex:column value="{!item.con.Preferred_Email__c}"/>
+					<apex:column value="{!item.con.phone}"/>
+					<apex:column value="{!item.con.PreferredPhone__c}"/>
 				</apex:pageBlockTable>		
 			</apex:pageBlock> 
     	</apex:form>
@@ -121,4 +124,5 @@
 			</apex:pageBlockTable>		
 		</apex:pageBlock>
 	</apex:outputPanel>
+	 -->
 </apex:page>

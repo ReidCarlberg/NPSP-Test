@@ -3,7 +3,7 @@
  */
 @isTest
 private class bulkTests {
-
+/*
     static testMethod void insertPrivate()
     {
     	String newContactfirstName = 'test';
@@ -233,5 +233,5 @@ private class bulkTests {
         
     }
     
-   
+   */
 }
