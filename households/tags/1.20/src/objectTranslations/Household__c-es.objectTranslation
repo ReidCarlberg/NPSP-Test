@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <value><!-- Household --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- Household --></value>
+    </caseValues>
+    <fields>
+        <label>Destinatario</label>
+        <name>Addressee__c</name>
+    </fields>
+    <fields>
+        <label>Siempre anónima</label>
+        <name>Always_Anonymous__c</name>
+    </fields>
+    <fields>
+        <label>Dirección</label>
+        <name>Formula_MailingAddress__c</name>
+    </fields>
+    <fields>
+        <label>Correo electrónico del Hogar</label>
+        <name>HouseholdEmail__c</name>
+    </fields>
+    <fields>
+        <label>Teléfono  del Hogar</label>
+        <name>HouseholdPhone__c</name>
+    </fields>
+    <fields>
+        <label>ID Hogar</label>
+        <name>Household_ID__c</name>
+    </fields>
+    <fields>
+        <label>Ciudad</label>
+        <name>MailingCity__c</name>
+    </fields>
+    <fields>
+        <label>País</label>
+        <name>MailingCountry__c</name>
+    </fields>
+    <fields>
+        <label>Código Postal</label>
+        <name>MailingPostalCode__c</name>
+    </fields>
+    <fields>
+        <label>Estado/Provincia</label>
+        <name>MailingState__c</name>
+    </fields>
+    <fields>
+        <label>Calle</label>
+        <name>MailingStreet__c</name>
+    </fields>
+    <gender><!-- Feminine --></gender>
+    <layouts>
+        <layout>Household Layout</layout>
+        <sections>
+            <label>Información de la Familia</label>
+            <section>Household Information</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel><!-- Household Name --></nameFieldLabel>
+    <webLinks>
+        <label>Nuevo Miembro de la Familia</label>
+        <name>New_Household_Member</name>
+    </webLinks>
+</CustomObjectTranslation>
