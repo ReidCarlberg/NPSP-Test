@@ -10,18 +10,18 @@ This is a draft plan for future development of the Nonprofit Starter Pack.
  * New wiki
  * Test coverage improvements
 
-= Release #2 - working =
+= Release #2 - released 09/11/09 =
  * [http://code.google.com/p/npsp/issues/list?can=1&q=milestone=Summer09&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary Issues]
  * Test coverage improvements
  * Tests for bulk data scenarios
  * Minimize pre/post install steps
  * Spanish Translations
- * ContactMerge for the 1-to-1 model
 
-= Release #3 = 
+= Release #3 - planning = 
  * [http://code.google.com/p/npsp/issues/list?can=1&q=milestone=Fall09&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary Issues]
  * campaigns in recurring donations
  * Technical documentation v.2
+ * ContactMerge for the 1-to-1 model
 
 = Release #4 = 
  * Lead convert 1-to-1 model, v.2
