@@ -13,7 +13,7 @@
 	* Neither the name of the Salesforce.com Foundation nor the names of
 	  its contributors may be used to endorse or promote products derived
   	  from this software without specific prior written permission.
- 
+
 	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 	"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
 	LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -27,26 +27,6 @@
 	ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
 	POSSIBILITY OF SUCH DAMAGE.
 */
-trigger Relationships on Relationship__c (before insert, before update, before delete, 
-after insert, after update, after delete, after undelete) {
-
-  
-    if(Trigger.isInsert && Trigger.isBefore){
-        Relationships process = new Relationships(Trigger.new, Trigger.old, Relationships_Utils.triggerAction.beforeInsert);
-    }
-    if( Trigger.isAfter && Trigger.isInsert ){
-        Relationships process = new Relationships(Trigger.new, Trigger.old, Relationships_Utils.triggerAction.afterInsert);
-    }
-    if(Trigger.isUpdate && Trigger.isBefore){
-        Relationships process = new Relationships(Trigger.new, Trigger.old, Relationships_Utils.triggerAction.beforeUpdate);
-    }
-    if( Trigger.isAfter && Trigger.isUpdate ){
-        Relationships process = new Relationships(Trigger.new, Trigger.old, Relationships_Utils.triggerAction.afterUpdate);
-    }
-    if( Trigger.isAfter && Trigger.isUpdate ){
-        Relationships process = new Relationships(Trigger.new, Trigger.old, Relationships_Utils.triggerAction.afterUpdate);
-    }
-    if( Trigger.isAfter && Trigger.isDelete ){
-        Relationships process = new Relationships(Trigger.old, null, Relationships_Utils.triggerAction.afterDelete);
-    }   
+public class Relationships_Utils {
+	public enum triggerAction {beforeInsert, beforeUpdate, beforeDelete, afterInsert, afterUpdate, afterDelete, afterUndelete}
 }

@@ -34,18 +34,13 @@ public class Relationships {
 	public Relationships()
 	{
 	}
-	
-	/// <name> triggeredAction </name>
-	/// <summary> contains possible actions for a trigger </summary>
-	public enum triggeredAction {beforeInsert, beforeUpdate, beforeDelete, afterInsert, afterUpdate, afterDelete, afterUndelete}
-
 
 	/// <name> Relationships </name>
 	/// <summary> Overloads the Relationships object constructor to handle Relationship processing </summary>
 	/// <param name="Relationships"> Relationship objects that are being triggered </param>
 	/// <param name="oldRelationships"> Relationships object values before trigger event </param>
 	/// <param name="ta"> Trigger action that is occuring </param>
-	public Relationships(Relationship__c[] Relationships, Relationship__c[] oldRelationships, triggeredAction ta) 
+	public Relationships(Relationship__c[] Relationships, Relationship__c[] oldRelationships, Relationships_Utils.triggerAction ta) 
 	{	
 		// Relationship list for termination updates
 		List<Relationship__c> origrelationships = new List<Relationship__c>();
@@ -59,7 +54,7 @@ public class Relationships {
 		for(Relationship__c r : Relationships) 
 		{
 			// AFTER INSERT
-			if (ta==triggeredAction.afterInsert) 
+			if (ta==Relationships_Utils.triggerAction.afterInsert) 
 			{
 				if (r.ReciprocalRelationship__c == null)
 				{
@@ -72,7 +67,7 @@ public class Relationships {
 			}
 			
 			// AFTER UPDATE
-			if (ta==triggeredAction.afterUpdate) 
+			if (ta==Relationships_Utils.triggerAction.afterUpdate) 
 			{
 				if (r.ReciprocalRelationship__c == oldRelationships[i].ReciprocalRelationship__c && r.RelatedContact__c != null)
 				{
@@ -86,7 +81,7 @@ public class Relationships {
 			}
 
 			// AFTER DELETE
-			if (ta==triggeredAction.afterDelete) 
+			if (ta==Relationships_Utils.triggerAction.afterDelete) 
 			{
 				if (r.ReciprocalRelationship__c != null)
 				{
@@ -113,6 +108,7 @@ public class Relationships {
 			deleteRelationship(relationshipsToDelete);
 		}
 	}
+
 
 	/// <name> deleteRelationships </name>
 	/// <summary> Deletes Reciprocal Relationships when a Relationship is deleted </summary>
