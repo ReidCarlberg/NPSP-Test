@@ -22,6 +22,7 @@ This is a draft plan for future development of the Nonprofit Starter Pack.
  * campaigns in recurring donations
  * Technical documentation v.2
  * ContactMerge for the 1-to-1 model
+ * exception handing
 
 = Release #4 = 
  * Lead convert 1-to-1 model, v.2
