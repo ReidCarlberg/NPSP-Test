@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Translations xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customPageWebLinks>
+        <label>Rapports de l&apos;Edition Nonprofit</label>
+        <name>Nonprofit_Edition_Reports</name>
+    </customPageWebLinks>
+    <customTabs>
+        <label>A propos des Nonprofit Starter Pack</label>
+        <name>About_Nonprofit_Edition</name>
+    </customTabs>
+    <scontrols>
+        <label>SubstituerVueCompte</label>
+        <name>AccountViewOverride</name>
+    </scontrols>
+    <scontrols>
+        <label>CréditsDonsContact</label>
+        <name>ContactDonationCredit</name>
+    </scontrols>
+    <scontrols>
+        <label>NPO_PageAccueil</label>
+        <name>NPO_HomePageComponent</name>
+    </scontrols>
+</Translations>

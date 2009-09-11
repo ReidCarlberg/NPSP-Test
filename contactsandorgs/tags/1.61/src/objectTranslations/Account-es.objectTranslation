@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <label>Fecha Primera Donación</label>
+        <name>FirstDonationDate__c</name>
+    </fields>
+    <fields>
+        <label>Fecha Última Donación</label>
+        <name>LastDonationDate__c</name>
+    </fields>
+    <fields>
+        <label>Monto Total Donado</label>
+        <name>LifetimeDonationHistory_Amount__c</name>
+    </fields>
+    <fields>
+        <label>Número Total de Donaciones</label>
+        <name>LifetimeDonationHistory_Number__c</name>
+    </fields>
+    <fields>
+        <name>One2OneContact__c</name>
+        <relationshipLabel>Cuenta</relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- _SYSTEM: IsIndividual --></label>
+        <name>SYSTEMIsIndividual__c</name>
+    </fields>
+    <fields>
+        <help><!-- System field: do not use or change. --></help>
+        <label><!-- _SYSTEM: AccountType --></label>
+        <name>SYSTEM_AccountType__c</name>
+    </fields>
+</CustomObjectTranslation>
