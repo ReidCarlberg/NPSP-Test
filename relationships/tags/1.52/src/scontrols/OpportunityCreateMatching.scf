@@ -1,0 +1,15 @@
+<script type="text/javascript" src="/js/functions.js"></script>
+<script src="/soap/ajax/12.0/connection.js"></script>
+<script>
+var url = '';
+url += '&RecordType=012400000005OUm';
+url += '&conid={!Opportunity.Contact__c}';
+url += '&opp3={!Account.Name} {!Opportunity.CloseDate} Matching Donation';
+url += '&opp7={!Opportunity.Amount}';
+url += '&opp9={!Opportunity.CloseDate}';
+url += '&CF00N40000001q6oX_lkid={!Opportunity.Id}';
+url += '&CF00N40000001q6oX={!Opportunity.Name}';
+
+this.parent.location.href = "/006/e?retURL=%2F{!Opportunity.Id}&cancelURL=%2F{!Opportunity.Id}" + url;
+//this.parent.location.href = "{!URLFOR($Action.Opportunity.New, null, [retURL=URLFOR($Action.Opportunity.View, Opportunity.Id)], true)}&conid={!Opportunity.Contact__c}&RecordType=012400000005OUm&cancelURL=%2F{!Opportunity.Id}"
+</script>
