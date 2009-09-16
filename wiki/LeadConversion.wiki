@@ -1,0 +1,17 @@
+#summary Planning for improvements to Lead Conversion
+
+= Current State =
+
+Lead Conversion has a couple issues right now:
+  # [http://code.google.com/p/npsp/issues/detail?id=79 Email and Phone fields aren't handled  correctly]
+  # [http://code.google.com/p/npsp/issues/detail?id=87 Email and Phone validation rules can stop Lead Conversion]
+  # [http://code.google.com/p/npsp/issues/detail?id=41 Leads can't be merged to existing Contacts in the one-to-one model]
+
+The first two issues have to do with Email and Phone fields and how they are handled on the Contact obect
+
+= Details =
+
+Add your content here.  Format your content with:
+  * Text in *bold* or _italic_
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages
