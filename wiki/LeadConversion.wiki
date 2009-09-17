@@ -1,7 +1,7 @@
 #summary Planning for improvements to Lead Conversion
 #labels Featured
 
-= Current State =
+== Current State ==
 
 Lead Conversion has a couple issues right now:
   # [http://code.google.com/p/npsp/issues/detail?id=79 Email and Phone fields aren't handled  correctly]
@@ -12,7 +12,7 @@ The first two issues have to do with Email and Phone fields and how they are han
 
 Right now there are multiple email and phone fields. The user selects Preferred Email and Preferred Phone, and the standard Email and Phone fields get filled from the preferred subsidiary field via workflow.
 
-= How to architect phone and email fields on Leads? =
+== How to architect phone and email fields on Leads? ==
 
 Leads can be converted to Contacts. When that happens, data in the Lead fields can be brought over to the Contact. This happens automatically for some standard fields, like email, and you can set up custom mapping for custom fields.
 
@@ -32,5 +32,3 @@ If we follow #2, we don't lose any of the functionality of #1. But we do have th
 We cannot, however, create fields on the Lead for Home Phone and Other Phone. Since these are standard fields on Contact, but are not standard fields on Lead, we can't map them through.
 
 Because we can't do a complete solution, I'm leaning toward #1, with instructions how to do #2 manually, explaining the limitations.
-
-
