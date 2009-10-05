@@ -248,7 +248,7 @@ global class Households {
 			contactIds.add(c.Id);
 		}
 		Double total = 0;
-		List<OpportunityContactRole> ocr = [Select Opportunity.Amount, Opportunity.CloseDate from OpportunityContactRole where ContactId in :contactIds Order By Opportunity.CloseDate DESC];
+		List<OpportunityContactRole> ocr = [Select Opportunity.Amount, Opportunity.CloseDate from OpportunityContactRole where ContactId in :contactIds AND Opportunity.isWon = true Order By Opportunity.CloseDate DESC];
 		if (ocr.size() > 0)
 		{
 			Date lastTransaction = ocr[0].Opportunity.CloseDate;
@@ -269,12 +269,19 @@ global class Households {
 			contactIds.add(c.Id);
 		}
 		Double total = 0;
-		for( OpportunityContactRole ocr : [Select Opportunity.Amount, OpportunityId From OpportunityContactRole where ContactId in :contactIds])
+		Set<Id> opps = new Set<Id>();
+		
+		for( OpportunityContactRole ocr : [Select Opportunity.Amount, OpportunityId From OpportunityContactRole where ContactId in :contactIds AND Opportunity.isWon = true])
 		{
 			if ( ocr.Opportunity.Amount != null )
 			{
-				total += ocr.Opportunity.Amount;
+				opps.add(ocr.OpportunityId);
+
 			}
+		}
+		for( Opportunity wonOpps : [Select Amount From Opportunity where Id in :opps])
+		{
+			total += wonOpps.Amount;
 		}
 		String totalString = system.label.DefaultHouseholdTransactionCurrency;
 		Decimal totalFormat = Decimal.valueOf(total).setScale(2);
