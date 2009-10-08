@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <label>Dirección del Hogar</label>
+        <name>Formula_HouseholdMailingAddress__c</name>
+    </fields>
+    <fields>
+        <label>Teléfono del Hogar</label>
+        <name>Formula_HouseholdPhone__c</name>
+    </fields>
+    <fields>
+        <label>Hogar</label>
+        <name>Household__c</name>
+        <relationshipLabel>Miembros del Hogar</relationshipLabel>
+    </fields>
+    <fields>
+        <label>Idiomas</label>
+        <name>Languages__c</name>
+    </fields>
+    <fields>
+        <label>Nivel</label>
+        <name>Level__c</name>
+        <picklistValues>
+            <masterLabel>Primary</masterLabel>
+            <translation>Primario</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Secondary</masterLabel>
+            <translation>Secundario</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Tertiary</masterLabel>
+            <translation>Superior</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- _SYSTEM: HOUSEHOLD PROCESSOR --></label>
+        <name>SystemHouseholdProcessor__c</name>
+    </fields>
+    <fields>
+        <label>Correo electrónico alternativo</label>
+        <name>npe01__AlternateEmail__c</name>
+    </fields>
+    <fields>
+        <label>Correo electrónico particular</label>
+        <name>npe01__HomeEmail__c</name>
+    </fields>
+    <fields>
+        <label>Dirección particular</label>
+        <name>npe01__Home_Address__c</name>
+    </fields>
+    <fields>
+        <label>Fecha de la última transacción</label>
+        <name>npe01__Last_Donation_Date__c</name>
+    </fields>
+    <fields>
+        <label>Monto total de transacciones</label>
+        <name>npe01__Lifetime_Giving_History_Amount__c</name>
+    </fields>
+    <fields>
+        <label>Tipo de organización</label>
+        <name>npe01__Organization_Type__c</name>
+    </fields>
+    <fields>
+        <label>Otra dirección</label>
+        <name>npe01__Other_Address__c</name>
+    </fields>
+    <fields>
+        <label>Teléfono elegido</label>
+        <name>npe01__PreferredPhone__c</name>
+        <picklistValues>
+            <masterLabel>Home</masterLabel>
+            <translation>Particular</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Household</masterLabel>
+            <translation>Familiar</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Mobile</masterLabel>
+            <translation>Célular</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Other</masterLabel>
+            <translation>Otro</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Work</masterLabel>
+            <translation>Laboral</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label>Correo electrónico elegido</label>
+        <name>npe01__Preferred_Email__c</name>
+        <picklistValues>
+            <masterLabel>Alternate</masterLabel>
+            <translation>Alternativo</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Home</masterLabel>
+            <translation>Particular</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Household</masterLabel>
+            <translation>Familia</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Work</masterLabel>
+            <translation>Laboral</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label>Tipo de dirección de correo</label>
+        <name>npe01__Primary_Address_Type__c</name>
+    </fields>
+    <fields>
+        <label>Privado</label>
+        <name>npe01__Private__c</name>
+    </fields>
+    <fields>
+        <label>Tipo de otra dirección</label>
+        <name>npe01__Secondary_Address_Type__c</name>
+    </fields>
+    <fields>
+        <label><!-- _SYSTEM: ACCOUNT PROCESSOR --></label>
+        <name>npe01__SystemAccountProcessor__c</name>
+    </fields>
+    <fields>
+        <label><!-- _SYSTEM: IsIndividual --></label>
+        <name>npe01__SystemIsIndividual__c</name>
+    </fields>
+    <fields>
+        <label>Correo electrónico laboral</label>
+        <name>npe01__WorkEmail__c</name>
+    </fields>
+    <fields>
+        <label>Teléfono laboral</label>
+        <name>npe01__WorkPhone__c</name>
+    </fields>
+    <fields>
+        <label>Dirección laboral</label>
+        <name>npe01__Work_Address__c</name>
+    </fields>
+    <layouts>
+        <layout>Contact Layout</layout>
+        <sections>
+            <label>Información del contacto</label>
+            <section>Contact Information</section>
+        </sections>
+    </layouts>
+</CustomObjectTranslation>
