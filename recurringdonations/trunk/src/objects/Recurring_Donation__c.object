@@ -40,7 +40,7 @@
         <formula>CASE(
  Schedule_Type__c ,
 &quot;Multiply By&quot;, Amount__c ,
-&quot;Divide By&quot;, Amount__c / Installments__c ,
+&quot;Divide By&quot;, IF(Installments__c&gt;0,Amount__c / Installments__c,0) ,
 0
 )</formula>
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
