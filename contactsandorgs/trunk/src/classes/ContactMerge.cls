@@ -28,9 +28,9 @@
 	POSSIBILITY OF SUCH DAMAGE.
 */
 public class ContactMerge {
-/*
-	This class handles the heavy lifting of merging contacts. It can be called
-	from the VisualForce page for contact merge, or elsewhere.
+
+	//This class handles the heavy lifting of merging contacts. It can be called
+	//from the VisualForce page for contact merge, or elsewhere.
 
 	//min number of contacts that can be merged
 	public final Integer MERGE_MINIMUM = 2;
@@ -233,5 +233,5 @@ public class ContactMerge {
     	secondIsWinner = false;
     	thirdIsWinner = false;
     }        
-    */
+    
 }

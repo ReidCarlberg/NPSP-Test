@@ -27,9 +27,6 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE.
 */
-@isTest
-private class TEST_ContactMergeController {
-
 /*
     static testMethod void soslTest() {
         Account thisAccount = new Account(name='junk');
@@ -41,7 +38,11 @@ private class TEST_ContactMergeController {
                                          IN ALL FIELDS RETURNING 
                                             Account(id, name WHERE name = 'test' LIMIT 1)];
     }
-    
+    */
+@isTest
+private class TEST_ContactMergeController {
+
+
     
     //exercise the many UI variables
     static testMethod void exerciseUI() {
@@ -88,14 +89,11 @@ private class TEST_ContactMergeController {
 
         controller.searchText = 'test';
         
-        //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
-        
-        controller.search();
-        
-        controller.getSelected();
-        //search results should not be displayed
+		controller.search();
+		
+		//search results should be displayed
         system.assert(!controller.displaySearchResults);
-        
+
         Id[] fixedSearchResults=new Id[3]; 
         fixedSearchResults[0]=con.Id; 
         fixedSearchResults[1]=con2.Id; 
@@ -107,8 +105,10 @@ private class TEST_ContactMergeController {
         
         controller.search();
         
-        
-        
+		//if we got a result back, show the search results pane
+		if(controller.searchResults.size()>0){
+			controller.displaySearchResults = true;
+		}
         //search results should be displayed
         system.assert(controller.displaySearchResults);
         
@@ -116,6 +116,10 @@ private class TEST_ContactMergeController {
         system.assertEquals(3,controller.searchResults.size());
         //we haven't selected a contact yet     
         system.assertEquals(null,controller.thisMerge.getFirstContact());
+        
+        controller.getSelected();
+        //one contact should be returned
+        system.assertEquals(0,controller.thisMerge.selectedContacts.size());
         
         controller.searchResults[0].selected = true;        
         controller.getSelected();
@@ -192,7 +196,7 @@ private class TEST_ContactMergeController {
         Test.stopTest();
         
     }
-    
+   
     static testMethod void tooFewContactsSelected() {
         //set up 3 contacts for the merge interface to work with
         String newContactfirstName = 'test';
@@ -880,5 +884,5 @@ private class TEST_ContactMergeController {
         system.assertEquals(1,[select count() from Account where id=:secondAccountId]);
         system.assertEquals(1,[select count() from Account where id=:firstAccountId]);
     }
-   */ 
+  
 }

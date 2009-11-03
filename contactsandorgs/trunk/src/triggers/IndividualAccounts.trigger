@@ -29,23 +29,25 @@
 */
 trigger IndividualAccounts on Contact (before insert, before update, after insert, after update,after delete) {
 
-    /// <name> triggerAction </name>
-    /// <summary> contains possible actions for a trigger </summary>
-    public enum triggerAction {beforeInsert, beforeUpdate, beforeDelete, afterInsert, afterUpdate, afterDelete, afterUndelete}
+	
  
     if(Trigger.isInsert && Trigger.isBefore){
-        IndividualAccounts process = new IndividualAccounts(Trigger.new, Trigger.old, triggerAction.beforeInsert);
+        IndividualAccounts process = new IndividualAccounts(Trigger.new, Trigger.old, IndividualAccounts_Utils.triggerAction.beforeInsert);
     }
     if(Trigger.isUpdate && Trigger.isBefore){
-        IndividualAccounts process = new IndividualAccounts(Trigger.new, Trigger.old, triggerAction.beforeUpdate);
+        IndividualAccounts process = new IndividualAccounts(Trigger.new, Trigger.old, IndividualAccounts_Utils.triggerAction.beforeUpdate);
     }
     if( Trigger.isAfter && Trigger.isInsert ){
-        IndividualAccounts process = new IndividualAccounts(Trigger.new, Trigger.old, triggerAction.afterInsert);
+    	//requery to get correct Account values
+    	Contact[] newContacts = [select id,SystemAccountProcessor__c,Private__c,AccountId,Account.npe01__SYSTEMIsIndividual__c,Account.Name,firstname, lastname from Contact where Id IN :trigger.New];
+	        
+        IndividualAccounts process = new IndividualAccounts(newContacts, Trigger.old, IndividualAccounts_Utils.triggerAction.afterInsert);
     }
     if( Trigger.isAfter && Trigger.isUpdate ){
-        IndividualAccounts process = new IndividualAccounts(Trigger.new, Trigger.old, triggerAction.afterUpdate);
+	    
+        IndividualAccounts process = new IndividualAccounts(Trigger.new, Trigger.old, IndividualAccounts_Utils.triggerAction.afterUpdate);
     }
     if( Trigger.isAfter && Trigger.isDelete ){
-        IndividualAccounts process = new IndividualAccounts(Trigger.new, Trigger.old, triggerAction.afterDelete);
+        IndividualAccounts process = new IndividualAccounts(Trigger.new, Trigger.old, IndividualAccounts_Utils.triggerAction.afterDelete);
     }
 }

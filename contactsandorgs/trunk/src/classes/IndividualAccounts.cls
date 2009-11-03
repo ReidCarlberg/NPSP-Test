@@ -33,10 +33,6 @@ global class IndividualAccounts
     /// <name> IndividualAccounts </name>
     /// <summary> Default Constructor </summary>
     public IndividualAccounts(){}
-
-    /// <name> triggerAction </name>
-    /// <summary> contains possible actions for a trigger </summary>
-    public enum triggerAction {beforeInsert, beforeUpdate, beforeDelete, afterInsert, afterUpdate, afterDelete, afterUndelete}
     
 
     /// <name> IndividualAccounts </name>
@@ -44,7 +40,7 @@ global class IndividualAccounts
     /// <param name="contacts"> Contact objects that are being triggered </param>
     /// <param name="oldContacts"> Contact object values before trigger event </param>
     /// <param name="ta"> Trigger action that is occuring </param>
-    public IndividualAccounts(Contact[] contacts, Contact[] oldContacts, triggerAction ta)
+    public IndividualAccounts(Contact[] contacts, Contact[] oldContacts, IndividualAccounts_Utils.triggerAction ta)
     {
     	
         List<Contact> individualInserts = new List<Contact>();
@@ -55,7 +51,7 @@ global class IndividualAccounts
         
         Integer i = 0;
         //if this is after a delete
-        if(ta==triggerAction.afterDelete){
+        if(ta==IndividualAccounts_Utils.triggerAction.afterDelete){
         	
         	for(Contact c : oldContacts) {
 				contactDeletes.add(c);
@@ -64,16 +60,14 @@ global class IndividualAccounts
         	//that override, by default, only worked with a batch size of one, so we aren't taking
         	//any functionality away. Would like to to large batches, but it becomes difficult to
         	//check for opps on the accounts when an account could have a large number of opps
-	        if (contactDeletes.size()==1)
-	        {
+	        if (contactDeletes.size()==1) {
 	        	deleteContactAccounts(contactDeletes);
 	        }
         } else {
-	        	
 	        for(Contact c : contacts)
 	        {
 	            //BEFORE INSERT
-	            if ( ta==triggerAction.beforeInsert )
+	            if ( ta==IndividualAccounts_Utils.triggerAction.beforeInsert )
 	            {
 	            	/*one-to-one account should be created if:
 	            		1. The account isn't set by the user
@@ -98,24 +92,24 @@ global class IndividualAccounts
 	            }
 	
 	            //AFTER INSERT
-	            if ( ta==triggerAction.afterInsert )
+	            if ( ta==IndividualAccounts_Utils.triggerAction.afterInsert )            
 	            {
 	            	/*grab the Accounts that need to have the newly assigned Contact Id to them if:
 	            		1. If the contact is connected to an Account
 	            		2. The Contact is flagged as an individual
 	            		3. The one-to-one model is chosen in the SystemAccountProcessor__c
 	            	*/
-	                if ( c.AccountId != null && c.Private__c != true && c.SystemAccountProcessor__c == Constants.ONE_TO_ONE_PROCESSOR && c.Type_of_Account__c=='Individual')
+
+	                if ( c.AccountId != null && c.Private__c != true && c.SystemAccountProcessor__c == Constants.ONE_TO_ONE_PROCESSOR && c.Account.npe01__SYSTEMIsIndividual__c)
 	                {
 	                	//contacts are connected to Accounts, make the connection in the other direction
 	                    accountUpdates.put(c.AccountId, c.Id);
 	                }
-	                
 	                //there is no after insert processing for the bucket account model
 	            }
 	
 	            //BEFORE UPDATE
-	            if ( ta==triggerAction.beforeUpdate )
+	            if ( ta==IndividualAccounts_Utils.triggerAction.beforeUpdate )
 	            {
 	            	/*one-to-one account should be created if:
 	            		1. The account has been blanked out by the user
@@ -139,13 +133,12 @@ global class IndividualAccounts
 	            }
 	
 	            //AFTER UPDATE
-	            if ( ta==triggerAction.afterUpdate )
+	            if ( ta==IndividualAccounts_Utils.triggerAction.afterUpdate )
 	            {
 	            	/*if the contact is in the one-to-one model, changes to fields on the Contact
 		            will require data changes on the Account to keep some fields in sync
 	            	*/
-	            	
-	                if (c.Organization_Type__c == Constants.ONE_TO_ONE_ORGANIZATION_TYPE)
+	                if (c.SystemAccountProcessor__c == Constants.ONE_TO_ONE_PROCESSOR)
 	                {
 	                    if (
 	                        c.FirstName != oldContacts[i].FirstName ||
@@ -170,7 +163,6 @@ global class IndividualAccounts
 	            i += 1;
 	        }
 	       
-	        
 	        if (individualInserts.size() > 0)
 	        {
 	        	//add the newly created or updated Contacts that need a new individual account
@@ -210,6 +202,7 @@ global class IndividualAccounts
         {
             Database.SaveResult[] lsr = Database.update(accountUpdates, false);
         }
+        
     }
 
 
@@ -280,8 +273,7 @@ global class IndividualAccounts
 				c.AccountId = conAccMap.get(c.Id);
 				
 				
-			} else
-			{
+			} else {
 				//construct the individul account for the Contact
 	            Account a = new Account();
     	        String aName = '';
@@ -324,7 +316,7 @@ global class IndividualAccounts
                 if (lsr[i].isSuccess() == true)
                 {
                     c.AccountId = lsr[i].getId();
-                    
+
                 }
                 i += 1;
             }
@@ -347,7 +339,6 @@ global class IndividualAccounts
 		List<Account> accts = [Select a.name,a.ShippingStreet, a.ShippingState, a.ShippingPostalCode, a.ShippingCountry, 
         a.ShippingCity, a.BillingStreet, a.BillingState, a.BillingPostalCode, a.BillingCountry, a.BillingCity
         From Account a where a.Id IN :accConMap.keyset()];
-    	
         List<Account> accountUpdates = new List<Account>();
         
         for(Account a : accts){     	
@@ -397,10 +388,8 @@ global class IndividualAccounts
 		List<Account> accountsForDeletion = new List<Account>();
 		
 		if (contacts.size()>0){
-	        if ( contacts[0].AccountId != null )
-	        {
+	        if ( contacts[0].AccountId != null ) {
 	        	accountsForDeletion = [Select Id, Type,SYSTEM_AccountType__c from Account where Id = :contacts[0].AccountId limit 1];
-	        	system.debug('account record: ' + accountsForDeletion);
 	        	//if the legacy or current type field show it's not a one-to-one record, don't delete the account
 	        	if ( accountsForDeletion[0].Type == Constants.ONE_TO_ONE_ORGANIZATION_TYPE || accountsForDeletion[0].SYSTEM_AccountType__c == Constants.ONE_TO_ONE_ORGANIZATION_TYPE)
 	        	
@@ -412,19 +401,15 @@ global class IndividualAccounts
 	        		{
 	        			canDelete = false;
 	        		}
-	        	} else
-	        	{
+	        	} else {
 	        		//don't delete a regular account or the bucket account
 	        		canDelete = false;
 	        	}
-	        } else
-	        {
+	        } else {
 	        	//don't delete a null account
 	        	canDelete = false;
 	        }
 	        
-		} else {
-			canDelete= false;
 		}
 		//delete the accounts
 		if(canDelete){
@@ -450,12 +435,9 @@ global class IndividualAccounts
 		webservice static String getContactLastDonation(Id contactId){
 		Date lastDonation = null;
 		List<OpportunityContactRole> ocr = [Select Opportunity.CloseDate, OpportunityId From OpportunityContactRole where Opportunity.IsWon = true and Opportunity.Amount != null and ContactId = :contactId ORDER BY Opportunity.CloseDate DESC Limit 100]; 
-		if ( ocr.size() > 0)
-		{
+		if ( ocr.size() > 0) {
 			return String.ValueOf(ocr[0].Opportunity.CloseDate);
-		}
-		else
-		{
+		} else {
 			return '';
 		}
 	}

@@ -28,7 +28,7 @@
 	POSSIBILITY OF SUCH DAMAGE.
 */
 public class ContactMergeController {
-	/*
+	
 	public ContactMergeController(){
 		searchText='';
 		searchResults = new List<contactWrapper>();
@@ -144,6 +144,8 @@ public class ContactMergeController {
 			}
 		}
 	}
+	
+	
 	//separate method so these fields are only described once--called from constructor
 	public String getContactFields(){
 		String fieldString = '';
@@ -280,5 +282,5 @@ public class ContactMergeController {
     	}
         displayMessagePopup = true;
     }
-    */
+    
 }

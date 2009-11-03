@@ -53,6 +53,7 @@ private class bulkTests2 {
         	Contact con = new Contact(FirstName='test', LastName='contact678', AccountId = acct.id,SystemAccountProcessor__c = Constants.BUCKET_PROCESSOR);
         	cons.add(con);
     	}
+    	Test.startTest();
         insert cons;
         
         Contact[] insertedContacts = [Select Account.Name,Account.SystemIsIndividual__c,AccountId,Organization_Type__c from Contact where id IN :cons];
@@ -65,7 +66,7 @@ private class bulkTests2 {
         	thisContact.AccountId = null;
 		}
         update insertedContacts;
-        
+        Test.stopTest();
         Contact[] updatedContacts = [Select Account.Name,AccountId,Account.SystemIsIndividual__c,Organization_Type__c from Contact where id IN :cons];
         
         //the account should be an individual account
@@ -105,6 +106,7 @@ private class bulkTests2 {
 		for(Contact thisContact : insertedContacts){
         	thisContact.AccountId = null;
 		}
+		
         update insertedContacts;
         Test.stopTest();
         

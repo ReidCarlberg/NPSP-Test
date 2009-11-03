@@ -1,5 +1,5 @@
 <apex:page controller="ContactMergeController" title="Merge Contacts">
-<!-- 
+
 	<style type="text/css">
         .messagepopup{
             background-color:white;
@@ -124,5 +124,5 @@
 			</apex:pageBlockTable>		
 		</apex:pageBlock>
 	</apex:outputPanel>
-	 -->
+	 
 </apex:page>

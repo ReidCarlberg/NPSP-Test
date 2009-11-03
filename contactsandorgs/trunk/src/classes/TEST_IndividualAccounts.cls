@@ -65,7 +65,9 @@ private class TEST_IndividualAccounts {
         insert con;
         
         Contact[] insertedContacts = [Select FirstName, LastName, Account.Name,Account.npe01__One2OneContact__c,MailingStreet,Account.BillingStreet,Organization_Type__c,Account.SYSTEMIsIndividual__c  from Contact where id=:con.id];
-		
+		system.debug(insertedContacts);
+		system.debug(insertedcontacts[0].id);
+		system.debug(insertedContacts);
 		//one contact should have been created
 		system.assertEquals(1,insertedContacts.size());
 		//the account should have the right type
@@ -356,6 +358,7 @@ private class TEST_IndividualAccounts {
 		system.assertEquals(1,missingAccount.size());
 
     }
+    
     public static testMethod void deleteContactNormalAccount() {
         
         Account orgAccount = new Account(
@@ -788,7 +791,7 @@ private class TEST_IndividualAccounts {
         Contact con = new Contact(FirstName='test', LastName='contact', SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR);
         insert con;
 
-		Opportunity o = new Opportunity(Amount=500,Name='test',StageName='Closed/Won',CloseDate=System.today());
+		Opportunity o = new Opportunity(Amount=500,Name='test',StageName='Closed Won',CloseDate=System.today());
 		insert o;
 		
 		OpportunityContactRole ocr = new OpportunityContactRole(OpportunityId=o.Id,ContactId=con.Id,isPrimary=true,role='Donor');
@@ -803,13 +806,18 @@ private class TEST_IndividualAccounts {
     {
         Contact con = new Contact(FirstName='test', LastName='contact', SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR);
         insert con;
+        
+        String sum = IndividualAccounts.getContactLastDonation(con.id);
+        
+        system.assertEquals('',sum);
 
-		Opportunity o = new Opportunity(Amount=500,Name='test',StageName='Closed/Won',CloseDate=System.today());
+		Opportunity o = new Opportunity(Amount=500,Name='test',StageName='Closed Won',CloseDate=System.today());
 		insert o;
 		
 		OpportunityContactRole ocr = new OpportunityContactRole(OpportunityId=o.Id,ContactId=con.Id,isPrimary=true,role='Donor');
 		insert ocr;
 
-		String sum = IndividualAccounts.getContactLastDonation(con.id);
+		sum = IndividualAccounts.getContactLastDonation(con.id);
+		
     }
 }
