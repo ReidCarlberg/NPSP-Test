@@ -60,9 +60,9 @@ global class IndividualAccounts
         	//that override, by default, only worked with a batch size of one, so we aren't taking
         	//any functionality away. Would like to to large batches, but it becomes difficult to
         	//check for opps on the accounts when an account could have a large number of opps
-	        if (contactDeletes.size()==1) {
+	       // if (contactDeletes.size()==1) {
 	        	deleteContactAccounts(contactDeletes);
-	        }
+	       // }
         } else {
 	        for(Contact c : contacts)
 	        {
@@ -384,36 +384,31 @@ global class IndividualAccounts
 	//delete the accounts for contacts that have been deleted
 	public void deleteContactAccounts(Contact[] contacts)
 	{
-		Boolean canDelete = true;
+		List<Id> accountIds = new List<Id>();
+		List<Account> accountsOnContacts = new List<Account>();
 		List<Account> accountsForDeletion = new List<Account>();
 		
 		if (contacts.size()>0){
-	        if ( contacts[0].AccountId != null ) {
-	        	accountsForDeletion = [Select Id, Type,SYSTEM_AccountType__c from Account where Id = :contacts[0].AccountId limit 1];
+			for (Contact thisContact : contacts){
+				accountIds.add(thisContact.accountId);
+			}
+
+	    	accountsOnContacts = [Select Id, Type,SYSTEM_AccountType__c,(Select Id from Opportunities limit 1) from Account where Id IN :accountIds];
+	    	
+	    	for (Account thisAccount : accountsOnContacts){
 	        	//if the legacy or current type field show it's not a one-to-one record, don't delete the account
-	        	if ( accountsForDeletion[0].Type == Constants.ONE_TO_ONE_ORGANIZATION_TYPE || accountsForDeletion[0].SYSTEM_AccountType__c == Constants.ONE_TO_ONE_ORGANIZATION_TYPE)
-	        	
-	        	{
-	        		//one-to-one accounts can be deleted
+	        	if ( thisAccount.Type == Constants.ONE_TO_ONE_ORGANIZATION_TYPE || thisAccount.SYSTEM_AccountType__c == Constants.ONE_TO_ONE_ORGANIZATION_TYPE){
 	        		
-	        		//if there are Opportunities for this Account, don't delete it
-	        		for (Opportunity o : [Select Id, AccountId from Opportunity where AccountId IN :accountsForDeletion limit 1])
+	        		//if there are no Opportunities for this Account, add it for deletion
+	        		if (thisAccount.Opportunities.size()==0)
 	        		{
-	        			canDelete = false;
+	        			accountsForDeletion.add(thisAccount);
 	        		}
-	        	} else {
-	        		//don't delete a regular account or the bucket account
-	        		canDelete = false;
-	        	}
-	        } else {
-	        	//don't delete a null account
-	        	canDelete = false;
-	        }
-	        
+	        	}	
+	    	}        
 		}
 		//delete the accounts
-		if(canDelete){
-			
+		if(accountsForDeletion.size()>0){			
 			delete accountsForDeletion;
 		}
 		

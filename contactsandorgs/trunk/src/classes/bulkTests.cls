@@ -72,6 +72,50 @@ private class bulkTests {
 		
     }
     
+    static testMethod void deleteOneToOne()
+    {
+    	String newContactfirstName = 'test';
+    	String newContactLastName = 'Contact_forTests';
+    	String newContactMailingStreet = '123 Elm St';
+    	
+    	List<Contact> cons = new List<contact>();
+    	Integer conCount = 200;
+    	for(Integer i=0;i<conCount;i++){
+    	
+	    	Contact con = new Contact(
+	        	FirstName=newContactfirstName,
+	        	LastName=newContactLastName,
+	        	MailingStreet = newContactMailingStreet,
+	        	SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR
+	        );
+	        cons.add(con);
+    	}
+    	Test.startTest();
+        insert cons;
+        
+        Contact[] insertedContacts = [Select id, AccountId from Contact where id IN :cons];
+        List<Id> createdAccountIds = new List<Id>();
+        Integer counter = 0;
+        Integer consToGetOpps = 10;
+        
+		for (Contact thisContact : insertedContacts){
+			createdAccountIds.add(thisContact.AccountId);
+			if (counter<consToGetOpps){
+				Opportunity o = new Opportunity(Amount=500,Name='test',StageName='Closed Won',CloseDate=System.today(), AccountId=thisContact.AccountId);
+				insert o;			
+			}			
+			counter++;
+		}
+        
+        delete cons;
+        Test.stopTest();
+        
+        Account[] remainingAccounts = [Select Id from Account where id IN :createdAccountIds];
+		
+		//one contact should have been created
+		system.assertEquals(consToGetOpps,remainingAccounts.size());		
+    }
+    
     static testMethod void updateOneToOne()
     {
     	String newContactfirstName = 'test';
