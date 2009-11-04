@@ -17,7 +17,7 @@ This is a draft plan for future development of the Nonprofit Starter Pack.
  * Minimize pre/post install steps
  * Spanish Translations
 
-= Release #3 - planning = 
+= Release #3 - release TBD = 
  * [http://code.google.com/p/npsp/issues/list?can=1&q=milestone=Fall09&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary Issues]
  * better Lead Conversion (dealing with email and phone)
  * ContactMerge for the 1-to-1 model
