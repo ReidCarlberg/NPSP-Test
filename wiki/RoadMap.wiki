@@ -23,7 +23,7 @@ This is a draft plan for future development of the Nonprofit Starter Pack.
  * ContactMerge for the 1-to-1 model
 
 = Release Spring 10 - Planning = 
-* [http://code.google.com/p/npsp/issues/list?can=1&q=milestone%3DSpring10&colspec=ID+Type+Status+Priority+Milestone+Owner+Summary&cells=tiles Issues]
+ * [http://code.google.com/p/npsp/issues/list?can=1&q=milestone%3DSpring10&colspec=ID+Type+Status+Priority+Milestone+Owner+Summary&cells=tiles Issues]
  * exception handing
  * campaigns in recurring donations
  * Technical documentation v.2
