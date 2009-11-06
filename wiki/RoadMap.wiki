@@ -17,12 +17,13 @@ This is a draft plan for future development of the Nonprofit Starter Pack.
  * Minimize pre/post install steps
  * Spanish Translations
 
-= Release #3 - released 11/05/2009 = 
+= Release Winter 10 - released 11/05/2009 = 
  * [http://code.google.com/p/npsp/issues/list?can=1&q=milestone=Fall09&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary Issues]
  * better Lead Conversion (dealing with email and phone)
  * ContactMerge for the 1-to-1 model
 
-= Release #4 - Planning = 
+= Release Spring 10 - Planning = 
+* [http://code.google.com/p/npsp/issues/list?can=1&q=milestone%3DSpring10&colspec=ID+Type+Status+Priority+Milestone+Owner+Summary&cells=tiles Issues]
  * exception handing
  * campaigns in recurring donations
  * Technical documentation v.2
