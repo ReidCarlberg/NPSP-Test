@@ -29,3 +29,4 @@ This is a draft plan for future development of the Nonprofit Starter Pack.
  * Technical documentation v.2
  * Lead convert 1-to-1 model, v.2
  * Incorporation of Winter '10 advancements
+ * UI improvements to Contact Merge
