@@ -26,7 +26,7 @@ This is a draft plan for future development of the Nonprofit Starter Pack.
  * Minimize pre/post install steps
  * Spanish Translations
 
-= Release #1 - released =
+= Release #1 - released 06/15/09 =
  * Open Sourcing
  * New wiki
  * Test coverage improvements
