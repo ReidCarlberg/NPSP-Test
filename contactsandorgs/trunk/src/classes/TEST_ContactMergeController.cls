@@ -383,7 +383,84 @@ private class TEST_ContactMergeController {
         //first contact's account should be deleted
         system.assertEquals(1,[select count() from Account where id=:secondAccountId]);
         system.assertEquals(0,[select count() from Account where id=:firstAccountId]);
+        //Second contact's account id should not have changed
+        system.assertEquals(secondAccountId,[select AccountId from Contact where id=:secondId].AccountId);
     }
+    //merge two contacts that are both in the one-to-one account model
+    //the second contact's org shouldn't be deleted because it has open opportunities
+    static testMethod void merge2OneToOneOpps() {
+
+        String newContactfirstName = 'test';
+        String newContactLastName = '1Contact_forTests_Merge';
+        String newContactMailingStreet = '123 Elm St';
+        Contact con = new Contact(
+            FirstName=newContactfirstName,
+            LastName=newContactLastName,
+            MailingStreet = newContactMailingStreet,
+            SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR
+        );
+        insert con;
+        
+        String secondContactfirstName = 'test';
+        String secondContactLastName = '2Contact_forTests_Merge';
+        String secondContactMailingStreet = '123 Elm St';
+        Contact con2 = new Contact(
+            FirstName=secondContactfirstName,
+            LastName=secondContactLastName,
+            MailingStreet = secondContactMailingStreet,
+            SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR
+        );
+        insert con2;
+        
+      
+        
+        Test.setCurrentPageReference(new PageReference('Page.ContactMerge'));
+        
+        ContactMergeController controller = new ContactMergeController();
+        
+        controller.searchText = 'test';
+        //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
+        Id[] fixedSearchResults=new Id[2]; 
+        fixedSearchResults[0]=con.Id; 
+        fixedSearchResults[1]=con2.Id; 
+        
+        Test.setFixedSearchResults(fixedSearchResults); 
+        //search for contacts
+        controller.search();
+        //select the two contacts and grab them
+        controller.searchResults[0].selected = true;
+        controller.searchResults[1].selected = true;
+        controller.getSelected();
+        //put them in the contact records
+        controller.thisMerge.firstContact = controller.thisMerge.selectedContacts[0];
+        controller.thisMerge.secondContact = controller.thisMerge.selectedContacts[1];
+        
+        //grab their Ids
+        Id firstId = controller.thisMerge.firstContact.Id;
+        Id secondId = controller.thisMerge.secondContact.Id;
+        //grab their AccountIds
+        Id firstAccountId = controller.thisMerge.firstContact.AccountId;
+        Id secondAccountId = controller.thisMerge.secondContact.AccountId;
+        
+        Opportunity o = new Opportunity(AccountId=firstAccountId,Amount=500,Name='test',StageName='Closed Won',CloseDate=System.today());
+		insert o;
+        
+        //select the first as winner
+        controller.selectSecondContact();
+        
+        //merge them
+        controller.mergeContacts();
+        
+        //first contact should be deleted
+        system.assertEquals(1,[select count() from Contact where id=:secondId]);
+        system.assertEquals(0,[select count() from Contact where id=:firstId]);
+        //first contact's account should be deleted
+        system.assertEquals(1,[select count() from Account where id=:secondAccountId]);
+        system.assertEquals(0,[select count() from Account where id=:firstAccountId]);
+        //Second contact's account id should not have changed
+        system.assertEquals(secondAccountId,[select AccountId from Contact where id=:secondId].AccountId);
+    }
+    
     //merge a one-to-one contact with one in a normal organzation
     //the organization shouldn't be deleted
     static testMethod void merge2Organizations() {
@@ -459,6 +536,8 @@ private class TEST_ContactMergeController {
         //second contact's account should not be deleted
         system.assertEquals(1,[select count() from Account where id=:secondAccountId]);
         system.assertEquals(1,[select count() from Account where id=:firstAccountId]);
+        //First contact's account id should not have changed
+        system.assertEquals(firstAccountId,[select AccountId from Contact where id=:firstId].AccountId);
     }
     
     //merge two private contacts
@@ -520,6 +599,8 @@ private class TEST_ContactMergeController {
         //second contact should be deleted
         system.assertEquals(0,[select count() from Contact where id=:secondId]);
         system.assertEquals(1,[select count() from Contact where id=:firstId]);
+        //First contact's account id should not have changed
+        system.assertEquals(null,[select AccountId from Contact where id=:firstId].AccountId);
     }
     
     //merge two contacts in the Individual Account
@@ -587,6 +668,8 @@ private class TEST_ContactMergeController {
         //second contact's account should not be deleted
         system.assertEquals(1,[select count() from Account where id=:secondAccountId]);
         system.assertEquals(1,[select count() from Account where id=:firstAccountId]);
+        //First contact's account id should not have changed
+        system.assertEquals(firstAccountId,[select AccountId from Contact where id=:firstId].AccountId);
     }
     
     //merge one contacts in the Individual Account, one in one-to-one model
@@ -654,6 +737,78 @@ private class TEST_ContactMergeController {
         //second contact's account should not be deleted
         system.assertEquals(1,[select count() from Account where id=:secondAccountId]);
         system.assertEquals(1,[select count() from Account where id=:firstAccountId]);
+        //First contact's account id should not have changed
+        system.assertEquals(firstAccountId,[select AccountId from Contact where id=:firstId].AccountId);
+    }
+    
+    //merge one contacts in the Individual Account, one in one-to-one model
+    //the individual organization shouldn't be deleted
+    static testMethod void merge1OneToOne1Individual() {
+        
+        String newContactfirstName = 'test';
+        String newContactLastName = '1Contact_forTests_Merge';
+        String newContactMailingStreet = '123 Elm St';
+        Contact con = new Contact(
+            FirstName=newContactfirstName,
+            LastName=newContactLastName,
+            MailingStreet = newContactMailingStreet,
+            SystemAccountProcessor__c = Constants.BUCKET_PROCESSOR
+        );
+        insert con;
+        
+        String secondContactfirstName = 'test';
+        String secondContactLastName = '2Contact_forTests2_Merge';
+        String secondContactMailingStreet = '123 Elm St';
+        Contact con2 = new Contact(
+            FirstName=secondContactfirstName,
+            LastName=secondContactLastName,
+            MailingStreet = secondContactMailingStreet,
+            
+            SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR
+        );
+        insert con2;
+        
+        Test.setCurrentPageReference(new PageReference('Page.ContactMerge'));
+        
+        ContactMergeController controller = new ContactMergeController();
+        
+        controller.searchText = 'test';
+        //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
+        Id[] fixedSearchResults=new Id[2]; 
+        fixedSearchResults[0]=con.Id; 
+        fixedSearchResults[1]=con2.Id; 
+        
+        Test.setFixedSearchResults(fixedSearchResults); 
+        //search for contacts
+        controller.search();
+        //select the two contacts and grab them
+        controller.searchResults[0].selected = true;
+        controller.searchResults[1].selected = true;
+        controller.getSelected();
+        //put them in the contact records
+        controller.thisMerge.firstContact = controller.thisMerge.selectedContacts[0];
+        controller.thisMerge.secondContact = controller.thisMerge.selectedContacts[1];
+        
+        //grab their Ids
+        Id firstId = controller.thisMerge.firstContact.Id;
+        Id secondId = controller.thisMerge.secondContact.Id;
+        //grab their AccountIds
+        Id firstAccountId = controller.thisMerge.firstContact.AccountId;
+        Id secondAccountId = controller.thisMerge.secondContact.AccountId;
+        
+        //select the first as winner
+        controller.selectFirstContact();
+        //merge them
+        controller.mergeContacts();
+        
+        //second contact should be deleted
+        system.assertEquals(0,[select count() from Contact where id=:secondId]);
+        system.assertEquals(1,[select count() from Contact where id=:firstId]);
+        //second contact's account should be deleted
+        system.assertEquals(0,[select count() from Account where id=:secondAccountId]);
+        system.assertEquals(1,[select count() from Account where id=:firstAccountId]);
+        //First contact's account id should not have changed
+        system.assertEquals(firstAccountId,[select AccountId from Contact where id=:firstId].AccountId);
     }
     
     //merge one contacts in the Individual Account, one in one-to-one model
@@ -726,6 +881,8 @@ private class TEST_ContactMergeController {
         //second contact's account should be deleted
         system.assertEquals(0,[select count() from Account where id=:secondAccountId]);
         system.assertEquals(1,[select count() from Account where id=:firstAccountId]);
+        //First contact's account id should not have changed
+        system.assertEquals(firstAccountId,[select AccountId from Contact where id=:firstId].AccountId);
     }
     
     static testMethod void merge3OneToOne() {
@@ -812,6 +969,8 @@ private class TEST_ContactMergeController {
         system.assertEquals(1,[select count() from Account where id=:thirdAccountId]);
         system.assertEquals(0,[select count() from Account where id=:secondAccountId]);
         system.assertEquals(0,[select count() from Account where id=:firstAccountId]);
+        //Third contact's account id should not have changed
+        system.assertEquals(thirdAccountId,[select AccountId from Contact where id=:thirdId].AccountId);
     }
     
     //merge two contacts that are both in the one-to-one account model
@@ -883,6 +1042,8 @@ private class TEST_ContactMergeController {
         //second contact's account shouldn't be deleted
         system.assertEquals(1,[select count() from Account where id=:secondAccountId]);
         system.assertEquals(1,[select count() from Account where id=:firstAccountId]);
+        //First contact's account id should not have changed
+        system.assertEquals(firstAccountId,[select AccountId from Contact where id=:firstId].AccountId);
     }
   
 }

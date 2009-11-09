@@ -157,32 +157,42 @@ public class ContactMerge {
 		Set<Id> loserAccountIds = new Set<Id>();
 		List<Account> loserAccounts = new List<Account>();
 		List<Account> loserAccountsToBeMerged = new List<Account>();
+		List<Account> loserAccountsToBeDeleted = new List<Account>();
 	
 		Id winningAccountId = null;
+		Boolean winnerAccountIsOneToOne = false;
 		
-		//get winner contact Account
+		//get winner contact Account if it's one-to-one
 		if (winner.AccountId!=null){
-			winnerAccount = [Select Id,SYSTEMIsIndividual__c,Name from Account where SYSTEMIsIndividual__c=true and Name!=:Constants.BUCKET_ACCOUNT_NAME and Id=:winner.accountid];
+			winnerAccount = [Select Id,SYSTEMIsIndividual__c,Name from Account where Id=:winner.accountid];
 		}
 			
 		if (winnerAccount.size()>0) {
+			winnerAccountIsOneToOne = true;
 			winningAccountId = winnerAccount[0].Id;
-			for(Contact thisloserContact : losers){
-				//don't try to merge null Accounts or Accounts that are the same as the winner's Account
-				if (thisloserContact.id!=null && thisloserContact.AccountId!=winner.AccountId){
-					loserAccountIds.add(thisloserContact.AccountId);
-				}
+		}	
+		
+		for(Contact thisloserContact : losers){
+			//don't try to merge null Accounts or Accounts that are the same as the winner's Account
+			if (thisloserContact.id!=null && thisloserContact.AccountId!=winner.AccountId){
+				loserAccountIds.add(thisloserContact.AccountId);
 			}
-			
-			//get loser contact Accounts
-			loserAccountsToBeMerged = [Select Id,SYSTEMIsIndividual__c,Name from Account where Id IN :loserAccountIds and SYSTEMIsIndividual__c=true and Name<>:Constants.BUCKET_ACCOUNT_NAME];
-			system.debug('Loser Accounts to be merged: ' + loserAccountsToBeMerged);
+		}
+		
+		//get loser contact Accounts
+		loserAccountsToBeMerged = [Select Id,SYSTEMIsIndividual__c,Name from Account where Id IN :loserAccountIds and SYSTEMIsIndividual__c=true and Name<>:Constants.BUCKET_ACCOUNT_NAME];
+		
+		if(winnerAccountIsOneToOne){
 			//one-to-one contacts each have an Account, so when merging Contacts we have to merge Accounts as well
 			//we merge the Accounts first, if there are any one-to-one Accounts in the mix
 			if(loserAccountsToBeMerged.size()>0){			
 				merge winnerAccount[0] loserAccountsToBeMerged;
 			}
-		}	
+		} else {
+			for(Account accountForDeletion : loserAccountsToBeMerged){
+				loserAccountsToBeDeleted.add(accountForDeletion);
+			}
+		}
 		//merge the contacts
 		
 		//there is a Contact delete trigger that deletes the one-to-one Account of a Contact after it is deleted
@@ -191,8 +201,11 @@ public class ContactMerge {
 		
 		//create new contacts for updating as the SOSL returned contacts have read-only fields on them
 		Contact winnerMakePrivate = new Contact();
-		winnerMakePrivate = new Contact(Id = winner.id,AccountId = null,Private__c=true);
-		
+		if(winnerAccountIsOneToOne){			
+			winnerMakePrivate = new Contact(Id = winner.id,AccountId = null,Private__c=true);
+		} else {
+			winnerMakePrivate = new Contact(Id = winner.id);
+		}
 		List<Contact> losersMakePrivate = new List<Contact>();
 		
 		for(Contact contactForUpdate : losers){			
@@ -201,23 +214,26 @@ public class ContactMerge {
 		}
 			
 		//set the account to null and mark private so that trigger won't reset the Account
-		if (winningAccountId!=null){
-			
-			update winnerMakePrivate;
+		if (winningAccountId!=null && winnerAccountIsOneToOne){			
+			update winnerMakePrivate;			
+		}
 		
-			if(losersMakePrivate.size()>0){
-				update losersMakePrivate;
-			}
+		if(losersMakePrivate.size()>0){
+			update losersMakePrivate;
 		}
 
 		merge winnerMakePrivate losersMakePrivate;
 		
 		//set the contact Account Id back to the winning Account Id
-		if (winnerMakePrivate.Id != null){
+		if (winnerAccountIsOneToOne){
 			winnerMakePrivate.AccountId = winningAccountId;
 			winnerMakePrivate.Private__c = false;
 			update winnerMakePrivate;
 		}		
+		system.debug('loserAccounts: ' + loserAccountsToBeDeleted);
+		if(loserAccountsToBeDeleted.size()>0){
+			//delete loserAccountsToBeDeleted;
+		}
 		successfulMerge = true;
 		return successfulMerge;
 	}
