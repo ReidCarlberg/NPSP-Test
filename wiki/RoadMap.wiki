@@ -5,23 +5,6 @@
 
 This is a draft plan for future development of the Nonprofit Starter Pack.
 
-= Release #1 - released =
- * Open Sourcing
- * New wiki
- * Test coverage improvements
-
-= Release #2 - released 09/11/09 =
- * [http://code.google.com/p/npsp/issues/list?can=1&q=milestone=Summer09&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary Issues]
- * Test coverage improvements
- * Tests for bulk data scenarios
- * Minimize pre/post install steps
- * Spanish Translations
-
-= Release Winter 10 - released 11/05/2009 = 
- * [http://code.google.com/p/npsp/issues/list?can=1&q=milestone=Fall09&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary Issues]
- * better Lead Conversion (dealing with email and phone)
- * ContactMerge for the 1-to-1 model
-
 = Release Spring 10 - Planning = 
  * [http://code.google.com/p/npsp/issues/list?can=1&q=label%3AMilestone-Spring10&colspec=ID+Type+Status+Priority+Milestone+Owner+Summary&sort=&mode=grid&y=Package&x=Status&cells=tiles&nobtn=Update Issues]
  * exception handing
@@ -30,3 +13,20 @@ This is a draft plan for future development of the Nonprofit Starter Pack.
  * Lead convert 1-to-1 model, v.2
  * Incorporation of Winter '10 advancements
  * UI improvements to Contact Merge
+
+= Release Winter 10 - released 11/05/2009 = 
+ * [http://code.google.com/p/npsp/issues/list?can=1&q=milestone=Fall09&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary Issues]
+ * better Lead Conversion (dealing with email and phone)
+ * ContactMerge for the 1-to-1 model
+
+= Release #2 - released 09/11/09 =
+ * [http://code.google.com/p/npsp/issues/list?can=1&q=milestone=Summer09&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary Issues]
+ * Test coverage improvements
+ * Tests for bulk data scenarios
+ * Minimize pre/post install steps
+ * Spanish Translations
+
+= Release #1 - released =
+ * Open Sourcing
+ * New wiki
+ * Test coverage improvements
