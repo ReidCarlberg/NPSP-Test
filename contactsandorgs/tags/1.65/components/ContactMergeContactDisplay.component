@@ -1,0 +1,11 @@
+<apex:component >
+ 
+	<apex:attribute name="thisContact" description="Contact to display." type="Contact" required="required"/>
+	
+			<apex:pageBlockSection title="{!thisContact.Name}" columns="1" collapsible="false">		
+				<apex:outputField value="{!thisContact.AccountId}"/> 		
+				<apex:outputField value="{!thisContact.Email}"/> 
+				<apex:outputField value="{!thisContact.Phone}"/> 
+			</apex:pageBlockSection>
+
+</apex:component>
