@@ -42,6 +42,9 @@ private class RecurringDonations_TEST {
 	/// <summary> test method for insertOpportunities function </summary>
 	static testMethod void insertOpportunities()
 	{
+		
+		system.debug('multiply: ' + System.Label.RecurringDonationMultiplyValue);
+		system.debug('divide: ' + System.Label.RecurringDonationDivideValue);
         Account a = new Account();
         a.Name = 'test Individual';
         insert a;
@@ -58,7 +61,7 @@ private class RecurringDonations_TEST {
 		r0.Amount__c = 100;
 		r0.Installment_Period__c = 'Yearly';
 		r0.Date_Established__c = System.today();
-		r0.Schedule_Type__c = 'Multiply By';
+		r0.Schedule_Type__c = System.Label.RecurringDonationMultiplyValue;
 		try {
 			insert r0;
 		} catch (exception e) {
@@ -70,18 +73,20 @@ private class RecurringDonations_TEST {
 
 		Recurring_Donation__c r1 = new Recurring_Donation__c();
 		r1.Name = 'test';
-		r1.Installments__c = 1;
+		r1.Installments__c = 2;
 		r1.Contact__c = c.Id;
 		r1.Amount__c = 100;
 		r1.Installment_Period__c = 'Yearly';
 		r1.Date_Established__c = System.today();
-		r1.Schedule_Type__c = 'Multiply By';
+		r1.Schedule_Type__c = System.Label.RecurringDonationMultiplyValue;
 		insert r1;
 		
 		Opportunity[] installments1 = [select Name,amount,accountid from Opportunity where Recurring_Donation__c = :r1.id];
-		system.assertEquals(1,installments1.size());
+		system.assertEquals(2,installments1.size());
 		system.assertEquals(100,installments1[0].Amount);
 		system.assertEquals(a.id,installments1[0].AccountId);
+		system.assertEquals(100,installments1[1].Amount);
+		system.assertEquals(a.id,installments1[1].AccountId);
 		system.debug(installments1);
 		
 		Recurring_Donation__c r3 = new Recurring_Donation__c();
@@ -91,7 +96,7 @@ private class RecurringDonations_TEST {
 		r3.Amount__c = 100;
 		r3.Installment_Period__c = 'Weekly';
 		r3.Date_Established__c = System.today();
-		r3.Schedule_Type__c = 'Multiply By';
+		r3.Schedule_Type__c = System.Label.RecurringDonationMultiplyValue;
 		try {
 			insert r3;
 		} catch (exception e) {
@@ -114,17 +119,25 @@ private class RecurringDonations_TEST {
 		r2.Amount__c = 100;
 		r2.Installment_Period__c = 'Monthly';
 		r2.Date_Established__c = System.today();
-		r2.Schedule_Type__c = 'Divide By';
+		r2.Schedule_Type__c = System.Label.RecurringDonationDivideValue;
 		insert r2;
+		
+		Opportunity[] installments2 = [select Name,amount,accountid from Opportunity where Recurring_Donation__c = :r2.id];
+		system.assertEquals(3,installments2.size());
+		system.assertEquals(33.33,installments2[0].Amount);
+		system.assertEquals(33.33,installments2[1].Amount);
+		system.assertEquals(33.34,installments2[2].Amount);
+		system.assertEquals(a.id,installments2[0].AccountId);
+		system.debug(installments2);
 		
 		try{
 			delete r2;
 		} catch (exception e1) {}
 		
 		//delete should have failed
-		Opportunity[] installments2 = [select amount from Opportunity where Recurring_Donation__c = :r2.id];
-		system.assertEquals(3,installments2.size());
-		system.assertEquals(33.33,installments2[0].Amount);
+		Opportunity[] installments3 = [select amount from Opportunity where Recurring_Donation__c = :r2.id];
+		system.assertEquals(3,installments3.size());
+		system.assertEquals(33.33,installments3[0].Amount);
 	}
 	
 	

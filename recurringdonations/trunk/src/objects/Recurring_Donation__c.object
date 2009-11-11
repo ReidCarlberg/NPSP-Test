@@ -37,12 +37,7 @@
     </fields>
     <fields>
         <fullName>Installment_Amount__c</fullName>
-        <formula>CASE(
- Schedule_Type__c ,
-&quot;Multiply By&quot;, Amount__c ,
-&quot;Divide By&quot;, IF(Installments__c&gt;0,Amount__c / Installments__c,0) ,
-0
-)</formula>
+        <formula>IF( text(Schedule_Type__c)=$Label.RecurringDonationMultiplyValue , Amount__c , IF(Installments__c&gt;0,Amount__c / Installments__c,0))</formula>
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
         <label>Installment Amount</label>
         <precision>18</precision>
@@ -113,6 +108,16 @@
 )</formula>
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
         <label>Total</label>
+        <precision>18</precision>
+        <scale>2</scale>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>fake_amount__c</fullName>
+        <formula>IF(
+text(Schedule_Type__c)=$Label.RecurringDonationMultiplyValue , Amount__c , IF(Installments__c&gt;0,Amount__c / Installments__c,0))</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>fake amount</label>
         <precision>18</precision>
         <scale>2</scale>
         <type>Currency</type>
