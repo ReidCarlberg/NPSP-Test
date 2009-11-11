@@ -174,6 +174,48 @@ private class RecurringDonations_TEST {
 		system.assertEquals(a.id,installments1[1].AccountId);
 	}
 	
+	static testMethod void insertCampaignOpportunities()
+	{
+		
+		Account a = new Account();
+        a.Name = 'test Individual';
+        insert a;
+        
+        Contact c = new Contact();
+        c.FirstName = 'test';
+        c.LastName = 'contact';
+        c.AccountId = a.Id;
+        insert c;		
+
+		Campaign camp = new Campaign();
+        camp.Name = 'test campaign';
+        insert camp;
+        
+        Id campaignId = camp.id;
+
+		Recurring_Donation__c r1 = new Recurring_Donation__c();
+		r1.Name = 'test';
+		r1.Installments__c = 2;
+		r1.Contact__c = c.Id;
+		r1.Amount__c = 100;
+		r1.Installment_Period__c = System.Label.RecurringDonationInstallmentPeriodWeekly;
+		r1.Date_Established__c = date.newinstance(1970,6,12);
+		r1.Schedule_Type__c = System.Label.RecurringDonationMultiplyValue;
+		r1.Recurring_Donation_Campaign__c = campaignId;
+		insert r1;
+		
+		Opportunity[] installments1 = [select Name,amount,accountid,CloseDate,CampaignId from Opportunity where Recurring_Donation__c = :r1.id];
+		system.assertEquals(2,installments1.size());
+		system.assertEquals(100,installments1[0].Amount);
+		system.assertEquals(date.newinstance(1970,6,12),installments1[0].CloseDate);
+		system.assertEquals(campaignId,installments1[0].CampaignId);
+		system.assertEquals(a.id,installments1[0].AccountId);
+		system.assertEquals(100,installments1[1].Amount);
+		system.assertEquals(date.newinstance(1970,6,19),installments1[1].CloseDate);
+		system.assertEquals(campaignId,installments1[1].CampaignId);
+		system.assertEquals(a.id,installments1[1].AccountId);
+	}
+	
 	static testMethod void deleteRecurringDonation()
 	{
 		Account a = new Account();

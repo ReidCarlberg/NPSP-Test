@@ -44,7 +44,7 @@ after insert, after update, after delete, after undelete) {
         RecurringDonations process = new RecurringDonations (Trigger.old, null, triggerAction.beforeDelete);
     }
     if(Trigger.isInsert && Trigger.isAfter){
-        Recurring_Donation__c[] updatedRecurringDonations = [select id,Organization__c,Contact__c,Installment_Amount__c,Installments__c,Amount__c,Total__c,Installment_Period__c,Date_Established__c,Donor_Name__c,Schedule_Type__c from Recurring_Donation__c where Id in :Trigger.new];
+        Recurring_Donation__c[] updatedRecurringDonations = [select id,Organization__c,Contact__c,Installment_Amount__c,Installments__c,Amount__c,Total__c,Installment_Period__c,Date_Established__c,Donor_Name__c,Schedule_Type__c,Recurring_Donation_Campaign__c from Recurring_Donation__c where Id in :Trigger.new];
         RecurringDonations process = new RecurringDonations (updatedRecurringDonations, Trigger.old, triggerAction.afterInsert);
     }
     if(Trigger.isUpdate && Trigger.isAfter){

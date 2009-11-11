@@ -187,6 +187,10 @@ global class RecurringDonations {
 				
 				opp.StageName = System.Label.RecurringDonationStageName;
 				opp.Recurring_Donation__c = r.Id;
+				if (r.Recurring_Donation_Campaign__c != null){
+					opp.CampaignId = r.Recurring_Donation_Campaign__c;
+				}
+				
 				opportunityInserts.add(opp);
 				if ( opportunityInserts.size() == 100 )
 				{
