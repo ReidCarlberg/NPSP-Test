@@ -153,19 +153,19 @@ global class RecurringDonations {
 					opp.Amount = r.Installment_Amount__c;
 				}
 				
-				if (r.Installment_Period__c == 'Yearly')
+				if (r.Installment_Period__c == System.Label.RecurringDonationInstallmentPeriodYearly)
 				{
 					opp.CloseDate = (r.Date_Established__c).addYears(j);
 				} else
-				if (r.Installment_Period__c == 'Quarterly')
+				if (r.Installment_Period__c == System.Label.RecurringDonationInstallmentPeriodQuarterly)
 				{
 					opp.CloseDate = (r.Date_Established__c).addMonths(3*j);
 				} else
-				if (r.Installment_Period__c == 'Monthly')
+				if (r.Installment_Period__c == System.Label.RecurringDonationInstallmentPeriodMonthly)
 				{
 					opp.CloseDate = (r.Date_Established__c).addMonths(j);
 				} else
-				if (r.Installment_Period__c == 'Weekly')
+				if (r.Installment_Period__c == System.Label.RecurringDonationInstallmentPeriodWeekly)
 				{
 					opp.CloseDate = (r.Date_Established__c).addDays(7*j);
 				} else
