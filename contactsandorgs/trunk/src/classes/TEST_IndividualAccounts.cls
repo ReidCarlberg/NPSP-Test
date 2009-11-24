@@ -33,6 +33,9 @@ private class TEST_IndividualAccounts {
     /// <summary> Test Method for inserting a Contact that should get no account </summary>
     static testMethod void insertPrivate()
     {
+    	String individualAccountNameForTests = 'IndividualAccountNameForTests';
+		IndividualAccounts_Utils.setIndividualAccountForTests(individualAccountNameForTests);
+		
     	String newContactfirstName = 'test';
     	String newContactLastName = 'Contact_forTests';
         Contact con = new Contact(
@@ -187,6 +190,9 @@ private class TEST_IndividualAccounts {
     /// <summary> Test Method for a new Contact in the Bucket Individual model </summary>
     static testMethod void attachToIndividualAccount()
     {
+    	String individualAccountNameForTests = 'IndividualAccountNameForTests';
+		IndividualAccounts_Utils.setIndividualAccountForTests(individualAccountNameForTests);
+		
         Contact con = new Contact(FirstName='test', LastName='contact', SystemAccountProcessor__c = Constants.BUCKET_PROCESSOR);
         insert con;
         
@@ -202,6 +208,9 @@ private class TEST_IndividualAccounts {
     /// <summary> Test Method for detaching a Contact from the bucket individual account </summary>
     static testMethod void detachIndividualAccount()
     {
+    	String individualAccountNameForTests = 'IndividualAccountNameForTests';
+		IndividualAccounts_Utils.setIndividualAccountForTests(individualAccountNameForTests);
+		
         Contact con = new Contact(FirstName='test', LastName='contact', SystemAccountProcessor__c = Constants.BUCKET_PROCESSOR);
         insert con;
         
@@ -227,6 +236,9 @@ private class TEST_IndividualAccounts {
     /// <summary> Test Method for detaching a Contact from a normal account. It should land in the bucket account. </summary>
     static testMethod void detachFromNormalAccountToBucket()
     {
+    	String individualAccountNameForTests = 'IndividualAccountNameForTests';
+		IndividualAccounts_Utils.setIndividualAccountForTests(individualAccountNameForTests);
+		
         Account acct = new Account(Name='Test Account 876');
         insert acct;
         
@@ -258,10 +270,46 @@ private class TEST_IndividualAccounts {
         
     }
     
+    static testMethod void contactInNormalOrgNameChange()
+    {
+    	String individualAccountNameForTests = 'IndividualAccountNameForTests';
+		IndividualAccounts_Utils.setIndividualAccountForTests(individualAccountNameForTests);
+		
+    	String acctName = 'Test Account 876';
+        Account acct = new Account(Name=acctName);
+        insert acct;
+        
+       
+        Contact con = new Contact(FirstName='test', LastName='contact678', AccountId = acct.id);
+        insert con;
+        
+        Contact[] insertedContacts = [Select Account.Name,Account.SystemIsIndividual__c,AccountId,Organization_Type__c from Contact where id=:con.id];
+		
+		//the contact should be connected to the account
+		system.assertEquals(acct.id,insertedContacts[0].AccountId);
+		
+		system.assertEquals(acctName,insertedContacts[0].Account.Name);
+		
+		
+		Contact con2 = new Contact(id=con.id, LastName='Smith');
+        
+        update con2;
+        
+        Contact[] updatedContacts = [Select Account.Name,AccountId,Account.SystemIsIndividual__c,Organization_Type__c from Contact where id=:con.id];
+        
+        system.assertEquals(acctName,updatedContacts[0].Account.Name);  
+		      
+        
+    }
+    
+    
     /// <name> detachFromNormalAccountToOneToOne </name>
     /// <summary> Test Method for detaching a Contact from a normal account. It should land in a one-to-one account. </summary>
     static testMethod void detachFromNormalAccountToOneToOne()
     {
+    	String individualAccountNameForTests = 'IndividualAccountNameForTests';
+		IndividualAccounts_Utils.setIndividualAccountForTests(individualAccountNameForTests);
+		
         Account acct = new Account(Name='Test Account 876');
         insert acct;
         
@@ -295,7 +343,8 @@ private class TEST_IndividualAccounts {
     
      public static testMethod void deleteContactNoOpp() {
 
-        
+        String individualAccountNameForTests = 'IndividualAccountNameForTests';
+		IndividualAccounts_Utils.setIndividualAccountForTests(individualAccountNameForTests);
         
         String newContactfirstName = 'test';
     	String newContactLastName = 'Contact_forTests';
@@ -325,6 +374,8 @@ private class TEST_IndividualAccounts {
     }
     public static testMethod void deleteContactWithOpp() {
 
+		String individualAccountNameForTests = 'IndividualAccountNameForTests';
+		IndividualAccounts_Utils.setIndividualAccountForTests(individualAccountNameForTests);
         
         String newContactfirstName = 'test';
     	String newContactLastName = 'Contact_forTests';
@@ -361,6 +412,9 @@ private class TEST_IndividualAccounts {
     
     public static testMethod void deleteContactNormalAccount() {
         
+        String individualAccountNameForTests = 'IndividualAccountNameForTests';
+		IndividualAccounts_Utils.setIndividualAccountForTests(individualAccountNameForTests);
+		
         Account orgAccount = new Account(
         	Name='Fake account'
         );
@@ -788,6 +842,9 @@ private class TEST_IndividualAccounts {
     /// <summary> Test Method for getContactDonationHistory</summary>
     static testMethod void getContactDonationHistory()
     {
+    	String individualAccountNameForTests = 'IndividualAccountNameForTests';
+		IndividualAccounts_Utils.setIndividualAccountForTests(individualAccountNameForTests);
+		
         Contact con = new Contact(FirstName='test', LastName='contact', SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR);
         insert con;
 
@@ -804,6 +861,9 @@ private class TEST_IndividualAccounts {
     /// <summary> Test Method for getContactLastDonation</summary>
     static testMethod void getContactLastDonation()
     {
+    	String individualAccountNameForTests = 'IndividualAccountNameForTests';
+		IndividualAccounts_Utils.setIndividualAccountForTests(individualAccountNameForTests);
+		
         Contact con = new Contact(FirstName='test', LastName='contact', SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR);
         insert con;
         

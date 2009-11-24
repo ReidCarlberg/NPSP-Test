@@ -138,7 +138,7 @@ global class IndividualAccounts
 	            	/*if the contact is in the one-to-one model, changes to fields on the Contact
 		            will require data changes on the Account to keep some fields in sync
 	            	*/
-	                if (c.SystemAccountProcessor__c == Constants.ONE_TO_ONE_PROCESSOR)
+	                if (c.SystemAccountProcessor__c == Constants.ONE_TO_ONE_PROCESSOR && c.Organization_Type__c == Constants.ONE_TO_ONE_ORGANIZATION_TYPE)
 	                {
 	                    if (
 	                        c.FirstName != oldContacts[i].FirstName ||
@@ -213,12 +213,15 @@ global class IndividualAccounts
     {
     	//grab the first Account that is named Individual
 		List<Account> individuals = [Select Id from Account where name = :Constants.BUCKET_ACCOUNT_NAME ORDER BY CreatedDate Desc Limit 1];
+		
+		Id individualAccountId = IndividualAccounts_Utils.GetIndividualAccountId();
+		
 		if (individuals.size() > 0)
 		{
 			for(Contact c : contacts)
 			{
 				//connect all Contacts to the bucket Account
-				c.AccountId = individuals[0].Id;
+				c.AccountId = individualAccountId;
 			}
 		} else
 		{
