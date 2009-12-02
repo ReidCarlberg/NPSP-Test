@@ -15,7 +15,7 @@ public class LeadConvertOverride
 		
 		//don't test if we're not in the one-to-one model
 		if(Constants.ONE_TO_ONE_ACCOUNT_MODEL){
-			if (l.company.toUpperCase() != 'INDIVIDUAL' && (l.company == null || l.company == '' || l.company.toUpperCase() == 'SELF' || l.company.toUpperCase() == l.firstName.toUpperCase() + ' ' + l.lastname.toUpperCase()))
+			if (l.company.toUpperCase() != 'INDIVIDUAL' && (l.company == null || l.company == '' || l.company.toUpperCase() == 'SELF' || l.company.toUpperCase() == getFullName(l)))
 			{
 				Database.LeadConvert lc = new database.LeadConvert();
 				lc.setLeadId(lId);
@@ -43,6 +43,15 @@ public class LeadConvertOverride
 		pageRef.setRedirect(true);
 		return pageRef;
 	}			
-		
+	
+	private String getFullName(Lead thisLead){
+		String fullName;
+		if(thisLead.firstName!=null&&thisLead.firstName!=''){
+			fullName = thisLead.firstName.toUpperCase() + ' ';
+		}
+		fullName += thisLead.lastname.toUpperCase();
+		return fullName;
+	}
+	
     private final ApexPages.StandardController controller;   
 }

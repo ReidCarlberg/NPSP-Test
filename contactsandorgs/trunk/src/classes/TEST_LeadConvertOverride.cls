@@ -32,7 +32,7 @@ private class TEST_LeadConvertOverride {
  		String AccountProcessorValue = Constants.BUCKET_PROCESSOR;
 		
 			companyName = 'Self';	        
-	        String leadFirstName = 'test';
+	        String leadFirstName = '';
 	        String leadLastName = 'lead for tests_987';
 	        Lead l = new Lead();
 			l.FirstName = leadFirstName;
@@ -70,6 +70,35 @@ private class TEST_LeadConvertOverride {
 		
 		companyName = 'Junky company for tests';
         String leadFirstName = 'test';
+        String leadLastName = 'lead for tests_989';
+        Lead l = new Lead();
+		l.FirstName = leadFirstName;
+		l.LastName = leadLastName;
+		l.Company = companyName;
+		insert l;
+		
+		system.currentPageReference().getParameters().put('id', l.id);
+		
+		//pass contact into the controller
+		ApexPages.StandardController sc = new ApexPages.standardController(l);
+		//pass the controller into the extension
+		LeadConvertOverride ext = new LeadConvertOverride(sc); 
+		PageReference landingPage = ext.convertLead();
+		system.Assert(landingPage.getUrl().contains('leadconvert.jsp'));
+    }
+    
+     //tests if it's a regular lead conversion in either model
+    public static testMethod void newLeadConversionNamedCompanyNoFirstName_Test() {
+
+        
+        Test.setCurrentPageReference(new PageReference('Page.LeadConvertOverride'));
+        
+        String companyName = 'Individual';
+ 		String AccountProcessorValue = Constants.BUCKET_PROCESSOR;
+		
+		
+		companyName = 'Junky company for tests';
+        String leadFirstName = '';
         String leadLastName = 'lead for tests_989';
         Lead l = new Lead();
 		l.FirstName = leadFirstName;
