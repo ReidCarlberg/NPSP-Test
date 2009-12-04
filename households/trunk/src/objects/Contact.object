@@ -24,13 +24,40 @@
     </fields>
     <fields>
         <fullName>Languages__c</fullName>
-        <label>Languages</label>
+        <label>Languages - DEPRECATED</label>
         <length>100</length>
         <type>Text</type>
     </fields>
     <fields>
+        <fullName>LeadSource</fullName>
+        <picklist>
+            <picklistValues>
+                <fullName>Web</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Phone Inquiry</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Partner Referral</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Purchased List</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Other</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <type>Picklist</type>
+    </fields>
+    <fields>
         <fullName>Level__c</fullName>
-        <label>Level</label>
+        <label>Level - DEPRECATED</label>
         <picklist>
             <picklistValues>
                 <fullName>Secondary</fullName>
@@ -50,6 +77,7 @@
     </fields>
     <fields>
         <fullName>SystemHouseholdProcessor__c</fullName>
+        <description>Used to set if Households should get created for all Contacts, or just those which are connected to an individual account</description>
         <label>_SYSTEM: HOUSEHOLD PROCESSOR</label>
         <picklist>
             <picklistValues>
@@ -126,10 +154,7 @@ null
     </fields>
     <fields>
         <fullName>npe01__Organization_Type__c</fullName>
-        <formula>CASE(Account.Type,
-&quot;One-to-One Individual&quot;,&quot;One-to-One Individual&quot;,
-&quot;Bucket Individual&quot;,&quot;Bucket Individual&quot;,
-&quot;Organization&quot;)</formula>
+        <formula>NULLVALUE(IF( Account.npe01__SYSTEM_AccountType__c==&quot;&quot;, TEXT(Account.Type),Account.npe01__SYSTEM_AccountType__c),&quot;Organization&quot; )</formula>
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
         <label>Organization Type</label>
         <type>Text</type>
@@ -274,8 +299,16 @@ if(ISPICKVAL(npe01__Secondary_Address_Type__c,&quot;Other&quot;),
     <fields>
         <fullName>npe01__SystemIsIndividual__c</fullName>
         <defaultValue>false</defaultValue>
-        <label>_SYSTEM: IsIndividual</label>
+        <label>_SYSTEM: IsIndividual - DEPRECATED</label>
         <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>npe01__Type_of_Account__c</fullName>
+        <formula>IF(Account.npe01__SYSTEMIsIndividual__c,&quot;Individual&quot;,&quot;Organization&quot;)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Shows the type of Account this Contact is connected to.</inlineHelpText>
+        <label>Type of Account</label>
+        <type>Text</type>
     </fields>
     <fields>
         <fullName>npe01__WorkEmail__c</fullName>
