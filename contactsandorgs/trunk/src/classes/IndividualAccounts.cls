@@ -439,5 +439,34 @@ global class IndividualAccounts
 			return '';
 		}
 	}
+	
+	/// <name> getContactDonationHistory </name>
+	/// <summary> Called by sControl to display total giving amount </summary>
+	public static string getContactDonationHistoryAmount(Id contactId){
+		Decimal sum = 0;
+		for (OpportunityContactRole o : [Select Opportunity.Amount, OpportunityId From OpportunityContactRole where Opportunity.IsWon = true and Opportunity.Amount != null and ContactId = :contactId]) 
+		{
+			sum += o.Opportunity.Amount;
+		}
+		
+		String totalString = system.label.DefaultContactTransactionCurrency;
+		
+		totalString += String.valueOf(sum);
+		return totalString;
+	}
+
+
+	/// <name> getContactLastDonation </name>
+	/// <summary> Called by sControl to display last donation date </summary>
+	public static String getContactLastDonationDate(Id contactId){
+		Date lastDonation = null;
+		List<OpportunityContactRole> ocr = [Select Opportunity.CloseDate, OpportunityId From OpportunityContactRole where Opportunity.IsWon = true and Opportunity.Amount != null and ContactId = :contactId ORDER BY Opportunity.CloseDate DESC Limit 100]; 
+		if ( ocr.size() > 0) {
+			//return String.ValueOf(ocr[0].Opportunity.CloseDate);
+			return ocr[0].Opportunity.CloseDate.month() + '/' + ocr[0].Opportunity.CloseDate.day() + '/' + ocr[0].Opportunity.CloseDate.year();
+		} else {
+			return '';
+		}
+	}
 
 }
