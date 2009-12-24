@@ -1,4 +1,4 @@
-<apex:page standardController="Contact" extensions="IndividualAccountExtension">
+<apex:page standardController="Contact" extensions="ContactDonationCredit_EXT">
 	
 <apex:pageBlock id="pb">
 <apex:pageBlockSection id="pbs">
