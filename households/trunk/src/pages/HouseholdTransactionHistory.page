@@ -1,4 +1,4 @@
-<apex:page standardController="Household__c" extensions="HouseholdExtension" >
+<apex:page standardController="Household__c" extensions="HouseholdTransactionHistory_EXT" >
 	
 <apex:pageBlock id="pb">
 <apex:pageBlockSection id="pbs">
