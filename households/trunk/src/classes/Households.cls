@@ -288,5 +288,55 @@ global class Households {
 		totalString += totalFormat;
 		return String.valueOf(totalString);
 	}
+	
+	/// <name> getHouseholdLastTransaction </name>
+    /// <summary>  </summary>
+    public static String getHouseholdLastTransactionDate(Id householdId)
+	{
+		List<Id> contactIds = new List<Id>();
+		List<Contact> contacts = [Select Id from Contact where Household__c = :householdId];
+		for (contact c : contacts)
+		{
+			contactIds.add(c.Id);
+		}
+		Double total = 0;
+		List<OpportunityContactRole> ocr = [Select Opportunity.Amount, Opportunity.CloseDate from OpportunityContactRole where ContactId in :contactIds AND Opportunity.isWon = true Order By Opportunity.CloseDate DESC];
+		if (ocr.size() > 0)
+		{
+			return ocr[0].Opportunity.CloseDate.month() + '/' + ocr[0].Opportunity.CloseDate.day() + '/' + ocr[0].Opportunity.CloseDate.year();
+		}
+		return null;
+	}
+	
+	 /// <name> getHouseholdTransactionTotal </name>
+    /// <summary>  </summary>
+	public static String getHouseholdTransactionAmount(Id householdId)
+	{
+		List<Id> contactIds = new List<Id>();
+		List<Contact> contacts = [Select Id from Contact where Household__c = :householdId];
+		for (contact c : contacts)
+		{
+			contactIds.add(c.Id);
+		}
+		Double total = 0;
+		Set<Id> opps = new Set<Id>();
+		
+		for( OpportunityContactRole ocr : [Select Opportunity.Amount, OpportunityId From OpportunityContactRole where ContactId in :contactIds AND Opportunity.isWon = true])
+		{
+			if ( ocr.Opportunity.Amount != null )
+			{
+				opps.add(ocr.OpportunityId);
+
+			}
+		}
+		for( Opportunity wonOpps : [Select Amount From Opportunity where Id in :opps])
+		{
+			total += wonOpps.Amount;
+		}
+		String totalString = system.label.DefaultHouseholdTransactionCurrency;
+		Decimal totalFormat = Decimal.valueOf(total).setScale(2);
+		totalString += totalFormat;
+		return String.valueOf(totalString);
+	}
 
 }
