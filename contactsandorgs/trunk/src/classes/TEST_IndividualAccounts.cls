@@ -880,4 +880,63 @@ private class TEST_IndividualAccounts {
 		sum = IndividualAccounts.getContactLastDonation(con.id);
 		
     }
+
+
+/// <name> getContactDonationHistory </name>
+    /// <summary> Test Method for getContactDonationHistory</summary>
+    static testMethod void getContactDonationHistoryAmount()
+    {
+    	String individualAccountNameForTests = 'IndividualAccountNameForTests';
+		IndividualAccounts_Utils.setIndividualAccountForTests(individualAccountNameForTests);
+		
+        Contact con = new Contact(FirstName='test', LastName='contact', SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR);
+        insert con;
+
+		Opportunity o = new Opportunity(Amount=500,Name='test',StageName='Closed Won',CloseDate=System.today());
+		insert o;
+		
+		OpportunityContactRole ocr = new OpportunityContactRole(OpportunityId=o.Id,ContactId=con.Id,isPrimary=true,role='Donor');
+		insert ocr;
+		
+		//pass contact into the controller
+		ApexPages.StandardController sc = new ApexPages.standardController(con);
+		//pass the controller into the extension
+		ContactDonationCredit_EXT ext = new ContactDonationCredit_EXT(sc);
+		
+		system.assertEquals(system.label.DefaultContactTransactionCurrency + '500.00',ext.getContactDonationHistory());
+    }
+
+    /// <name> getContactLastDonation </name>
+    /// <summary> Test Method for getContactLastDonation</summary>
+    static testMethod void getContactLastDonationDate()
+    {
+    	
+    	Integer year = 2005;
+		Integer month = 10;
+		Integer day = 10;
+		
+    	String individualAccountNameForTests = 'IndividualAccountNameForTests';
+		IndividualAccounts_Utils.setIndividualAccountForTests(individualAccountNameForTests);
+		
+        Contact con = new Contact(FirstName='test', LastName='contact', SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR);
+        insert con;
+        
+        String sum = IndividualAccounts.getContactLastDonation(con.id);
+        
+        system.assertEquals('',sum);
+
+		Opportunity o = new Opportunity(Amount=500,Name='test',StageName='Closed Won',CloseDate=date.newInstance(year,month,day));
+		insert o;
+		
+		OpportunityContactRole ocr = new OpportunityContactRole(OpportunityId=o.Id,ContactId=con.Id,isPrimary=true,role='Donor');
+		insert ocr;
+		
+		//pass contact into the controller
+		ApexPages.StandardController sc = new ApexPages.standardController(con);
+		//pass the controller into the extension
+		ContactDonationCredit_EXT ext = new ContactDonationCredit_EXT(sc);
+
+		system.assertEquals(String.valueOf(day) + '/' + String.valueOf(month) + '/' + String.valueOf(year),ext.getContactLastDonation());
+		
+    }
 }
