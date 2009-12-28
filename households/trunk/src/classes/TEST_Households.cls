@@ -289,5 +289,50 @@ private class TEST_Households {
 		system.assertEquals(String.valueOf(year)+'-'+String.valueOf(month)+'-'+String.valueOf(day),Households.getHouseholdLastTransaction(h.id));
 	}
 	
+	 /// visualforce and apex methods for totals
+	static testMethod void getHouseholdTransactionAmount_test()
+	{
+		
+		Household__c h = new Household__c(Name='Test Household');
+		insert h;
+		Contact c = new Contact(FirstName='test',LastName='test',Household__c=h.Id);
+		insert c;
+		Opportunity o = new Opportunity(Name='test oppty',CloseDate=date.newInstance(2007,3,3),StageName='Closed Won',Amount=100);
+		insert o;
+		OpportunityContactRole ocr = new OpportunityContactRole(OpportunityId=o.Id,ContactId=c.Id,Role='Test');
+		insert ocr;
+		
+		//pass contact into the controller
+		ApexPages.StandardController sc = new ApexPages.standardController(h);
+		//pass the controller into the extension
+		HouseholdTransactionHistory_EXT ext = new HouseholdTransactionHistory_EXT(sc);  
+		
+		system.assertEquals(system.Label.DefaultHouseholdTransactionCurrency + '100.00',ext.getHouseholdTransactionTotal());
+	}
+	
+	/// visualforce and apex methods for totals
+	static testMethod void getHouseholdLastTransactionDate_test()
+	{
+		Integer year = 2005;
+		Integer month = 10;
+		Integer day = 10;
+		
+		Household__c h = new Household__c(Name='Test Household');
+		insert h;
+		Contact c = new Contact(FirstName='test',LastName='test',Household__c=h.Id);
+		insert c;
+		Opportunity o = new Opportunity(Name='test oppty',CloseDate=date.newInstance(year,month,day),StageName='Closed Won',Amount=100);
+		insert o;
+		OpportunityContactRole ocr = new OpportunityContactRole(OpportunityId=o.Id,ContactId=c.Id,Role='Test');
+		insert ocr;
+		
+		//pass contact into the controller
+		ApexPages.StandardController sc = new ApexPages.standardController(h);
+		//pass the controller into the extension
+		HouseholdTransactionHistory_EXT ext = new HouseholdTransactionHistory_EXT(sc);
+		
+		system.assertEquals(String.valueOf(day) + '/' + String.valueOf(month) + '/' + String.valueOf(year),ext.getLastTransactionDate());
+	}
+	
 
 }
