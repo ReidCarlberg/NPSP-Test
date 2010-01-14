@@ -5,7 +5,7 @@
 
 This is a draft plan for future development of the Nonprofit Starter Pack.
 
-= Release Spring 10 - Planning = 
+= Release Spring 10 - Working = 
  * [http://code.google.com/p/npsp/issues/list?can=1&q=label%3AMilestone-Spring10&colspec=ID+Type+Status+Priority+Milestone+Owner+Summary&sort=&mode=grid&y=Package&x=Status&cells=tiles&nobtn=Update Issues]
  * exception handing
  * minimize test failures on install upgrade (existing Individual Account)
