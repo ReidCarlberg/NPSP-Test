@@ -1040,7 +1040,7 @@ private class TEST_ContactMergeController {
         system.assertEquals(0,[select count() from Contact where id=:secondId]);
         system.assertEquals(1,[select count() from Contact where id=:firstId]);
         //second contact's account shouldn't be deleted
-        system.assertEquals(1,[select count() from Account where id=:secondAccountId]);
+        system.assertEquals(0,[select count() from Account where id=:secondAccountId]);
         system.assertEquals(1,[select count() from Account where id=:firstAccountId]);
         //First contact's account id should not have changed
         system.assertEquals(firstAccountId,[select AccountId from Contact where id=:firstId].AccountId);

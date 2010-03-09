@@ -47,7 +47,15 @@ global class IndividualAccounts
         List<Contact> individualUpdates = new List<Contact>();
         List<Contact> contactDeletes = new List<Contact>();
         List<Contact> bucketContacts = new List<Contact>();
+        Set<Id> contactAccountIds = new Set<Id>();
         Map<Id,Id> accountUpdates = new Map<Id,Id>();
+        if(contacts!=null){
+	        for(Contact mycontact : contacts){
+	        	contactAccountIds.add(mycontact.AccountId);
+	        }
+        }
+        
+        Map<Id,Account> existingAccounts = new Map<Id,Account>([select Id,npe01__One2OneContact__c from Account where Id IN :contactAccountIds]);
         
         Integer i = 0;
         //if this is after a delete
@@ -74,11 +82,16 @@ global class IndividualAccounts
 	            		2. The Private__c checkbox isn't set by the user
 	            		3. The one-to-one model is chosen in the SystemAccountProcessor__c
 	            	*/
-	                if (c.AccountId == null && c.Private__c != true && c.SystemAccountProcessor__c == Constants.ONE_TO_ONE_PROCESSOR)
+	            	system.debug('YOYOYOYOYO: ' + c.Account.npe01__One2OneContact__c);
+	            	//system.debug('YOYOYOYOYO: ' + existingAccounts.get(c.AccountId).npe01__One2OneContact__c);
+	                if (((c.AccountId != null && existingAccounts.get(c.AccountId).npe01__One2OneContact__c!=null) || c.AccountId == null) && c.Private__c != true && c.SystemAccountProcessor__c == Constants.ONE_TO_ONE_PROCESSOR)
 	                {
-	
+						if(c.AccountId != null && c.Account.npe01__One2OneContact__c != null){
+							c.AccountId = null;
+						}
 	                    individualInserts.add(c);
 	                }
+	           
 	                /*contact should be connected to the bucket account if:
 	            		1. The account isn't set by the user
 	            		2. The Private__c checkbox isn't set by the user

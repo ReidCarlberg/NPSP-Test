@@ -270,6 +270,29 @@ private class TEST_IndividualAccounts {
         
     }
     
+    static testMethod void contactAddedToExistingOneToOne()
+    {
+    	String individualAccountNameForTests = 'IndividualAccountNameForTests';
+		IndividualAccounts_Utils.setIndividualAccountForTests(individualAccountNameForTests);
+		
+        Contact con = new Contact(FirstName='test', LastName='contact678');
+        insert con;
+        
+        Contact[] insertedContacts = [Select Account.Name,Account.SystemIsIndividual__c,AccountId,Organization_Type__c from Contact where id=:con.id];
+		
+		Id accountId = insertedContacts[0].AccountId;
+		
+		Contact con2 = new Contact(FirstName='John', LastName='Smith',AccountId=accountId);
+        
+        insert con2;
+        
+        Contact[] insertedContact = [Select Account.Name,AccountId,Account.SystemIsIndividual__c,Organization_Type__c from Contact where id=:con2.id];
+        
+        system.assertNotEquals(accountId,insertedContact[0].AccountId);  
+		      
+        
+    }
+    
     static testMethod void contactInNormalOrgNameChange()
     {
     	String individualAccountNameForTests = 'IndividualAccountNameForTests';
