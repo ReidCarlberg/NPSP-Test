@@ -51,6 +51,31 @@ private class TEST_IndividualAccounts {
 		system.assertEquals(null,insertedContacts[0].AccountId);
     
     }
+    
+    static testMethod void insertOneToOneChangeToPrivate()
+    {
+    	String individualAccountNameForTests = 'IndividualAccountNameForTests';
+		IndividualAccounts_Utils.setIndividualAccountForTests(individualAccountNameForTests);
+		
+    	String newContactfirstName = 'test';
+    	String newContactLastName = 'Contact_forTests';
+        Contact con = new Contact(
+        	FirstName=newContactfirstName,
+        	LastName=newContactLastName,
+        	SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR
+        );
+        insert con;
+        
+        Contact[] insertedContacts = [Select FirstName, LastName, AccountId  from Contact where id=:con.id];
+		
+		insertedContacts[0].Private__c = true;
+		update insertedContacts;
+		insertedContacts = [Select FirstName, LastName, AccountId,Private__c  from Contact where id=:con.id];
+		//contact should have no AccountId
+		system.assertEquals(null,insertedContacts[0].AccountId);
+		system.assert(insertedContacts[0].Private__c);
+    
+    }
 
  	/// <name> insertUpdateOneToOne </name>
     /// <summary> Test Method for inserting and updating a Contact in the One-to-One model</summary>

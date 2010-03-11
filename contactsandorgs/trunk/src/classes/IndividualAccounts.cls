@@ -82,9 +82,7 @@ global class IndividualAccounts
 	            		2. The Private__c checkbox isn't set by the user
 	            		3. The one-to-one model is chosen in the SystemAccountProcessor__c
 	            	*/
-	            	system.debug('YOYOYOYOYO: ' + c.Account.npe01__One2OneContact__c);
-	            	//system.debug('YOYOYOYOYO: ' + existingAccounts.get(c.AccountId).npe01__One2OneContact__c);
-	                if (((c.AccountId != null && existingAccounts.get(c.AccountId).npe01__One2OneContact__c!=null) || c.AccountId == null) && c.Private__c != true && c.SystemAccountProcessor__c == Constants.ONE_TO_ONE_PROCESSOR)
+	            	if (((c.AccountId != null && existingAccounts.get(c.AccountId).npe01__One2OneContact__c!=null) || c.AccountId == null) && c.Private__c != true && c.SystemAccountProcessor__c == Constants.ONE_TO_ONE_PROCESSOR)
 	                {
 						if(c.AccountId != null && c.Account.npe01__One2OneContact__c != null){
 							c.AccountId = null;
@@ -143,6 +141,11 @@ global class IndividualAccounts
 	
 	                    bucketContacts.add(c);
 	                }
+	                //for contacts marked private after they have been created, break the relationship to the one to one
+	                if (c.AccountId != null && c.Private__c == true && c.SystemAccountProcessor__c == Constants.ONE_TO_ONE_PROCESSOR)
+	                {
+	                    c.AccountId = null;
+	                } 
 	            }
 	
 	            //AFTER UPDATE
@@ -409,14 +412,14 @@ global class IndividualAccounts
 				accountIds.add(thisContact.accountId);
 			}
 
-	    	accountsOnContacts = [Select Id, Type,SYSTEM_AccountType__c,(Select Id from Opportunities limit 1) from Account where Id IN :accountIds];
+	    	accountsOnContacts = [Select Id, Type,SYSTEM_AccountType__c,(Select Id from Opportunities limit 1),(select Id from Contacts limit 1) from Account where Id IN :accountIds];
 	    	
 	    	for (Account thisAccount : accountsOnContacts){
 	        	//if the legacy or current type field show it's not a one-to-one record, don't delete the account
 	        	if ( thisAccount.Type == Constants.ONE_TO_ONE_ORGANIZATION_TYPE || thisAccount.SYSTEM_AccountType__c == Constants.ONE_TO_ONE_ORGANIZATION_TYPE){
 	        		
 	        		//if there are no Opportunities for this Account, add it for deletion
-	        		if (thisAccount.Opportunities.size()==0)
+	        		if (thisAccount.Opportunities.size()==0 && thisAccount.Contacts.size()==0 )
 	        		{
 	        			accountsForDeletion.add(thisAccount);
 	        		}
