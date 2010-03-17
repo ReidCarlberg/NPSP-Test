@@ -1,4 +1,4 @@
-<apex:page controller="ContactMergeController" title="Merge Contacts">
+<apex:page controller="ContactMergeController" title="Merge Contacts" id="contactMergePage">
 
 	<style type="text/css">
         .messagepopup{
@@ -16,8 +16,27 @@
             padding: 10px;
         }
     </style>
-	<apex:outputPanel id="searchform" layout="block">
-		<apex:form >	
+	<apex:outputPanel id="searchformPanel" layout="block">
+		<apex:form id="searchForm">	
+		<script type="text/javascript">
+			function noenter(e){
+			   if(window.event){
+			          key = window.event.keyCode;     //IE
+			    } else{
+			          key = e.which;     //firefox
+			 	}
+			     if(key == 13) {
+			     	var ele=document.getElementById('contactMergePage:searchForm:searchButton');
+							ele.click();
+			          return false;
+			     } else{
+			          return true;
+				}
+			}
+		</script>
+		
+		
+			
 			<apex:sectionHeader title="Contact Merge" subTitle="Merge Duplicate Contact Records">
 				<description>
 					<ol>
@@ -28,9 +47,9 @@
 					</ol>
 				</description>
 			</apex:sectionHeader>
-	        <apex:inputText value="{!searchText}" id="searchText"/> 
+	        <apex:inputText value="{!searchText}" id="searchText" onkeypress="return noenter(event);"/> 
 
-    		<apex:commandButton action="{!search}"  rerender="searchresults,selectedContacts,winnerpanel" value="Search" status="searchStatus"/> <apex:actionStatus startText="(searching...)" id="searchStatus"/> 
+    		<apex:commandButton id="searchButton" action="{!search}"  rerender="searchresults,selectedContacts,winnerpanel" value="Search" status="searchStatus"/> <apex:actionStatus startText="(searching...)" id="searchStatus"/> 
     		<br/><br/>
 	    </apex:form>
     </apex:outputPanel>
