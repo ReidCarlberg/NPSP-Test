@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <label>Adresse du Foyer</label>
+        <name>Formula_HouseholdMailingAddress__c</name>
+    </fields>
+    <fields>
+        <label>Téléphone du Foyer</label>
+        <name>Formula_HouseholdPhone__c</name>
+    </fields>
+    <fields>
+        <label>Foyer</label>
+        <name>Household__c</name>
+        <relationshipLabel>Membres du Foyer</relationshipLabel>
+    </fields>
+    <fields>
+        <label>Langues</label>
+        <name>Languages__c</name>
+    </fields>
+    <fields>
+        <label>Niveau</label>
+        <name>Level__c</name>
+        <picklistValues>
+            <masterLabel>Primary</masterLabel>
+            <translation>Principal</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Secondary</masterLabel>
+            <translation>Secondaire</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Tertiary</masterLabel>
+            <translation>Supérieur</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- _SYSTEM: HOUSEHOLD PROCESSOR --></label>
+        <name>SystemHouseholdProcessor__c</name>
+    </fields>
+    <fields>
+        <label>E-mail alternatif</label>
+        <name>npe01__AlternateEmail__c</name>
+    </fields>
+    <fields>
+        <label>E-mail personnel</label>
+        <name>npe01__HomeEmail__c</name>
+    </fields>
+    <fields>
+        <label>Adresse du domicile</label>
+        <name>npe01__Home_Address__c</name>
+    </fields>
+    <fields>
+        <label>Date de la dernière transaction</label>
+        <name>npe01__Last_Donation_Date__c</name>
+    </fields>
+    <fields>
+        <label>Total des transactions</label>
+        <name>npe01__Lifetime_Giving_History_Amount__c</name>
+    </fields>
+    <fields>
+        <label>Type d&apos;organisation</label>
+        <name>npe01__Organization_Type__c</name>
+    </fields>
+    <fields>
+        <label>Autre adresse</label>
+        <name>npe01__Other_Address__c</name>
+    </fields>
+    <fields>
+        <label>Téléphone préféré</label>
+        <name>npe01__PreferredPhone__c</name>
+    </fields>
+    <fields>
+        <label>E-mail préféré</label>
+        <name>npe01__Preferred_Email__c</name>
+        <picklistValues>
+            <masterLabel>Alternate</masterLabel>
+            <translation>Alternatif</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Home</masterLabel>
+            <translation>Domicile</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Household</masterLabel>
+            <translation>Foyer</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Work</masterLabel>
+            <translation>Professionnel</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label>Type d&apos;adresse postale</label>
+        <name>npe01__Primary_Address_Type__c</name>
+    </fields>
+    <fields>
+        <label>Privée</label>
+        <name>npe01__Private__c</name>
+    </fields>
+    <fields>
+        <label>Type d&apos;adresse secondaire</label>
+        <name>npe01__Secondary_Address_Type__c</name>
+    </fields>
+    <fields>
+        <label><!-- _SYSTEM: ACCOUNT PROCESSOR --></label>
+        <name>npe01__SystemAccountProcessor__c</name>
+    </fields>
+    <fields>
+        <label><!-- _SYSTEM: IsIndividual --></label>
+        <name>npe01__SystemIsIndividual__c</name>
+    </fields>
+    <fields>
+        <label>E-mail professionnel</label>
+        <name>npe01__WorkEmail__c</name>
+    </fields>
+    <fields>
+        <label>Téléphone professionnel</label>
+        <name>npe01__WorkPhone__c</name>
+    </fields>
+    <fields>
+        <label>Adresse professionnelle</label>
+        <name>npe01__Work_Address__c</name>
+    </fields>
+    <layouts>
+        <layout>Contact Layout</layout>
+        <sections>
+            <label>Information du Contact</label>
+            <section>Contact Information</section>
+        </sections>
+    </layouts>
+</CustomObjectTranslation>
