@@ -253,5 +253,33 @@ private class RecurringDonations_TEST {
 		system.assertEquals(33.33,installments3[0].Amount);
 	}
 	
+	static testMethod void contactRolesOnOpps()
+	{
+		
+		 Account a = new Account();
+        a.Name = 'test Individual';
+        insert a;
+        
+        Contact c = new Contact();
+        c.FirstName = 'test';
+        c.LastName = 'contact';
+        c.AccountId = a.Id;
+        insert c;		
+		Test.startTest();
+		Recurring_Donation__c r1 = new Recurring_Donation__c();
+		r1.Name = 'test';
+		r1.Installments__c = 2;
+		r1.Contact__c = c.Id;
+		r1.Amount__c = 100;
+		r1.Installment_Period__c = System.Label.RecurringDonationInstallmentPeriodWeekly;
+		r1.Date_Established__c = date.newinstance(1970,6,12);
+		r1.Schedule_Type__c = System.Label.RecurringDonationMultiplyValue;
+		insert r1;
+		Test.stopTest();
+		OpportunityContactRole[] installmentCRs = [select ContactId,OpportunityId,Role from OpportunityContactRole where Opportunity.Recurring_Donation__c = :r1.id];
+		system.assertEquals(2,installmentCRs.size());
+		system.assertEquals(System.Label.RecurringDonationContactRole,installmentCRs[0].Role);
+	}
+	
 	
 }
