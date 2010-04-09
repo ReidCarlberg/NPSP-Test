@@ -10,7 +10,7 @@ public class HouseholdOpportunity {
     	//get all Opps in the trigger set that are for individual accounts 
     	List<Opportunity> oppsForContactRoles = [select Id, AccountId, account.npe01__One2OneContact__c,account.npe01__SYSTEMIsIndividual__c from Opportunity where Id IN :opportunities AND account.npe01__SYSTEMIsIndividual__c = true AND systemHouseholdContactRoleProcessor__c = :householdContactRolesOn];
     	
-    	if(oppsForContactRoles!=null){
+    	if(oppsForContactRoles.size()>0){
     		
     		//set of contact Ids on Accounts for Opps in the trigger set
 	    	Set<Id> contactIds = new Set<Id>();	    	
@@ -46,7 +46,9 @@ public class HouseholdOpportunity {
 	    	
 	    	//create a map of contacts and thier Household Ids
 	    	for(Contact myContact : individualContacts){
-	    		contactIdToHouseholdId.put(myContact.Id,myContact.Household__c);	    		
+	    		if(myContact.Household__c!=null){
+	    			contactIdToHouseholdId.put(myContact.Id,myContact.Household__c);	    
+	    		}		
 	    	}
 	    	
 	    	//query all contacts in all the Households
