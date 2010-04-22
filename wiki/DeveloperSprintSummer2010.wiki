@@ -14,6 +14,8 @@ A small group of folks interested in nonprofits on Salesforce.com:
   # Salesforce.com company staff
   # Salesforce.com Foundation staff
 
+I plan to limit the sprint to about 15 people. We will break into groups of about 3 and work on coding efforts in small teams.
+
 == Why are we doing this? ==
 The Nonprofit Starter Pack is in use by thousands of organizations. We will never be satisfied with the speed at which is improves. This is an effort to move the code-base forward through an intense effort of some of the best minds in our space.
 
@@ -23,6 +25,9 @@ The Nonprofit Starter Pack is in use by thousands of organizations. We will neve
   # Share knowledge
 
 = Details =
+== Work selection ==
+I have developed a list of potential projects that could be tackled in a sprint. I will define these in detail before the sprint. Attendees will be asked to review the list and help with the plan of attack for each. At the sprint we'll break into groups and tackle the work, with a general plan of attack already in place. While we will be open to changing implementation details, the goal is to walk in the first day with an idea of how to solve each of these, rather than start by brainstorming solutions.
+
 == Potential Work ==
    * Batch rollups for opp in Individual model
       * likely be completed by then?
