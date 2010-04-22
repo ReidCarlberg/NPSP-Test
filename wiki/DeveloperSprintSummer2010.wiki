@@ -2,8 +2,52 @@
 
 = Intro =
 
+Wednesday June 9 through Friday June 11, 2010, in San Francisco, California. A planned and focused sprint to improve and augment the Nonprofit Starter Pack.
+
 = Report Out =
+post event...
 
 = Main Points =
+== Who is doing this? ==
+A small group of folks interested in nonprofits on Salesforce.com:
+  # Salesforce.com implementers
+  # Salesforce.com company staff
+  # Salesforce.com Foundation staff
+
+== Why are we doing this? ==
+The Nonprofit Starter Pack is in use by thousands of organizations. We will never be satisfied with the speed at which is improves. This is an effort to move the code-base forward through an intense effort of some of the best minds in our space.
+
+== Our goals ==
+  # Create deployment-ready code for the Nonprofit Starter Pack that addresses key gaps/issues that will make Nonprofits more effective
+  # Strengthen the relationships in our community
+  # Share knowledge
 
 = Details =
+== Potential Work ==
+   * Batch rollups for opp in Individual model
+      * likely be completed by then?
+   * Contact merge in one-to-one
+      * paint a perfect record
+      * what to do with parent records?
+   * Household sync
+   * Opportunity contact roles
+      * relationship to contact?
+      * wizard for creation?
+      * trigger for CR creation
+   * Membership module
+   * Lead Conversion
+      * email and phone fields
+      * interface for opp creation
+      * field mapping
+   * Recurring Donations v.2
+   * Relationships
+      * Directionality
+      * list custom settings for relationship values?
+   * refactoring for Winter and Spring 10
+      * SOQL
+      * custom settings
+      * exception handling
+   * Documentation
+
+== Time and Location ==
+The sprint will be held at the Salesforce.com corporate offices in San Francisco on June 9-11, 2010. The sprint will begin at 9 am June 9th.
