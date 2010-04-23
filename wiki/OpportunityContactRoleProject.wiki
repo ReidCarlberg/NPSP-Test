@@ -15,6 +15,10 @@ In both Account models, new Opportunities created from UI buttons on the Contact
  * Multiple code pieces create opportunities (Recurring Donations, Households) and they all have to manage contact role creation
  * testing is difficult for some functions because of the need for contact role existence before opp triggers can do things like rollup gifts to the contact
 
+== Open Issues ==
+  * http://code.google.com/p/npsp/issues/detail?id=100
+  * http://code.google.com/p/npsp/issues/detail?id=131
+
 = Potential Course of Action =
 
   * Build contact role creation into an Opportunity trigger so that the Contact Id is known at the moment of opp insert, no matter where the Opp is inserted from.
