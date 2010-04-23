@@ -1,4 +1,4 @@
-#summary summary
+#summary Household functionality has many areas for improvement
 #labels 2010Sprint
 [DeveloperSprintSummer2010 Sprint Home]
 <wiki:toc max_depth="2" />
@@ -12,13 +12,18 @@
  * 
 
 == Open Issues ==
-  * 
+  * http://code.google.com/p/npsp/issues/detail?id=3
+  * http://code.google.com/p/npsp/issues/detail?id=17
+  * http://code.google.com/p/npsp/issues/detail?id=56
+  * http://code.google.com/p/npsp/issues/detail?id=57
 
 = Potential Course of Action =
 
   * 
 
 = Implementation Details =
+
+== Impact on current install base ==
 
 = Pros and Cons of Course of Action =
 
