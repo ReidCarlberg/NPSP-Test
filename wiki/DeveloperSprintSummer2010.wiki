@@ -1,5 +1,4 @@
 #summary Resources page for Summer 2010 developer sprint
-
 = Intro =
 
 Wednesday June 9 through Friday June 11, 2010, in San Francisco, California. A planned and focused sprint to improve and augment the Nonprofit Starter Pack.
