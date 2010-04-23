@@ -1,0 +1,23 @@
+#summary Duplicate contacts always will exists and will need merging
+<wiki:toc max_depth="2" />
+= Introduction =
+
+= Current State = 
+
+
+= Problems with current State =
+
+ * 
+
+== Open Issues ==
+  * 
+
+= Potential Course of Action =
+
+  * 
+
+= Implementation Details =
+
+= Pros and Cons of Course of Action =
+
+  * 
