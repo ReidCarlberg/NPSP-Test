@@ -10,7 +10,7 @@ In both Account models, new Opportunities created from UI buttons on the Contact
 
 = Problems with current State =
 
- * Contact Role Role value is blank
+ * Contact Role Role value is blank for created opps
  * Importing Opportunities is a two step process--create the opps then create the contact roles for the opps
  * Multiple code pieces create opportunities (Recurring Donations, Households) and they all have to manage contact role creation
  * testing is difficult for some functions because of the need for contact role existence before opp triggers can do things like rollup gifts to the contact
