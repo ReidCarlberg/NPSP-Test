@@ -59,7 +59,9 @@ The sprint will be held at the Salesforce.com corporate offices in San Francisco
 
 == Agenda ==
 ||Wednesday June 9||
-|| 9 am || Start ||
+|| 9 am - noon || Kickoff ||
+|| 1:30 pm - 6 pm || Afternoon session ||
+|| 7:30 pm - whenever || Evening session ||
 ||Thursday June 10||
 ||Friday June 11||
 
