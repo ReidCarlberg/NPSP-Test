@@ -1,4 +1,5 @@
 #summary Resources page for Summer 2010 developer sprint
+#labels 2010Sprint
 <wiki:toc max_depth="2" />
 = Intro =
 
