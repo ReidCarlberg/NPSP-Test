@@ -35,7 +35,7 @@ I have developed a list of potential projects that could be tackled in a sprint.
       * paint a perfect record
       * what to do with parent records?
    * HouseholdSyncProject
-   * Opportunity contact roles
+   * OpportunityContactRoleProject
       * relationship to contact?
       * wizard for creation?
       * trigger for CR creation
