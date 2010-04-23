@@ -17,7 +17,7 @@ In both Account models, new Opportunities created from UI buttons on the Contact
 
 == Open Issues ==
   * http://code.google.com/p/npsp/issues/detail?id=100
-  * http://code.google.com/p/npsp/issues/detail?id=131
+  * http://code.google.com/p/npsp/issues/detail?id=133
 
 = Potential Course of Action =
 
