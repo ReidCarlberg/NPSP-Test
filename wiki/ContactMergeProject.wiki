@@ -27,6 +27,7 @@ The one-to-one Account model currently does not work with the standard Salesforc
   * build a paint-a-perfect record interface
 
 = Implementation Details =
+== Impact on current install base ==
 
 = Pros and Cons of Course of Action =
 
