@@ -29,6 +29,7 @@ In both Account models, new Opportunities created from UI buttons on the Contact
   * Modify all code to rely on this service for contact role creation
 
 = Implementation Details =
+== Impact on current install base ==
 
 = Pros and Cons of Course of Action =
 
