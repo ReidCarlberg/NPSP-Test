@@ -23,6 +23,7 @@ In both Account models, new Opportunities created from UI buttons on the Contact
 
   * Build contact role creation into an Opportunity trigger so that the Contact Id is known at the moment of opp insert, no matter where the Opp is inserted from.
   * Create a relationship from Opp to Contact that will hold the contact id
+  * Should we build a wizard interface in the UI to make opp creation easier or more functional? see Groundwire's wizard.
   * Modify all code to rely on this service for contact role creation
 
 = Implementation Details =
