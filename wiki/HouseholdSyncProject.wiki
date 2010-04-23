@@ -4,12 +4,22 @@
 <wiki:toc max_depth="2" />
 = Introduction =
 
+Household is a custom object that is a parent of Contact. It is used to group Contacts at their physical mailing address. 
+
 = Current State = 
+
+lots of current functionality to describe
+trigger on contact
+name generation
+address copying
+formula field back down
 
 
 = Problems with current State =
 
- * 
+ * can't specify naming convention
+ * address not kept in sync
+ * name doesn't sync with contact name fields
 
 == Open Issues ==
   * http://code.google.com/p/npsp/issues/detail?id=3
@@ -22,6 +32,9 @@
   * 
 
 = Implementation Details =
+
+== Packages affected ==
+* Households
 
 == Impact on current install base ==
 
