@@ -1,5 +1,5 @@
 #summary A key part of tracking donations to individuals is Opportunity Contact Roles.
-
+<wiki:toc max_depth="2" />
 = Introduction =
 
 When Opportunities are created there is benefit in having them connected to Contacts via Opportunity Contact Roles.
