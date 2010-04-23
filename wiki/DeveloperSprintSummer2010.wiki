@@ -29,30 +29,30 @@ The Nonprofit Starter Pack is in use by thousands of organizations. We will neve
 I have developed a list of potential projects that could be tackled in a sprint. I will define these in detail before the sprint. Attendees will be asked to review the list and help with the plan of attack for each. At the sprint we'll break into groups and tackle the work, with a general plan of attack already in place. While we will be open to changing implementation details, the goal is to walk in the first day with an idea of how to solve each of these, rather than start by brainstorming solutions.
 
 == Potential Work ==
-   * Batch rollups for opp in Individual model
+   * BatchRollupProject
       * likely be completed by then?
-   * Contact merge in one-to-one
+   * ContactMergeProject
       * paint a perfect record
       * what to do with parent records?
-   * Household sync
+   * HouseholdSyncProject
    * Opportunity contact roles
       * relationship to contact?
       * wizard for creation?
       * trigger for CR creation
-   * Membership module
-   * Lead Conversion
+   * MembershipProject
+   * LeadConversionProject
       * email and phone fields
       * interface for opp creation
       * field mapping
-   * Recurring Donations v.2
-   * Relationships
+   * RecurringDonationsProject
+   * RelationshipsProject
       * Directionality
       * list custom settings for relationship values?
-   * refactoring for Winter and Spring 10
+   * CodeOptimizationProject
       * SOQL
       * custom settings
       * exception handling
-   * Documentation
+   * DocumentationProject
 
 == Time and Location ==
 The sprint will be held at the Salesforce.com corporate offices in San Francisco on June 9-11, 2010. The sprint will begin at 9 am June 9th.
