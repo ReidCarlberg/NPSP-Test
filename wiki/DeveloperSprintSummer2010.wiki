@@ -17,6 +17,7 @@ A small group of folks interested in nonprofits on Salesforce.com:
   # Salesforce.com company staff
     # Ron Hess
     # Andrew Waite
+    # Someone from platform evangelism team
   # Salesforce.com Foundation staff
     # Steve Wright
     # Akhilesh Gupta
