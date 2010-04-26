@@ -13,7 +13,7 @@ post event...
 A small group of folks interested in nonprofits on Salesforce.com:
   # Salesforce.com implementers
     # Dave Manelski, http://Groundwire.org
-    # David Cheng, http://idealistconsulting.org
+    # David Cheng, http://idealistconsulting.com
   # Salesforce.com company staff
     # Ron Hess
     # Andrew Waite
