@@ -12,8 +12,15 @@ post event...
 == Who is doing this? ==
 A small group of folks interested in nonprofits on Salesforce.com:
   # Salesforce.com implementers
+    # Dave Manelski, http://Groundwire.org
+    # David Cheng, http://idealistconsulting.org
   # Salesforce.com company staff
+    # Ron Hess
+    # Andrew Waite
   # Salesforce.com Foundation staff
+    # Steve Wright
+    # Akhilesh Gupta
+    # Steve Andersen
 
 I plan to limit the sprint to about 15 people. We will break into groups of about 3 and work on coding efforts in small teams.
 
