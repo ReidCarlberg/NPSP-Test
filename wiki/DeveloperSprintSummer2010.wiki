@@ -57,6 +57,7 @@ I have developed a list of potential projects that could be tackled in a sprint.
    * RelationshipsProject
       * Directionality
       * list custom settings for relationship values?
+      * Visualizer for relationships and associations?
    * CodeOptimizationProject
       * SOQL
       * custom settings
