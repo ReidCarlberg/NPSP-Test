@@ -14,6 +14,7 @@ A small group of folks interested in nonprofits on Salesforce.com:
   # Salesforce.com implementers
     # Dave Manelski, http://Groundwire.org
     # David Cheng, http://idealistconsulting.com
+    # Jason Venable, http://www.tehnrd.com/
   # Salesforce.com company staff
     # Ron Hess
     # Andrew Waite
