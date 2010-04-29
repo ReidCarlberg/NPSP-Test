@@ -94,4 +94,5 @@ The sprint will be held at the Salesforce.com corporate offices in San Francisco
  * [https://login.salesforce.com/?startURL=%2Fpackaging%2FinstallPackage.apexp%3Fp0%3D04t80000000lIjF Relationships Unmanaged]
  * [https://login.salesforce.com/?startURL=%2Fpackaging%2FinstallPackage.apexp%3Fp0%3D04t80000000jL9R Recurring Donations Unmanaged]
  * [https://login.salesforce.com/?startURL=%2Fpackaging%2FinstallPackage.apexp%3Fp0%3D04t80000000YL5r Affiliations Unmanaged]
- * Households cannot be offered unmanaged because it is an extension of Contacts and Organizations
+ * Households cannot be offered unmanaged because it is an extension of Contacts and Organizations 
+  * https://login.salesforce.com/?startURL=%2Fpackaging%2FinstallPackage.apexp%3Fp0%3D04t80000000jLAo
