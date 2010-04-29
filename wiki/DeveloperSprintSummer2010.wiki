@@ -85,3 +85,13 @@ The sprint will be held at the Salesforce.com corporate offices in San Francisco
 || 1:30 pm - 5 pm || Afternoon session and wrap up ||
 
 [http://www.google.com/calendar/embed?src=m4ntng5pkkri9m9p6g11kbq3u4%40group.calendar.google.com&ctz=America/Los_Angeles Calendar for the Event]
+
+= Tech links =
+== Orgs ==
+== Subversion ==
+== Packages ==
+ * [https://login.salesforce.com/?startURL=%2Fpackaging%2FinstallPackage.apexp%3Fp0%3D04t80000000j7IX Contacts and Orgs Unmanaged]
+ * [https://login.salesforce.com/?startURL=%2Fpackaging%2FinstallPackage.apexp%3Fp0%3D04t80000000lIjF Relationships Unmanaged]
+ * [https://login.salesforce.com/?startURL=%2Fpackaging%2FinstallPackage.apexp%3Fp0%3D04t80000000jL9R Recurring Donations Unmanaged]
+ * [https://login.salesforce.com/?startURL=%2Fpackaging%2FinstallPackage.apexp%3Fp0%3D04t80000000YL5r Affiliations Unmanaged]
+ * Households cannot be offered unmanaged because it is an extension of Contacts and Organizations
