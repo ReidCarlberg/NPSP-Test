@@ -21,7 +21,7 @@ There is nothing in the Nonprofit Starter Pack regarding membership.
 
 = Potential Course of Action =
 
-  * this is an open slate project. If people want to take it on they'll need to define it
+  * this is an blank slate project. If people want to take it on they'll need to define it
 
 = Implementation Details =
 == Impact on current install base ==
