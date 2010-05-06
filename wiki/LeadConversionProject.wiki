@@ -3,20 +3,25 @@
 [DeveloperSprintSummer2010 Sprint Home]
 <wiki:toc max_depth="2" />
 = Introduction =
+Nearly every Salesforce org needs to convert leads. Either they have a business process that includes Leads, or they're using Web to Lead to get Contacts into their database.
 
 = Current State = 
-
+Lead conversion doesn't work as might be expected in the one-to-one Account model. The Lead conversion interface is not shown when converting a one-to-one lead.
 
 = Problems with current State =
 
- * 
+ * an Opportunity cannot be created when converting a Lead in the one-to-one model.
+ * Leads can't be merged to existing Contacts
 
 == Open Issues ==
-  * 
+  * http://code.google.com/p/npsp/issues/detail?id=15
+  * http://code.google.com/p/npsp/issues/detail?id=41
+  * http://code.google.com/p/npsp/issues/detail?id=90
+  * http://code.google.com/p/npsp/issues/detail?id=161
 
 = Potential Course of Action =
 
-  * 
+  * build a lead conversion UI to allow for merging and Opportunity creation
 
 = Implementation Details =
 == Impact on current install base ==
