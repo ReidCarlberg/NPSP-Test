@@ -4,19 +4,22 @@
 <wiki:toc max_depth="2" />
 = Introduction =
 
-= Current State = 
 
+= Current State = 
+Documentation is on the Developer wiki.
 
 = Problems with current State =
 
- * 
+ * Some documentation is out of date because the platform has upgraded since it was written
+ * New features of the packages are not documented well
 
 == Open Issues ==
   * 
 
 = Potential Course of Action =
 
-  * 
+ * survey the documentation
+ * Update and add to the documentation as necessary
 
 = Implementation Details =
 == Impact on current install base ==
