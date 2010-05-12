@@ -42,7 +42,6 @@ I have developed a list of potential projects that could be tackled in a sprint.
 
 == Potential Work ==
    * BatchRollupProject
-      * likely be completed by then?
    * ContactMergeProject
       * paint a perfect record
       * what to do with parent records?
