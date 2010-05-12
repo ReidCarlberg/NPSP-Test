@@ -3,13 +3,23 @@
 [DeveloperSprintSummer2010 Sprint Home]
 <wiki:toc max_depth="2" />
 = Introduction =
+The Salesforce.com platform moves very quickly. New platform features have come out that should be taken advantage of. 
 
 = Current State = 
+New platform features that could be refactored into our code where appropriate:
+ * Batch Apex
+ * Scheduled Apex
+ * Custom settings
+ * SOQL improvements (group by, having, etc.)
 
+Best practices for coding on the Salesforce.com platform are not all followed in the code base:
+ 
 
 = Problems with current State =
 
- * 
+ * efficiency and quality can always be improved
+ * there are many places where unhandled exceptions can occur
+ * test coverage is incomplete
 
 == Open Issues ==
   * 
