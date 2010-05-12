@@ -1,4 +1,4 @@
-#summary Duplicate contacts always will exists and will need merging
+#summary Rolling up donations is a key need for all nonprofits doing donor management.
 [DeveloperSprintSummer2010 Sprint Home]
 <wiki:toc max_depth="2" />
 = Introduction =
