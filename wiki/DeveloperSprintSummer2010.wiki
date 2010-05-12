@@ -17,6 +17,7 @@ A small group of folks interested in nonprofits on Salesforce.com:
     # Sara Chieco, http://exponentpartners.com
     # Dave Manelski, http://groundwire.org
     # Jason Venable, http://www.tehnrd.com/
+    # Nick Bailey, http://helpsudaninternational.org
   # Salesforce.com company staff
     # Ron Hess
     # Andrew Waite
