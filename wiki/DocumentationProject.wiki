@@ -12,6 +12,7 @@ Documentation is on the Developer wiki.
 
  * Some documentation is out of date because the platform has upgraded since it was written
  * New features of the packages are not documented well
+ * Work done at this sprint must be documented
 
 == Open Issues ==
   * 
