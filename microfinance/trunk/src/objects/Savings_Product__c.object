@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <enableActivities>true</enableActivities>
+    <enableHistory>true</enableHistory>
+    <enableReports>true</enableReports>
+    <fields>
+        <fullName>Applicable_for__c</fullName>
+        <description>Select from a list of values to whom the savings product is
+applicable i.e. the client or group</description>
+        <label>Applicable for</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Client</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Group</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Both</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Balance_Type__c</fullName>
+        <description>Select the type of balance that will be used for interest. There are 3
+options i.e. minimum balance, average balance and ending balance.
+Compound interest will be used as a basis of calculating interest.</description>
+        <inlineHelpText>Select the type of balance that will be used for interest. There are 3
+options i.e. minimum balance, average balance and ending balance.
+Compound interest will be used as a basis of calculating interest.</inlineHelpText>
+        <label>Balance Type</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Minimum Balance</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Average Balance</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Ending Balance</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Deposit_Type__c</fullName>
+        <description>Select whether the product is voluntary or mandatory. A voluntary
+product means that the client(s) or group(s) assigned this product
+is/are not obliged to save whereas a mandatory product means that
+savings must be made as defined in the product.</description>
+        <label>Deposit Type</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Voluntary</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Mandatory</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Deposits_GL_Code__c</fullName>
+        <description>Enter the accounting code that will be used to aggregate the
+deposits and withdrawals to this account.</description>
+        <inlineHelpText>Enter the accounting code that will be used to aggregate the
+deposits and withdrawals to this account.</inlineHelpText>
+        <label>Deposits GL Code</label>
+        <picklist>
+            <picklistValues>
+                <fullName>1001</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Description__c</fullName>
+        <description>Enter the saving product description.</description>
+        <label>Description</label>
+        <length>32000</length>
+        <type>LongTextArea</type>
+        <visibleLines>3</visibleLines>
+    </fields>
+    <fields>
+        <fullName>End_Date__c</fullName>
+        <description>Enter the final date when the savings product can be used
+for defining savings accounts. Leave blank if the date is
+indefinite.</description>
+        <label>End Date</label>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Interest_GL_Code__c</fullName>
+        <description>Select the general ledger accounting code that will be used to
+aggregate interest for this saving product.</description>
+        <inlineHelpText>Select the general ledger accounting code that will be used to
+aggregate interest for this saving product.</inlineHelpText>
+        <label>Interest GL Code</label>
+        <picklist>
+            <picklistValues>
+                <fullName>1001</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Interest_Rate_Calculation_Frequncy__c</fullName>
+        <description>Enter the time period when the interest can be calculated. 1 month
+means that the interest rate will be calculated at the end of every
+month</description>
+        <inlineHelpText>Enter the time period when the interest can be calculated. 1 month
+means that the interest rate will be calculated at the end of every
+month</inlineHelpText>
+        <label>Interest Rate Calculation Frequncy</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Weekly</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Biweekly</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Monthly</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Interest_Rate__c</fullName>
+        <description>Enter the applicable interest rate</description>
+        <inlineHelpText>Enter the applicable interest rate</inlineHelpText>
+        <label>Interest Rate</label>
+        <precision>5</precision>
+        <scale>3</scale>
+        <type>Percent</type>
+    </fields>
+    <fields>
+        <fullName>Max_Amount_Withdrawal__c</fullName>
+        <description>Enter the maximum amount that can be withdrawn from the account
+at any given time.</description>
+        <label>Max Amount Per Withdrawal</label>
+        <precision>18</precision>
+        <scale>2</scale>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Min_Balance_for_Interest__c</fullName>
+        <description>Enter the minimum balance that will be used for computing interest.
+If the amount is lower than the amount entered here, interest will not
+be applied.</description>
+        <inlineHelpText>Enter the minimum balance that will be used for computing interest.
+If the amount is lower than the amount entered here, interest will not
+be applied.</inlineHelpText>
+        <label>Min Balance for Interest</label>
+        <precision>18</precision>
+        <scale>2</scale>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Product_SKU__c</fullName>
+        <description>Unique Cross Version Identifier for the Product. Two products with the same SKU can&apos;t have overlapping start and end dates.</description>
+        <label>Product SKU</label>
+        <length>255</length>
+        <type>Text</type>
+        <unique>true</unique>
+    </fields>
+    <fields>
+        <fullName>Recommended_Amount__c</fullName>
+        <description>Enter the recommended value of each deposit. If the type of deposit
+is mandatory and the savings account requires a monthly deposit,
+the client(s) or group(s) must make a savings deposit on a monthly
+basis.</description>
+        <label>Recommended Amount</label>
+        <precision>18</precision>
+        <scale>2</scale>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Start_Date__c</fullName>
+        <description>Enter the start date when the users can start using the
+savings product.</description>
+        <label>Start Date</label>
+        <type>Date</type>
+    </fields>
+    <label>Savings Product</label>
+    <listViews>
+        <fullName>All</fullName>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+    </listViews>
+    <nameField>
+        <label>Savings Product Name</label>
+        <type>Text</type>
+    </nameField>
+    <pluralLabel>Savings Products</pluralLabel>
+    <searchLayouts/>
+    <sharingModel>ReadWrite</sharingModel>
+</CustomObject>

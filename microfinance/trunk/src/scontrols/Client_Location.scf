@@ -1,0 +1,50 @@
+<!DOCTYPE HTML PUBLIC
+	"-//W3C//DTD HTML 4.01 Transitional//EN"
+	"http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" type="text/css" href="/sCSS/9.0/Theme2/dStandard.css" />
+    <link rel="stylesheet" type="text/css" href="/sCSS/9.0/Theme2/common.css" />
+    <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAA6MwJwOazIPpZTfwJdWUCkRTP-nQO30TV4MerbYT8p0gD9BDdlBQ_CYclkKEQr0spCiJrbFEtjVzyDA"
+            type="text/javascript"></script>
+    <script type="text/javascript">
+    //<![CDATA[
+
+    function load() {
+      var address = document.getElementById("address").value;
+      
+      if ((address.length > 0) && GBrowserIsCompatible()) {
+        var map = new GMap2(document.getElementById("map"));
+        var geocoder = new GClientGeocoder();
+        geocoder.getLatLng(
+              address,
+              function(point) {
+                if (!point) {
+                  // alert(address + " not found");
+                  mapDiv = document.getElementById("map");
+                  mapDiv.style.display = "none";
+
+                  errDiv = document.getElementById("error");
+                  errDiv.style.display = "inline";
+                } else {
+                  map.setCenter(point, 7, G_HYBRID_MAP);
+                  map.addControl(new GSmallMapControl());
+                  var marker = new GMarker(point);
+                  map.addOverlay(marker);
+                  // marker.openInfoWindowHtml(address);
+                }
+              }
+            );
+      }
+    }
+
+    //]]>
+    </script>
+  </head>
+  <body onload="load()" onunload="GUnload()" class="contactTab  detailPage" style="background-color: #f3f3ec;">
+   <div id="error" class="detailList dataCol" style="display: none; padding: 0">Unable to locate {!Contact.MailingAddress}</div>
+   <div id="map" style="width: 100%; height: 300px"></div> 
+   <textarea id="address" style="display: none">{!Contact.MailingAddress}</textarea>
+  </body>
+</html>

@@ -1,0 +1,571 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <description>Used to track a Loan Account for a given client/group</description>
+    <enableActivities>true</enableActivities>
+    <enableHistory>true</enableHistory>
+    <enableReports>true</enableReports>
+    <fields>
+        <fullName>Amortized_Payment__c</fullName>
+        <formula>(
+Annual_Interest_Rate__c/12.0 * Loan_Amount__c * ((1+ Annual_Interest_Rate__c/12.0 ) ^ Number_of_Installments__c )
+)
+/
+(
+((1+ Annual_Interest_Rate__c/12.0 ) ^ Number_of_Installments__c ) - 1
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Estimated Payment</label>
+        <precision>18</precision>
+        <scale>2</scale>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Annual_Interest_Rate__c</fullName>
+        <label>Annual Interest Rate (ex. &quot;8.125&quot;)</label>
+        <precision>5</precision>
+        <required>true</required>
+        <scale>3</scale>
+        <type>Percent</type>
+    </fields>
+    <fields>
+        <fullName>Client__c</fullName>
+        <label>Client</label>
+        <referenceTo>Contact</referenceTo>
+        <relationshipName>Loan_Account</relationshipName>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Frequency_of_Installments__c</fullName>
+        <formula>CASE(Loan_Product__r.Frequency_of_Installments__c,&apos;Weekly&apos;,&apos;Weekly&apos;,&apos;Biweekly&apos;,&apos;Biweekly&apos;,&apos;Monthly&apos;,&apos;Monthly&apos;,&apos;Not Defined&apos;)</formula>
+        <label>Frequency of Installments</label>
+        <type>Text</type>
+    </fields>
+    <fields>
+        <fullName>Grace_Period_Days__c</fullName>
+        <defaultValue>0</defaultValue>
+        <label>Grace Period (Days)</label>
+        <precision>3</precision>
+        <scale>0</scale>
+        <type>Number</type>
+    </fields>
+    <fields>
+        <fullName>Group__c</fullName>
+        <label>Group</label>
+        <referenceTo>Account</referenceTo>
+        <relationshipName>Loan_Account</relationshipName>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Interest_Rate_Type__c</fullName>
+        <formula>CASE(Loan_Product__r.Interest_Rate_Type__c,&apos;Flat&apos;,&apos;Flat&apos;,&apos;Declining Balance&apos;,&apos;Declining Balance&apos;,&apos;Interest Only&apos;,&apos;Interest Only&apos;,&apos;Not Defined&apos;)</formula>
+        <label>Interest Rate Type</label>
+        <type>Text</type>
+    </fields>
+    <fields>
+        <fullName>Interest_at_Disbursement__c</fullName>
+        <formula>IF(NOT(ISNULL( Loan_Product__c)),IF(  Loan_Product__r.Int_Ded_Disbursement__c ,&apos;Yes&apos;,&apos;No&apos;),&apos;Not Defined&apos;)</formula>
+        <label>Interest Deducted at Disbursement</label>
+        <type>Text</type>
+    </fields>
+    <fields>
+        <fullName>Loan_Amount__c</fullName>
+        <label>Loan Amount</label>
+        <precision>12</precision>
+        <scale>2</scale>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Loan_Cycle_Counter__c</fullName>
+        <formula>IF(NOT(ISNULL( Loan_Product__c)),IF( Loan_Product__r.Loan_Counter_Flag__c,&apos;Yes&apos;,&apos;No&apos;),&apos;Not Defined&apos;)</formula>
+        <label>Include in Loan Cycle Counter</label>
+        <type>Text</type>
+    </fields>
+    <fields>
+        <fullName>Loan_Product__c</fullName>
+        <description>Loan Product from which the Loan Account terms are derived.</description>
+        <label>Loan Product</label>
+        <referenceTo>Loan_Product__c</referenceTo>
+        <relationshipLabel>Loan Accounts</relationshipLabel>
+        <relationshipName>Loan_Accounts</relationshipName>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Max_Installments__c</fullName>
+        <formula>Loan_Product__r.Max_Installments__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Max Installments</label>
+        <precision>18</precision>
+        <scale>0</scale>
+        <type>Number</type>
+    </fields>
+    <fields>
+        <fullName>Max_Interest_Rate__c</fullName>
+        <formula>Loan_Product__r.Max_Interest_Rate__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Max Interest Rate</label>
+        <precision>18</precision>
+        <scale>2</scale>
+        <type>Percent</type>
+    </fields>
+    <fields>
+        <fullName>Max_Loan_Amount__c</fullName>
+        <formula>Loan_Product__r.Max_Amount__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Max Loan Amount</label>
+        <precision>18</precision>
+        <scale>2</scale>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Min_Installments__c</fullName>
+        <formula>Loan_Product__r.Min_Installments__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Min Installments</label>
+        <precision>18</precision>
+        <scale>0</scale>
+        <type>Number</type>
+    </fields>
+    <fields>
+        <fullName>Min_Interest_Rate__c</fullName>
+        <formula>Loan_Product__r.Min_Interest_Rate__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Min Interest Rate</label>
+        <precision>18</precision>
+        <scale>2</scale>
+        <type>Percent</type>
+    </fields>
+    <fields>
+        <fullName>Min_Loan_Amount__c</fullName>
+        <formula>Loan_Product__r.Min_Amount__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Min Loan Amount</label>
+        <precision>18</precision>
+        <scale>2</scale>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Number_of_Installments__c</fullName>
+        <label>Number of Installments</label>
+        <precision>18</precision>
+        <required>true</required>
+        <scale>0</scale>
+        <type>Number</type>
+    </fields>
+    <fields>
+        <fullName>Outstanding_Balance__c</fullName>
+        <label>Outstanding Balance</label>
+        <precision>12</precision>
+        <scale>2</scale>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Payment_Type__c</fullName>
+        <label>Payment Type</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Cash</fullName>
+                <default>true</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Check</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Voucher</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Period__c</fullName>
+        <label>Payment Period</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Weekly</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Biweekly</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Monthly</fullName>
+                <default>true</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Start_Date__c</fullName>
+        <defaultValue>Today()+7</defaultValue>
+        <label>Start Date</label>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Status__c</fullName>
+        <label>Status</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Application</fullName>
+                <default>true</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Pending Approval</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Rejected</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Approved</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Active</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Paid</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Defaulted</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Total_Repayment_Amount__c</fullName>
+        <formula>Amortized_Payment__c * Number_of_Installments__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Total Repayment Amount</label>
+        <precision>18</precision>
+        <scale>2</scale>
+        <type>Currency</type>
+    </fields>
+    <label>Loan Account</label>
+    <listViews>
+        <fullName>All</fullName>
+        <columns>NAME</columns>
+        <columns>Client__c</columns>
+        <columns>Group__c</columns>
+        <columns>Loan_Amount__c</columns>
+        <columns>Outstanding_Balance__c</columns>
+        <columns>Status__c</columns>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+        <language>en_US</language>
+    </listViews>
+    <listViews>
+        <fullName>LoanApprovalQueueMedakDistrict</fullName>
+        <filterScope>Queue</filterScope>
+        <label>Loan Approval Queue - Medak District</label>
+        <queue>Loan Approval Queue - Medak District</queue>
+    </listViews>
+    <listViews>
+        <fullName>LoanApprovalQueuePrakasamDistrict</fullName>
+        <filterScope>Queue</filterScope>
+        <label>Loan Approval Queue - Prakasam District</label>
+        <queue>Loan Approval Queue - Prakasam District</queue>
+    </listViews>
+    <nameField>
+        <displayFormat>LN-{00000000}</displayFormat>
+        <label>Loan ID</label>
+        <type>AutoNumber</type>
+    </nameField>
+    <pluralLabel>Loan Accounts</pluralLabel>
+    <recordTypes>
+        <fullName>ClientLoan</fullName>
+        <active>true</active>
+        <description>New loan to a Client</description>
+        <label>Client Loan</label>
+        <picklistValues>
+            <picklist>Payment_Type__c</picklist>
+            <values>
+                <fullName>Cash</fullName>
+                <default>true</default>
+            </values>
+            <values>
+                <fullName>Check</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Voucher</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Period__c</picklist>
+            <values>
+                <fullName>Biweekly</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Monthly</fullName>
+                <default>true</default>
+            </values>
+            <values>
+                <fullName>Weekly</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Status__c</picklist>
+            <values>
+                <fullName>Active</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Application</fullName>
+                <default>true</default>
+            </values>
+            <values>
+                <fullName>Approved</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Defaulted</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Paid</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Pending Approval</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Rejected</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+    </recordTypes>
+    <recordTypes>
+        <fullName>GroupLoan</fullName>
+        <active>true</active>
+        <description>New loan to a Group</description>
+        <label>Group Loan</label>
+        <picklistValues>
+            <picklist>Payment_Type__c</picklist>
+            <values>
+                <fullName>Cash</fullName>
+                <default>true</default>
+            </values>
+            <values>
+                <fullName>Check</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Voucher</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Period__c</picklist>
+            <values>
+                <fullName>Biweekly</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Monthly</fullName>
+                <default>true</default>
+            </values>
+            <values>
+                <fullName>Weekly</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Status__c</picklist>
+            <values>
+                <fullName>Active</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Application</fullName>
+                <default>true</default>
+            </values>
+            <values>
+                <fullName>Approved</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Defaulted</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Paid</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Pending Approval</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Rejected</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+    </recordTypes>
+    <recordTypes>
+        <fullName>ScheduledLoan</fullName>
+        <active>true</active>
+        <description>Represents a Loan Account that has been scheduled. Locks fields.</description>
+        <label>Scheduled Loan</label>
+        <picklistValues>
+            <picklist>Payment_Type__c</picklist>
+            <values>
+                <fullName>Cash</fullName>
+                <default>true</default>
+            </values>
+            <values>
+                <fullName>Check</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Voucher</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Period__c</picklist>
+            <values>
+                <fullName>Biweekly</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Monthly</fullName>
+                <default>true</default>
+            </values>
+            <values>
+                <fullName>Weekly</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Status__c</picklist>
+            <values>
+                <fullName>Active</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Application</fullName>
+                <default>true</default>
+            </values>
+            <values>
+                <fullName>Approved</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Defaulted</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Paid</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Pending Approval</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Rejected</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+    </recordTypes>
+    <searchLayouts>
+        <customTabListAdditionalFields>Client__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Group__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Status__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Loan_Amount__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Outstanding_Balance__c</customTabListAdditionalFields>
+        <lookupDialogsAdditionalFields>Client__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>Group__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>Status__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>Loan_Amount__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>Outstanding_Balance__c</lookupDialogsAdditionalFields>
+        <searchResultsAdditionalFields>Client__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Group__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Status__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Loan_Amount__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Outstanding_Balance__c</searchResultsAdditionalFields>
+    </searchLayouts>
+    <sharingModel>Private</sharingModel>
+    <validationRules>
+        <fullName>Group_XOR_Client</fullName>
+        <active>false</active>
+        <errorConditionFormula>AND( Client__c &lt;&gt; &quot;&quot;, Group__c &lt;&gt; &quot;&quot;)</errorConditionFormula>
+        <errorMessage>A Loan Account may not be associated with both a Group and a Client. Please remove the association to one of these two records.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Require_Group_or_Client</fullName>
+        <active>true</active>
+        <errorConditionFormula>AND( Client__c = &quot;&quot;, Group__c = &quot;&quot;)</errorConditionFormula>
+        <errorMessage>You must select a Group or Client.</errorMessage>
+    </validationRules>
+    <webLinks>
+        <fullName>New_Client_Loan</fullName>
+        <availability>online</availability>
+        <displayType>massActionButton</displayType>
+        <linkType>url</linkType>
+        <masterLabel>New Client Loan</masterLabel>
+        <openType>replace</openType>
+        <protected>false</protected>
+        <requireRowSelection>true</requireRowSelection>
+        <url>/a01/e?CF00NA0000003UPh6={!Contact.FirstName}+{!Contact.LastName}&amp;CF00NA0000003UPh6_lkid={!Contact.Id}&amp;retURL=%2F{!Contact.Id}&amp;RecordType=012A0000000ZBKf&amp;cancelURL=%2F{!Contact.Id}&amp;ent=01IA0000000wrR7
+
+0NA0000003UPh6</url>
+    </webLinks>
+    <webLinks>
+        <fullName>New_Group_Loan</fullName>
+        <availability>online</availability>
+        <displayType>massActionButton</displayType>
+        <linkType>url</linkType>
+        <masterLabel>New Group Loan</masterLabel>
+        <openType>replace</openType>
+        <protected>false</protected>
+        <requireRowSelection>true</requireRowSelection>
+        <url>/a01/e?CF00NA0000003UPh7={!Account.Name}&amp;CF00NA0000003UPh7_lkid={!Account.Id}&amp;retURL=%2F0{!Account.Id}&amp;RecordType=012A0000000ZBKh&amp;cancelURL=%2F{!Account.Id}&amp;ent=01IA0000000wrR7</url>
+    </webLinks>
+</CustomObject>

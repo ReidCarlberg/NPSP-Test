@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <value>Savings Account</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Savings Accounts</value>
+    </caseValues>
+    <fields>
+        <label><!-- Account Balance --></label>
+        <name>Account_Balance__c</name>
+    </fields>
+    <fields>
+        <label><!-- Activation Date --></label>
+        <name>Activation_Date__c</name>
+    </fields>
+    <fields>
+        <label><!-- Annual Interest Rate --></label>
+        <name>Annual_Interest_Rate__c</name>
+    </fields>
+    <fields>
+        <label><!-- Client --></label>
+        <name>Client__c</name>
+        <relationshipLabel><!-- Savings Accounts --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Deposit Type --></label>
+        <name>Deposit_Type__c</name>
+    </fields>
+    <fields>
+        <label><!-- Group --></label>
+        <name>Group__c</name>
+        <relationshipLabel><!-- Savings Accounts --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Interest Rate Calculation Frequency --></label>
+        <name>Interest_Rate_Calculation_Frequency__c</name>
+    </fields>
+    <fields>
+        <label><!-- Max Amount Per Withdrawal --></label>
+        <name>Max_Amount_Per_Withdrawal__c</name>
+    </fields>
+    <fields>
+        <label><!-- Min Balance For Interest --></label>
+        <name>Min_Balance_For_Interest__c</name>
+    </fields>
+    <fields>
+        <label><!-- Recommended Amount --></label>
+        <name>Recommended_Amount__c</name>
+    </fields>
+    <fields>
+        <label><!-- Savings Product --></label>
+        <name>Savings_Product__c</name>
+        <relationshipLabel><!-- Savings Accounts --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Status --></label>
+        <name>Status__c</name>
+        <picklistValues>
+            <masterLabel>Active</masterLabel>
+            <translation><!-- Active --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Application</masterLabel>
+            <translation><!-- Application --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Cancelled</masterLabel>
+            <translation><!-- Cancelled --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Closed</masterLabel>
+            <translation><!-- Closed --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Inactive</masterLabel>
+            <translation><!-- Inactive --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Pending Approval</masterLabel>
+            <translation><!-- Pending Approval --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Total Deposits --></label>
+        <name>Total_Deposits__c</name>
+    </fields>
+    <fields>
+        <label><!-- Total Interest --></label>
+        <name>Total_Interest__c</name>
+    </fields>
+    <fields>
+        <label><!-- Total Withdrawals --></label>
+        <name>Total_Withdrawals__c</name>
+    </fields>
+    <layouts>
+        <layout>Savings Account Layout</layout>
+        <sections>
+            <label><!-- Performance History --></label>
+            <section>Performance History</section>
+        </sections>
+        <sections>
+            <label><!-- Savings Product Details --></label>
+            <section>Savings Product Details</section>
+        </sections>
+    </layouts>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>

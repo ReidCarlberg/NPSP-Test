@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <value>Savings Transaction</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Savings Transactions</value>
+    </caseValues>
+    <fields>
+        <label><!-- Current Account Balance --></label>
+        <name>Account_Balance__c</name>
+    </fields>
+    <fields>
+        <help><!-- Enter the bank account number where applicable. Typically for check transactions. --></help>
+        <label><!-- Account Number --></label>
+        <name>Account_Number__c</name>
+    </fields>
+    <fields>
+        <label><!-- Amount --></label>
+        <name>Amount__c</name>
+    </fields>
+    <fields>
+        <label><!-- Check Number --></label>
+        <name>Cheque_ID__c</name>
+    </fields>
+    <fields>
+        <label><!-- Due Date --></label>
+        <name>Due_Date__c</name>
+    </fields>
+    <fields>
+        <label><!-- Payment Mode --></label>
+        <name>Payment_Mode__c</name>
+        <picklistValues>
+            <masterLabel>Cash</masterLabel>
+            <translation><!-- Cash --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Check</masterLabel>
+            <translation><!-- Check --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Voucher</masterLabel>
+            <translation><!-- Voucher --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Running Balance --></label>
+        <name>Running_Balance__c</name>
+    </fields>
+    <fields>
+        <label><!-- Savings Account --></label>
+        <name>Savings_Account__c</name>
+        <relationshipLabel><!-- Savings Transactions --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Status --></label>
+        <name>Status__c</name>
+        <picklistValues>
+            <masterLabel>Calculating</masterLabel>
+            <translation><!-- Calculating --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Complete</masterLabel>
+            <translation><!-- Complete --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Overdue</masterLabel>
+            <translation><!-- Overdue --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Scheduled</masterLabel>
+            <translation><!-- Scheduled --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Unscheduled</masterLabel>
+            <translation><!-- Unscheduled --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Transaction Date --></label>
+        <name>Transaction_Date__c</name>
+    </fields>
+    <fields>
+        <label><!-- Voucher Number --></label>
+        <name>Voucher_Number__c</name>
+    </fields>
+    <layouts>
+        <layout>Savings Transaction Layout</layout>
+        <sections>
+            <label><!-- Other Details --></label>
+            <section>Other Details</section>
+        </sections>
+    </layouts>
+    <recordTypes>
+        <label><!-- Deposit --></label>
+        <name>Deposit</name>
+    </recordTypes>
+    <recordTypes>
+        <label><!-- Interest --></label>
+        <name>Interest</name>
+    </recordTypes>
+    <recordTypes>
+        <label><!-- Withdrawal --></label>
+        <name>Withdrawal</name>
+    </recordTypes>
+    <startsWith>Consonant</startsWith>
+    <validationRules>
+        <errorMessage><!-- Maximum Withdrawal Amount Exceeded --></errorMessage>
+        <name>Max_Withdrawal</name>
+    </validationRules>
+</CustomObjectTranslation>

@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <description>The loan product defines the product attributes that are used as a basis for defining a loan account.</description>
+    <enableActivities>true</enableActivities>
+    <enableHistory>true</enableHistory>
+    <enableReports>true</enableReports>
+    <fields>
+        <fullName>Applicable_for__c</fullName>
+        <description>Select whether this is a loan given to groups or individual clients.</description>
+        <label>Applicable for</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Client</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Group</fullName>
+                <default>true</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Both</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Default_Amount__c</fullName>
+        <description>The typical amount (in the standard currency) that a loan of this type may be granted for.</description>
+        <label>Default Amount</label>
+        <precision>18</precision>
+        <scale>2</scale>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Default_Installments__c</fullName>
+        <description>The default value entered in the number of installments when defining a
+loan account. The user will be able to change the installments value when
+defining a loan account based on this loan product.</description>
+        <label>Default Number of Installments</label>
+        <precision>18</precision>
+        <scale>0</scale>
+        <type>Number</type>
+    </fields>
+    <fields>
+        <fullName>Default_Interest_Rate__c</fullName>
+        <description>The standard interest rate that will be charged with this loan product.</description>
+        <label>Default Interest Rate</label>
+        <precision>5</precision>
+        <scale>3</scale>
+        <type>Percent</type>
+    </fields>
+    <fields>
+        <fullName>Description__c</fullName>
+        <description>A free text description of the loan product: its purpose, eligible recipients, or other
+information that will help an employee determine whether it is appropriate for a particular
+client.</description>
+        <label>Description</label>
+        <length>32000</length>
+        <type>LongTextArea</type>
+        <visibleLines>3</visibleLines>
+    </fields>
+    <fields>
+        <fullName>End_Date__c</fullName>
+        <description>The last date on which loans of this type may be issued.</description>
+        <label>End Date</label>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Frequency_of_Installments__c</fullName>
+        <description>The frequency the payments are made to the MFI.</description>
+        <label>Frequency of Installments</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Weekly</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Biweekly</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Monthly</fullName>
+                <default>true</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Grace_Installments__c</fullName>
+        <description>This is the number of initial due dates at the beginning of the loan when no
+payment is due. The first payment would be due on the next installment
+date.</description>
+        <label>Grace Installments</label>
+        <precision>18</precision>
+        <scale>0</scale>
+        <type>Number</type>
+    </fields>
+    <fields>
+        <fullName>Grace_Period_Duration__c</fullName>
+        <description>The max number of days the client can be late before the penalty
+applies.</description>
+        <inlineHelpText>The max number of days the client can be late before the penalty
+applies.</inlineHelpText>
+        <label>Grace Period Duration</label>
+        <precision>18</precision>
+        <scale>0</scale>
+        <type>Number</type>
+    </fields>
+    <fields>
+        <fullName>Int_Ded_Disbursement__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Only applicable for flat interest loans. If “Interest deducted at
+disbursement” is selected, grace period option will not be enabled for such
+loan products. If this attribute is set to On for a product instance, the first
+repayment date is the same as the loan disbursement date. Grace period is
+not applicable since the repayment starts with loan disbursement.</description>
+        <label>Interest Deducted at Disbursement</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Interest_GL_Code__c</fullName>
+        <description>Select the general ledger code for the product interest.</description>
+        <label>Interest GL Code</label>
+        <picklist>
+            <picklistValues>
+                <fullName>1005</fullName>
+                <default>true</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>1006</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>1007</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Interest_Rate_Calculation__c</fullName>
+        <description>Choose an option to be applied for interest rate calculation. You can choose any of the
+following:
+Always recalculate: The system will always recalculate interest whenever an early or a late
+payment is made.
+Never recalculate: Never recalculate whenever there is an early/over or late payment.
+Upon request: The system will recalculate interest as and when prompted by the user.</description>
+        <label>Interest Rate Calculation for Early/Late</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Always Recalculate</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Never Recalculate</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Upon Request</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Interest_Rate_Type__c</fullName>
+        <description>The formula used to calculate interest due, based on the amount of money borrowed. For
+example, the “Flat” rate sets the interest due as the product of the principal times the
+interest rate times the full term of the loan and the amount can be paid upfront or distributed
+throughout the loan period. The “Declining Balance” rate charges interest on the
+outstanding loan at the end of the installment period. As the loan amount decreases, the
+interest due decreases as well.</description>
+        <label>Interest Rate Type</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Flat</fullName>
+                <default>true</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Declining Balance</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Interest Only</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Loan_Counter_Flag__c</fullName>
+        <defaultValue>true</defaultValue>
+        <description>A Yes/No choice for whether these loans count towards the experience level of this borrower.
+The default option is Yes.</description>
+        <label>Include in Loan Cycle Counter</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Max_Amount__c</fullName>
+        <description>The largest amount (in the standard currency) that a loan of this type may be granted for.</description>
+        <label>Max Amount</label>
+        <precision>18</precision>
+        <scale>2</scale>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Max_Installments__c</fullName>
+        <description>The maximum number of installments the loan can be repaid.</description>
+        <label>Maximum Number of Installments</label>
+        <precision>18</precision>
+        <scale>0</scale>
+        <type>Number</type>
+    </fields>
+    <fields>
+        <fullName>Max_Interest_Rate__c</fullName>
+        <description>The maximum interest rate that can be charged with this loan product.</description>
+        <label>Max Interest Rate</label>
+        <precision>5</precision>
+        <scale>3</scale>
+        <type>Percent</type>
+    </fields>
+    <fields>
+        <fullName>Min_Amount__c</fullName>
+        <description>The smallest amount (in the standard currency) that a loan of this type may be granted for.</description>
+        <label>Min Amount</label>
+        <precision>18</precision>
+        <scale>2</scale>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Min_Installments__c</fullName>
+        <description>The minimum number of installments the loan can be repaid.</description>
+        <label>Minimum Number of Installments</label>
+        <precision>18</precision>
+        <scale>0</scale>
+        <type>Number</type>
+    </fields>
+    <fields>
+        <fullName>Min_Interest_Rate__c</fullName>
+        <description>The minimum interest rate that can be charged with this loan product.</description>
+        <label>Min Interest Rate</label>
+        <precision>5</precision>
+        <scale>3</scale>
+        <type>Percent</type>
+    </fields>
+    <fields>
+        <fullName>Penalties_GL_Code__c</fullName>
+        <description>Select the general ledger code for the loan product penalties.</description>
+        <label>Penalties GL Code</label>
+        <picklist>
+            <picklistValues>
+                <fullName>1007</fullName>
+                <default>true</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>1005</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>1006</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Penalty_Rate__c</fullName>
+        <description>The percentage rate applicable to the particular product.</description>
+        <label>Penalty Rate</label>
+        <precision>5</precision>
+        <scale>3</scale>
+        <type>Percent</type>
+    </fields>
+    <fields>
+        <fullName>Penalty_Type__c</fullName>
+        <description>Select the penalty type applicable from the list of values.</description>
+        <label>Penalty Type</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Type 1</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Type 2</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Principal_GL_Code__c</fullName>
+        <description>Select the general ledger code for the product principal.</description>
+        <label>Principal GL Code</label>
+        <picklist>
+            <picklistValues>
+                <fullName>1006</fullName>
+                <default>true</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>1005</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>1007</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Product_SKU__c</fullName>
+        <caseSensitive>true</caseSensitive>
+        <description>Unique Cross Version Identifier for the Product. Two products with the same SKU can&apos;t have overlapping start and end dates.</description>
+        <label>Product SKU</label>
+        <length>255</length>
+        <type>Text</type>
+        <unique>true</unique>
+    </fields>
+    <fields>
+        <fullName>Start_Date__c</fullName>
+        <description>The full date after which loans of this type may be issued.</description>
+        <label>Start Date</label>
+        <type>Date</type>
+    </fields>
+    <label>Loan Product</label>
+    <listViews>
+        <fullName>All</fullName>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+    </listViews>
+    <nameField>
+        <label>Loan Product Name</label>
+        <type>Text</type>
+    </nameField>
+    <pluralLabel>Loan Products</pluralLabel>
+    <searchLayouts>
+        <lookupDialogsAdditionalFields>Applicable_for__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>Default_Amount__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>Default_Interest_Rate__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>Default_Installments__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>Frequency_of_Installments__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>End_Date__c</lookupDialogsAdditionalFields>
+    </searchLayouts>
+    <sharingModel>ReadWrite</sharingModel>
+</CustomObject>

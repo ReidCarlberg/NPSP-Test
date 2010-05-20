@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <value>Loan Account</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Loan Accounts</value>
+    </caseValues>
+    <fields>
+        <label><!-- Estimated Payment --></label>
+        <name>Amortized_Payment__c</name>
+    </fields>
+    <fields>
+        <label><!-- Annual Interest Rate (ex. &quot;8.125&quot;) --></label>
+        <name>Annual_Interest_Rate__c</name>
+    </fields>
+    <fields>
+        <label><!-- Client --></label>
+        <name>Client__c</name>
+        <relationshipLabel><!-- Loan Accounts --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Frequency of Installments --></label>
+        <name>Frequency_of_Installments__c</name>
+    </fields>
+    <fields>
+        <label><!-- Grace Period (Days) --></label>
+        <name>Grace_Period_Days__c</name>
+    </fields>
+    <fields>
+        <label><!-- Group --></label>
+        <name>Group__c</name>
+        <relationshipLabel><!-- Loan Accounts --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Interest Rate Type --></label>
+        <name>Interest_Rate_Type__c</name>
+    </fields>
+    <fields>
+        <label><!-- Interest Deducted at Disbursement --></label>
+        <name>Interest_at_Disbursement__c</name>
+    </fields>
+    <fields>
+        <label><!-- Loan Amount --></label>
+        <name>Loan_Amount__c</name>
+    </fields>
+    <fields>
+        <label><!-- Include in Loan Cycle Counter --></label>
+        <name>Loan_Cycle_Counter__c</name>
+    </fields>
+    <fields>
+        <label><!-- Loan Product --></label>
+        <name>Loan_Product__c</name>
+        <relationshipLabel><!-- Loan Accounts --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Max Installments --></label>
+        <name>Max_Installments__c</name>
+    </fields>
+    <fields>
+        <label><!-- Max Interest Rate --></label>
+        <name>Max_Interest_Rate__c</name>
+    </fields>
+    <fields>
+        <label><!-- Max Loan Amount --></label>
+        <name>Max_Loan_Amount__c</name>
+    </fields>
+    <fields>
+        <label><!-- Min Installments --></label>
+        <name>Min_Installments__c</name>
+    </fields>
+    <fields>
+        <label><!-- Min Interest Rate --></label>
+        <name>Min_Interest_Rate__c</name>
+    </fields>
+    <fields>
+        <label><!-- Min Loan Amount --></label>
+        <name>Min_Loan_Amount__c</name>
+    </fields>
+    <fields>
+        <label><!-- Number of Installments --></label>
+        <name>Number_of_Installments__c</name>
+    </fields>
+    <fields>
+        <label><!-- Outstanding Balance --></label>
+        <name>Outstanding_Balance__c</name>
+    </fields>
+    <fields>
+        <label><!-- Payment Type --></label>
+        <name>Payment_Type__c</name>
+        <picklistValues>
+            <masterLabel>Cash</masterLabel>
+            <translation><!-- Cash --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Check</masterLabel>
+            <translation><!-- Check --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Voucher</masterLabel>
+            <translation><!-- Voucher --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Payment Period --></label>
+        <name>Period__c</name>
+        <picklistValues>
+            <masterLabel>Biweekly</masterLabel>
+            <translation><!-- Biweekly --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Monthly</masterLabel>
+            <translation><!-- Monthly --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Weekly</masterLabel>
+            <translation><!-- Weekly --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Start Date --></label>
+        <name>Start_Date__c</name>
+    </fields>
+    <fields>
+        <label><!-- Status --></label>
+        <name>Status__c</name>
+        <picklistValues>
+            <masterLabel>Active</masterLabel>
+            <translation><!-- Active --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Active-Pending</masterLabel>
+            <translation><!-- Active-Pending --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Application</masterLabel>
+            <translation><!-- Application --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Approved</masterLabel>
+            <translation><!-- Approved --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Defaulted</masterLabel>
+            <translation><!-- Defaulted --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Paid</masterLabel>
+            <translation><!-- Paid --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Pending Approval</masterLabel>
+            <translation><!-- Pending Approval --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Rejected</masterLabel>
+            <translation><!-- Rejected --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Under Review</masterLabel>
+            <translation><!-- Under Review --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Total Repayment Amount --></label>
+        <name>Total_Repayment_Amount__c</name>
+    </fields>
+    <layouts>
+        <layout>Client Loan Application Layout</layout>
+        <sections>
+            <label><!-- Loan Product Details --></label>
+            <section>Loan Product Details</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Group Loan Application Layout</layout>
+        <sections>
+            <label><!-- Loan Product Details --></label>
+            <section>Loan Product Details</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Scheduled Loan Layout</layout>
+        <sections>
+            <label><!-- Loan Product Details --></label>
+            <section>Loan Product Details</section>
+        </sections>
+    </layouts>
+    <recordTypes>
+        <label><!-- Client Loan --></label>
+        <name>ClientLoan</name>
+    </recordTypes>
+    <recordTypes>
+        <label><!-- Group Loan --></label>
+        <name>GroupLoan</name>
+    </recordTypes>
+    <recordTypes>
+        <label><!-- Scheduled Loan --></label>
+        <name>ScheduledLoan</name>
+    </recordTypes>
+    <startsWith>Consonant</startsWith>
+    <validationRules>
+        <errorMessage><!-- A Loan Account may not be associated with both a Group and a Client. Please remove the association to one of these two records. --></errorMessage>
+        <name>Group_XOR_Client</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- You must select a Group or Client. --></errorMessage>
+        <name>Require_Group_or_Client</name>
+    </validationRules>
+    <webLinks>
+        <label><!-- New_Client_Loan --></label>
+        <name>New_Client_Loan</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- New_Group_Loan --></label>
+        <name>New_Group_Loan</name>
+    </webLinks>
+</CustomObjectTranslation>

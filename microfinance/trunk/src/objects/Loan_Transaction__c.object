@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <enableHistory>true</enableHistory>
+    <enableReports>true</enableReports>
+    <fields>
+        <fullName>Account_Number__c</fullName>
+        <description>Enter the account number where applicable</description>
+        <label>Account Number</label>
+        <length>255</length>
+        <type>Text</type>
+    </fields>
+    <fields>
+        <fullName>Amount__c</fullName>
+        <label>Amount</label>
+        <precision>12</precision>
+        <scale>2</scale>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Balance_Adjustment__c</fullName>
+        <formula>IF( $RecordType.Name = &quot;Payment&quot;, (Amount__c * -1), Amount__c )</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Balance Adjustment</label>
+        <precision>18</precision>
+        <scale>2</scale>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Bank_Number__c</fullName>
+        <label>Bank Number</label>
+        <length>255</length>
+        <type>Text</type>
+    </fields>
+    <fields>
+        <fullName>Check_Number__c</fullName>
+        <description>Enter Check number where payment is made by check.</description>
+        <label>Check Number</label>
+        <length>255</length>
+        <type>Text</type>
+    </fields>
+    <fields>
+        <fullName>Client__c</fullName>
+        <formula>HYPERLINK(&quot;/&quot; &amp;  Loan_Account__r.Client__c ,  Loan_Account__r.Client__r.FirstName &amp; &quot; &quot; &amp; Loan_Account__r.Client__r.LastName ,&quot;_top&quot;)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Client</label>
+        <type>Text</type>
+    </fields>
+    <fields>
+        <fullName>Default_Date__c</fullName>
+        <label>Default Date</label>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Due_Date__c</fullName>
+        <label>Due Date</label>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Grace_Period_Days__c</fullName>
+        <defaultValue>0</defaultValue>
+        <label>Grace Period (Days)</label>
+        <precision>3</precision>
+        <scale>0</scale>
+        <type>Number</type>
+    </fields>
+    <fields>
+        <fullName>Group__c</fullName>
+        <formula>HYPERLINK(&quot;/&quot; &amp;  Loan_Account__r.Group__c ,   Loan_Account__r.Group__r.Name  ,&quot;_top&quot;)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Group</label>
+        <type>Text</type>
+    </fields>
+    <fields>
+        <fullName>Loan_Account__c</fullName>
+        <label>Loan Account</label>
+        <referenceTo>Loan_Account__c</referenceTo>
+        <relationshipName>Loan_Transaction</relationshipName>
+        <relationshipOrder>0</relationshipOrder>
+        <type>MasterDetail</type>
+    </fields>
+    <fields>
+        <fullName>Paid_Date__c</fullName>
+        <label>Paid Date</label>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Status__c</fullName>
+        <formula>IF ( NOT(ISBLANK(Default_Date__c)),&quot;Defaulted&quot;,
+IF ( OR( TEXT(Type__c) =  &quot;N/A&quot;,
+                NOT( ISNULL( Paid_Date__c ) )) ,
+    &quot;Complete&quot;,
+    IF ( ISNULL(  Due_Date__c ),
+        &quot;Unscheduled&quot;,
+        IF ( AND( TODAY() - Due_Date__c &gt; 0, TODAY() - Due_Date__c &lt;=  Grace_Period_Days__c ),
+             &quot;Grace Period&quot;,
+
+             IF ( ( TODAY() - Due_Date__c) &gt; 0,
+                &quot;Overdue&quot;,
+                &quot;Scheduled&quot;
+             )
+        )
+    )
+)
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Status</label>
+        <type>Text</type>
+    </fields>
+    <fields>
+        <fullName>Type__c</fullName>
+        <label>Type</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Cash</fullName>
+                <default>true</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Check</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Voucher</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>N/A</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Voucher_Number__c</fullName>
+        <label>Voucher Number</label>
+        <length>255</length>
+        <type>Text</type>
+    </fields>
+    <label>Loan Transaction</label>
+    <listViews>
+        <fullName>All</fullName>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+    </listViews>
+    <listViews>
+        <fullName>All_Overdue_Transactions</fullName>
+        <columns>NAME</columns>
+        <columns>Group__c</columns>
+        <columns>Client__c</columns>
+        <columns>Amount__c</columns>
+        <columns>Due_Date__c</columns>
+        <columns>Grace_Period_Days__c</columns>
+        <columns>Type__c</columns>
+        <columns>RECORDTYPE</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>Status__c</field>
+            <operation>equals</operation>
+            <value>Overdue</value>
+        </filters>
+        <label>All Overdue Transactions</label>
+        <language>en_US</language>
+    </listViews>
+    <listViews>
+        <fullName>Intial_Loan_Group_Upcoming_transactions</fullName>
+        <booleanFilter>1 AND (2 OR (3 AND 4))</booleanFilter>
+        <columns>NAME</columns>
+        <columns>Client__c</columns>
+        <columns>Amount__c</columns>
+        <columns>Due_Date__c</columns>
+        <columns>Grace_Period_Days__c</columns>
+        <columns>Paid_Date__c</columns>
+        <columns>RECORDTYPE</columns>
+        <columns>Type__c</columns>
+        <columns>Status__c</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>Group__c</field>
+            <operation>contains</operation>
+            <value>Initial loan group</value>
+        </filters>
+        <filters>
+            <field>Status__c</field>
+            <operation>equals</operation>
+            <value>overdue</value>
+        </filters>
+        <filters>
+            <field>Status__c</field>
+            <operation>equals</operation>
+            <value>scheduled</value>
+        </filters>
+        <filters>
+            <field>Due_Date__c</field>
+            <operation>equals</operation>
+            <value>THIS_MONTH</value>
+        </filters>
+        <label>Intial Loan Group Overdue and Due</label>
+        <language>en_US</language>
+    </listViews>
+    <nameField>
+        <displayFormat>TN-{000000000}</displayFormat>
+        <label>Transaction ID</label>
+        <type>AutoNumber</type>
+    </nameField>
+    <pluralLabel>Loan Transactions</pluralLabel>
+    <recordTypes>
+        <fullName>Disbursement</fullName>
+        <active>true</active>
+        <description>Payment of funds to the client</description>
+        <label>Disbursement</label>
+        <picklistValues>
+            <picklist>Type__c</picklist>
+            <values>
+                <fullName>Cash</fullName>
+                <default>true</default>
+            </values>
+            <values>
+                <fullName>Check</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Voucher</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+    </recordTypes>
+    <recordTypes>
+        <fullName>Fee</fullName>
+        <active>true</active>
+        <description>Charge for service or penalty for late payment</description>
+        <label>Fee</label>
+        <picklistValues>
+            <picklist>Type__c</picklist>
+            <values>
+                <fullName>N%2FA</fullName>
+                <default>true</default>
+            </values>
+        </picklistValues>
+    </recordTypes>
+    <recordTypes>
+        <fullName>Interest</fullName>
+        <active>true</active>
+        <description>Balance adjustment from calculated interest</description>
+        <label>Interest</label>
+        <picklistValues>
+            <picklist>Type__c</picklist>
+            <values>
+                <fullName>Cash</fullName>
+                <default>true</default>
+            </values>
+            <values>
+                <fullName>Check</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Voucher</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+    </recordTypes>
+    <recordTypes>
+        <fullName>Payment</fullName>
+        <active>true</active>
+        <description>Funds received from client against loan balance</description>
+        <label>Payment</label>
+        <picklistValues>
+            <picklist>Type__c</picklist>
+            <values>
+                <fullName>Cash</fullName>
+                <default>true</default>
+            </values>
+            <values>
+                <fullName>Check</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Voucher</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+    </recordTypes>
+    <searchLayouts>
+        <listViewButtons>Mark_Paid</listViewButtons>
+        <searchFilterFields>Loan_Account__c</searchFilterFields>
+        <searchFilterFields>Amount__c</searchFilterFields>
+        <searchFilterFields>Due_Date__c</searchFilterFields>
+        <searchFilterFields>Paid_Date__c</searchFilterFields>
+    </searchLayouts>
+    <sharingModel>ControlledByParent</sharingModel>
+    <webLinks>
+        <fullName>Mark_Paid</fullName>
+        <availability>online</availability>
+        <displayType>massActionButton</displayType>
+        <height>600</height>
+        <linkType>page</linkType>
+        <masterLabel>Mark Paid</masterLabel>
+        <openType>noSidebar</openType>
+        <page>LoanTransactionsMarkPaid</page>
+        <protected>false</protected>
+        <requireRowSelection>true</requireRowSelection>
+    </webLinks>
+    <webLinks>
+        <fullName>Mark_Transaction_Paid</fullName>
+        <availability>online</availability>
+        <displayType>massActionButton</displayType>
+        <linkType>javascript</linkType>
+        <masterLabel>Mark Paid</masterLabel>
+        <openType>onClickJavaScript</openType>
+        <protected>false</protected>
+        <requireRowSelection>true</requireRowSelection>
+        <url>{!REQUIRESCRIPT(&quot;/soap/ajax/9.0/connection.js&quot;)}
+{!REQUIRESCRIPT(&quot;/soap/ajax/9.0/apex.js&quot;)}
+idArray = {!GETRECORDIDS( $ObjectType.Loan_Transaction__c )};
+var apexCode = sforce.apex.execute(&quot;ServiceMethods&quot;,&quot;markPaid&quot;, {loanTransactionIds: idArray});
+window.location.reload();</url>
+    </webLinks>
+</CustomObject>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Dashboard xmlns="http://soap.sforce.com/2006/04/metadata">
+    <backgroundEndColor>#FFFFFF</backgroundEndColor>
+    <backgroundFadeDirection>Diagonal</backgroundFadeDirection>
+    <backgroundStartColor>#FFFFFF</backgroundStartColor>
+    <leftSection>
+        <columnSize>Medium</columnSize>
+        <components>
+            <chartAxisRange>Auto</chartAxisRange>
+            <componentType>Pie</componentType>
+            <displayUnits>Integer</displayUnits>
+            <legendPosition>Bottom</legendPosition>
+            <report>MarketDemographicsReports/ClientsByBusinessType</report>
+            <sortBy>RowValueAscending</sortBy>
+            <title>Clients by Business Type</title>
+        </components>
+        <components>
+            <chartAxisRange>Auto</chartAxisRange>
+            <componentType>Column</componentType>
+            <displayUnits>Auto</displayUnits>
+            <legendPosition>Bottom</legendPosition>
+            <report>MarketDemographicsReports/GroupSize</report>
+            <sortBy>RowValueAscending</sortBy>
+            <title>Group Size</title>
+        </components>
+    </leftSection>
+    <middleSection>
+        <columnSize>Medium</columnSize>
+        <components>
+            <chartAxisRange>Auto</chartAxisRange>
+            <componentType>ColumnStacked100</componentType>
+            <displayUnits>Auto</displayUnits>
+            <legendPosition>Bottom</legendPosition>
+            <report>MarketDemographicsReports/GroupMembersPovertyStatus</report>
+            <sortBy>RowLabelAscending</sortBy>
+            <title>Group Composition by Poverty Level</title>
+        </components>
+        <components>
+            <chartAxisRange>Auto</chartAxisRange>
+            <componentType>Pie</componentType>
+            <displayUnits>Integer</displayUnits>
+            <legendPosition>Bottom</legendPosition>
+            <report>MarketDemographicsReports/ClientsByMaritalStatus</report>
+            <sortBy>RowValueAscending</sortBy>
+            <title>Clients by Marital Status</title>
+        </components>
+        <components>
+            <chartAxisRange>Auto</chartAxisRange>
+            <componentType>Pie</componentType>
+            <displayUnits>Integer</displayUnits>
+            <legendPosition>Bottom</legendPosition>
+            <report>MarketDemographicsReports/ClientsbyMobilePhone_d_2</report>
+            <sortBy>RowLabelAscending</sortBy>
+            <title>Clients by Mobile Phone</title>
+        </components>
+    </middleSection>
+    <rightSection>
+        <columnSize>Medium</columnSize>
+        <components>
+            <chartAxisRange>Auto</chartAxisRange>
+            <componentType>Pie</componentType>
+            <displayUnits>Integer</displayUnits>
+            <legendPosition>Bottom</legendPosition>
+            <report>MarketDemographicsReports/ClientsByEducationLevel</report>
+            <sortBy>RowValueAscending</sortBy>
+            <title>Clients by Education Level</title>
+        </components>
+        <components>
+            <chartAxisRange>Auto</chartAxisRange>
+            <componentType>Pie</componentType>
+            <displayUnits>Integer</displayUnits>
+            <legendPosition>Bottom</legendPosition>
+            <report>MarketDemographicsReports/ClientsByPovertyStatus</report>
+            <sortBy>RowValueAscending</sortBy>
+            <title>Clients by Poverty Status</title>
+        </components>
+    </rightSection>
+    <runningUser>ffabiano1268940303831@mfi2_newdot.dot</runningUser>
+    <textColor>#000000</textColor>
+    <title>Market Demographics</title>
+    <titleColor>#000000</titleColor>
+    <titleSize>12</titleSize>
+</Dashboard>

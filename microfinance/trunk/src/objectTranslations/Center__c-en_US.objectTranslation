@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <value>Center</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Centers</value>
+    </caseValues>
+    <fields>
+        <label><!-- City --></label>
+        <name>City__c</name>
+    </fields>
+    <fields>
+        <label><!-- Country --></label>
+        <name>Country__c</name>
+    </fields>
+    <fields>
+        <label><!-- Distance from Branch (km) --></label>
+        <name>Distance_from_Branch_km__c</name>
+    </fields>
+    <fields>
+        <label><!-- Joining Date --></label>
+        <name>Joining_Date__c</name>
+    </fields>
+    <fields>
+        <label><!-- Postal Code --></label>
+        <name>Postal_Code__c</name>
+    </fields>
+    <fields>
+        <label><!-- State --></label>
+        <name>State__c</name>
+    </fields>
+    <fields>
+        <label><!-- Street --></label>
+        <name>Street__c</name>
+    </fields>
+    <fields>
+        <label><!-- Telephone --></label>
+        <name>Telephone__c</name>
+    </fields>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>

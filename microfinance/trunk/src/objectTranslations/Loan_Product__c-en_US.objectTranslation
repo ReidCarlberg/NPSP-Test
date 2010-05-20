@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <value>Loan Product</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Loan Products</value>
+    </caseValues>
+    <fields>
+        <label><!-- Applicable for --></label>
+        <name>Applicable_for__c</name>
+        <picklistValues>
+            <masterLabel>Both</masterLabel>
+            <translation><!-- Both --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Client</masterLabel>
+            <translation><!-- Client --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Group</masterLabel>
+            <translation><!-- Group --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Default Amount --></label>
+        <name>Default_Amount__c</name>
+    </fields>
+    <fields>
+        <label><!-- Default Number of Installments --></label>
+        <name>Default_Installments__c</name>
+    </fields>
+    <fields>
+        <label><!-- Default Interest Rate --></label>
+        <name>Default_Interest_Rate__c</name>
+    </fields>
+    <fields>
+        <label><!-- Description --></label>
+        <name>Description__c</name>
+    </fields>
+    <fields>
+        <label><!-- End Date --></label>
+        <name>End_Date__c</name>
+    </fields>
+    <fields>
+        <label><!-- Frequency of Installments --></label>
+        <name>Frequency_of_Installments__c</name>
+        <picklistValues>
+            <masterLabel>Biweekly</masterLabel>
+            <translation><!-- Biweekly --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Monthly</masterLabel>
+            <translation><!-- Monthly --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Weekly</masterLabel>
+            <translation><!-- Weekly --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Grace Installments --></label>
+        <name>Grace_Installments__c</name>
+    </fields>
+    <fields>
+        <help><!-- The max number of days the client can be late before the penalty
+applies. --></help>
+        <label><!-- Grace Period Duration --></label>
+        <name>Grace_Period_Duration__c</name>
+    </fields>
+    <fields>
+        <label><!-- Interest Deducted at Disbursement --></label>
+        <name>Int_Ded_Disbursement__c</name>
+    </fields>
+    <fields>
+        <label><!-- Interest GL Code --></label>
+        <name>Interest_GL_Code__c</name>
+        <picklistValues>
+            <masterLabel>1005</masterLabel>
+            <translation><!-- 1005 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>1006</masterLabel>
+            <translation><!-- 1006 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>1007</masterLabel>
+            <translation><!-- 1007 --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Interest Rate Calculation for Early/Late --></label>
+        <name>Interest_Rate_Calculation__c</name>
+        <picklistValues>
+            <masterLabel>Always Recalculate</masterLabel>
+            <translation><!-- Always Recalculate --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Never Recalculate</masterLabel>
+            <translation><!-- Never Recalculate --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Upon Request</masterLabel>
+            <translation><!-- Upon Request --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Interest Rate Type --></label>
+        <name>Interest_Rate_Type__c</name>
+        <picklistValues>
+            <masterLabel>Declining Balance</masterLabel>
+            <translation><!-- Declining Balance --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Flat</masterLabel>
+            <translation><!-- Flat --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Interest Only</masterLabel>
+            <translation><!-- Interest Only --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Include in Loan Cycle Counter --></label>
+        <name>Loan_Counter_Flag__c</name>
+    </fields>
+    <fields>
+        <label><!-- Max Amount --></label>
+        <name>Max_Amount__c</name>
+    </fields>
+    <fields>
+        <label><!-- Maximum Number of Installments --></label>
+        <name>Max_Installments__c</name>
+    </fields>
+    <fields>
+        <label><!-- Max Interest Rate --></label>
+        <name>Max_Interest_Rate__c</name>
+    </fields>
+    <fields>
+        <label><!-- Min Amount --></label>
+        <name>Min_Amount__c</name>
+    </fields>
+    <fields>
+        <label><!-- Minimum Number of Installments --></label>
+        <name>Min_Installments__c</name>
+    </fields>
+    <fields>
+        <label><!-- Min Interest Rate --></label>
+        <name>Min_Interest_Rate__c</name>
+    </fields>
+    <fields>
+        <label><!-- Penalties GL Code --></label>
+        <name>Penalties_GL_Code__c</name>
+        <picklistValues>
+            <masterLabel>1005</masterLabel>
+            <translation><!-- 1005 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>1006</masterLabel>
+            <translation><!-- 1006 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>1007</masterLabel>
+            <translation><!-- 1007 --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Penalty Rate --></label>
+        <name>Penalty_Rate__c</name>
+    </fields>
+    <fields>
+        <label><!-- Penalty Type --></label>
+        <name>Penalty_Type__c</name>
+        <picklistValues>
+            <masterLabel>Type 1</masterLabel>
+            <translation><!-- Type 1 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Type 2</masterLabel>
+            <translation><!-- Type 2 --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Principal GL Code --></label>
+        <name>Principal_GL_Code__c</name>
+        <picklistValues>
+            <masterLabel>1005</masterLabel>
+            <translation><!-- 1005 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>1006</masterLabel>
+            <translation><!-- 1006 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>1007</masterLabel>
+            <translation><!-- 1007 --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Product SKU --></label>
+        <name>Product_SKU__c</name>
+    </fields>
+    <fields>
+        <label><!-- Start Date --></label>
+        <name>Start_Date__c</name>
+    </fields>
+    <layouts>
+        <layout>Loan Product Layout</layout>
+        <sections>
+            <label><!-- Accounting Information --></label>
+            <section>Accounting Information</section>
+        </sections>
+        <sections>
+            <label><!-- Grace Information --></label>
+            <section>Grace Information</section>
+        </sections>
+        <sections>
+            <label><!-- Penalty Information --></label>
+            <section>Penalty Information</section>
+        </sections>
+    </layouts>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>

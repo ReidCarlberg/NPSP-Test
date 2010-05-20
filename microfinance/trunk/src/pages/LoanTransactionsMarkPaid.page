@@ -1,0 +1,2 @@
+<apex:page standardController="Loan_Transaction__c" recordSetVar="transactions" extensions="MarkTransactions" action="{!MarkAsPaid}">    
+</apex:page>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Translations xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customApplications>
+        <label><!-- Microfinance --></label>
+        <name>Microfinance</name>
+    </customApplications>
+    <customPageWebLinks>
+        <label><!-- Create new Client --></label>
+        <name>Create_new_Client</name>
+    </customPageWebLinks>
+    <customPageWebLinks>
+        <label><!-- Create new Group --></label>
+        <name>Create_new_Group</name>
+    </customPageWebLinks>
+    <customPageWebLinks>
+        <label><!-- Open new Loan Account --></label>
+        <name>Open_new_Loan_Account</name>
+    </customPageWebLinks>
+    <customTabs>
+        <label><!-- Collection Sheet Debug --></label>
+        <name>CollectionSheetDebug</name>
+    </customTabs>
+    <customTabs>
+        <label><!-- Group Meetings --></label>
+        <name>GroupMeetings</name>
+    </customTabs>
+    <scontrols>
+        <label><!-- Map --></label>
+        <name>Client_Location</name>
+    </scontrols>
+    <scontrols>
+        <label><!-- Feed --></label>
+        <name>Feed</name>
+    </scontrols>
+    <scontrols>
+        <label><!-- Group Meeting Detail --></label>
+        <name>Group_Meeting_Detail</name>
+    </scontrols>
+    <scontrols>
+        <label><!-- Group Meeting Detail 2 --></label>
+        <name>Group_Meeting_Detail_2</name>
+    </scontrols>
+    <scontrols>
+        <label><!-- Group Meeting Detail 3 --></label>
+        <name>Group_Meeting_Detail_3</name>
+    </scontrols>
+    <scontrols>
+        <label><!-- Group Meeting Viewer --></label>
+        <name>Group_Meeting_Viewer</name>
+    </scontrols>
+</Translations>

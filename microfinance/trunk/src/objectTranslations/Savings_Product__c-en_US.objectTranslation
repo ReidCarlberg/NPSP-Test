@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <value>Savings Product</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Savings Products</value>
+    </caseValues>
+    <fields>
+        <label><!-- Applicable for --></label>
+        <name>Applicable_for__c</name>
+        <picklistValues>
+            <masterLabel>Both</masterLabel>
+            <translation><!-- Both --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Client</masterLabel>
+            <translation><!-- Client --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Group</masterLabel>
+            <translation><!-- Group --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- Select the type of balance that will be used for interest. There are 3
+options i.e. minimum balance, average balance and ending balance.
+Compound interest will be used as a basis of calculating interest. --></help>
+        <label><!-- Balance Type --></label>
+        <name>Balance_Type__c</name>
+        <picklistValues>
+            <masterLabel>Average Balance</masterLabel>
+            <translation><!-- Average Balance --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Ending Balance</masterLabel>
+            <translation><!-- Ending Balance --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Minimum Balance</masterLabel>
+            <translation><!-- Minimum Balance --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Deposit Type --></label>
+        <name>Deposit_Type__c</name>
+        <picklistValues>
+            <masterLabel>Mandatory</masterLabel>
+            <translation><!-- Mandatory --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Voluntary</masterLabel>
+            <translation><!-- Voluntary --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- Enter the accounting code that will be used to aggregate the
+deposits and withdrawals to this account. --></help>
+        <label><!-- Deposits GL Code --></label>
+        <name>Deposits_GL_Code__c</name>
+        <picklistValues>
+            <masterLabel>1001</masterLabel>
+            <translation><!-- 1001 --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Description --></label>
+        <name>Description__c</name>
+    </fields>
+    <fields>
+        <label><!-- End Date --></label>
+        <name>End_Date__c</name>
+    </fields>
+    <fields>
+        <help><!-- Select the general ledger accounting code that will be used to
+aggregate interest for this saving product. --></help>
+        <label><!-- Interest GL Code --></label>
+        <name>Interest_GL_Code__c</name>
+        <picklistValues>
+            <masterLabel>1001</masterLabel>
+            <translation><!-- 1001 --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- Enter the time period when the interest can be calculated. 1 month
+means that the interest rate will be calculated at the end of every
+month --></help>
+        <label><!-- Interest Rate Calculation Frequncy --></label>
+        <name>Interest_Rate_Calculation_Frequncy__c</name>
+        <picklistValues>
+            <masterLabel>Biweekly</masterLabel>
+            <translation><!-- Biweekly --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Monthly</masterLabel>
+            <translation><!-- Monthly --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Weekly</masterLabel>
+            <translation><!-- Weekly --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- Enter the applicable interest rate --></help>
+        <label><!-- Interest Rate --></label>
+        <name>Interest_Rate__c</name>
+    </fields>
+    <fields>
+        <label><!-- Max Amount Per Withdrawal --></label>
+        <name>Max_Amount_Withdrawal__c</name>
+    </fields>
+    <fields>
+        <help><!-- Enter the minimum balance that will be used for computing interest.
+If the amount is lower than the amount entered here, interest will not
+be applied. --></help>
+        <label><!-- Min Balance for Interest --></label>
+        <name>Min_Balance_for_Interest__c</name>
+    </fields>
+    <fields>
+        <label><!-- Product SKU --></label>
+        <name>Product_SKU__c</name>
+    </fields>
+    <fields>
+        <label><!-- Recommended Amount --></label>
+        <name>Recommended_Amount__c</name>
+    </fields>
+    <fields>
+        <label><!-- Start Date --></label>
+        <name>Start_Date__c</name>
+    </fields>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>
