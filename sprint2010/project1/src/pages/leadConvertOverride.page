@@ -1,0 +1,4 @@
+<apex:page standardController="Lead" extensions="LeadConvertOverride" action="{!convertLead}">
+<apex:outputField value="{!lead.company}" rendered="false" />
+<apex:outputField value="{!lead.name}" rendered="false" />
+</apex:page>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>AccountViewOverride</members>
+        <members>Affiliations</members>
+        <members>Constants</members>
+        <members>ContactDonationCredit_EXT</members>
+        <members>ContactMerge</members>
+        <members>ContactMergeController</members>
+        <members>DonationNewMatching</members>
+        <members>HouseholdOpportunity</members>
+        <members>HouseholdTransactionHistory_EXT</members>
+        <members>Households</members>
+        <members>IndividualAccounts</members>
+        <members>IndividualAccounts_Utils</members>
+        <members>LeadConvertOverride</members>
+        <members>RecurringDonations</members>
+        <members>RecurringDonations_TEST</members>
+        <members>Relationships</members>
+        <members>Relationships_Utils</members>
+        <members>TEST_AccountViewOverride</members>
+        <members>TEST_Affiliations</members>
+        <members>TEST_ContactMergeController</members>
+        <members>TEST_HouseholdOpportunity</members>
+        <members>TEST_Households</members>
+        <members>TEST_IndividualAccounts</members>
+        <members>TEST_LeadConvertOverride</members>
+        <members>TEST_Relationships</members>
+        <members>startHereController</members>
+        <name>ApexClass</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>ApexComponent</name>
+    </types>
+    <types>
+        <members>ContactDonationCredit</members>
+        <members>ContactMerge</members>
+        <members>HouseholdTransactionHistory</members>
+        <members>accountViewOverride</members>
+        <members>leadConvertOverride</members>
+        <name>ApexPage</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>ApexTrigger</name>
+    </types>
+    <types>
+        <members>Nonprofit</members>
+        <name>CustomApplication</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>CustomLabels</name>
+    </types>
+    <types>
+        <members>*</members>
+        <members>Account</members>
+        <members>Contact</members>
+        <members>Lead</members>
+        <members>Opportunity</members>
+        <name>CustomObject</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>CustomObjectTranslation</name>
+    </types>
+    <types>
+        <members>Contact_Merge</members>
+        <members>Household__c</members>
+        <members>Recurring_Donation__c</members>
+        <name>CustomTab</name>
+    </types>
+    <types>
+        <members>Account-Account Layout</members>
+        <members>Affiliation__c-Affiliation Layout</members>
+        <members>Contact-Contact Layout</members>
+        <members>Household__c-Household Layout</members>
+        <members>Lead-Lead Layout</members>
+        <members>Opportunity-Opportunity Layout</members>
+        <members>Recurring_Donation__c-Recurring Donation Layout</members>
+        <members>Relationship__c-Relationship Layout</members>
+        <name>Layout</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>Scontrol</name>
+    </types>
+    <types>
+        <members>Contact</members>
+        <name>Workflow</name>
+    </types>
+    <version>18.0</version>
+</Package>
