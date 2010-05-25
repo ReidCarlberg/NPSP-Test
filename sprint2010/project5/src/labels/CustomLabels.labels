@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>Contact_Merge_Error_Confirm_Message</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Contact Merge Error - Confirm Message</shortDescription>
+        <value>Merging Contacts may result in the loss of data. Make sure the Contact you choose as the winner has all the data you want. You may need to copy data from one Contact to another before you merge the records.</value>
+    </labels>
+    <labels>
+        <fullName>Contact_Merge_Error_Confirm_Message_Households</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Contact Merge Error Confirm Message Households</shortDescription>
+        <value>If you have the Household package, please note that the Households for merged Contacts are not affected during the merge. If you want to merge the Households, you should do that by hand, making sure the winning Contact is connected to the correct Household.</value>
+    </labels>
+    <labels>
+        <fullName>Contact_Merge_Error_Confirm_Message_Nothing_Found</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Contact Merge Error Confirm Message Nothing Found</shortDescription>
+        <value>No matching Contacts found, please search again.</value>
+    </labels>
+    <labels>
+        <fullName>Contact_Merge_Error_Too_Few_Contacts</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Contact Merge Error - Too Few Contacts</shortDescription>
+        <value>Please select at least 2 contacts to merge.</value>
+    </labels>
+    <labels>
+        <fullName>Contact_Merge_Error_Too_Many_Contacts</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Contact Merge Error - Too Many Contacts</shortDescription>
+        <value>You can only merge up to 3 contacts at a time.</value>
+    </labels>
+    <labels>
+        <fullName>Contact_Merge_Step1</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Contact Merge Step1</shortDescription>
+        <value>Enter search text to find duplicate Contacts</value>
+    </labels>
+    <labels>
+        <fullName>Contact_Merge_Step2</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Contact Merge Step2</shortDescription>
+        <value>Pick up to 3 Contacts to Merge</value>
+    </labels>
+    <labels>
+        <fullName>Contact_Merge_Step3</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Contact Merge Step3</shortDescription>
+        <value>Pick the winning Contact</value>
+    </labels>
+    <labels>
+        <fullName>Contact_Merge_Step4</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Contact Merge Step4</shortDescription>
+        <value>Merge the Contacts</value>
+    </labels>
+    <labels>
+        <fullName>DefaultContactTransactionCurrency</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DefaultContactTransactionCurrency</shortDescription>
+        <value>$</value>
+    </labels>
+    <labels>
+        <fullName>DefaultCurrentStatus</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DefaultCurrentStatus</shortDescription>
+        <value>Current</value>
+    </labels>
+    <labels>
+        <fullName>DefaultFormerStatus</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DefaultFormerStatus</shortDescription>
+        <value>Former</value>
+    </labels>
+    <labels>
+        <fullName>DefaultHouseholdName</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DefaultHouseholdName</shortDescription>
+        <value>Household</value>
+    </labels>
+    <labels>
+        <fullName>DefaultHouseholdTransactionCurrency</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DefaultHouseholdTransactionCurrency</shortDescription>
+        <value>$</value>
+    </labels>
+    <labels>
+        <fullName>Household_Contact_Role_Processor_Off</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Household Contact Role Processor Off</shortDescription>
+        <value>No Opportunities</value>
+    </labels>
+    <labels>
+        <fullName>Household_Contact_Role_Processor_On</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Household Contact Role Processor On</shortDescription>
+        <value>All Opportunities</value>
+    </labels>
+    <labels>
+        <fullName>Household_Member_Contact_Role</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Household Member Contact Role</shortDescription>
+        <value>Household Credit</value>
+    </labels>
+    <labels>
+        <fullName>Primary_Donor_Contact_Role</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Primary Donor Contact Role</shortDescription>
+        <value>Donor</value>
+    </labels>
+    <labels>
+        <fullName>RecurringDonationCantDeleteError</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RecurringDonationCantDeleteError</shortDescription>
+        <value>You must delete the related Donations before you can delete this recurring donation</value>
+    </labels>
+    <labels>
+        <fullName>RecurringDonationContactRole</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RecurringDonationContactRole</shortDescription>
+        <value>Donor</value>
+    </labels>
+    <labels>
+        <fullName>RecurringDonationDivideValue</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RecurringDonationDivideValue</shortDescription>
+        <value>Divide By</value>
+    </labels>
+    <labels>
+        <fullName>RecurringDonationInstallmentPeriodMonthly</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RecurringDonationInstallmentPeriodMonthly</shortDescription>
+        <value>Monthly</value>
+    </labels>
+    <labels>
+        <fullName>RecurringDonationInstallmentPeriodQuarterly</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RecurringDonationInstallmentPeriodQuarterly</shortDescription>
+        <value>Quarterly</value>
+    </labels>
+    <labels>
+        <fullName>RecurringDonationInstallmentPeriodWeekly</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RecurringDonationInstallmentPeriodWeekly</shortDescription>
+        <value>Weekly</value>
+    </labels>
+    <labels>
+        <fullName>RecurringDonationInstallmentPeriodYearly</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RecurringDonationInstallmentPeriodYearly</shortDescription>
+        <value>Yearly</value>
+    </labels>
+    <labels>
+        <fullName>RecurringDonationMissingDataError</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RecurringDonationMissingDataError</shortDescription>
+        <value>You must select an Organization or Contact</value>
+    </labels>
+    <labels>
+        <fullName>RecurringDonationMultiplyValue</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RecurringDonationMultiplyValue</shortDescription>
+        <value>Multiply By</value>
+    </labels>
+    <labels>
+        <fullName>RecurringDonationPrefix</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RecurringDonationPrefix</shortDescription>
+        <value>Donation</value>
+    </labels>
+    <labels>
+        <fullName>RecurringDonationStageName</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RecurringDonationStageName</shortDescription>
+        <value>Pledged</value>
+    </labels>
+    <labels>
+        <fullName>RecurringDonationTooManyInstallmentsError</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RecurringDonationTooInstallmentsManyError</shortDescription>
+        <value>You must specify fewer than 50 installments</value>
+    </labels>
+</CustomLabels>
