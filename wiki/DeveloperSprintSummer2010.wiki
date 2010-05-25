@@ -97,7 +97,16 @@ The sprint will be held at the Salesforce.com corporate offices in San Francisco
   * integrate@project4.integration
   * integrate@project5.integration
  * Individual Orgs
-  * 
+  * gokubi@npspsprint.dev
+  * wrightenich@npspsprint.dev 
+  * akhilesh.iitd@npspsprint.dev
+  * jason.venable@npspsprint.dev 
+  * davemanelski@npspsprint.dev 
+  * evan@npspsprint.dev 
+  * vnehess@npspsprint.dev 
+  * davidtraveller@npspsprint.dev 
+  * sarachieco@npspsprint.dev 
+  * sfdc.awaite@npspsprint.dev
 == Subversion ==
  * TK
 == Packages ==
