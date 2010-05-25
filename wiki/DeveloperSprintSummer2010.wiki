@@ -110,6 +110,14 @@ The sprint will be held at the Salesforce.com corporate offices in San Francisco
 == Subversion ==
  * Each integration project has a repository location here
   * http://code.google.com/p/npsp/source/browse/#svn/sprint2010
+ * To create a Force.com project connected to Subversion
+  * Create a new repository for the google code project
+  * navigate to your integration branch
+  * right click the project folder and select Checkout
+  * checkout using the new project wizard
+  * enter the force.com credentials for your integration org
+  * select no metadata
+  * finish
 == Packages ==
  * [https://login.salesforce.com/?startURL=%2Fpackaging%2FinstallPackage.apexp%3Fp0%3D04t80000000j7IX Contacts and Orgs Unmanaged]
  * [https://login.salesforce.com/?startURL=%2Fpackaging%2FinstallPackage.apexp%3Fp0%3D04t80000000lIjF Relationships Unmanaged]
