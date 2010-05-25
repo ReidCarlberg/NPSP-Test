@@ -90,7 +90,14 @@ The sprint will be held at the Salesforce.com corporate offices in San Francisco
 
 = Tech links =
 == Orgs ==
- * TK
+ * Integration Orgs
+  * integrate@project1.integration
+  * integrate@project2.integration
+  * integrate@project3.integration
+  * integrate@project4.integration
+  * integrate@project5.integration
+ * Individual Orgs
+  * 
 == Subversion ==
  * TK
 == Packages ==
