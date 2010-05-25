@@ -108,7 +108,8 @@ The sprint will be held at the Salesforce.com corporate offices in San Francisco
   * sarachieco@npspsprint.dev 
   * sfdc.awaite@npspsprint.dev
 == Subversion ==
- * TK
+ * Each integration project has a repository location here
+  * http://code.google.com/p/npsp/source/browse/#svn/sprint2010
 == Packages ==
  * [https://login.salesforce.com/?startURL=%2Fpackaging%2FinstallPackage.apexp%3Fp0%3D04t80000000j7IX Contacts and Orgs Unmanaged]
  * [https://login.salesforce.com/?startURL=%2Fpackaging%2FinstallPackage.apexp%3Fp0%3D04t80000000lIjF Relationships Unmanaged]
