@@ -1,0 +1,147 @@
+<apex:page controller="ContactMergeController" title="Merge Contacts" id="contactMergePage">
+
+	<style type="text/css">
+        .messagepopup{
+            background-color:white;
+            border-style:solid;
+            border-width:1px;
+            position: absolute;
+            z-index: 9999;
+            /* These are the 4 css properties you will need to tweak so the
+            messagepopup displays in approximately the center of the screen. First
+            set the width and height then adjust the left and top.*/
+            width: 500px;
+            left:40%;
+            top:30%;
+            padding: 10px;
+        }
+    </style>
+	<apex:outputPanel id="searchformPanel" layout="block">
+		<apex:form id="searchForm">	
+		<script type="text/javascript">
+			function noenter(e){
+			   if(window.event){
+			          key = window.event.keyCode;     //IE
+			    } else{
+			          key = e.which;     //firefox
+			 	}
+			     if(key == 13) {
+			     	var ele=document.getElementById('contactMergePage:searchForm:searchButton');
+							ele.click();
+			          return false;
+			     } else{
+			          return true;
+				}
+			}
+		</script>
+		
+		
+			
+			<apex:sectionHeader title="Contact Merge" subTitle="Merge Duplicate Contact Records">
+				<description>
+					<ol>
+						<li>{!$Label.Contact_Merge_Step1}</li>
+						<li>{!$Label.Contact_Merge_Step2}</li>
+						<li>{!$Label.Contact_Merge_Step3}</li>
+						<li>{!$Label.Contact_Merge_Step4}</li>
+					</ol>
+				</description>
+			</apex:sectionHeader>
+	        <apex:inputText value="{!searchText}" id="searchText" onkeypress="return noenter(event);"/> 
+
+    		<apex:commandButton id="searchButton" action="{!search}"  rerender="searchresults,selectedContacts,winnerpanel" value="Search" status="searchStatus"/> <apex:actionStatus startText="(searching...)" id="searchStatus"/> 
+    		<br/><br/>
+	    </apex:form>
+    </apex:outputPanel>
+    
+    <apex:outputPanel id="searchresults" layout="block">
+    	<apex:outputPanel id="nothingfound" layout="block" rendered="{!!displaySearchResults&&searchText!=''&&!successfulMerge}">
+    	{!$Label.Contact_Merge_Error_Confirm_Message_Nothing_Found}
+    	</apex:outputPanel>
+	    <apex:form >
+	    	<apex:pageBlock title="Found Contacts" rendered="{!displaySearchResults}"> 
+				<apex:pageBlockTable value="{!searchResults}" var="item">
+					<apex:column >
+						<apex:inputCheckbox value="{!item.selected}" id="checkedone">
+							<apex:actionSupport event="onclick" action="{!GetSelected}" rerender="selectedContacts,messagepopup,pagemessages,mergebutton" status="selectionStatus"/>
+						</apex:inputCheckbox>
+					</apex:column>
+					<apex:column headervalue="Name">
+						<apex:outputLink value="/{!item.con.Id}">
+							<apex:outputText >{!item.con.Name}</apex:outputText>
+						</apex:outputLink>
+					</apex:column>
+					<apex:column value="{!item.con.AccountId}"/>
+					<apex:column value="{!item.con.email}"/>
+					<apex:column value="{!item.con.Preferred_Email__c}"/>
+					<apex:column value="{!item.con.phone}"/>
+					<apex:column value="{!item.con.PreferredPhone__c}"/>
+				</apex:pageBlockTable>		
+			</apex:pageBlock> 
+    	</apex:form>
+    </apex:outputPanel>
+    <apex:actionStatus startText="(selecting...)" id="selectionStatus"/>
+	
+
+    <apex:outputPanel id="selectedContacts" layout="block">
+	    <apex:outputPanel id="selectedContactsBlock" rendered="{!displaySelected}" layout="block">
+	    	<apex:form >
+		    	<apex:pageBlock title="Selected Contacts">
+		    	<apex:outputText value="Select one Contact to keep."/>
+		    		<apex:pageBlockSection columns="3">
+		    			<apex:outputPanel layout="block" id="firstContactPanel" >
+				    		<apex:outputPanel layout="block" rendered="{!thisMerge.displayFirst}">
+					    		<apex:inputCheckbox value="{!thisMerge.firstIsWinner}" id="checkfirstcontact">
+									<apex:actionSupport event="onclick" action="{!selectFirstContact}"/>
+								</apex:inputCheckbox>
+								<c:ContactMergeContactDisplay thisContact="{!thisMerge.firstContact}"/> 
+							</apex:outputPanel>
+						</apex:outputPanel>
+						<apex:outputPanel layout="block" id="secondContactPanel">
+							<apex:outputPanel layout="block" rendered="{!thisMerge.displaySecond}">
+								<apex:inputCheckbox value="{!thisMerge.secondIsWinner}" id="checksecondcontact">
+									<apex:actionSupport event="onclick" action="{!selectSecondContact}" />
+								</apex:inputCheckbox>
+								<c:ContactMergeContactDisplay thisContact="{!thisMerge.secondContact}"/> 
+							</apex:outputPanel>
+						</apex:outputPanel>
+						<apex:outputPanel layout="block" id="thirdContactPanel">
+							<apex:outputPanel layout="block" rendered="{!thisMerge.displayThird}">
+								<apex:inputCheckbox value="{!thisMerge.thirdIsWinner}" id="checkthirdcontact">
+									<apex:actionSupport event="onclick" action="{!selectThirdContact}"/>
+								</apex:inputCheckbox>
+								<c:ContactMergeContactDisplay thisContact="{!thisMerge.thirdContact}"/> 
+							</apex:outputPanel>
+						</apex:outputPanel>
+					</apex:pageBlockSection>
+					<apex:pageBlockButtons id="mergebutton">
+						<apex:commandButton action="{!showMessagePopup}" rendered="{!displayMergeButton}" rerender="messagepopup" value="Merge"/> 
+					</apex:pageBlockButtons>
+				</apex:pageBlock> 
+				
+				<apex:outputPanel id="messagepopup">
+		            <apex:outputPanel styleClass="messagepopup" layout="block" rendered="{!displayMessagePopup}">
+		            	<apex:pageMessages id="pagemessages"/> 
+		            	<br/><br/>
+		                <apex:commandButton value="Continue and Merge Contacts" action="{!mergeContacts}" rendered="{!!(tooManyContactsSelected||tooFewContactsSelected)}" rerender="messagepopup,searchresults,selectedContacts,winnerpanel"/>
+		                <apex:commandButton value="Cancel" action="{!cancelMessagePopup}" rendered="{!!(tooManyContactsSelected||tooFewContactsSelected)}" rerender="messagepopup"/>
+		                <apex:commandButton value="Ok" action="{!cancelMessagePopup}" rendered="{!tooManyContactsSelected||tooFewContactsSelected}" rerender="messagepopup"/>
+		            	<br/><br/>
+		            </apex:outputPanel>
+		        </apex:outputPanel>
+	    	</apex:form>
+    	</apex:outputPanel>
+    </apex:outputPanel>
+    <apex:outputPanel id="winnerpanel" layout="block">
+		<apex:pageBlock title="Winner" rendered="{!successfulMerge}"> 
+			<apex:pageBlockTable value="{!thisMerge.winner}" var="item">
+				<apex:column >
+					<apex:outputLink value="/{!thisMerge.winner.Id}">
+					<apex:outputText >{!thisMerge.winner.Name}</apex:outputText>
+				</apex:outputLink>
+				</apex:column>
+			</apex:pageBlockTable>		
+		</apex:pageBlock>
+	</apex:outputPanel>
+	 
+</apex:page>
