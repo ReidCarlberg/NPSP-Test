@@ -23,7 +23,12 @@ Best practices for coding on the Salesforce.com platform are not all followed in
  * test coverage is incomplete
 
 == Open Issues ==
-  * 
+  * http://code.google.com/p/npsp/issues/detail?id=172
+  * http://code.google.com/p/npsp/issues/detail?id=175
+  * http://code.google.com/p/npsp/issues/detail?id=176
+  * http://code.google.com/p/npsp/issues/detail?id=177
+  * http://code.google.com/p/npsp/issues/detail?id=178
+  * http://code.google.com/p/npsp/issues/detail?id=179
 
 = Potential Course of Action =
 
