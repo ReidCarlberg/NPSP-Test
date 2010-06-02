@@ -64,6 +64,7 @@ I have developed a list of potential projects that could be tackled in a sprint.
    * CodeOptimizationProject
       * SOQL
       * custom settings
+        * ability to turn-off triggers without uninstalling
       * exception handling
    * DocumentationProject
 
