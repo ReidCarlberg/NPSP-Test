@@ -19,6 +19,7 @@ Best practices for coding on the Salesforce.com platform are not all followed in
 
  * efficiency and quality can always be improved
  * there are many places where unhandled exceptions can occur
+ * you can't disable functionality without uninstalling the packages
  * test coverage is incomplete
 
 == Open Issues ==
