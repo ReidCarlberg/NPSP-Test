@@ -8,18 +8,17 @@ Household is a custom object that is a parent of Contact. It is used to group Co
 
 = Current State = 
 
-lots of current functionality to describe
-trigger on contact
-name generation
-address copying
-formula field back down
+* trigger on contact
+* name generation
+* address copying
+* formula field back down
 
 
 = Problems with current State =
 
- * can't specify naming convention
- * address not kept in sync
- * name doesn't sync with contact name fields
+ * can't specify naming convention for Household
+ * address not kept in sync with Contacts
+ * name doesn't sync with contact name change
 
 == Open Issues ==
   * http://code.google.com/p/npsp/issues/detail?id=3
