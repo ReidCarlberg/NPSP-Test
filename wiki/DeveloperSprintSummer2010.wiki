@@ -71,18 +71,18 @@ I have developed a list of potential projects that could be tackled in a sprint.
 The sprint will be held at the Salesforce.com corporate offices in San Francisco on June 9-11, 2010. The sprint will begin at 9 am June 9th.
 
 == Agenda ==
-|| *Wednesday June 9* ||||
+|| *Wednesday June 9* - Noa, 9th Spear||||
 || 9 am - noon || Kickoff ||
 || noon - 1:30 PM || Lunch ||
 || 1:30 pm - 6 PM || Afternoon session ||
 || 6 pm - 7:30 PM || Dinner - [http://www.yelp.com/biz/osha-thai-san-francisco-3 Osha Thai] ||
 || 7:30 pm - whenever || Evening session ||
-|| *Thursday June 10* ||||
+|| *Thursday June 10* - Noa, 9th Spear||||
 || 9 am - noon || Morning Session ||
 || noon - 1:30 PM || Lunch ||
 || 1:30 pm - 6 pm || Afternoon session ||
 || 6 pm - whenever || Dinner - [http://www.yelp.com/biz/r-and-g-lounge-san-francisco R&G Lounge] ||
-|| *Friday June 11* ||||
+|| *Friday June 11* - Oahu, 4th Landmark||||
 || 9 am - noon || Morning Session ||
 || 1:30 pm - 5 pm || Afternoon session and wrap up ||
 
