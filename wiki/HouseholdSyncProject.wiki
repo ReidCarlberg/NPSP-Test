@@ -8,10 +8,10 @@ Household is a custom object that is a parent of Contact. It is used to group Co
 
 = Current State = 
 
-* trigger on contact
-* name generation
-* address copying
-* formula field back down
+ * trigger on contact
+ * name generation
+ * address copying
+ * formula field back down
 
 
 = Problems with current State =
