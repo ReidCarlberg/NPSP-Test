@@ -12,12 +12,12 @@ New platform features that could be refactored into our code where appropriate:
  * Custom settings
  * SOQL improvements (group by, having, etc.)
 
-Best practices for coding on the Salesforce.com platform are not all followed in the code base:
- 
+Best practices for coding on the Salesforce.com platform are not all followed in the code base.
 
 = Problems with current State =
 
  * efficiency and quality can always be improved
+ * we use picklists to store config variables
  * there are many places where unhandled exceptions can occur
  * you can't disable functionality without uninstalling the packages
  * test coverage is incomplete
@@ -32,7 +32,8 @@ Best practices for coding on the Salesforce.com platform are not all followed in
 
 = Potential Course of Action =
 
-  * 
+  * move all settings to custom settings
+  * build transaction control and exception handling
 
 = Implementation Details =
 == Impact on current install base ==
