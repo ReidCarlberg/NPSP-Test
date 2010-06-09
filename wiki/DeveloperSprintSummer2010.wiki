@@ -12,7 +12,7 @@ post event...
 == Who is doing this? ==
 A small group of folks interested in nonprofits on Salesforce.com:
   # Salesforce.com implementers    
-    # Evan Callahan, http://groundwire.org
+    # Evan Callahan, http://groundwire.org, evan@groundwire.org
     # David Cheng, http://idealistconsulting.com
     # Sara Chieco, http://exponentpartners.com
     # Dave Manelski, http://groundwire.org
