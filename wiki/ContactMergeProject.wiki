@@ -26,6 +26,8 @@ The one-to-one Account model currently does not work with the standard Salesforc
   * allow for viewing all relevant Contact fields
   * build a paint-a-perfect record interface
 
+  * look for potential dupes on lead conversion and put them in the same one to one--makes finding dupes easier
+
 = Implementation Details =
 == Impact on current install base ==
 
