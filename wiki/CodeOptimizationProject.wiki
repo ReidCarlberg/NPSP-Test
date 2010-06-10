@@ -28,7 +28,7 @@ Prior to the project starting the following snapshots will be taken:
   * running all existing tests
   * basic profiling of pages using viewstate inspector, apex csi for performance and governor limit consumption.
 
-= Details =
+= Security Scanner results (before) =
 
 The security scanner resulted in the following results:
 
@@ -108,6 +108,12 @@ The security scanner resulted in the following results:
 ...
 90. <apex:form >
 }}}
+
+= Test results =
+
+== Before ==
+
+ * runalltests: 68 tests, 31.07 seconds (averaged across 10 runs), 81% coverage
 
 = Change Log =
 
