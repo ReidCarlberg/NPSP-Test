@@ -42,7 +42,7 @@ I have developed a list of potential projects that could be tackled in a sprint.
 
 == Potential Work ==
    * BatchRollupProject
-   * ContactMergeProject
+   * ContactMergeProject - Done
       * paint a perfect record
       * what to do with parent records?
    * HouseholdSyncProject
