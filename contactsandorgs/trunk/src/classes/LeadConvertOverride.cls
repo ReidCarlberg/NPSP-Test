@@ -1,57 +1,148 @@
-public class LeadConvertOverride
-{
-	private final Lead l;
+public class LeadConvertOverride {
+// Controller for lead conversion of one-to-one contacts
+ 
+// Written by jason venable and evan callahan
+// at the NPSP Sprint 2010    
 
-    public LeadConvertOverride(ApexPages.StandardController controller)
-    {
-        this.l = (Lead) controller.getRecord();
+	// properties for page
+	public lead l { get; set; }
+	public opportunity dummyOpp { get; set; }
+	public boolean sendEmailToOwner { get; set; }
+	//public string acct { get; set; }	
+	public string con { get; set; }
+	public string oppName { get; set; }
+	public boolean doNotCreateOpp { get; set; }
+	public string leadConvStatus { get; set; }
+	//public task leadTask { get; set; }
+
+	//public list<selectOption> acctList = new list<selectOption>(); 
+	public list<selectOption> conList; 
+	map<id, contact> conMap = new map<id, contact>(); 
+	public list<selectOption> lcStatuses; 
+	
+	boolean oneToOne = true;
+	
+    public LeadConvertOverride(ApexPages.StandardController controller) {
+    	    	
+        // get the lead
+        l = [select id, name, firstname, lastname, company, email, ownerId from lead
+			where id = : controller.getId()];
+    	
+    	// dummy opp allows owner selection
+    	dummyOpp = new Opportunity( 
+			ownerid = ((((string)(l.ownerid)).startsWith('005')) ? l.ownerid : userInfo.getUserId())
+		);
+    	
+    	// set a default opp name
+    	oppName = l.name;
+		doNotCreateOpp = false;
+    	
+    	// get the one-to-one setting
+    	oneToOne = Constants.ONE_TO_ONE_ACCOUNT_MODEL;		
     }    
-   
-	public pageReference convertLead()
-	{
-		String lId = ApexPages.currentPage().getParameters().get('id');  
-		PageReference pageRef;
-		pageRef = new PageReference('/lead/leadconvert.jsp?retURL=%2F' + lId + '&id=' + lId + '&nooverride=1');
+	
+	public list<selectOption> getConList() {
+		if (conList == null) {
+			conList = new list<selectOption>();
+			
+			conList.add( new SelectOption('', '--None--') );
+			conList.add( new SelectOption('NEW_CONTACT', 'Create New: ' + l.name) );			
 		
-		//don't test if we're not in the one-to-one model
-		if(Constants.ONE_TO_ONE_ACCOUNT_MODEL){
-			if (l.company.toUpperCase() != 'INDIVIDUAL' && (l.company == null || l.company == '' || l.company.toUpperCase() == 'SELF' || l.company.toUpperCase() == getFullName(l)))
-			{
-				Database.LeadConvert lc = new database.LeadConvert();
-				lc.setLeadId(lId);
-				lc.setDoNotCreateOpportunity(true);
-				LeadStatus convertStatus = [Select Id, MasterLabel from LeadStatus where IsConverted=true limit 1];
-				lc.setConvertedStatus(convertStatus.MasterLabel);
-				Database.LeadConvertResult lcr = Database.convertLead(lc);
-				Contact c = new Contact(Id=lcr.getContactId(),AccountId = null);
-				update c;
-				Contact[] myconvertedContact = [select id,firstname, lastname, accountid,account.name, SystemAccountProcessor__c from contact where id=:c.Id];
-					
-				if (lcr.getAccountId() != null)
-				{
-					if(myconvertedContact.size()>0){
-						//if the contact is connected to the Individual account, don't delete it
-						if (myconvertedContact[0].account.Name.toUpperCase()!='INDIVIDUAL'){
-							Account a = new Account(Id=lcr.getAccountId());
-							Database.DeleteResult d = Database.delete(a);
-						}						
-					}
-				}
-				pageRef = new PageReference('/' + c.Id);
+			// find contact matches
+			conMap = new map<id, contact>([select id, name, accountid, firstname, lastname from contact where 
+				(lastname = : l.lastname and firstname = : l.firstname) or
+				(email = : l.email and email != null) limit 50]);
+				
+			for (contact c : conMap.values()) {
+				conList.add( new SelectOption(c.id, 'Merge with Existing: ' + c.name) );							
 			}
 		}
-		pageRef.setRedirect(true);
+		return conList;	
+	} 
+	
+	public list<selectOption> getlcStatuses() {
+		if (lcStatuses == null) {
+			lcStatuses = new list<selectOption>();
+			// query
+			for (LeadStatus ls : [Select Id, MasterLabel from LeadStatus where IsConverted=true] ) {
+				lcStatuses.add( new SelectOption(ls.masterLabel, ls.masterLabel ));
+			}
+			leadConvStatus = lcStatuses[0].getValue();
+		}
+		return lcStatuses;
+	} 
+   	
+	public pageReference convertLead()
+	{
+		//String lId = ApexPages.currentPage().getParameters().get('id');  
+		PageReference pageRef;
+		
+		//don't test if we're not in the one-to-one model
+		if (oneToOne && !((l.company.toUpperCase() != 'INDIVIDUAL' && 
+				(l.company == null || l.company == '' || l.company.toUpperCase() == 'SELF' || 
+				l.company.toUpperCase() == l.name)))) {
+
+			pageRef = new PageReference('/lead/leadconvert.jsp?retURL=%2F' + l.Id + '&id=' + l.Id + '&nooverride=1');
+			pageRef.setRedirect(true);
+		}
 		return pageRef;
 	}			
-	
-	private String getFullName(Lead thisLead){
-		String fullName;
-		if(thisLead.firstName!=null&&thisLead.firstName!=''){
-			fullName = thisLead.firstName.toUpperCase() + ' ';
+
+	public pageReference convertOneToOne() {
+		if (con == null) {
+			apexPages.addMessage(
+				new ApexPages.Message(ApexPages.Severity.Error,
+				'You must select an option in the Contact box.'
+			));
+			return null;
 		}
-		fullName += thisLead.lastname.toUpperCase();
-		return fullName;
+		
+		// set up the conversion
+		Database.LeadConvert lc = new database.LeadConvert();
+		lc.setLeadId(l.Id);
+		if (!doNotCreateOpp) lc.setOpportunityName(oppName);
+		lc.setDoNotCreateOpportunity(doNotCreateOpp);
+		lc.setConvertedStatus(leadConvStatus);
+
+		// is this a merge to existing?
+		if (con != 'NEW_CONTACT') {	
+			// get this contact's account
+			lc.setContactId(con);
+			lc.setAccountId(conMap.get(con).accountId);			 
+		}		
+
+		// convert the lead
+		PageReference pageRef;
+		Database.LeadConvertResult lcr;
+		try {
+			lcr = Database.convertLead(lc);
+			
+			
+			// fix the account that lead conversion created
+			if (con == 'NEW_CONTACT') {		
+				//
+				Contact[] myconvertedContact = [select id,firstname, lastname from contact where id=:lcr.getContactId()];
+				
+				Account myAccount = new Account(Id=lcr.getAccountId());
+				myAccount.Name= myconvertedContact[0].firstName + ' ' + myconvertedContact[0].lastName;
+				myAccount.One2OneContact__c=lcr.getContactId();
+				myAccount.SYSTEM_AccountType__c = Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
+				myAccount.SYSTEMISINDIVIDUAL__c = true;
+				update myAccount;
+			}	
+			
+			
+			
+			pageRef = new PageReference('/' + lcr.getContactId());			
+		} catch (exception e) {
+			apexPages.addMessage(
+				new ApexPages.Message(ApexPages.Severity.Error,	e.getMessage())
+			);
+		}
+		
+							
+		
+		// redirect
+		return pageRef;		
 	}
-	
-    private final ApexPages.StandardController controller;   
 }
