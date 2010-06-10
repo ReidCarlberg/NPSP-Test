@@ -1,43 +1,110 @@
-#summary summary
 #labels 2010Sprint
-[DeveloperSprintSummer2010 Sprint Home]
-<wiki:toc max_depth="2" />
+#Log and results from the code optimization project
+
 = Introduction =
-The Salesforce.com platform moves very quickly. New platform features have come out that should be taken advantage of. 
 
-= Current State = 
-New platform features that could be refactored into our code where appropriate:
- * Batch Apex
- * Scheduled Apex
- * Custom settings
- * SOQL improvements (group by, having, etc.)
+The code optimization project goal as initially stated was:
 
-Best practices for coding on the Salesforce.com platform are not all followed in the code base.
+{{{
+    * SOQL
+    * custom settings
+          o ability to turn-off triggers without uninstalling 
+    * exception handling "
+}}}
 
-= Problems with current State =
+Possible outcomes from this project also include:
 
- * efficiency and quality can always be improved
- * we use picklists to store config variables
- * there are many places where unhandled exceptions can occur
- * you can't disable functionality without uninstalling the packages
- * test coverage is incomplete
+  * code reduction
+  * performance improvement
+  * governor limit recovery (reduced footprint)
+  * better exception handling
+  * refactoring tasks that may be performed later
 
-== Open Issues ==
-  * http://code.google.com/p/npsp/issues/detail?id=172
-  * http://code.google.com/p/npsp/issues/detail?id=175
-  * http://code.google.com/p/npsp/issues/detail?id=176
-  * http://code.google.com/p/npsp/issues/detail?id=177
-  * http://code.google.com/p/npsp/issues/detail?id=178
-  * http://code.google.com/p/npsp/issues/detail?id=179
+= Approach =
 
-= Potential Course of Action =
+Prior to the project starting the following snapshots will be taken: 
 
-  * move all settings to custom settings
-  * build transaction control and exception handling
+  * running the code through the security analyzer
+  * running all existing tests
+  * basic profiling of pages using viewstate inspector, apex csi for performance and governor limit consumption.
 
-= Implementation Details =
-== Impact on current install base ==
+= Details =
 
-= Pros and Cons of Course of Action =
+The security scanner resulted in the following results:
 
-  * 
+== Test methods with no asserts: ==
+
+=== npo02.test_householdopportunity.cls ===
+
+  * static testMethod void HouseholdOpportunity()
+
+=== npo02.test_households.cls ===
+
+  * static testMethod void Households_Test()
+
+=== npe03.bulktest.cls ===
+
+  * static testMethod void bulkInsertOpportunities()
+
+=== npe03.recurringdonations_test.cls ===
+
+  * static testMethod void RecurringDonations()
+
+=== npe5.test_affiliations.cls ===
+
+  * static testMethod void Affiliations_Test()
+
+=== npe01.test_accountviewoverride.cls ===
+
+  * public static testMethod void accountViewOverride()
+  * public static testMethod void noAccount()
+
+=== npe01.test_individualaccounts.cls ===
+
+  * static testMethod void IndividualAccounts()
+  * static testMethod void getContactDonationHistory()
+
+=== npe01.test_leadconvertoverride.cls ===
+
+  * public static testMethod void newLeadWithCompanyMatchingLeadName_Test()
+
+== Sharing Violations: ==
+
+=== page: accountviewoverride ===
+  
+  * controller extension: npe01.accountviewoverride.cls
+
+=== page: contactmerge ===
+
+  * controller extension: npe01.contactmergecontroller.cls
+
+=== page: leadconvertoverride ===
+
+  * controller extension: npe01.leadconvertoverride.cls
+
+== Cross-site request forgery ==
+
+=== npe01.leadconvertoverride.cls ===
+
+{{{
+...
+12. String lId = ApexPages.currentPage().getParameters().get('id');
+...
+21. lc.setLeadId(lId);
+22. lc.setDoNotCreateOpportunity(true);
+...
+24. lc.setConvertedStatus(convertStatus.MasterLabel);
+25. Database.LeadConvertResult lcr = Database.convertLead(lc);
+}}}
+
+== Multiple forms in a Visualforce page ==
+
+=== contactmerge.page ===
+{{{
+...
+20. <apex:form id="searchForm">
+...
+63. <apex:form >
+...
+90. <apex:form >
+}}}
