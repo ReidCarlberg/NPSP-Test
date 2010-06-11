@@ -56,6 +56,31 @@ I have developed a list of potential projects that could be tackled in a sprint.
       * interface for opp creation
       * field mapping
    * RecurringDonationsProject
+
+All of the code and config is in the "Integration 3" instance:
+Changed Existing:
+Opportunity Object
+Constants.cls
+
+Added:
+Payment Object
+Payment Tab
+Recurrence Information Object
+Recurrence Information Tab
+3 Opportunity Page Layouts: Donation (NPSP), Grant (NPSP), Pledge (NPSP)
+3 Opportunity Record Types: Donation (NPSP), Grant (NPSP), Pledge (NPSP)
+FundraisingSettings custom settings
+TestOpportunityPayments.cls - 100% coverage
+OpportunityPayments.cls
+FundraisingOpportunity.trigger
+
+Code is commented and complete.
+New payment is created for One-time Donation, kept in synch while there is just one.
+New Payment(s) are created for payment plan. May want to put a validation rule on the Payment Plan fields so if they put in a number of payments, they need to add the frequency and vice versa and making those two fields required if they select the Type = 'Payment Plan'.
+
+TODO:
+Add the one Field in the FundraisingSettings custom settings object to one of the newly created Custom Settings UI's made by Dave or David.
+
    * RelationshipsProject
       * Directionality
       * list custom settings for relationship values?
