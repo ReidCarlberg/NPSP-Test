@@ -26,17 +26,26 @@ Household is a custom object that is a parent of Contact. It is used to group Co
   * http://code.google.com/p/npsp/issues/detail?id=56
   * http://code.google.com/p/npsp/issues/detail?id=57
 
-= Potential Course of Action =
+== Packages affected ==
+  * Households
 
-  * 
+= What we Did At the Sprint Event =
+  * Added automatic household naming code from NPower/Groundwire
+  * Fixed issue #116 where households sometimes remained after all contacts were removed from them 
 
 = Implementation Details =
+  * Households.cls significantly refactored to support automatic naming of households
+  * New trigger - HouseholdUpdate - responds to Household Before Update event (calls a method in Households.cls)
+  * New fields on Household include Greeting (for Dear John), 3 Automatic Naming checkboxes, Number of Members
+  * New fields on Contact include HH Addressee and Greeting (cross-object formulas) and Do Not Include in HH Name
+  * Added a custom setting, Automatically Name Households, that indicates whether to use the new feature
 
-== Packages affected ==
-* Households
+= Tasks still TODO =
+  # To support old NPSP installations, put code back in that names new HHs in the old way - run that instead if the AutoNaming setting is not turned on
+  # Fix tests to verify either scenario - old way or new way
+  # Create a button that allows people to upgrade to new scheme by turning on the Auto naming custom setting and then using batch apex to set the 3 Auto Naming checkboxes to true on every existing household
+  # OPTIONALLY - add support for multiple naming options for each of the three naming schemes
 
 == Impact on current install base ==
-
-= Pros and Cons of Course of Action =
-
-  * 
+  * Once the old naming is back in place, no impact - current installs get same old behavior EXCEPT that deleting a contact will never delete the household (that could be fixed) 
+  * Upgrading is easy - just set all the auto naming boxes as mentioned above
