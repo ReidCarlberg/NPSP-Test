@@ -42,7 +42,7 @@ I have developed a list of potential projects that could be tackled in a sprint.
 
 == Potential Work ==
    * BatchRollupProject - Ready for review
-   * ContactMergeProject - Committed
+   * ContactMergeProject - In development
       * paint a perfect record
       * what to do with parent records?
    * HouseholdSyncProject - Ready for review
@@ -51,7 +51,7 @@ I have developed a list of potential projects that could be tackled in a sprint.
       * wizard for creation?
       * trigger for CR creation
    * MembershipProject
-   * LeadConversionProject - In development
+   * LeadConversionProject - Ready for review
       * email and phone fields
       * interface for opp creation
       * field mapping
