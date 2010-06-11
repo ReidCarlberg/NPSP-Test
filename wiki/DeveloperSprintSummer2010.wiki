@@ -41,17 +41,17 @@ The Nonprofit Starter Pack is in use by thousands of organizations. We will neve
 I have developed a list of potential projects that could be tackled in a sprint. I will define these in detail before the sprint. Attendees will be asked to review the list and help with the plan of attack for each. At the sprint we'll break into groups and tackle the work, with a general plan of attack already in place. While we will be open to changing implementation details, the goal is to walk in the first day with an idea of how to solve each of these, rather than start by brainstorming solutions.
 
 == Potential Work ==
-   * BatchRollupProject
-   * ContactMergeProject - Done
+   * BatchRollupProject - Ready for review
+   * ContactMergeProject - Committed
       * paint a perfect record
       * what to do with parent records?
-   * HouseholdSyncProject
-   * OpportunityContactRoleProject
+   * HouseholdSyncProject - Ready for review
+   * OpportunityContactRoleProject - Ready for review
       * relationship to contact?
       * wizard for creation?
       * trigger for CR creation
    * MembershipProject
-   * LeadConversionProject
+   * LeadConversionProject - In development
       * email and phone fields
       * interface for opp creation
       * field mapping
@@ -60,7 +60,7 @@ I have developed a list of potential projects that could be tackled in a sprint.
       * Directionality
       * list custom settings for relationship values?
       * Visualizer for relationships and associations?
-   * CodeOptimizationProject
+   * CodeOptimizationProject - In development
       * SOQL
       * custom settings
         * ability to turn-off triggers without uninstalling
