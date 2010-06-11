@@ -57,21 +57,21 @@ I have developed a list of potential projects that could be tackled in a sprint.
       * field mapping
    * RecurringDonationsProject
 
-All of the code and config is in the "Integration 3" instance:
-Changed Existing:
-Opportunity Object
+All of the code and config is in the "Integration 3" instance:<BR/>
+Changed Existing:<BR/>
+Opportunity Object<BR/>
 Constants.cls
 
-Added:
-Payment Object
-Payment Tab
-Recurrence Information Object
-Recurrence Information Tab
-3 Opportunity Page Layouts: Donation (NPSP), Grant (NPSP), Pledge (NPSP)
-3 Opportunity Record Types: Donation (NPSP), Grant (NPSP), Pledge (NPSP)
-FundraisingSettings custom settings
-TestOpportunityPayments.cls - 100% coverage
-OpportunityPayments.cls
+Added:<BR/>
+Payment Object<BR/>
+Payment Tab<BR/>
+Recurrence Information Object<BR/>
+Recurrence Information Tab<BR/>
+3 Opportunity Page Layouts: Donation (NPSP), Grant (NPSP), Pledge (NPSP)<BR/>
+3 Opportunity Record Types: Donation (NPSP), Grant (NPSP), Pledge (NPSP)<BR/>
+FundraisingSettings custom settings<BR/>
+TestOpportunityPayments.cls - 100% coverage<BR/>
+OpportunityPayments.cls<BR/>
 FundraisingOpportunity.trigger
 
 Code is commented and complete.
