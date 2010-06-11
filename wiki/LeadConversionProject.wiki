@@ -28,9 +28,18 @@ Lead conversion doesn't work as might be expected in the one-to-one Account mode
 
   * build a lead conversion UI to allow for merging and Opportunity creation
 
-= Implementation Details =
+= Implementation Details = 
+
+== Notes ==
+  * There were no new pages or classes created. The existing leadConvertOverride.page and LeadConvertOverride.cls were modified.
+  * The new process stops on the leadConvertOverride page if the lead is identified as a one-to-one lead.
+  * Functionality added. Merge to existing Contact. Create opportunity upon conversion. Set owner of any newly created records. Notify new owner (Standard lead convert option, no custom email/workflow). Set converted status of lead if org has more than one option for converted status.
+  * TEST_LeadConvertOverride class was updated with new unit tests with coverage around 93%.
+
 == Impact on current install base ==
+  * No new fields, class, pages were created so metadata impact should be minimal.
+  * Users that are familiar with current one-to-one convert behavior may be caught off guard.
 
-= Pros and Cons of Course of Action =
-
-  * 
+== Pros and Cons of Course of Action ==
+  * PRO: Added features.
+  * ACTION: Notify users of changed behavior/new features.
