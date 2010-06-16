@@ -6,7 +6,7 @@
 Wednesday June 9 through Friday June 11, 2010, in San Francisco, California. A planned and focused sprint to improve and augment the Nonprofit Starter Pack.
 
 = Report Out =
-post event...
+[DeveloperSprintSummer2010ReportOut|Report Out]
 
 = Main Points =
 == Who is doing this? ==
