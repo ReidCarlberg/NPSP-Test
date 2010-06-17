@@ -6,6 +6,20 @@
 
 = What did we get done? =
 
+ * Contact Merge interface
+ * Lead Conversion improvements
+ * Batch Rollups
+ * Household Naming
+ * Automatic Opportunity Contact Roles 
+ * Opportunity Payments
+
 = What worked? =
 
+ * good group of people
+ * good collaboration
+ * communal dinners were great for getting to know folks
+
 = What didn't work? =
+ 
+ * would have been better to have customer need tied to the projects - e.g. 10 customers need to create Opps on lead conversion
+ * conference rooms get old by the end of the day
