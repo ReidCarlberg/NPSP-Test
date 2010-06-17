@@ -7,7 +7,7 @@
 = What did we get done? =
 
  * Contact Merge interface
-  * Youtube demo: 
+  * Youtube demo: [http://www.youtube.com/watch?v=CA4kjsaOgbo]
  * Lead Conversion improvements
  * Batch Rollups
  * Household Naming
