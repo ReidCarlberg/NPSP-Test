@@ -31,128 +31,24 @@ public class ContactMerge {
 
 	//This class handles the heavy lifting of merging contacts. It can be called
 	//from the VisualForce page for contact merge, or elsewhere.
-
+	
 	//min number of contacts that can be merged
 	public final Integer MERGE_MINIMUM = 2;
 	
 	//max number of contacts that can be merged
 	public final Integer MERGE_LIMIT = 3;
-	//a list of all selected contacts for merging
-    public List<Contact> selectedContacts {get; set;}
     
-    //booleans to flag which of the 3 contacts has been chosen as the users
-    public Boolean firstIsWinner {get; set;}
-    public Boolean secondIsWinner {get; set;}
-    public Boolean thirdIsWinner {get; set;}
+    //contact for the winning record
+    public Contact winner {get; set;}
     
-    //booleans to control display of the contact panes
-    public Boolean displayFirst {get; set;}
-    public Boolean displaySecond {get; set;}
-    public Boolean displayThird {get; set;}
-    
-	//the first contact selected        
-    public Contact firstContact = new Contact();
-    
-    //getter for first contact
-    public Contact getfirstContact(){
-    	//always get it if at least one contact has been selected
-		if(selectedContacts.size()>0){
-			firstContact = selectedContacts[0];
-			return firstContact;    			
-		} else {
-			return null;
-		}
-    }
-    //the second contact selected
-    public Contact secondContact = new Contact();
-    
-    //getter for second contact
-    public Contact getSecondContact(){
-    	//always get it if at least two contacts have been selected
-		if(selectedContacts.size()>1){
-			secondContact = selectedContacts[1];
-			return secondContact;
-		} else {
-			return null;
-		}
-    }
-        //the third contact selected
-        public Contact thirdContact = new Contact();
+    //List for the losing records
+    public List<Contact> losers {get; set;}
         
-        //getter for third contact
-        public Contact getThirdContact(){
-        	//always get it if at least three contacts have been selected
-    		if(selectedContacts.size()>2){
-    			thirdContact = selectedContacts[2];
-    			return thirdContact;
-    		} else {
-    			return null;
-    		}
-        }
-        
-        //contact for the winning record
-        public Contact winner {get; set;}
-        
-        //List for the losing records
-        public List<Contact> losers {get; set;}
-        
-        public void selectFirstContact() {
-        	//first is winner
-			firstIsWinner = true;
-			winner = firstContact;
-			//others are not
-	    	secondIsWinner = false;
-	    	thirdIsWinner = false;
-	    		    	
-	    	losers.clear();
-	    	//add all non-empty contacts to losers
-	    	if(secondContact.Id!=null){
-	    		losers.add(secondContact);
-	    	}
-	    	if(thirdContact.Id!=null){
-	    		losers.add(thirdContact);
-	    	}
-        }
-        //method for selecting second contact, called when user chooses the second as the winner
-		public void selectSecondContact() {
-			//second is winner
-			secondIsWinner = true;
-			winner = secondContact;
-			//others are not
-			firstIsWinner = false;    	
-	    	thirdIsWinner = false;
-	    	
-			losers.clear();
-			//add all non-empty contacts to losers
-	    	if(firstContact.Id!=null){
-	    		losers.add(firstContact);
-	    	}
-	    	if(thirdContact.Id!=null){
-	    		losers.add(thirdContact);
-	    	}		
-		}
-		//method for selecting third contact, called when user chooses the thirs as the winner
-		public void selectThirdContact() {
-			//third is winner
-			thirdIsWinner = true;
-			winner = thirdContact;
-			//others are not
-			firstIsWinner = false;
-	    	secondIsWinner = false;    	
-	    	
-	    	losers.clear();
-	    	//add all non-empty contacts to losers
-	    	if(firstContact.Id!=null){
-	    		losers.add(firstContact);
-	    	}
-	    	if(secondContact.Id!=null){
-	    		losers.add(secondContact);
-	    	}
-		}
 		
 	//method to merge the winner and losers
 	public boolean mergeContacts() {
 		boolean successfulMerge = false;
+		
 		List<Account> winnerAccount = new List<Account>();
 		Set<Id> loserAccountIds = new Set<Id>();
 		List<Account> loserAccounts = new List<Account>();
@@ -239,15 +135,9 @@ public class ContactMerge {
 	}
 		
     //constructor for mergeSet class
-    public ContactMerge() {
-		selectedContacts = new List<Contact>();
-		losers = new List<Contact>();
-		winner = new Contact();
-		
-		//set all the winner booleans to false as none has been selected yet
-		firstIsWinner = false;
-    	secondIsWinner = false;
-    	thirdIsWinner = false;
+    public ContactMerge(Contact winner, List<Contact> losers) {
+		this.losers = losers;
+		this.winner = winner;
     }        
     
 }
