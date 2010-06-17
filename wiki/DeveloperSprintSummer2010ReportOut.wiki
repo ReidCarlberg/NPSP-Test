@@ -7,6 +7,7 @@
 = What did we get done? =
 
  * Contact Merge interface
+  * Youtube demo: 
  * Lead Conversion improvements
  * Batch Rollups
  * Household Naming
@@ -18,6 +19,8 @@
  * good group of people
  * good collaboration
  * communal dinners were great for getting to know folks
+ * periodic checkins about where people are on their projects
+ * demo of all code at the end of the sprint
 
 = What didn't work? =
  
