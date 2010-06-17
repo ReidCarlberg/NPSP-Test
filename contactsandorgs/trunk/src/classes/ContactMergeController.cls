@@ -133,8 +133,14 @@ public class ContactMergeController {
 		contactIdFilter = contactIdFilter.substring(0, contactIdFilter.length() - 1);
 		
 		// Check we have atleast 2 and not more than 3 records selected for merge. If not throw an error. 
-		if (selectedRecords <=1 || selectedRecords >3 ) {
-			ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, 'You must select atleast 2 contacts and not more than 3 to merge.'));
+		if (selectedRecords <=1) {
+			ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, Label.Contact_Merge_Error_Too_Few_Contacts));
+			displayMessagePopup = true;
+			return;
+		}
+		
+		if (selectedRecords >3 ) {
+			ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, Label.Contact_Merge_Error_Too_Many_Contacts));
 			displayMessagePopup = true;
 			return;
 		}
@@ -177,12 +183,12 @@ public class ContactMergeController {
 			contacts = Database.query(query); // Query the records
 			// Ensure we got back the same number of records as expected. In case any record got deleted/moved since last search.
 			if (contacts == null || contacts.size() != selectedRecords) {
-				ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, 'Failed to query all the selected contacts. Please search the contacts again.'));
+				ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, Label.Contact_Merge_Error_Query_Failed + ' ' + Label.Contact_Merge_Error_please_retry));
 				displayMessagePopup = true;
 				return;
 			}
 		} catch (Exception e) {
-			ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, 'Failed to query contact information. Error: ' + e));
+			ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, Label.Contact_Merge_Error_Contact_not_found + ' Error: ' + e));
 			displayMessagePopup = true;
 			return;
 		}
@@ -200,7 +206,7 @@ public class ContactMergeController {
 		
 		// Sort the custom fields list by name before creating the list of FieldRow for merge UI
 		List<String> customFieldList = new List<String>();
-		customFieldList.addAll(customFieldMap.keySet());
+		customFieldList.addAll(customFieldMap.keySet()); 
 		customFieldList.sort();
 		
 		// Add the first row of type header with contact names as titles
@@ -435,7 +441,7 @@ public class ContactMergeController {
 			List<Contact> lock = [Select id from Contact where id IN :allContacts for update];
 			
 			if (lock == null || lock.size() != allContacts.size()) {
-				ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, 'Failed to lock all the records for merging. Please retry from start.'));
+				ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, Label.Contact_Merge_Error_Lock_failed + ' ' + Label.Contact_Merge_Error_please_retry));
 				displayMessagePopup = true;
 				return null;
 			}
@@ -447,22 +453,22 @@ public class ContactMergeController {
 					return new PageReference('/' + master.id);
 				} else {
 					Database.rollback(sp);
-					ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, 'Failed to merge the contacts. Please retry from start.'));
+					ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, Label.Contact_Merge_Error_Merge_Failed + ' ' + Label.Contact_Merge_Error_please_retry));
 					displayMessagePopup = true;
 				}
 			} catch (Exception e) {
 				Database.rollback(sp);
-				ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, 'Failed unexpectedly during merge process. Error: ' + e));
+				ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, Label.Contact_Merge_Error_Merge_Failed + ' Error: ' + e));
 				displayMessagePopup = true;	
 			}
 		} else {
-			ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, 'Please select a master record for merging.'));
+			ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, Label.Contact_Merge_Error_No_Master));
 			displayMessagePopup = true;
 		}
 		
 		return null;
 	}
-	
+	 
 	public boolean displayMessagePopup {get; set;}
  
     public void cancelMessagePopup() {
@@ -472,7 +478,7 @@ public class ContactMergeController {
  
     public void showMessagePopup() {
     	if(this.searchResults.size() > 1 && this.searchResults.size() <= 3){
-	    	ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.WARNING,system.label.Contact_Merge_Error_Confirm_Message + ' ' + system.label.Contact_Merge_Error_Confirm_Message_Households);
+	    	ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.WARNING,system.label.Contact_Merge_Error_Confirm_Message);
 	        ApexPages.addMessage(myMsg);
     	}
         displayMessagePopup = true;
