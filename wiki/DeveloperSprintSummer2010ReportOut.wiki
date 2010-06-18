@@ -7,7 +7,7 @@
 = What did we get done? =
 
  * Contact Merge interface
-  * paint your perfect contact record
+  * We improved the contact merge included with the NPSP by adding paint your perfect record functionality
   * Youtube demo: [http://www.youtube.com/watch?v=CA4kjsaOgbo]
   * Status: code is committed to the package and will be included in next release
  * Lead Conversion improvements
