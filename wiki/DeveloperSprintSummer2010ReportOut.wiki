@@ -30,6 +30,9 @@ After lunch on the last day we did a demo of each project. It was great to see a
   * Dave Manelski and Nick Bailey modified Groundwire's Opportunity rollup code to work with the nonprofit starter pack
   * This will be part of the Household package
   * You'll be able to get rollups and turn off Householding if you want
+  * Rollups will work in the one-to-one and the individual account model
+  * Rollups will be calculated for contacts, accounts, and households
+  * There are an amazing array of rollup information in this code! Significanly better than what’s possible with rollup summary fields alone
   * Dave and Nick built a VisualForce configuration page to control how the rollups work
   * Integrating this into the Household package still has significant work left, but an amazing amount of work was accomplished
  * Household Naming
