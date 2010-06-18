@@ -26,6 +26,7 @@
  * communal dinners were great for getting to know folks
  * periodic checkins about where people are on their projects
  * demo of all code at the end of the sprint
+ * having very knowledgeable staff from Salesforce.com there was really great. Andrew Waite was able to definitively answer any Apex of VF question, complete with historical info about when and why
 
 = What didn't work? =
  
