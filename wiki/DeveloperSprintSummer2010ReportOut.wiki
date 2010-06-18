@@ -7,8 +7,13 @@
 = What did we get done? =
 
  * Contact Merge interface
+  * paint your perfect contact record
   * Youtube demo: [http://www.youtube.com/watch?v=CA4kjsaOgbo]
+  * Status: code is committed to the package and will be included in next release
  * Lead Conversion improvements
+  * create Opportunities when converting leads
+  * merge leads to existing contacts
+  * Status: code is committed to the package and will be included in next release
  * Batch Rollups
  * Household Naming
  * Automatic Opportunity Contact Roles 
