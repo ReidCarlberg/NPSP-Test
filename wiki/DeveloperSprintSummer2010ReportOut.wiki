@@ -39,8 +39,14 @@ After lunch on the last day we did a demo of each project. It was great to see a
  * periodic checkins about where people are on their projects
  * demo of all code at the end of the sprint
  * having very knowledgeable staff from Salesforce.com there was really great. Andrew Waite was able to definitively answer any Apex of VF question, complete with historical info about when and why. Ron Hess gave great implementation advice.
+ * It was great to have a mix of coding skill level--great learning opportunities
 
 = What didn't work? =
  
  * would have been better to have customer need tied to the projects - e.g. 10 customers need to create Opps on lead conversion
  * conference rooms get old by the end of the day
+ * it would be great to have more people next time
+
+= Next time? =
+
+I want to replicate this event as I think it was very successful. Because everyone was a volunteer and covered their own travel and lodging, it was a very low-cost event. Now that we've done one successful event I would consider doing a larger event, having remote attendees, and other ideas.
