@@ -2,7 +2,13 @@
 
 = Introduction =
 
-11 people gathered in San Francisco for the first inaugural developer sprint.
+June 9-11, 11 people gathered in San Francisco for the first inaugural developer sprint. There were 6 community members, 3 Foundation staff, and 2 Salesforce.com employees.
+
+We started out the first morning with a quick round-the-table intro session. After that Steve Andersen did a quick intro to the nonprofit starter pack to get everyone on the same page. Some of the folks at the table knew the starter pack very well, others were new to it.
+
+Next, Steve ran down the list of potential projects, explaining them in detail and answering questions as they came up. Everyone then selected which projects they wanted to be a part of. We generally broke into teams of two, with a couple folks taking on projects on their own.
+
+From there the teams began design conversations--how best to proceed in addressing the projects they had chosen.
 
 = What did we get done? =
 
