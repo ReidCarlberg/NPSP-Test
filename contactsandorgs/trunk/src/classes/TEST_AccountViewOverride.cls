@@ -24,32 +24,32 @@ private class TEST_AccountViewOverride {
 
     //can't test very well because of the way the page redirect is built
     public static testMethod void accountViewOverride() {
-
+        
+        Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
         
         Test.setCurrentPageReference(new PageReference('Page.AccountViewOverride'));
         
         String newContactfirstName = 'test';
-    	String newContactLastName = 'Contact_forAccountTests';
-    	String newContactMailingStreet = '123 Elm St';
+        String newContactLastName = 'Contact_forAccountTests';
+        String newContactMailingStreet = '123 Elm St';
         Contact con = new Contact(
-        	FirstName=newContactfirstName,
-        	LastName=newContactLastName,
-        	MailingStreet = newContactMailingStreet,
-        	SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR
+            FirstName=newContactfirstName,
+            LastName=newContactLastName,
+            MailingStreet = newContactMailingStreet
         );
         insert con;
         
         Contact[] insertedContacts = [Select FirstName, LastName, AccountId  from Contact where id=:con.id];
-		
-		Account newAccount = [select id from Account where id=:insertedContacts[0].AccountId];
-		
-		system.currentPageReference().getParameters().put('id', newAccount.id);
-		
-		//pass contact into the controller
-		ApexPages.StandardController sc = new ApexPages.standardController(newAccount);
-		//pass the controller into the extension
-		AccountViewOverride ext = new AccountViewOverride(sc); 
-		ext.getAccount();
+        
+        Account newAccount = [select id from Account where id=:insertedContacts[0].AccountId];
+        
+        system.currentPageReference().getParameters().put('id', newAccount.id);
+        
+        //pass contact into the controller
+        ApexPages.StandardController sc = new ApexPages.standardController(newAccount);
+        //pass the controller into the extension
+        AccountViewOverride ext = new AccountViewOverride(sc); 
+        ext.getAccount();
 
     }
     
@@ -60,13 +60,13 @@ private class TEST_AccountViewOverride {
         Test.setCurrentPageReference(new PageReference('Page.AccountViewOverride'));
         
         Account newAccount = new Account();
-		
-		system.currentPageReference().getParameters().put('id', '');
-		
-		//pass contact into the controller
-		ApexPages.StandardController sc = new ApexPages.standardController(newAccount);
-		//pass the controller into the extension
-		AccountViewOverride ext = new AccountViewOverride(sc); 
-		ext.getAccount();
+        
+        system.currentPageReference().getParameters().put('id', '');
+        
+        //pass contact into the controller
+        ApexPages.StandardController sc = new ApexPages.standardController(newAccount);
+        //pass the controller into the extension
+        AccountViewOverride ext = new AccountViewOverride(sc); 
+        ext.getAccount();
     }
 }

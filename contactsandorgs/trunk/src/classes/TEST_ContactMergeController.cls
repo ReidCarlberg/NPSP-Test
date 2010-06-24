@@ -42,7 +42,7 @@
 @isTest
 private class TEST_ContactMergeController {
 
-
+    Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
     
     //exercise the many UI variables
     static testMethod void exerciseUI() {
@@ -57,8 +57,7 @@ private class TEST_ContactMergeController {
             LastName=newContactLastName,
             MailingStreet = newContactMailingStreet,
             WorkPhone__c = workphone,
-            PreferredPhone__c = 'Work',
-            SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR
+            PreferredPhone__c = 'Work'
         );
         
         String secondContactfirstName = 'test';
@@ -70,8 +69,7 @@ private class TEST_ContactMergeController {
             LastName=secondContactLastName,
             Homephone = homephone,
             PreferredPhone__c = 'Home',
-            MailingStreet = secondContactMailingStreet,
-            SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR
+            MailingStreet = secondContactMailingStreet
         );
         
         String thirdContactfirstName = 'test';
@@ -82,8 +80,7 @@ private class TEST_ContactMergeController {
             LastName=thirdContactLastName,
             MailingStreet = thirdContactMailingStreet,
             WorkPhone__c = workphone,
-            PreferredPhone__c = 'Work',
-            SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR
+            PreferredPhone__c = 'Work'
         );
         insert new Contact[]{con, con2, con3};
         
@@ -95,9 +92,9 @@ private class TEST_ContactMergeController {
 
         controller.searchText = 'test';
         
-		controller.search();
-		
-		//Since we didn't index the results yet, search results should be empty and should not be displayed
+        controller.search();
+        
+        //Since we didn't index the results yet, search results should be empty and should not be displayed
         system.assert(!controller.displaySearchResults);
 
         Id[] fixedSearchResults=new Id[3]; 
@@ -111,60 +108,60 @@ private class TEST_ContactMergeController {
         
         controller.search();
         
-		//search results should be displayed
+        //search results should be displayed
         system.assert(controller.displaySearchResults);
         
         //there should be 3 Contacts returned
         system.assertEquals(3,controller.getSearchResults().size());
         
-		controller.getSearchResults()[0].selected = true;
-		
-		controller.nextStep();
-		
-		System.assertEquals(1, ApexPages.getMessages().size()); // Selecting only one record for merge should throw an error.
-		ApexPages.Message m = ApexPages.getMessages()[0];
-		System.assertEquals(ApexPages.Severity.Error, m.getSeverity());
-		System.assertEquals('You must select atleast 2 contacts and not more than 3 to merge.', m.getDetail());
-		System.assert(controller.displayMessagePopup); // Check the rendered flag to show error messages when there are errors.
-		System.assertEquals(1, controller.step); // We should still be on step 1
-		
-		controller.cancelMessagePopup();
-		
-		controller.getSearchResults()[1].selected = true; // Select second contact
-		
-		controller.nextStep();
-		
-		System.assertEquals(2, controller.step); // We are on to next step now
-		System.assert(!controller.displayMessagePopup); // Check the rendered flag to show error messages when there are errors.
-		
-		List<ContactMergeController.FieldRow> fieldRows = controller.fieldRows;
-		
-		for (ContactMergeController.FieldRow row : fieldRows) {
-			if (row.fieldName.equals('Master')) {
-				System.assert(row.showRadio);
-				System.assert(row.selectedValue != null); // Since all contacts were created simulateneously, hard to know which one will be selected by default
-			}
-			
-			if (row.fieldName.equalsIgnoreCase('MailingStreet')) {
-				System.assert(!row.showRadio); // Since both records have the same value, we dont need to show the radio
-			}
-			
-			if (row.fieldName.equalsIgnoreCase('homephone')) {
-				System.assert(row.showRadio); 
-				System.assertEquals(con2.id, row.selectedValue); // Since contact 1 has a null homephone while contact 2 has a non-null homephone, the contact 2 should be selected here.
-			}
-		}
-		
-		// Test select all for a record
-		String selectedRecordId = controller.getSearchResults()[1].con.id;
-		ApexPages.currentPage().getParameters().put('recordId', selectedRecordId);
-		controller.selectDefaultRecord();
-		
-		for (ContactMergeController.FieldRow row : fieldRows) {
-			if (row.showRadio) {
-				System.assertEquals(selectedRecordId, row.selectedValue); // Since we selected all radios for contact 2, contact 2 id should be the selected value
-			}
-		}
+        controller.getSearchResults()[0].selected = true;
+        
+        controller.nextStep();
+        
+        System.assertEquals(1, ApexPages.getMessages().size()); // Selecting only one record for merge should throw an error.
+        ApexPages.Message m = ApexPages.getMessages()[0];
+        System.assertEquals(ApexPages.Severity.Error, m.getSeverity());
+        System.assertEquals(Label.Contact_Merge_Error_Too_Few_Contacts, m.getDetail());
+        System.assert(controller.displayMessagePopup); // Check the rendered flag to show error messages when there are errors.
+        System.assertEquals(1, controller.step); // We should still be on step 1
+        
+        controller.cancelMessagePopup();
+        
+        controller.getSearchResults()[1].selected = true; // Select second contact
+        
+        controller.nextStep();
+        
+        System.assertEquals(2, controller.step); // We are on to next step now
+        System.assert(!controller.displayMessagePopup); // Check the rendered flag to show error messages when there are errors.
+        
+        List<ContactMergeController.FieldRow> fieldRows = controller.fieldRows;
+        
+        for (ContactMergeController.FieldRow row : fieldRows) {
+            if (row.fieldName.equals('Master')) {
+                System.assert(row.showRadio);
+                System.assert(row.selectedValue != null); // Since all contacts were created simulateneously, hard to know which one will be selected by default
+            }
+            
+            if (row.fieldName.equalsIgnoreCase('MailingStreet')) {
+                System.assert(!row.showRadio); // Since both records have the same value, we dont need to show the radio
+            }
+            
+            if (row.fieldName.equalsIgnoreCase('homephone')) {
+                System.assert(row.showRadio); 
+                System.assertEquals(con2.id, row.selectedValue); // Since contact 1 has a null homephone while contact 2 has a non-null homephone, the contact 2 should be selected here.
+            }
+        }
+        
+        // Test select all for a record
+        String selectedRecordId = controller.getSearchResults()[1].con.id;
+        ApexPages.currentPage().getParameters().put('recordId', selectedRecordId);
+        controller.selectDefaultRecord();
+        
+        for (ContactMergeController.FieldRow row : fieldRows) {
+            if (row.showRadio) {
+                System.assertEquals(selectedRecordId, row.selectedValue); // Since we selected all radios for contact 2, contact 2 id should be the selected value
+            }
+        }
         
         Test.stopTest();
         
@@ -173,6 +170,8 @@ private class TEST_ContactMergeController {
     // Try selecting a deleted record for merge
     static testMethod void failNextStepWithDeletedRecordSelected() {
         
+        Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
+        
         //set up 3 contacts for the merge interface to work with
         String newContactfirstName = 'test';
         String newContactLastName = '1Contact_forTests_Merge';
@@ -180,8 +179,7 @@ private class TEST_ContactMergeController {
         Contact con = new Contact(
             FirstName=newContactfirstName,
             LastName=newContactLastName,
-            MailingStreet = newContactMailingStreet,
-            SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR
+            MailingStreet = newContactMailingStreet
         );
         
         String secondContactfirstName = 'test';
@@ -190,8 +188,7 @@ private class TEST_ContactMergeController {
         Contact con2 = new Contact(
             FirstName=secondContactfirstName,
             LastName=secondContactLastName,
-            MailingStreet = secondContactMailingStreet,
-            SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR
+            MailingStreet = secondContactMailingStreet
         );
         
         insert new Contact[]{con, con2};
@@ -214,24 +211,24 @@ private class TEST_ContactMergeController {
         
         controller.search();
         
-		//there should be 2 Contacts returned
+        //there should be 2 Contacts returned
         system.assertEquals(2,controller.getSearchResults().size());
         
-		controller.getSearchResults()[0].selected = true;
-		controller.getSearchResults()[1].selected = true;
-		
-		// delete 1 contact
-		delete con;
-		
-		controller.nextStep();
-		
-		System.assertEquals(1, ApexPages.getMessages().size()); // Selecting a deleted record must throw an error
-		ApexPages.Message m = ApexPages.getMessages()[0];
-		System.assertEquals(ApexPages.Severity.Error, m.getSeverity());
-		System.assertEquals('Failed to query all the selected contacts. Please search the contacts again.', m.getDetail());
-		System.assert(controller.displayMessagePopup); // Check the rendered flag to show error messages when there are errors.
-		System.assertEquals(1, controller.step); // We should still be on step 1
-		
+        controller.getSearchResults()[0].selected = true;
+        controller.getSearchResults()[1].selected = true;
+        
+        // delete 1 contact
+        delete con;
+        
+        controller.nextStep();
+        
+        System.assertEquals(1, ApexPages.getMessages().size()); // Selecting a deleted record must throw an error
+        ApexPages.Message m = ApexPages.getMessages()[0];
+        System.assertEquals(ApexPages.Severity.Error, m.getSeverity());
+        System.assertEquals(Label.Contact_Merge_Error_Query_Failed + ' ' + Label.Contact_Merge_Error_please_retry, m.getDetail());
+        System.assert(controller.displayMessagePopup); // Check the rendered flag to show error messages when there are errors.
+        System.assertEquals(1, controller.step); // We should still be on step 1
+        
         Test.stopTest();
         
     }
@@ -239,6 +236,8 @@ private class TEST_ContactMergeController {
         // Try selecting a deleted record for merge
     static testMethod void failMergeWithDeletedRecordSelected() {
         
+        Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
+        
         //set up 3 contacts for the merge interface to work with
         String newContactfirstName = 'test';
         String newContactLastName = '1Contact_forTests_Merge';
@@ -246,8 +245,7 @@ private class TEST_ContactMergeController {
         Contact con = new Contact(
             FirstName=newContactfirstName,
             LastName=newContactLastName,
-            MailingStreet = newContactMailingStreet,
-            SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR
+            MailingStreet = newContactMailingStreet
         );
         
         String secondContactfirstName = 'test';
@@ -256,8 +254,7 @@ private class TEST_ContactMergeController {
         Contact con2 = new Contact(
             FirstName=secondContactfirstName,
             LastName=secondContactLastName,
-            MailingStreet = secondContactMailingStreet,
-            SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR
+            MailingStreet = secondContactMailingStreet
         );
         
         insert new Contact[]{con, con2};
@@ -280,30 +277,33 @@ private class TEST_ContactMergeController {
         
         controller.search();
         
-		//there should be 2 Contacts returned
+        //there should be 2 Contacts returned
         system.assertEquals(2,controller.getSearchResults().size());
         
-		controller.getSearchResults()[0].selected = true;
-		controller.getSearchResults()[1].selected = true;
-				
-		controller.nextStep();
-		
-		// delete 1 contact
-		delete con;
-		
-		controller.mergeContacts();
-		
-		System.assertEquals(1, ApexPages.getMessages().size()); // Selecting a deleted record must throw an error
-		ApexPages.Message m = ApexPages.getMessages()[0];
-		System.assertEquals(ApexPages.Severity.Error, m.getSeverity());
-		System.assertEquals('Failed to lock all the records for merging. Please retry from start.', m.getDetail());
-		System.assert(controller.displayMessagePopup); // Check the rendered flag to show error messages when there are errors.
-		
+        controller.getSearchResults()[0].selected = true;
+        controller.getSearchResults()[1].selected = true;
+                
+        controller.nextStep();
+        
+        // delete 1 contact
+        delete con;
+        
+        controller.mergeContacts();
+        
+        System.assertEquals(1, ApexPages.getMessages().size()); // Selecting a deleted record must throw an error
+        ApexPages.Message m = ApexPages.getMessages()[0];
+        System.assertEquals(ApexPages.Severity.Error, m.getSeverity());
+        System.assertEquals('Failed to lock all the records for merging. Please retry from start.', m.getDetail());
+        System.assert(controller.displayMessagePopup); // Check the rendered flag to show error messages when there are errors.
+        
         Test.stopTest();
         
     }
    
     static testMethod void tooFewContactsSelected() {
+        
+        Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
+        
         //set up 3 contacts for the merge interface to work with
         String newContactfirstName = 'test';
         String newContactLastName = '1Contact_forTests_Merge';
@@ -311,8 +311,7 @@ private class TEST_ContactMergeController {
         Contact con = new Contact(
             FirstName=newContactfirstName,
             LastName=newContactLastName,
-            MailingStreet = newContactMailingStreet,
-            SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR
+            MailingStreet = newContactMailingStreet
         );
         insert con;
         
@@ -332,16 +331,19 @@ private class TEST_ContactMergeController {
         controller.getSearchResults()[0].selected = true;
               
         controller.nextStep();
-		
-		System.assertEquals(1, ApexPages.getMessages().size()); // Selecting only one record for merge should throw an error.
-		ApexPages.Message m = ApexPages.getMessages()[0];
-		System.assertEquals(ApexPages.Severity.Error, m.getSeverity());
-		System.assertEquals('You must select atleast 2 contacts and not more than 3 to merge.', m.getDetail());
-		System.assert(controller.displayMessagePopup); // Check the rendered flag to show error messages when there are errors.
+        
+        System.assertEquals(1, ApexPages.getMessages().size()); // Selecting only one record for merge should throw an error.
+        ApexPages.Message m = ApexPages.getMessages()[0];
+        System.assertEquals(ApexPages.Severity.Error, m.getSeverity());
+        System.assertEquals(Label.Contact_Merge_Error_Too_Few_Contacts, m.getDetail());
+        System.assert(controller.displayMessagePopup); // Check the rendered flag to show error messages when there are errors.
     }
     
     
     static testMethod void tooManyContactsSelected() {
+        
+        Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
+        
         //set up 3 contacts for the merge interface to work with
         String newContactfirstName = 'test';
         String newContactLastName = '1Contact_forTests_Merge';
@@ -349,8 +351,7 @@ private class TEST_ContactMergeController {
         Contact con = new Contact(
             FirstName=newContactfirstName,
             LastName=newContactLastName,
-            MailingStreet = newContactMailingStreet,
-            SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR
+            MailingStreet = newContactMailingStreet
         );
         
         String secondContactfirstName = 'test';
@@ -359,8 +360,7 @@ private class TEST_ContactMergeController {
         Contact con2 = new Contact(
             FirstName=secondContactfirstName,
             LastName=secondContactLastName,
-            MailingStreet = secondContactMailingStreet,
-            SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR
+            MailingStreet = secondContactMailingStreet
         );
         
         String thirdContactfirstName = 'test';
@@ -369,8 +369,7 @@ private class TEST_ContactMergeController {
         Contact con3 = new Contact(
             FirstName=thirdContactfirstName,
             LastName=thirdContactLastName,
-            MailingStreet = thirdContactMailingStreet,
-            SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR
+            MailingStreet = thirdContactMailingStreet
         );
         
         String fourthContactfirstName = 'test';
@@ -379,8 +378,7 @@ private class TEST_ContactMergeController {
         Contact con4 = new Contact(
             FirstName=fourthContactfirstName,
             LastName=fourthContactLastName,
-            MailingStreet = fourthContactMailingStreet,
-            SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR
+            MailingStreet = fourthContactMailingStreet
         );
         insert new Contact[]{con, con2, con3, con4};
         
@@ -406,12 +404,12 @@ private class TEST_ContactMergeController {
         controller.getSearchResults()[3].selected = true;
         
         controller.nextStep();
-		
-		System.assertEquals(1, ApexPages.getMessages().size()); // Selecting only one record for merge should throw an error.
-		ApexPages.Message m = ApexPages.getMessages()[0];
-		System.assertEquals(ApexPages.Severity.Error, m.getSeverity());
-		System.assertEquals('You must select atleast 2 contacts and not more than 3 to merge.', m.getDetail());
-		System.assert(controller.displayMessagePopup); // Check the rendered flag to show error messages when there are errors.
+        
+        System.assertEquals(1, ApexPages.getMessages().size()); // Selecting only one record for merge should throw an error.
+        ApexPages.Message m = ApexPages.getMessages()[0];
+        System.assertEquals(ApexPages.Severity.Error, m.getSeverity());
+        System.assertEquals(Label.Contact_Merge_Error_Too_Many_Contacts, m.getDetail());
+        System.assert(controller.displayMessagePopup); // Check the rendered flag to show error messages when there are errors.
     }
     
     //test the visibilty of the popup messages
@@ -430,16 +428,18 @@ private class TEST_ContactMergeController {
     }
     
     private static void selectMasterRecord(ContactMergeController cont, Id masterId) {
-    	for (ContactMergeController.FieldRow row : cont.fieldRows) {
-    		if (row.showRadio) {
-    			row.selectedValue = String.valueOf(masterId);
-    		}
-    	}	
+        for (ContactMergeController.FieldRow row : cont.fieldRows) {
+            if (row.showRadio) {
+                row.selectedValue = String.valueOf(masterId);
+            }
+        }   
     }
     
     //merge two contacts that are both in the one-to-one account model
     //the second contact's org should be deleted
     static testMethod void merge2OneToOne() {
+        
+        Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
 
         String newContactfirstName = 'test';
         String newContactLastName = '1Contact_forTests_Merge';
@@ -447,8 +447,7 @@ private class TEST_ContactMergeController {
         Contact con = new Contact(
             FirstName=newContactfirstName,
             LastName=newContactLastName,
-            MailingStreet = newContactMailingStreet,
-            SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR
+            MailingStreet = newContactMailingStreet
         );
         
         String secondContactfirstName = 'test';
@@ -457,13 +456,12 @@ private class TEST_ContactMergeController {
         Contact con2 = new Contact(
             FirstName=secondContactfirstName,
             LastName=secondContactLastName,
-            MailingStreet = secondContactMailingStreet,
-            SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR
+            MailingStreet = secondContactMailingStreet
         );
         insert new Contact[]{con, con2};
         
-        con = [Select id, accountId, FirstName, LastName, MailingStreet, SystemAccountProcessor__c from Contact where Id = :con.id];
-        con2 = [Select id, accountId, FirstName, LastName, MailingStreet, SystemAccountProcessor__c from Contact where Id = :con2.id];
+        con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
+        con2 = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con2.id];
         
         Test.setCurrentPageReference(new PageReference('Page.ContactMerge'));
         
@@ -486,7 +484,7 @@ private class TEST_ContactMergeController {
         
         selectMasterRecord(controller, con2.id);
         
-		//merge them
+        //merge them
         controller.mergeContacts();
         
         //first contact should be deleted
@@ -501,6 +499,8 @@ private class TEST_ContactMergeController {
     //merge two contacts that are both in the one-to-one account model
     //the second contact's org shouldn't be deleted because it has open opportunities
     static testMethod void merge2OneToOneOpps() {
+        
+        Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
 
         String newContactfirstName = 'test';
         String newContactLastName = '1Contact_forTests_Merge';
@@ -508,8 +508,7 @@ private class TEST_ContactMergeController {
         Contact con = new Contact(
             FirstName=newContactfirstName,
             LastName=newContactLastName,
-            MailingStreet = newContactMailingStreet,
-            SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR
+            MailingStreet = newContactMailingStreet
         );
         
         String secondContactfirstName = 'test';
@@ -518,13 +517,12 @@ private class TEST_ContactMergeController {
         Contact con2 = new Contact(
             FirstName=secondContactfirstName,
             LastName=secondContactLastName,
-            MailingStreet = secondContactMailingStreet,
-            SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR
+            MailingStreet = secondContactMailingStreet
         );
         insert new Contact[]{con, con2};
         
-        con = [Select id, accountId, FirstName, LastName, MailingStreet, SystemAccountProcessor__c from Contact where Id = :con.id];
-        con2 = [Select id, accountId, FirstName, LastName, MailingStreet, SystemAccountProcessor__c from Contact where Id = :con2.id];
+        con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
+        con2 = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con2.id];
         
         
         Test.setCurrentPageReference(new PageReference('Page.ContactMerge'));
@@ -545,7 +543,7 @@ private class TEST_ContactMergeController {
         controller.getSearchResults()[1].selected = true;
         
         Opportunity o = new Opportunity(AccountId=con.accountId,Amount=500,Name='test',StageName='Closed Won',CloseDate=System.today());
-		insert o;
+        insert o;
         
         //select the first as winner
         controller.nextStep();
@@ -603,8 +601,8 @@ private class TEST_ContactMergeController {
         );
         insert new Contact[]{con, con2};
         
-        con = [Select id, accountId, FirstName, LastName, MailingStreet, SystemAccountProcessor__c from Contact where Id = :con.id];
-        con2 = [Select id, accountId, FirstName, LastName, MailingStreet, SystemAccountProcessor__c from Contact where Id = :con2.id];
+        con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
+        con2 = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con2.id];
         
         Test.setCurrentPageReference(new PageReference('Page.ContactMerge'));
         
@@ -627,7 +625,7 @@ private class TEST_ContactMergeController {
         
         selectMasterRecord(controller, con.id);
         
-		//merge them
+        //merge them
         controller.mergeContacts();
         
         //second contact should be deleted
@@ -665,8 +663,8 @@ private class TEST_ContactMergeController {
         );
         insert new Contact[]{con, con2};
         
-        con = [Select id, accountId, FirstName, LastName, MailingStreet, SystemAccountProcessor__c from Contact where Id = :con.id];
-        con2 = [Select id, accountId, FirstName, LastName, MailingStreet, SystemAccountProcessor__c from Contact where Id = :con2.id];
+        con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
+        con2 = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con2.id];
         
         Test.setCurrentPageReference(new PageReference('Page.ContactMerge'));
         
@@ -689,7 +687,7 @@ private class TEST_ContactMergeController {
         
         selectMasterRecord(controller, con.id);
         
-		//merge them
+        //merge them
         controller.mergeContacts();
         
         //second contact should be deleted
@@ -703,14 +701,15 @@ private class TEST_ContactMergeController {
     //the organization shouldn't be deleted
     static testMethod void merge2Individuals() {
         
+        Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.BUCKET_PROCESSOR));
+        
         String newContactfirstName = 'test';
         String newContactLastName = '1Contact_forTests_Merge';
         String newContactMailingStreet = '123 Elm St';
         Contact con = new Contact(
             FirstName=newContactfirstName,
             LastName=newContactLastName,
-            MailingStreet = newContactMailingStreet,
-            SystemAccountProcessor__c = Constants.BUCKET_PROCESSOR
+            MailingStreet = newContactMailingStreet
         );
         
         String secondContactfirstName = 'test';
@@ -719,13 +718,12 @@ private class TEST_ContactMergeController {
         Contact con2 = new Contact(
             FirstName=secondContactfirstName,
             LastName=secondContactLastName,
-            MailingStreet = secondContactMailingStreet,
-            SystemAccountProcessor__c = Constants.BUCKET_PROCESSOR
+            MailingStreet = secondContactMailingStreet
         );
         insert new Contact[]{con, con2};
         
-        con = [Select id, accountId, FirstName, LastName, MailingStreet, SystemAccountProcessor__c from Contact where Id = :con.id];
-        con2 = [Select id, accountId, FirstName, LastName, MailingStreet, SystemAccountProcessor__c from Contact where Id = :con2.id];
+        con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
+        con2 = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con2.id];
         
         Test.setCurrentPageReference(new PageReference('Page.ContactMerge'));
         
@@ -748,7 +746,7 @@ private class TEST_ContactMergeController {
         
         selectMasterRecord(controller, con.id);
         
-		//merge them
+        //merge them
         controller.mergeContacts();
         
         //second contact should be deleted
@@ -760,10 +758,12 @@ private class TEST_ContactMergeController {
         //First contact's account id should not have changed
         system.assertEquals(con.accountId,[select AccountId from Contact where id=:con.id].AccountId);
     }
-    
+    /*
     //merge one contacts in the Individual Account, one in one-to-one model
     //the individual organization shouldn't be deleted
     static testMethod void merge1Individual1OneToOne() {
+        
+        Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
         
         String newContactfirstName = 'test';
         String newContactLastName = '1Contact_forTests_Merge';
@@ -771,8 +771,7 @@ private class TEST_ContactMergeController {
         Contact con = new Contact(
             FirstName=newContactfirstName,
             LastName=newContactLastName,
-            MailingStreet = newContactMailingStreet,
-            SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR
+            MailingStreet = newContactMailingStreet
         );
         
         String secondContactfirstName = 'test';
@@ -781,13 +780,12 @@ private class TEST_ContactMergeController {
         Contact con2 = new Contact(
             FirstName=secondContactfirstName,
             LastName=secondContactLastName,
-            MailingStreet = secondContactMailingStreet,
-            SystemAccountProcessor__c = Constants.BUCKET_PROCESSOR
+            MailingStreet = secondContactMailingStreet
         );
         insert new Contact[]{con, con2};
         
-        con = [Select id, accountId, FirstName, LastName, MailingStreet, SystemAccountProcessor__c from Contact where Id = :con.id];
-        con2 = [Select id, accountId, FirstName, LastName, MailingStreet, SystemAccountProcessor__c from Contact where Id = :con2.id];
+        con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
+        con2 = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con2.id];
         
         Test.setCurrentPageReference(new PageReference('Page.ContactMerge'));
         
@@ -806,10 +804,10 @@ private class TEST_ContactMergeController {
         controller.getSearchResults()[0].selected = true;
         controller.getSearchResults()[1].selected = true;
 
-		controller.nextStep();
-		
-		selectMasterRecord(controller, con.id);
-		
+        controller.nextStep();
+        
+        selectMasterRecord(controller, con.id);
+        
         //merge them
         controller.mergeContacts();
         
@@ -827,14 +825,15 @@ private class TEST_ContactMergeController {
     //the individual organization shouldn't be deleted
     static testMethod void merge1OneToOne1Individual() {
         
+        Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.BUCKET_PROCESSOR));
+        
         String newContactfirstName = 'test';
         String newContactLastName = '1Contact_forTests_Merge';
         String newContactMailingStreet = '123 Elm St';
         Contact con = new Contact(
             FirstName=newContactfirstName,
             LastName=newContactLastName,
-            MailingStreet = newContactMailingStreet,
-            SystemAccountProcessor__c = Constants.BUCKET_PROCESSOR
+            MailingStreet = newContactMailingStreet
         );
         
         String secondContactfirstName = 'test';
@@ -843,14 +842,12 @@ private class TEST_ContactMergeController {
         Contact con2 = new Contact(
             FirstName=secondContactfirstName,
             LastName=secondContactLastName,
-            MailingStreet = secondContactMailingStreet,
-            
-            SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR
+            MailingStreet = secondContactMailingStreet
         );
         insert new Contact[]{con, con2};
         
-        con = [Select id, accountId, FirstName, LastName, MailingStreet, SystemAccountProcessor__c from Contact where Id = :con.id];
-        con2 = [Select id, accountId, FirstName, LastName, MailingStreet, SystemAccountProcessor__c from Contact where Id = :con2.id];
+        con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
+        con2 = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con2.id];
         
         Test.setCurrentPageReference(new PageReference('Page.ContactMerge'));
         
@@ -872,8 +869,8 @@ private class TEST_ContactMergeController {
         controller.nextStep();
         
         selectMasterRecord(controller, con.id);
-		
-		//merge them
+        
+        //merge them
         controller.mergeContacts();
         
         //second contact should be deleted
@@ -885,10 +882,12 @@ private class TEST_ContactMergeController {
         //First contact's account id should not have changed
         system.assertEquals(con.accountId,[select AccountId from Contact where id=:con.id].AccountId);
     }
-    
+    */
     //merge one contacts in the Individual Account, one in one-to-one model
     //the individual organization shouldn't be deleted
     static testMethod void merge1Org1OneToOne() {
+        
+        Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
         
         Account acc = new Account(
             Name = 'Test Account 1'
@@ -911,13 +910,12 @@ private class TEST_ContactMergeController {
         Contact con2 = new Contact(
             FirstName=secondContactfirstName,
             LastName=secondContactLastName,
-            MailingStreet = secondContactMailingStreet,
-            SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR
+            MailingStreet = secondContactMailingStreet
         );
         insert new Contact[]{con, con2};
         
-        con = [Select id, accountId, FirstName, LastName, MailingStreet, SystemAccountProcessor__c from Contact where Id = :con.id];
-        con2 = [Select id, accountId, FirstName, LastName, MailingStreet, SystemAccountProcessor__c from Contact where Id = :con2.id];
+        con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
+        con2 = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con2.id];
         
         Test.setCurrentPageReference(new PageReference('Page.ContactMerge'));
         
@@ -936,10 +934,10 @@ private class TEST_ContactMergeController {
         controller.getSearchResults()[0].selected = true;
         controller.getSearchResults()[1].selected = true;
         
-		controller.nextStep();
-		
-		selectMasterRecord(controller, con.id);
-		
+        controller.nextStep();
+        
+        selectMasterRecord(controller, con.id);
+        
         //merge them
         controller.mergeContacts();
         
@@ -954,6 +952,8 @@ private class TEST_ContactMergeController {
     }
     
     static testMethod void merge3OneToOne() {
+        
+        Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
 
         String newContactfirstName = 'test';
         String newContactLastName = '1Contact_forTests_Merge';
@@ -961,8 +961,7 @@ private class TEST_ContactMergeController {
         Contact con = new Contact(
             FirstName=newContactfirstName,
             LastName=newContactLastName,
-            MailingStreet = newContactMailingStreet,
-            SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR
+            MailingStreet = newContactMailingStreet
         );
         
         String secondContactfirstName = 'test';
@@ -971,8 +970,7 @@ private class TEST_ContactMergeController {
         Contact con2 = new Contact(
             FirstName=secondContactfirstName,
             LastName=secondContactLastName,
-            MailingStreet = secondContactMailingStreet,
-            SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR
+            MailingStreet = secondContactMailingStreet
         );
         
         String thirdContactfirstName = 'test';
@@ -981,14 +979,13 @@ private class TEST_ContactMergeController {
         Contact con3 = new Contact(
             FirstName=thirdContactfirstName,
             LastName=thirdContactLastName,
-            MailingStreet = thirdContactMailingStreet,
-            SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR
+            MailingStreet = thirdContactMailingStreet
         );
         insert new Contact[]{con, con2, con3};
         
-        con = [Select id, accountId, FirstName, LastName, MailingStreet, SystemAccountProcessor__c from Contact where Id = :con.id];
-        con2 = [Select id, accountId, FirstName, LastName, MailingStreet, SystemAccountProcessor__c from Contact where Id = :con2.id];
-        con3 = [Select id, accountId, FirstName, LastName, MailingStreet, SystemAccountProcessor__c from Contact where Id = :con3.id];
+        con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
+        con2 = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con2.id];
+        con3 = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con3.id];
         
         Test.setCurrentPageReference(new PageReference('Page.ContactMerge'));
         
@@ -1014,7 +1011,7 @@ private class TEST_ContactMergeController {
         
         selectMasterRecord(controller, con3.id);
         
-		//merge them
+        //merge them
         controller.mergeContacts();
         
         //first and second contact should be deleted
@@ -1032,6 +1029,8 @@ private class TEST_ContactMergeController {
     //merge two contacts that are both in the one-to-one account model
     //the second contact's org should be deleted
     static testMethod void merge2OneToOneInSameAccount() {
+        
+        Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
 
         String newContactfirstName = 'test';
         String newContactLastName = '1Contact_forTests_Merge';
@@ -1039,8 +1038,7 @@ private class TEST_ContactMergeController {
         Contact con = new Contact(
             FirstName=newContactfirstName,
             LastName=newContactLastName,
-            MailingStreet = newContactMailingStreet,
-            SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR
+            MailingStreet = newContactMailingStreet
         );
         insert con;
         
@@ -1053,13 +1051,12 @@ private class TEST_ContactMergeController {
             FirstName=secondContactfirstName,
             LastName=secondContactLastName,
             MailingStreet = secondContactMailingStreet,
-            AccountId = conAccountId,
-            SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR
+            AccountId = conAccountId
         );
         insert con2;
         
-        con = [Select id, accountId, FirstName, LastName, MailingStreet, SystemAccountProcessor__c from Contact where Id = :con.id];
-        con2 = [Select id, accountId, FirstName, LastName, MailingStreet, SystemAccountProcessor__c from Contact where Id = :con2.id];
+        con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
+        con2 = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con2.id];
         
         Test.setCurrentPageReference(new PageReference('Page.ContactMerge'));
         
@@ -1082,7 +1079,7 @@ private class TEST_ContactMergeController {
         
         selectMasterRecord(controller, con.id);
         
-		//merge them
+        //merge them
         controller.mergeContacts();
         
         //second contact should be deleted
