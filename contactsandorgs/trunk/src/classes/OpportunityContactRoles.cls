@@ -92,14 +92,22 @@ public with sharing class OpportunityContactRoles {
     }
     //fill one-to-one accounts for Opportunities where a Contact id is supplied
     public static void opportunityAccounts(List<Opportunity> oppList){
+    	
         Map<String,Account> contactsAndOneToOneAccounts = new Map<String,Account>();
         Set<String> primaryContactIds = new Set<String>();
-        system.assertNotEquals(null,oppList);
+        Set<Id> oppAccounts = new Set<Id>();
+        
         for(Opportunity o : oppList){
+        	if(o.AccountId != null && o.Contact_Id_for_role__c == null){
+        		oppAccounts.add(o.AccountId);
+        	}
+        	
             if(o.AccountId == null && o.Contact_Id_for_role__c != null){
                 primaryContactIds.add(o.Contact_Id_for_role__c);                
             }
         }
+        Map<Id,Account> primaryAccounts = new Map<Id,Account>([select id, One2OneContact__c from Account where id IN :oppAccounts]);
+         
         List<Contact> primaryContacts = new List<Contact>();
         primaryContacts = [select AccountId,Account.Id,Account.SYSTEM_AccountType__c from Contact where Id IN :primaryContactIds];
         for(Contact thisContact : primaryContacts) {
@@ -107,8 +115,12 @@ public with sharing class OpportunityContactRoles {
         }
         //loop through opps again and then put the right accountid on the opp
         for(Opportunity o : oppList){
-            if(o.AccountId == null && o.Contact_Id_for_role__c != null){
-                //using the contact id, pull the account from the map
+        	//add the contact id from the Account. if it's not valid it won't error
+        	if(o.AccountId != null && o.Contact_Id_for_role__c == null){ 
+        		o.Contact_Id_for_role__c = primaryAccounts.get(o.AccountId).One2OneContact__c;
+        	}
+        	
+            if(o.AccountId == null && o.Contact_Id_for_role__c != null){                //using the contact id, pull the account from the map
                 
                 if(contactsAndOneToOneAccounts.get(shortenId(o.Contact_Id_for_role__c))!=null){
                 	Account accountForContact = contactsAndOneToOneAccounts.get(shortenId(o.Contact_Id_for_role__c));

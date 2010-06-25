@@ -86,13 +86,46 @@ private class TEST_OpportunityContactRoles {
         system.assertEquals(donorRoleforTest, result[0].Role);
     }
     
-	static testMethod void oppRolesForOneToOne() {
+    static testMethod void oppCRTriggerTurnedOff() {
+        String donorRoleforTest = 'Donor';
+        Contacts_and_Orgs_Settings__c testSettings = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR,Enable_Opportunity_Contact_Role_Trigger__c = false, Opportunity_Contact_Role_Default_role__c = donorRoleforTest));
+          
+        String title = 'CEO';
+        Contact con = new Contact(
+            FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=Constants.CONTACT_LASTNAME_FOR_TESTS,
+            Title=title,
+            WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );
+        insert con;
+        
+        Contact[] createdContacts = [select AccountId from Contact where Id = :con.id];
+
+        Opportunity opp1 = new Opportunity(
+            Name = 'Apex Test Opp1',
+            Contact_Id_for_Role__c = con.Id,
+            CloseDate = date.today(),
+            StageName = 'Closed Won'
+        );
+        Test.startTest();
+        insert opp1;
+        Test.stopTest();
+        OpportunityContactRole[] result = [select OpportunityId, ContactId, isPrimary, Role from OpportunityContactRole where OpportunityId = :opp1.Id];
+        //should be a contact role
+        system.assertEquals(0, result.size());
+        
+       Opportunity[] oppResult = [select AccountId from Opportunity where Id = :opp1.Id];
+       //should have the contact's one to one account
+       system.assertEquals(null, oppResult[0].AccountId);
+    }
+    
+	static testMethod void oppRolesForOneToOneContact() {
         String donorRoleforTest = 'Donor';
         Contacts_and_Orgs_Settings__c testSettings = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR,Enable_Opportunity_Contact_Role_Trigger__c = true, Opportunity_Contact_Role_Default_role__c = donorRoleforTest));
-        
-        Account acc = new Account(Name='test77');
-        insert acc;
-        
+                
         String title = 'CEO';
         Contact con = new Contact(
             FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
@@ -127,13 +160,85 @@ private class TEST_OpportunityContactRoles {
        system.assertEquals(createdContacts[0].AccountId, oppResult[0].AccountId);
     }
     
-    static testMethod void oppRolesForIndividual() {
+    static testMethod void oppRolesForIndividualContact() {
         String donorRoleforTest = 'Donor';
         Contacts_and_Orgs_Settings__c testSettings = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.BUCKET_PROCESSOR,Enable_Opportunity_Contact_Role_Trigger__c = true, Opportunity_Contact_Role_Default_role__c = donorRoleforTest));
+              
+        String title = 'CEO';
+        Contact con = new Contact(
+            FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=Constants.CONTACT_LASTNAME_FOR_TESTS,
+            Title=title,
+            WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );
+        insert con;
         
-        Account acc = new Account(Name='test77');
-        insert acc;
+        Contact[] createdContacts = [select AccountId from Contact where Id = :con.id];
+
+        Opportunity opp1 = new Opportunity(
+            Name = 'Apex Test Opp1',
+            Contact_Id_for_Role__c = con.Id,
+            CloseDate = date.today(),
+            StageName = 'Closed Won'
+        );
+        Test.startTest();
+        insert opp1;
+        Test.stopTest();
+
+        OpportunityContactRole[] result = [select OpportunityId, ContactId, isPrimary,Role from OpportunityContactRole where OpportunityId = :opp1.Id];
+        //should be one role
+        system.assertEquals(1, result.size());
+        system.assertEquals(donorRoleforTest, result[0].Role);
+        system.assertEquals(true, result[0].isPrimary);
         
+       Opportunity[] oppResult = [select AccountId from Opportunity where Id = :opp1.Id];
+       //should be null account
+       system.assertEquals(null, oppResult[0].AccountId);
+
+    }
+    
+    static testMethod void oppRolesForOneToOneAccount() {
+        String donorRoleforTest = 'Donor';
+        Contacts_and_Orgs_Settings__c testSettings = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR,Enable_Opportunity_Contact_Role_Trigger__c = true, Opportunity_Contact_Role_Default_role__c = donorRoleforTest));
+                
+        String title = 'CEO';
+        Contact con = new Contact(
+            FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=Constants.CONTACT_LASTNAME_FOR_TESTS,
+            Title=title,
+            WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );
+        insert con;
+        
+        Contact[] createdContacts = [select AccountId from Contact where Id = :con.id];
+
+        Opportunity opp1 = new Opportunity(
+            Name = 'Apex Test Opp1',
+            AccountId = createdContacts[0].AccountId,
+            CloseDate = date.today(),
+            StageName = 'Closed Won'
+        );
+        Test.startTest();
+        insert opp1;
+        Test.stopTest();
+        OpportunityContactRole[] result = [select OpportunityId, ContactId, isPrimary, Role from OpportunityContactRole where OpportunityId = :opp1.Id];
+        //should be a contact role
+        system.assertEquals(1, result.size());
+        system.assertEquals(donorRoleforTest, result[0].Role);
+        system.assertEquals(true, result[0].isPrimary);
+        
+    }
+    
+    static testMethod void oppRolesForIndividualAccount() {
+        String donorRoleforTest = 'Donor';
+        Contacts_and_Orgs_Settings__c testSettings = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.BUCKET_PROCESSOR,Enable_Opportunity_Contact_Role_Trigger__c = true, Opportunity_Contact_Role_Default_role__c = donorRoleforTest));
+              
         String title = 'CEO';
         Contact con = new Contact(
             FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
