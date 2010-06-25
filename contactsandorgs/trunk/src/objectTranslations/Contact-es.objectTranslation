@@ -17,6 +17,53 @@
         <name>Last_Donation_Date__c</name>
     </fields>
     <fields>
+        <name>LeadSource</name>
+        <picklistValues>
+            <masterLabel>Employee Referral</masterLabel>
+            <translation><!-- Employee Referral --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>External Referral</masterLabel>
+            <translation><!-- External Referral --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Other</masterLabel>
+            <translation>Otros</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Partner</masterLabel>
+            <translation><!-- Partner --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Partner Referral</masterLabel>
+            <translation>Referido</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Phone Inquiry</masterLabel>
+            <translation>Consulta telefónica</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Public Relations</masterLabel>
+            <translation><!-- Public Relations --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Purchased List</masterLabel>
+            <translation>Lista adquirida</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Trade Show</masterLabel>
+            <translation><!-- Trade Show --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Web</masterLabel>
+            <translation>Web</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Word of mouth</masterLabel>
+            <translation><!-- Word of mouth --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
         <label>Monto total de transacciones</label>
         <name>Lifetime_Giving_History_Amount__c</name>
     </fields>
@@ -34,6 +81,10 @@
         <picklistValues>
             <masterLabel>Home</masterLabel>
             <translation>Particular</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Household</masterLabel>
+            <translation><!-- Household --></translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Mobile</masterLabel>
@@ -56,6 +107,10 @@
             <translation>Alternativo</translation>
         </picklistValues>
         <picklistValues>
+            <masterLabel>Household</masterLabel>
+            <translation><!-- Household --></translation>
+        </picklistValues>
+        <picklistValues>
             <masterLabel>Personal</masterLabel>
             <translation>Particular</translation>
         </picklistValues>
@@ -70,6 +125,10 @@
         <picklistValues>
             <masterLabel>Home</masterLabel>
             <translation>Particular</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Household</masterLabel>
+            <translation><!-- Household --></translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Other</masterLabel>
@@ -92,6 +151,10 @@
             <translation>Particular</translation>
         </picklistValues>
         <picklistValues>
+            <masterLabel>Household</masterLabel>
+            <translation><!-- Household --></translation>
+        </picklistValues>
+        <picklistValues>
             <masterLabel>Other</masterLabel>
             <translation>Otro</translation>
         </picklistValues>
@@ -103,6 +166,14 @@
     <fields>
         <label><!-- _SYSTEM: ACCOUNT PROCESSOR --></label>
         <name>SystemAccountProcessor__c</name>
+        <picklistValues>
+            <masterLabel>Individual</masterLabel>
+            <translation><!-- Individual --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>One-to-One</masterLabel>
+            <translation><!-- One-to-One --></translation>
+        </picklistValues>
     </fields>
     <fields>
         <help><!-- This field is no longer used and should not be referenced. It has been replaced by Type_of_Account__c --></help>

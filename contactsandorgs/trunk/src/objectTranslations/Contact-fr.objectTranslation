@@ -17,6 +17,53 @@
         <name>Last_Donation_Date__c</name>
     </fields>
     <fields>
+        <name>LeadSource</name>
+        <picklistValues>
+            <masterLabel>Employee Referral</masterLabel>
+            <translation><!-- Employee Referral --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>External Referral</masterLabel>
+            <translation><!-- External Referral --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Other</masterLabel>
+            <translation>Autre</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Partner</masterLabel>
+            <translation><!-- Partner --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Partner Referral</masterLabel>
+            <translation>Référence partenaire</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Phone Inquiry</masterLabel>
+            <translation>Appel téléphonique</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Public Relations</masterLabel>
+            <translation><!-- Public Relations --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Purchased List</masterLabel>
+            <translation>Données achetées</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Trade Show</masterLabel>
+            <translation><!-- Trade Show --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Web</masterLabel>
+            <translation>Web</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Word of mouth</masterLabel>
+            <translation><!-- Word of mouth --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
         <label>Durée totale de la transaction</label>
         <name>Lifetime_Giving_History_Amount__c</name>
     </fields>
@@ -31,14 +78,66 @@
     <fields>
         <label>Téléphone préféré</label>
         <name>PreferredPhone__c</name>
+        <picklistValues>
+            <masterLabel>Home</masterLabel>
+            <translation><!-- Home --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Household</masterLabel>
+            <translation><!-- Household --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Mobile</masterLabel>
+            <translation><!-- Mobile --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Other</masterLabel>
+            <translation><!-- Other --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Work</masterLabel>
+            <translation><!-- Work --></translation>
+        </picklistValues>
     </fields>
     <fields>
         <label>E-mail préféré</label>
         <name>Preferred_Email__c</name>
+        <picklistValues>
+            <masterLabel>Alternate</masterLabel>
+            <translation><!-- Alternate --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Household</masterLabel>
+            <translation><!-- Household --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Personal</masterLabel>
+            <translation><!-- Personal --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Work</masterLabel>
+            <translation><!-- Work --></translation>
+        </picklistValues>
     </fields>
     <fields>
         <label>Type d&apos;adresse principale</label>
         <name>Primary_Address_Type__c</name>
+        <picklistValues>
+            <masterLabel>Home</masterLabel>
+            <translation><!-- Home --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Household</masterLabel>
+            <translation><!-- Household --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Other</masterLabel>
+            <translation><!-- Other --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Work</masterLabel>
+            <translation><!-- Work --></translation>
+        </picklistValues>
     </fields>
     <fields>
         <label>Privé(e)</label>
@@ -47,19 +146,43 @@
     <fields>
         <label>Type d&apos;adresse secondaire</label>
         <name>Secondary_Address_Type__c</name>
+        <picklistValues>
+            <masterLabel>Home</masterLabel>
+            <translation><!-- Home --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Household</masterLabel>
+            <translation><!-- Household --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Other</masterLabel>
+            <translation><!-- Other --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Work</masterLabel>
+            <translation><!-- Work --></translation>
+        </picklistValues>
     </fields>
     <fields>
-        <label><!-- _SYSTEM: ACCOUNT PROCESSOR --></label>
+        <label>_SYSTEME: PROCESSEUR COMPTE</label>
         <name>SystemAccountProcessor__c</name>
+        <picklistValues>
+            <masterLabel>Individual</masterLabel>
+            <translation><!-- Individual --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>One-to-One</masterLabel>
+            <translation><!-- One-to-One --></translation>
+        </picklistValues>
     </fields>
     <fields>
-        <help><!-- This field is no longer used and should not be referenced. It has been replaced by Type_of_Account__c --></help>
-        <label><!-- _SYSTEM: IsIndividual - DEPRECATED --></label>
+        <help>Ce champ n&apos;est plus utilisé et ne doit pas être référencé. Le champ &quot;Type du compte&quot; (Type_of_Account__c) le remplace.</help>
+        <label>_SYSTEME: EstIndividu - OBSOLETE</label>
         <name>SystemIsIndividual__c</name>
     </fields>
     <fields>
-        <help><!-- Shows the type of Account this Contact is connected to. --></help>
-        <label><!-- Type of Account --></label>
+        <help>Indique le type de compte dont ce contact dépend.</help>
+        <label>Type de Compte</label>
         <name>Type_of_Account__c</name>
     </fields>
     <fields>
@@ -75,11 +198,11 @@
         <name>Work_Address__c</name>
     </fields>
     <validationRules>
-        <errorMessage>Le champ &quot;E-mail&quot; DOIT correspondre à la liste des E-mails préferés. Pour le corriger, vous devez copier la valeur existente du champ &quot;E-mail&quot; dans un nouveau champ.</errorMessage>
+        <errorMessage>Le champ &quot;E-mail&quot; DOIT correspondre à la liste des E-mails préferés. Pour le corriger, vous devez copier la valeur existente du champ &quot;E-mail&quot; dans le champ désigné</errorMessage>
         <name>Populated_Email_Field_Warning</name>
     </validationRules>
     <validationRules>
-        <errorMessage>Le champ &quot;Téléphone&quot; DOIT correspondre avec la liste des Téléphones préférés. Pour le corriger, vous devez copier la valeur existente du champ &quot;Téléphone&quot; dans un nouveau champ.</errorMessage>
+        <errorMessage>Le champ &quot;Téléphone&quot; DOIT correspondre avec la liste des Téléphones préférés. Pour le corriger, vous devez copier la valeur existente du champ &quot;Téléphone&quot; dans le champ désigné</errorMessage>
         <name>Populated_Phone_Field_Warning</name>
     </validationRules>
     <validationRules>
