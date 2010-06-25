@@ -46,6 +46,18 @@ global class Constants {
     
     public static Contacts_and_Orgs_Settings__c ContactsSettings;
     
+    public static final string CONTACT_FIRSTNAME_FOR_TESTS = 'test';
+    public static final string CONTACT_LASTNAME_FOR_TESTS = 'Contact_forTests';
+    
+    public static final string CONTACT_EMAIL_FOR_TESTS = 'junk@test.net';
+    public static final string CONTACT_PREFERRED_EMAIL_FOR_TESTS = 'Work';
+    public static final string CONTACT_PHONE_FOR_TESTS = '206-777-8888';
+    public static final string CONTACT_PREFERRED_PHONE_FOR_TESTS = 'Work';
+    
+    public static final string INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS = 'IndividualAccountNameForTests';
+    
+    
+    
     //get the settings. handles the case where the managed value doesn't exist yet
     public static Contacts_and_Orgs_Settings__c getContactsSettings() {
         boolean usedToBeOneToOne = false;
