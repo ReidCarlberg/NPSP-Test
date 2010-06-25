@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <value>Contacts And Orgs Settings</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Contacts And Orgs Settings</value>
+    </caseValues>
+    <fields>
+        <help><!-- Setting for the Account model. Should be &quot;One-to-one&quot; or &quot;Individual&quot;. Replaces the custom field Contact.SystemAccountProcessor__c --></help>
+        <label><!-- Account Processor --></label>
+        <name>Account_Processor__c</name>
+    </fields>
+    <fields>
+        <help><!-- Check this to turn off the Account Model trigger. Accounts will no longer be automatically created for Contacts. Only use this if you understand the ramifications. Turning off the account model could get your data into an inconsistent state. --></help>
+        <label><!-- Disable Account Model Trigger --></label>
+        <name>Disable_Account_Model_Trigger__c</name>
+    </fields>
+    <fields>
+        <help><!-- Check this to turn on the automatic creation of Opportunity Contact Roles for newly created Opportunities in the One-to-One model. --></help>
+        <label><!-- Enable Opportunity Contact Role Trigger --></label>
+        <name>Enable_Opportunity_Contact_Role_Trigger__c</name>
+    </fields>
+    <fields>
+        <help><!-- Default role for the primary Opportunity Contact Role --></help>
+        <label><!-- Opportunity Contact Role Default role --></label>
+        <name>Opportunity_Contact_Role_Default_role__c</name>
+    </fields>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>
