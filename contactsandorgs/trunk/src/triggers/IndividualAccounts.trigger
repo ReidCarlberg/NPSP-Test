@@ -39,13 +39,13 @@ trigger IndividualAccounts on Contact (before insert, before update, after inser
     }
     if( Trigger.isAfter && Trigger.isInsert ){
     	//requery to get correct Account values
-    	Contact[] newContacts = [select id,SystemAccountProcessor__c,Private__c,AccountId,Account.npe01__SYSTEMIsIndividual__c,Account.Name,firstname, lastname from Contact where Id IN :trigger.New];
+    	Contact[] newContacts = [select id,SystemAccountProcessor__c,Private__c,AccountId,Account.SYSTEMIsIndividual__c,Account.Name,firstname, lastname from Contact where Id IN :trigger.New];
 	        
         IndividualAccounts process = new IndividualAccounts(newContacts, Trigger.old, IndividualAccounts_Utils.triggerAction.afterInsert);
     }
     if( Trigger.isAfter && Trigger.isUpdate ){
 	    //requery to get correct Account values
-    	Contact[] newContacts = [select id,SystemAccountProcessor__c,Private__c,AccountId,Account.npe01__SYSTEMIsIndividual__c,Organization_Type__c,Account.Name,firstname, lastname,MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, OtherStreet, OtherCity, OtherState, OtherPostalCode, OtherCountry, Phone, Fax from Contact where Id IN :trigger.New];
+    	Contact[] newContacts = [select id,SystemAccountProcessor__c,Private__c,AccountId,Account.SYSTEMIsIndividual__c,Organization_Type__c,Account.Name,firstname, lastname,MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, OtherStreet, OtherCity, OtherState, OtherPostalCode, OtherCountry, Phone, Fax from Contact where Id IN :trigger.New];
 	    
         IndividualAccounts process = new IndividualAccounts(newContacts, Trigger.old, IndividualAccounts_Utils.triggerAction.afterUpdate);
     }
