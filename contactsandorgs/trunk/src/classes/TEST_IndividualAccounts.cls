@@ -33,15 +33,17 @@ private class TEST_IndividualAccounts {
     /// <summary> Test Method for inserting a Contact that should get no account </summary>
     static testMethod void insertPrivate()
     {
-        String individualAccountNameForTests = 'IndividualAccountNameForTests';
-        IndividualAccounts_Utils.setIndividualAccountForTests(individualAccountNameForTests);
         
-        String newContactfirstName = 'test';
-        String newContactLastName = 'Contact_forTests';
+        IndividualAccounts_Utils.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+
         Contact con = new Contact(
-            FirstName=newContactfirstName,
-            LastName=newContactLastName,
-            Private__c=true
+            FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=Constants.CONTACT_LASTNAME_FOR_TESTS,
+            Private__c=true,
+            WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         insert con;
         
@@ -55,14 +57,16 @@ private class TEST_IndividualAccounts {
     static testMethod void insertOneToOneChangeToPrivate()
     {
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
-        String individualAccountNameForTests = 'IndividualAccountNameForTests';
-        IndividualAccounts_Utils.setIndividualAccountForTests(individualAccountNameForTests);
         
-        String newContactfirstName = 'test';
-        String newContactLastName = 'Contact_forTests';
+        IndividualAccounts_Utils.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+
         Contact con = new Contact(
-            FirstName=newContactfirstName,
-            LastName=newContactLastName
+            FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=Constants.CONTACT_LASTNAME_FOR_TESTS,
+            WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS,
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         insert con;
         
@@ -80,14 +84,16 @@ private class TEST_IndividualAccounts {
     static testMethod void insertOneToOneTriggerOff()
     {
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR,Disable_Account_Model_Trigger__c=true));
-        String individualAccountNameForTests = 'IndividualAccountNameForTests';
-        IndividualAccounts_Utils.setIndividualAccountForTests(individualAccountNameForTests);
         
-        String newContactfirstName = 'test';
-        String newContactLastName = 'Contact_forTests';
+        IndividualAccounts_Utils.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+
         Contact con = new Contact(
-            FirstName=newContactfirstName,
-            LastName=newContactLastName
+            FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=Constants.CONTACT_LASTNAME_FOR_TESTS,
+            WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS,
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         insert con;
         
@@ -103,13 +109,18 @@ private class TEST_IndividualAccounts {
     static testMethod void insertUpdateOneToOne()
     {
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
-        String newContactfirstName = 'test';
-        String newContactLastName = 'Contact_forTests';
+        
+        
         String newContactMailingStreet = '123 Elm St';
+
         Contact con = new Contact(
-            FirstName=newContactfirstName,
-            LastName=newContactLastName,
-            MailingStreet = newContactMailingStreet
+            FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=Constants.CONTACT_LASTNAME_FOR_TESTS,
+            MailingStreet = newContactMailingStreet,
+            WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS,
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         insert con;
         
@@ -124,7 +135,7 @@ private class TEST_IndividualAccounts {
         //the account should be flagged as an individual
         system.assertEquals(true,insertedcontacts[0].Account.SYSTEMIsIndividual__c );
         //the account should have been named correctly
-        system.assertEquals(newContactfirstName + ' ' + newContactLastName,insertedcontacts[0].Account.Name);
+        system.assertEquals(Constants.CONTACT_FIRSTNAME_FOR_TESTS + ' ' + Constants.CONTACT_LASTNAME_FOR_TESTS,insertedcontacts[0].Account.Name);
         //relationship should be bi-directional
         system.assertEquals(insertedcontacts[0].id,insertedcontacts[0].Account.One2OneContact__c);
         //addresses should be sync'd
@@ -173,11 +184,13 @@ private class TEST_IndividualAccounts {
     {
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
         
-        String newContactfirstName = 'test';
-        String newContactLastName = 'Contact_forTests';
         Contact con = new Contact(
-            FirstName=newContactfirstName,
-            LastName=newContactLastName
+            FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=Constants.CONTACT_LASTNAME_FOR_TESTS,
+            WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS,
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         insert con;
         
@@ -202,20 +215,23 @@ private class TEST_IndividualAccounts {
         system.assertEquals(originalAccountId,updatedContacts[0].AccountId);
     
     }
-    
-    
+        
     /// <name> editContactDuringDetachOneToOne </name>
     /// <summary> Test Method for editing a contact while it is being detached from it's One-to-One Account. This was a bug (#37)</summary>
     static testMethod void editContactDuringDetachOneToOne()
     {
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
-        String newContactfirstName = 'test';
-        String newContactLastName = 'Contact_forTests';
+                
         String newContactMailingStreet = '123 Elm St';
+
         Contact con = new Contact(
-            FirstName=newContactfirstName,
-            LastName=newContactLastName,
-            MailingStreet = newContactMailingStreet
+            FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=Constants.CONTACT_LASTNAME_FOR_TESTS,
+            MailingStreet = newContactMailingStreet,
+            WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS,
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         insert con;
         
@@ -254,10 +270,17 @@ private class TEST_IndividualAccounts {
     {
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.BUCKET_PROCESSOR));
         
-        String individualAccountNameForTests = 'IndividualAccountNameForTests';
-        IndividualAccounts_Utils.setIndividualAccountForTests(individualAccountNameForTests);
         
-        Contact con = new Contact(FirstName='test', LastName='contact');
+        IndividualAccounts_Utils.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+
+        Contact con = new Contact(
+        	FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+        	LastName=Constants.CONTACT_LASTNAME_FOR_TESTS,
+        	WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS,
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );
         insert con;
         
         Contact[] insertedContacts = [Select Account.Name,AccountId,Organization_Type__c from Contact where id=:con.id];
@@ -274,10 +297,17 @@ private class TEST_IndividualAccounts {
     {
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.BUCKET_PROCESSOR));
         
-        String individualAccountNameForTests = 'IndividualAccountNameForTests';
-        IndividualAccounts_Utils.setIndividualAccountForTests(individualAccountNameForTests);
         
-        Contact con = new Contact(FirstName='test', LastName='contact');
+        IndividualAccounts_Utils.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+
+        Contact con = new Contact(
+        	FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+        	LastName=Constants.CONTACT_LASTNAME_FOR_TESTS,
+        	WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS,
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );
         insert con;
         
         Contact[] insertedContacts = [Select Account.Name,AccountId,Organization_Type__c from Contact where id=:con.id];
@@ -304,8 +334,8 @@ private class TEST_IndividualAccounts {
     {
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.BUCKET_PROCESSOR));
         
-        String individualAccountNameForTests = 'IndividualAccountNameForTests';
-        IndividualAccounts_Utils.setIndividualAccountForTests(individualAccountNameForTests);
+        
+        IndividualAccounts_Utils.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
         
         Account acct = new Account(Name='Test Account 876');
         insert acct;
@@ -314,8 +344,16 @@ private class TEST_IndividualAccounts {
         
         //the account should not be an individual one
         system.assert(!insertedAccount[0].SystemIsIndividual__c);
-        
-        Contact con = new Contact(FirstName='test', LastName='contact678', AccountId = acct.id);
+
+        Contact con = new Contact(
+        	FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+        	LastName=Constants.CONTACT_LASTNAME_FOR_TESTS,
+        	AccountId = acct.id,
+        	WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS,
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );
         insert con;
         
         Contact[] insertedContacts = [Select Account.Name,Account.SystemIsIndividual__c,AccountId,Organization_Type__c from Contact where id=:con.id];
@@ -342,10 +380,17 @@ private class TEST_IndividualAccounts {
     {
         
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
-        String individualAccountNameForTests = 'IndividualAccountNameForTests';
-        IndividualAccounts_Utils.setIndividualAccountForTests(individualAccountNameForTests);
         
-        Contact con = new Contact(FirstName='test', LastName='contact678');
+        IndividualAccounts_Utils.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+
+        Contact con = new Contact(
+        	FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+        	LastName=Constants.CONTACT_LASTNAME_FOR_TESTS,
+        	WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS,
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );
         insert con;
         
         Contact[] insertedContacts = [Select Account.Name,Account.SystemIsIndividual__c,AccountId,Organization_Type__c from Contact where id=:con.id];
@@ -366,15 +411,22 @@ private class TEST_IndividualAccounts {
     static testMethod void contactInNormalOrgNameChange()
     {
         
-        String individualAccountNameForTests = 'IndividualAccountNameForTests';
-        IndividualAccounts_Utils.setIndividualAccountForTests(individualAccountNameForTests);
+        
+        IndividualAccounts_Utils.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
         
         String acctName = 'Test Account 876';
         Account acct = new Account(Name=acctName);
         insert acct;
-        
-       
-        Contact con = new Contact(FirstName='test', LastName='contact678', AccountId = acct.id);
+
+        Contact con = new Contact(
+        	FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+        	LastName=Constants.CONTACT_LASTNAME_FOR_TESTS,
+        	AccountId = acct.id,
+        	WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS,
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );
         insert con;
         
         Contact[] insertedContacts = [Select Account.Name,Account.SystemIsIndividual__c,AccountId,Organization_Type__c from Contact where id=:con.id];
@@ -403,8 +455,8 @@ private class TEST_IndividualAccounts {
     {
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
         
-        String individualAccountNameForTests = 'IndividualAccountNameForTests';
-        IndividualAccounts_Utils.setIndividualAccountForTests(individualAccountNameForTests);
+        
+        IndividualAccounts_Utils.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
         
         Account acct = new Account(Name='Test Account 876');
         insert acct;
@@ -413,8 +465,16 @@ private class TEST_IndividualAccounts {
         
         //the account should not be an individual one
         system.assert(!insertedAccount[0].SystemIsIndividual__c);
-        
-        Contact con = new Contact(FirstName='test', LastName='contact678', AccountId = acct.id);
+
+        Contact con = new Contact(
+        	FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+        	LastName=Constants.CONTACT_LASTNAME_FOR_TESTS,
+        	AccountId = acct.id,
+        	WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS,
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );
         insert con;
         
         Contact[] insertedContacts = [Select Account.Name,Account.SystemIsIndividual__c,AccountId,Organization_Type__c from Contact where id=:con.id];
@@ -441,16 +501,19 @@ private class TEST_IndividualAccounts {
 
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
 
-        String individualAccountNameForTests = 'IndividualAccountNameForTests';
-        IndividualAccounts_Utils.setIndividualAccountForTests(individualAccountNameForTests);
         
-        String newContactfirstName = 'test';
-        String newContactLastName = 'Contact_forTests';
+        IndividualAccounts_Utils.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+        
         String newContactMailingStreet = '123 Elm St';
+
         Contact con = new Contact(
-            FirstName=newContactfirstName,
-            LastName=newContactLastName,
-            MailingStreet = newContactMailingStreet
+            FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=Constants.CONTACT_LASTNAME_FOR_TESTS,
+            MailingStreet = newContactMailingStreet,
+            WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS,
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         insert con;
         Id contactId;
@@ -473,16 +536,21 @@ private class TEST_IndividualAccounts {
         
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
         
-        String individualAccountNameForTests = 'IndividualAccountNameForTests';
-        IndividualAccounts_Utils.setIndividualAccountForTests(individualAccountNameForTests);
         
-        String newContactfirstName = 'test';
-        String newContactLastName = 'Contact_forTests';
+        IndividualAccounts_Utils.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+        
+        
+        
         String newContactMailingStreet = '123 Elm St';
+
         Contact con = new Contact(
-            FirstName=newContactfirstName,
-            LastName=newContactLastName,
-            MailingStreet = newContactMailingStreet
+            FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=Constants.CONTACT_LASTNAME_FOR_TESTS,
+            MailingStreet = newContactMailingStreet,
+            WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS,
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         insert con;
         Id contactId;
@@ -510,22 +578,27 @@ private class TEST_IndividualAccounts {
     
     public static testMethod void deleteContactNormalAccount() {
         
-        String individualAccountNameForTests = 'IndividualAccountNameForTests';
-        IndividualAccounts_Utils.setIndividualAccountForTests(individualAccountNameForTests);
+        
+        IndividualAccounts_Utils.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
         
         Account orgAccount = new Account(
             Name='Fake account'
         );
         insert orgAccount;
         
-        String newContactfirstName = 'test';
-        String newContactLastName = 'Contact_forTests';
+        
+        
         String newContactMailingStreet = '123 Elm St';
+
         Contact con = new Contact(
-            FirstName=newContactfirstName,
-            LastName=newContactLastName,
+            FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=Constants.CONTACT_LASTNAME_FOR_TESTS,
             MailingStreet = newContactMailingStreet,
-            AccountId=orgAccount.id
+            AccountId=orgAccount.id,
+            WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS,
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         insert con;
         
@@ -712,7 +785,7 @@ private class TEST_IndividualAccounts {
         String workPhone = '206-888-8888';
         
         con.WorkPhone__c = workPhone;
-        con.PreferredPhone__c = preferredPhone;
+        con.PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS;
         update con;
         
         Contact[] insertedContacts1 = [Select phone,HomePhone,WorkPhone__c,PreferredPhone__c from Contact where id=:con.id];
@@ -727,7 +800,7 @@ private class TEST_IndividualAccounts {
         String mobilePhone = '206-999-9999';
         
         con.MobilePhone = mobilePhone;
-        con.PreferredPhone__c = preferredPhone;
+        con.PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS;
         update con;
         
         Contact[] insertedContacts2 = [Select phone,HomePhone,WorkPhone__c,MobilePhone,PreferredPhone__c from Contact where id=:con.id];
@@ -743,7 +816,7 @@ private class TEST_IndividualAccounts {
         String otherPhone = '206-666-6666';
         
         con.OtherPhone = otherPhone;
-        con.PreferredPhone__c = preferredPhone;
+        con.PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS;
         update con;
         
         Contact[] insertedContacts3 = [Select phone,HomePhone,WorkPhone__c,MobilePhone,OtherPhone,PreferredPhone__c from Contact where id=:con.id];
@@ -905,7 +978,7 @@ private class TEST_IndividualAccounts {
         String workEmail = 'jd@email.net';
         
         con.workEmail__c = workEmail;
-        con.Preferred_Email__c = preferredEmail;
+        con.Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS;
         update con;
         
         Contact[] insertedContacts1 = [Select email,HomeEmail__c,workEmail__c,Preferred_Email__c from Contact where id=:con.id];
@@ -920,7 +993,7 @@ private class TEST_IndividualAccounts {
         String alternateEmail = 'jdc@testemail.net';
         
         con.alternateEmail__c = alternateEmail;
-        con.Preferred_Email__c = preferredEmail;
+        con.Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS;
         update con;
         
         Contact[] insertedContacts2 = [Select email,HomeEmail__c,workEmail__c,alternateEmail__c,Preferred_Email__c from Contact where id=:con.id];
@@ -942,10 +1015,17 @@ private class TEST_IndividualAccounts {
     {
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
         
-        String individualAccountNameForTests = 'IndividualAccountNameForTests';
-        IndividualAccounts_Utils.setIndividualAccountForTests(individualAccountNameForTests);
         
-        Contact con = new Contact(FirstName='test', LastName='contact');
+        IndividualAccounts_Utils.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+
+        Contact con = new Contact(
+        	FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+        	LastName=Constants.CONTACT_LASTNAME_FOR_TESTS,
+        	WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS,
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );
         insert con;
 
         Opportunity o = new Opportunity(Amount=500,Name='test',StageName='Closed Won',CloseDate=System.today());
@@ -962,10 +1042,17 @@ private class TEST_IndividualAccounts {
     static testMethod void getContactLastDonation()
     {
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
-        String individualAccountNameForTests = 'IndividualAccountNameForTests';
-        IndividualAccounts_Utils.setIndividualAccountForTests(individualAccountNameForTests);
         
-        Contact con = new Contact(FirstName='test', LastName='contact');
+        IndividualAccounts_Utils.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+
+        Contact con = new Contact(
+        	FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+        	LastName=Constants.CONTACT_LASTNAME_FOR_TESTS,
+        	WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS,
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );
         insert con;
         
         String sum = IndividualAccounts.getContactLastDonation(con.id);
@@ -988,10 +1075,17 @@ private class TEST_IndividualAccounts {
     static testMethod void getContactDonationHistoryAmount()
     {
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
-        String individualAccountNameForTests = 'IndividualAccountNameForTests';
-        IndividualAccounts_Utils.setIndividualAccountForTests(individualAccountNameForTests);
         
-        Contact con = new Contact(FirstName='test', LastName='contact');
+        IndividualAccounts_Utils.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+
+        Contact con = new Contact(
+        	FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+        	LastName=Constants.CONTACT_LASTNAME_FOR_TESTS,
+        	WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS,
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );
         insert con;
 
         Opportunity o = new Opportunity(Amount=500,Name='test',StageName='Closed Won',CloseDate=System.today());
@@ -1018,10 +1112,17 @@ private class TEST_IndividualAccounts {
         Integer month = 10;
         Integer day = 10;
         
-        String individualAccountNameForTests = 'IndividualAccountNameForTests';
-        IndividualAccounts_Utils.setIndividualAccountForTests(individualAccountNameForTests);
         
-        Contact con = new Contact(FirstName='test', LastName='contact');
+        IndividualAccounts_Utils.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+
+        Contact con = new Contact(
+        	FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+        	LastName=Constants.CONTACT_LASTNAME_FOR_TESTS,
+        	WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS,
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );
         insert con;
         
         String sum = IndividualAccounts.getContactLastDonation(con.id);

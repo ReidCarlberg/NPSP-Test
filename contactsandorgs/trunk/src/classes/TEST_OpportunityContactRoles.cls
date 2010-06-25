@@ -33,10 +33,14 @@ private class TEST_OpportunityContactRoles {
         
         String title = 'CEO';
         Contact con = new Contact(
-            FirstName='test',
-            LastName='contact66',
+            FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=Constants.CONTACT_LASTNAME_FOR_TESTS,
             Title=title,
-            AccountId = acc.Id
+            AccountId = acc.Id,
+            WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         insert con;
 
@@ -91,9 +95,13 @@ private class TEST_OpportunityContactRoles {
         
         String title = 'CEO';
         Contact con = new Contact(
-            FirstName='test',
-            LastName='contact66',
-            Title=title
+            FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=Constants.CONTACT_LASTNAME_FOR_TESTS,
+            Title=title,
+            WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         insert con;
         
@@ -128,9 +136,13 @@ private class TEST_OpportunityContactRoles {
         
         String title = 'CEO';
         Contact con = new Contact(
-            FirstName='test',
-            LastName='contact66',
-            Title=title
+            FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=Constants.CONTACT_LASTNAME_FOR_TESTS,
+            Title=title,
+            WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         insert con;
         
@@ -167,9 +179,13 @@ private class TEST_OpportunityContactRoles {
         
         String title = 'CEO';
         Contact con = new Contact(
-            FirstName='test',
-            LastName='contact66',
-            Title=title
+            FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=Constants.CONTACT_LASTNAME_FOR_TESTS,
+            Title=title,
+            WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         insert con;
         

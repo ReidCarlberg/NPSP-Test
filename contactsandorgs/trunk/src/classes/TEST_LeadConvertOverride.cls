@@ -26,6 +26,7 @@ private class TEST_LeadConvertOverride {
     public static testMethod void newLeadConversion_Test() {
         
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
+        IndividualAccounts_Utils.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
         
         Test.setCurrentPageReference(new PageReference('Page.LeadConvertOverride'));
  
@@ -83,63 +84,62 @@ private class TEST_LeadConvertOverride {
     public static testMethod void newLeadConversionMerge_Test() {
 
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
+        IndividualAccounts_Utils.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
         
         Test.setCurrentPageReference(new PageReference('Page.LeadConvertOverride'));
  
         String companyName = 'Individual';
 
-            companyName = 'Self';           
-            String leadFirstName = 'joebob';
-            String leadLastName = 'lead for tests_987';
-            
-            // create a contact to merge into
-            contact c = new contact(
-                firstname = leadFirstName,
-                lastname = leadLastName
-            );          
-            insert c;
-            
-            Lead l = new Lead();
-            l.FirstName = leadFirstName;
-            l.LastName = leadLastName;
-            l.Company = companyName;
-            insert l;
-            
-            system.currentPageReference().getParameters().put('id', l.id);
-            
-            //pass contact into the controller
-            ApexPages.StandardController sc = new ApexPages.standardController(l);
-            
-            //pass the controller into the extension
-            LeadConvertOverride ext = new LeadConvertOverride(sc); 
-            
-            //this should NOT convert the lead - because it is one to one
-            PageReference landingPage = ext.convertLead();
-            system.assert(landingPage == null);
-            
-            // fill the lists (for coverage)
-            ext.getConList();
-            system.assertEquals(3, ext.conList.size());
-            ext.getlcStatuses();
-            system.assert(ext.lcStatuses.size() > 0);
-            
-            // this selects the Merge to <contact> option in the Contact box
-            ext.con = c.id;
-            
-            ext.convertOneToOne();
-            
-            if (Constants.isOneToOne()){                
-                Contact[] convertedContacts = [select id, firstname, lastname,Account.Systemisindividual__c from Contact where lastname = :leadLastName];
-                lead[] unconvertedLeads = [select id, firstname, lastname from lead where lastname = :leadLastName and isconverted = false];
-                //no lead still unconverted             
-                system.assertEquals(0,unconvertedLeads.size());
-                //one contact should have been created
-                system.assertEquals(1,convertedContacts.size());
-                //the account for this contact should be an individual account, no matter the model
-                system.assertEquals(true,convertedContacts[0].Account.Systemisindividual__c);
-            } else {
-                system.Assert(landingPage.getUrl().contains('leadconvert.jsp'));
-            }
+        companyName = 'Self'; 
+        
+        // create a contact to merge into
+        contact c = new contact(
+            FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+        	LastName=Constants.CONTACT_LASTNAME_FOR_TESTS
+        );          
+        insert c;
+        
+        Lead l = new Lead();
+        l.FirstName = Constants.CONTACT_FIRSTNAME_FOR_TESTS;
+        l.LastName = Constants.CONTACT_LASTNAME_FOR_TESTS;
+        l.Company = companyName;
+        insert l;
+        
+        system.currentPageReference().getParameters().put('id', l.id);
+        
+        //pass contact into the controller
+        ApexPages.StandardController sc = new ApexPages.standardController(l);
+        
+        //pass the controller into the extension
+        LeadConvertOverride ext = new LeadConvertOverride(sc); 
+        
+        //this should NOT convert the lead - because it is one to one
+        PageReference landingPage = ext.convertLead();
+        system.assert(landingPage == null);
+        
+        // fill the lists (for coverage)
+        ext.getConList();
+        system.assertEquals(3, ext.conList.size());
+        ext.getlcStatuses();
+        system.assert(ext.lcStatuses.size() > 0);
+        
+        // this selects the Merge to <contact> option in the Contact box
+        ext.con = c.id;
+        
+        ext.convertOneToOne();
+        
+        if (Constants.isOneToOne()){                
+            Contact[] convertedContacts = [select id, firstname, lastname,Account.Systemisindividual__c from Contact where lastname = :Constants.CONTACT_LASTNAME_FOR_TESTS];
+            lead[] unconvertedLeads = [select id, firstname, lastname from lead where lastname = :Constants.CONTACT_LASTNAME_FOR_TESTS and isconverted = false];
+            //no lead still unconverted             
+            system.assertEquals(0,unconvertedLeads.size());
+            //one contact should have been created
+            system.assertEquals(1,convertedContacts.size());
+            //the account for this contact should be an individual account, no matter the model
+            system.assertEquals(true,convertedContacts[0].Account.Systemisindividual__c);
+        } else {
+            system.Assert(landingPage.getUrl().contains('leadconvert.jsp'));
+        }
 
     }
 
@@ -147,18 +147,17 @@ private class TEST_LeadConvertOverride {
     public static testMethod void newLeadConversionNamedCompany_Test() {
 
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
+        IndividualAccounts_Utils.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
         
         Test.setCurrentPageReference(new PageReference('Page.LeadConvertOverride'));
         
         String companyName = 'Individual';
         
-        
         companyName = 'Junky company for tests';
-        String leadFirstName = 'test';
-        String leadLastName = 'lead for tests_989';
+
         Lead l = new Lead();
-        l.FirstName = leadFirstName;
-        l.LastName = leadLastName;
+        l.FirstName = Constants.CONTACT_FIRSTNAME_FOR_TESTS;
+        l.LastName = Constants.CONTACT_LASTNAME_FOR_TESTS;
         l.Company = companyName;
         insert l;
         
@@ -176,6 +175,7 @@ private class TEST_LeadConvertOverride {
     public static testMethod void newLeadConversionNamedCompanyNoFirstName_Test() {
 
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
+        IndividualAccounts_Utils.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
         
         Test.setCurrentPageReference(new PageReference('Page.LeadConvertOverride')); 
         
@@ -183,11 +183,10 @@ private class TEST_LeadConvertOverride {
         
         
         companyName = 'Junky company for tests';
-        String leadFirstName = '';
-        String leadLastName = 'lead for tests_989';
+
         Lead l = new Lead();
-        l.FirstName = leadFirstName;
-        l.LastName = leadLastName;
+        l.FirstName = Constants.CONTACT_FIRSTNAME_FOR_TESTS;
+        l.LastName = Constants.CONTACT_LASTNAME_FOR_TESTS;
         l.Company = companyName;
         insert l;
         
@@ -205,17 +204,17 @@ private class TEST_LeadConvertOverride {
     public static testMethod void newLeadWithCompanyMatchingLeadName_Test() {
         
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
+        IndividualAccounts_Utils.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
         
         Test.setCurrentPageReference(new PageReference('Page.LeadConvertOverride'));
         
         String companyName = 'Individual';
         
         companyName = 'test lead for tests_989';
-        String leadFirstName = 'test';
-        String leadLastName = 'lead for tests_989';
+
         Lead l = new Lead();
-        l.FirstName = leadFirstName;
-        l.LastName = leadLastName;
+        l.FirstName = Constants.CONTACT_FIRSTNAME_FOR_TESTS;
+        l.LastName = Constants.CONTACT_LASTNAME_FOR_TESTS;
         l.Company = companyName;
         insert l;
         

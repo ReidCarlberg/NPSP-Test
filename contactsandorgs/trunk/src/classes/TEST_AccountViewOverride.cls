@@ -29,13 +29,15 @@ private class TEST_AccountViewOverride {
         
         Test.setCurrentPageReference(new PageReference('Page.AccountViewOverride'));
         
-        String newContactfirstName = 'test';
-        String newContactLastName = 'Contact_forAccountTests';
         String newContactMailingStreet = '123 Elm St';
         Contact con = new Contact(
-            FirstName=newContactfirstName,
-            LastName=newContactLastName,
-            MailingStreet = newContactMailingStreet
+            FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=Constants.CONTACT_LASTNAME_FOR_TESTS,
+            MailingStreet = newContactMailingStreet,
+        	WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         insert con;
         

@@ -48,16 +48,17 @@ private class TEST_ContactMergeController {
     static testMethod void exerciseUI() {
         
         //set up 3 contacts for the merge interface to work with
-        String newContactfirstName = 'test';
-        String newContactLastName = '1Contact_forTests_Merge';
+        
         String newContactMailingStreet = '123 Elm St';
         String workphone = '5554567890';
         Contact con = new Contact(
-            FirstName=newContactfirstName,
-            LastName=newContactLastName,
+            FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=Constants.CONTACT_LASTNAME_FOR_TESTS,
             MailingStreet = newContactMailingStreet,
+        	WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
             WorkPhone__c = workphone,
-            PreferredPhone__c = 'Work'
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         
         String secondContactfirstName = 'test';
@@ -67,7 +68,9 @@ private class TEST_ContactMergeController {
         Contact con2 = new Contact(
             FirstName=secondContactfirstName,
             LastName=secondContactLastName,
-            Homephone = homephone,
+        	WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            HomePhone = homephone,
             PreferredPhone__c = 'Home',
             MailingStreet = secondContactMailingStreet
         );
@@ -79,8 +82,10 @@ private class TEST_ContactMergeController {
             FirstName=thirdContactfirstName,
             LastName=thirdContactLastName,
             MailingStreet = thirdContactMailingStreet,
-            WorkPhone__c = workphone,
-            PreferredPhone__c = 'Work'
+        	WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         insert new Contact[]{con, con2, con3};
         
@@ -173,13 +178,17 @@ private class TEST_ContactMergeController {
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
         
         //set up 3 contacts for the merge interface to work with
-        String newContactfirstName = 'test';
-        String newContactLastName = '1Contact_forTests_Merge';
+        
+        
         String newContactMailingStreet = '123 Elm St';
         Contact con = new Contact(
-            FirstName=newContactfirstName,
-            LastName=newContactLastName,
-            MailingStreet = newContactMailingStreet
+            FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=Constants.CONTACT_LASTNAME_FOR_TESTS,
+            MailingStreet = newContactMailingStreet,
+        	WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         
         String secondContactfirstName = 'test';
@@ -188,7 +197,11 @@ private class TEST_ContactMergeController {
         Contact con2 = new Contact(
             FirstName=secondContactfirstName,
             LastName=secondContactLastName,
-            MailingStreet = secondContactMailingStreet
+            MailingStreet = secondContactMailingStreet,
+        	WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         
         insert new Contact[]{con, con2};
@@ -239,13 +252,17 @@ private class TEST_ContactMergeController {
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
         
         //set up 3 contacts for the merge interface to work with
-        String newContactfirstName = 'test';
-        String newContactLastName = '1Contact_forTests_Merge';
+        
+        
         String newContactMailingStreet = '123 Elm St';
         Contact con = new Contact(
-            FirstName=newContactfirstName,
-            LastName=newContactLastName,
-            MailingStreet = newContactMailingStreet
+            FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=Constants.CONTACT_LASTNAME_FOR_TESTS,
+            MailingStreet = newContactMailingStreet,
+        	WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         
         String secondContactfirstName = 'test';
@@ -254,7 +271,11 @@ private class TEST_ContactMergeController {
         Contact con2 = new Contact(
             FirstName=secondContactfirstName,
             LastName=secondContactLastName,
-            MailingStreet = secondContactMailingStreet
+            MailingStreet = secondContactMailingStreet,
+        	WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         
         insert new Contact[]{con, con2};
@@ -305,13 +326,17 @@ private class TEST_ContactMergeController {
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
         
         //set up 3 contacts for the merge interface to work with
-        String newContactfirstName = 'test';
-        String newContactLastName = '1Contact_forTests_Merge';
+        
+        
         String newContactMailingStreet = '123 Elm St';
         Contact con = new Contact(
-            FirstName=newContactfirstName,
-            LastName=newContactLastName,
-            MailingStreet = newContactMailingStreet
+            FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=Constants.CONTACT_LASTNAME_FOR_TESTS,
+            MailingStreet = newContactMailingStreet,
+        	WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         insert con;
         
@@ -345,13 +370,17 @@ private class TEST_ContactMergeController {
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
         
         //set up 3 contacts for the merge interface to work with
-        String newContactfirstName = 'test';
-        String newContactLastName = '1Contact_forTests_Merge';
+        
+        
         String newContactMailingStreet = '123 Elm St';
         Contact con = new Contact(
-            FirstName=newContactfirstName,
-            LastName=newContactLastName,
-            MailingStreet = newContactMailingStreet
+            FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=Constants.CONTACT_LASTNAME_FOR_TESTS,
+            MailingStreet = newContactMailingStreet,
+        	WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         
         String secondContactfirstName = 'test';
@@ -360,7 +389,11 @@ private class TEST_ContactMergeController {
         Contact con2 = new Contact(
             FirstName=secondContactfirstName,
             LastName=secondContactLastName,
-            MailingStreet = secondContactMailingStreet
+            MailingStreet = secondContactMailingStreet,
+        	WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         
         String thirdContactfirstName = 'test';
@@ -369,7 +402,11 @@ private class TEST_ContactMergeController {
         Contact con3 = new Contact(
             FirstName=thirdContactfirstName,
             LastName=thirdContactLastName,
-            MailingStreet = thirdContactMailingStreet
+            MailingStreet = thirdContactMailingStreet,
+            WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         
         String fourthContactfirstName = 'test';
@@ -378,7 +415,11 @@ private class TEST_ContactMergeController {
         Contact con4 = new Contact(
             FirstName=fourthContactfirstName,
             LastName=fourthContactLastName,
-            MailingStreet = fourthContactMailingStreet
+            MailingStreet = fourthContactMailingStreet,
+        	WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         insert new Contact[]{con, con2, con3, con4};
         
@@ -441,13 +482,17 @@ private class TEST_ContactMergeController {
         
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
 
-        String newContactfirstName = 'test';
-        String newContactLastName = '1Contact_forTests_Merge';
+        
+        
         String newContactMailingStreet = '123 Elm St';
         Contact con = new Contact(
-            FirstName=newContactfirstName,
-            LastName=newContactLastName,
-            MailingStreet = newContactMailingStreet
+            FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=Constants.CONTACT_LASTNAME_FOR_TESTS,
+            MailingStreet = newContactMailingStreet,
+            WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         
         String secondContactfirstName = 'test';
@@ -456,7 +501,11 @@ private class TEST_ContactMergeController {
         Contact con2 = new Contact(
             FirstName=secondContactfirstName,
             LastName=secondContactLastName,
-            MailingStreet = secondContactMailingStreet
+            MailingStreet = secondContactMailingStreet,
+            WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         insert new Contact[]{con, con2};
         
@@ -502,13 +551,17 @@ private class TEST_ContactMergeController {
         
         Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
 
-        String newContactfirstName = 'test';
-        String newContactLastName = '1Contact_forTests_Merge';
+        
+        
         String newContactMailingStreet = '123 Elm St';
         Contact con = new Contact(
-            FirstName=newContactfirstName,
-            LastName=newContactLastName,
-            MailingStreet = newContactMailingStreet
+            FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=Constants.CONTACT_LASTNAME_FOR_TESTS,
+            MailingStreet = newContactMailingStreet,
+            WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         
         String secondContactfirstName = 'test';
@@ -580,14 +633,18 @@ private class TEST_ContactMergeController {
         );
         insert new Account[]{acc, acc2};
 
-        String newContactfirstName = 'test';
-        String newContactLastName = '1Contact_forTests_Merge';
+        
+        
         String newContactMailingStreet = '123 Elm St';
         Contact con = new Contact(
-            FirstName=newContactfirstName,
-            LastName=newContactLastName,
+            FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=Constants.CONTACT_LASTNAME_FOR_TESTS,
             MailingStreet = newContactMailingStreet,
-            AccountId = acc.id
+            AccountId = acc.id,
+            WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         
         String secondContactfirstName = 'test';
@@ -597,7 +654,11 @@ private class TEST_ContactMergeController {
             FirstName=secondContactfirstName,
             LastName=secondContactLastName,
             MailingStreet = secondContactMailingStreet,
-            AccountId = acc2.id
+            AccountId = acc2.id,
+            WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         insert new Contact[]{con, con2};
         
@@ -642,14 +703,18 @@ private class TEST_ContactMergeController {
     //the organization shouldn't be deleted
     static testMethod void merge2PrivateContacts() {
         
-        String newContactfirstName = 'test';
-        String newContactLastName = '1Contact_forTests_Merge';
+        
+        
         String newContactMailingStreet = '123 Elm St';
         Contact con = new Contact(
-            FirstName=newContactfirstName,
-            LastName=newContactLastName,
+            FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=Constants.CONTACT_LASTNAME_FOR_TESTS,
             MailingStreet = newContactMailingStreet,
-            Private__c = true
+            Private__c = true,
+            WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         
         String secondContactfirstName = 'test';
@@ -659,7 +724,11 @@ private class TEST_ContactMergeController {
             FirstName=secondContactfirstName,
             LastName=secondContactLastName,
             MailingStreet = secondContactMailingStreet,
-            Private__c = true
+            Private__c = true,
+            WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         insert new Contact[]{con, con2};
         
@@ -703,13 +772,17 @@ private class TEST_ContactMergeController {
         
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.BUCKET_PROCESSOR));
         
-        String newContactfirstName = 'test';
-        String newContactLastName = '1Contact_forTests_Merge';
+        
+        
         String newContactMailingStreet = '123 Elm St';
         Contact con = new Contact(
-            FirstName=newContactfirstName,
-            LastName=newContactLastName,
-            MailingStreet = newContactMailingStreet
+            FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=Constants.CONTACT_LASTNAME_FOR_TESTS,
+            MailingStreet = newContactMailingStreet,
+            WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         
         String secondContactfirstName = 'test';
@@ -718,7 +791,11 @@ private class TEST_ContactMergeController {
         Contact con2 = new Contact(
             FirstName=secondContactfirstName,
             LastName=secondContactLastName,
-            MailingStreet = secondContactMailingStreet
+            MailingStreet = secondContactMailingStreet,
+            WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         insert new Contact[]{con, con2};
         
@@ -765,12 +842,12 @@ private class TEST_ContactMergeController {
         
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
         
-        String newContactfirstName = 'test';
-        String newContactLastName = '1Contact_forTests_Merge';
+        
+        
         String newContactMailingStreet = '123 Elm St';
         Contact con = new Contact(
-            FirstName=newContactfirstName,
-            LastName=newContactLastName,
+            FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=Constants.CONTACT_LASTNAME_FOR_TESTS,
             MailingStreet = newContactMailingStreet
         );
         
@@ -827,12 +904,12 @@ private class TEST_ContactMergeController {
         
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.BUCKET_PROCESSOR));
         
-        String newContactfirstName = 'test';
-        String newContactLastName = '1Contact_forTests_Merge';
+        
+        
         String newContactMailingStreet = '123 Elm St';
         Contact con = new Contact(
-            FirstName=newContactfirstName,
-            LastName=newContactLastName,
+            FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=Constants.CONTACT_LASTNAME_FOR_TESTS,
             MailingStreet = newContactMailingStreet
         );
         
@@ -894,14 +971,18 @@ private class TEST_ContactMergeController {
         );
         insert acc;
         
-        String newContactfirstName = 'test';
-        String newContactLastName = '1Contact_forTests_Merge';
+        
+        
         String newContactMailingStreet = '123 Elm St';
         Contact con = new Contact(
-            FirstName=newContactfirstName,
-            LastName=newContactLastName,
+            FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=Constants.CONTACT_LASTNAME_FOR_TESTS,
             MailingStreet = newContactMailingStreet,
-            AccountId = acc.id          
+            AccountId = acc.id,
+            WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         
         String secondContactfirstName = 'test';
@@ -910,7 +991,11 @@ private class TEST_ContactMergeController {
         Contact con2 = new Contact(
             FirstName=secondContactfirstName,
             LastName=secondContactLastName,
-            MailingStreet = secondContactMailingStreet
+            MailingStreet = secondContactMailingStreet,
+            WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         insert new Contact[]{con, con2};
         
@@ -955,13 +1040,17 @@ private class TEST_ContactMergeController {
         
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
 
-        String newContactfirstName = 'test';
-        String newContactLastName = '1Contact_forTests_Merge';
+        
+        
         String newContactMailingStreet = '123 Elm St';
         Contact con = new Contact(
-            FirstName=newContactfirstName,
-            LastName=newContactLastName,
-            MailingStreet = newContactMailingStreet
+            FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=Constants.CONTACT_LASTNAME_FOR_TESTS,
+            MailingStreet = newContactMailingStreet,
+            WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         
         String secondContactfirstName = 'test';
@@ -970,7 +1059,11 @@ private class TEST_ContactMergeController {
         Contact con2 = new Contact(
             FirstName=secondContactfirstName,
             LastName=secondContactLastName,
-            MailingStreet = secondContactMailingStreet
+            MailingStreet = secondContactMailingStreet,
+            WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         
         String thirdContactfirstName = 'test';
@@ -979,7 +1072,11 @@ private class TEST_ContactMergeController {
         Contact con3 = new Contact(
             FirstName=thirdContactfirstName,
             LastName=thirdContactLastName,
-            MailingStreet = thirdContactMailingStreet
+            MailingStreet = thirdContactMailingStreet,
+            WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         insert new Contact[]{con, con2, con3};
         
@@ -1032,13 +1129,17 @@ private class TEST_ContactMergeController {
         
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
 
-        String newContactfirstName = 'test';
-        String newContactLastName = '1Contact_forTests_Merge';
+        
+        
         String newContactMailingStreet = '123 Elm St';
         Contact con = new Contact(
-            FirstName=newContactfirstName,
-            LastName=newContactLastName,
-            MailingStreet = newContactMailingStreet
+            FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=Constants.CONTACT_LASTNAME_FOR_TESTS,
+            MailingStreet = newContactMailingStreet,
+            WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         insert con;
         
@@ -1051,7 +1152,11 @@ private class TEST_ContactMergeController {
             FirstName=secondContactfirstName,
             LastName=secondContactLastName,
             MailingStreet = secondContactMailingStreet,
-            AccountId = conAccountId
+            AccountId = conAccountId,
+            WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         insert con2;
         
