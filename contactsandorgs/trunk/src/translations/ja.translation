@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Translations xmlns="http://soap.sforce.com/2006/04/metadata">
     <customLabels>
-        <label>Fusionar Contactos puede resultar en la pérdida de datos. Asegúrese de que el Contacto que seleccione como ganador tenga todos los datos que desea. Quizás necesite copiar datos de un Contacto a otro, antes de fusionar los registros.</label>
+        <label>不正確な個人のマージを行うと、必要なデータが消失する場合があります。マージ後に残したい個人のレコードに、すべての必要なデータが含まれていることを確認してください。データが足りない場合は、個人のマージを行う前に、データをコピーしてください。</label>
         <name>Contact_Merge_Error_Confirm_Message</name>
     </customLabels>
     <customLabels>
-        <label>Si usted tiene un Paquete de Casa, por favor, note que las Casas para los Contactos fusionados no se ven afectadas durante la fusión. Si usted desea fusionar Casas, debería hacerlo en forma manual, asegurándose de que el Contacto ganador esté conectado con la Casa correcta.</label>
+        <label>家族（Household）のパッケージを使用している場合、個人をマージしても、家族には影響しないことに注意してください。家族のマージは、手動で行う必要があります。マージ後の個人が適切な家族と結び付けられていることを確認し、家族を手動でマージしてください。</label>
         <name>Contact_Merge_Error_Confirm_Message_Households</name>
     </customLabels>
     <customLabels>
-        <label>No se encontraron Contactos que coincidieran, por favor, busque nuevamente.</label>
+        <label>該当する個人が見つかりませんでした。再検索してください。</label>
         <name>Contact_Merge_Error_Confirm_Message_Nothing_Found</name>
     </customLabels>
     <customLabels>
@@ -33,11 +33,11 @@
         <name>Contact_Merge_Error_Query_Failed</name>
     </customLabels>
     <customLabels>
-        <label>Por favor, seleccione al menos 2 contactos para fusionar.</label>
+        <label>マージするレコードを少なくとも2つ選択してください。</label>
         <name>Contact_Merge_Error_Too_Few_Contacts</name>
     </customLabels>
     <customLabels>
-        <label>Sólo puede fusionar hasta 3 contactos por vez.</label>
+        <label>一度にマージできるレコードは3つまでです。</label>
         <name>Contact_Merge_Error_Too_Many_Contacts</name>
     </customLabels>
     <customLabels>
@@ -45,19 +45,19 @@
         <name>Contact_Merge_Error_please_retry</name>
     </customLabels>
     <customLabels>
-        <label>Ingrese un hilo de búsqueda para encontrar Contactos duplicados.</label>
+        <label>重複した個人を検索する文字列を入力してください。</label>
         <name>Contact_Merge_Step1</name>
     </customLabels>
     <customLabels>
-        <label>Seleccione 3 Contactos para Fusionar.</label>
+        <label>マージするレコードを2つまたは3つ選択してください。</label>
         <name>Contact_Merge_Step2</name>
     </customLabels>
     <customLabels>
-        <label>Seleccione el Contacto ganador.</label>
+        <label>残すレコードを選択してください。</label>
         <name>Contact_Merge_Step3</name>
     </customLabels>
     <customLabels>
-        <label>Fusione los Contactos.</label>
+        <label>個人をマージします。</label>
         <name>Contact_Merge_Step4</name>
     </customLabels>
     <customLabels>
@@ -77,19 +77,19 @@
         <name>Opportunity_Contact_Role_Error_Bad_Contact_Id</name>
     </customLabels>
     <customPageWebLinks>
-        <label>Reportes de la Edición Nonprofit</label>
+        <label>NPO版レポート</label>
         <name>Nonprofit_Edition_Reports</name>
     </customPageWebLinks>
     <customTabs>
-        <label>Sobre Nonprofit Starter Pack</label>
+        <label>Nonprofit Starter Packについて</label>
         <name>About_Nonprofit_Edition</name>
     </customTabs>
     <customTabs>
-        <label><!-- Contact Merge --></label>
+        <label>個人のマージ</label>
         <name>Contact_Merge</name>
     </customTabs>
     <scontrols>
-        <label>CrearOportunidadContrapartida</label>
+        <label><!-- OpportunityCreateMatching --></label>
         <name>OpportunityCreateMatching</name>
     </scontrols>
 </Translations>
