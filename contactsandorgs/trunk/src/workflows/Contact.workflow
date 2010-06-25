@@ -1,66 +1,87 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Workflow xmlns="http://soap.sforce.com/2006/04/metadata">
     <fieldUpdates>
-        <fullName>Contact%2EAlternateEmail%2EUpdate</fullName>
+        <fullName>ContactAlternateEmailUpdate</fullName>
         <field>AlternateEmail__c</field>
         <formula>Email</formula>
+        <name>Contact.AlternateEmail.Update</name>
         <notifyAssignee>false</notifyAssignee>
         <operation>Formula</operation>
         <protected>false</protected>
     </fieldUpdates>
     <fieldUpdates>
-        <fullName>Contact%2EHomePhone%2EUpdate</fullName>
+        <fullName>ContactHomePhoneUpdate</fullName>
         <field>HomePhone</field>
         <formula>Phone</formula>
+        <name>Contact.HomePhone.Update</name>
         <notifyAssignee>false</notifyAssignee>
         <operation>Formula</operation>
         <protected>false</protected>
     </fieldUpdates>
     <fieldUpdates>
-        <fullName>Contact%2EMobilePhone%2EUpdate</fullName>
+        <fullName>ContactMobilePhoneUpdate</fullName>
         <field>MobilePhone</field>
         <formula>Phone</formula>
+        <name>Contact.MobilePhone.Update</name>
         <notifyAssignee>false</notifyAssignee>
         <operation>Formula</operation>
         <protected>false</protected>
     </fieldUpdates>
     <fieldUpdates>
-        <fullName>Contact%2EOtherEmail%2EUpdate</fullName>
+        <fullName>ContactOtherEmailUpdate</fullName>
         <field>OtherPhone</field>
         <formula>Phone</formula>
+        <name>Contact.OtherEmail.Update</name>
         <notifyAssignee>false</notifyAssignee>
         <operation>Formula</operation>
         <protected>false</protected>
     </fieldUpdates>
     <fieldUpdates>
-        <fullName>Contact%2EPersonalEmail%2EUpdate</fullName>
+        <fullName>ContactPersonalEmailUpdate</fullName>
         <field>HomeEmail__c</field>
         <formula>Email</formula>
+        <name>Contact.PersonalEmail.Update</name>
         <notifyAssignee>false</notifyAssignee>
         <operation>Formula</operation>
         <protected>false</protected>
     </fieldUpdates>
     <fieldUpdates>
-        <fullName>Contact%2EPreferredEmail</fullName>
+        <fullName>ContactPreferredEmail</fullName>
         <field>Email</field>
-        <formula>CASE(
- Preferred_Email__c ,
-&quot;Work&quot;,
- WorkEmail__c ,
-&quot;Personal&quot;,
- HomeEmail__c,
-&quot;Alternate&quot;,
- AlternateEmail__c,
-If(LEN(WorkEmail__c)&gt;0 , WorkEmail__c ,
-if(LEN(  HomeEmail__c)&gt;0,  HomeEmail__c,
- AlternateEmail__c
+        <formula>CASE( 
+Preferred_Email__c , 
+
+&quot;Work&quot;, 
+if(len(WorkEmail__c)&gt;0, WorkEmail__c, 
+if(len(HomeEmail__c)&gt;0, HomeEmail__c, 
+AlternateEmail__c)), 
+
+&quot;Personal&quot;, 
+if(len(HomeEmail__c)&gt;0, HomeEmail__c, 
+if(len(WorkEmail__c)&gt;0, WorkEmail__c, 
+AlternateEmail__c)), 
+
+&quot;Home&quot;, 
+if(len(HomeEmail__c)&gt;0, HomeEmail__c, 
+if(len(WorkEmail__c)&gt;0, WorkEmail__c, 
+AlternateEmail__c)), 
+
+&quot;Alternate&quot;, 
+if(len(AlternateEmail__c)&gt;0, AlternateEmail__c, 
+if(len(WorkEmail__c)&gt;0, WorkEmail__c, 
+HomeEmail__c)), 
+
+If(LEN(WorkEmail__c)&gt;0 , WorkEmail__c , 
+if(LEN( HomeEmail__c)&gt;0, HomeEmail__c, 
+AlternateEmail__c 
 )))</formula>
+        <name>Contact.PreferredEmail</name>
         <notifyAssignee>false</notifyAssignee>
         <operation>Formula</operation>
         <protected>false</protected>
     </fieldUpdates>
     <fieldUpdates>
-        <fullName>Contact%2EPreferredPhone</fullName>
+        <fullName>ContactPreferredPhone</fullName>
         <description>Populates the standard Phone field displayed on activities based on the Preferred Phone field value.</description>
         <field>Phone</field>
         <formula>CASE(
@@ -78,70 +99,79 @@ if(LEN(  HomePhone)&gt;0,  HomePhone,
 if(LEN( MobilePhone)&gt;0, MobilePhone,
 OtherPhone
 ))))</formula>
+        <name>Contact.PreferredPhone</name>
         <notifyAssignee>false</notifyAssignee>
         <operation>Formula</operation>
         <protected>false</protected>
     </fieldUpdates>
     <fieldUpdates>
-        <fullName>Contact%2EWorkEmail%2EUpdate</fullName>
+        <fullName>ContactWorkEmailUpdate</fullName>
         <field>WorkEmail__c</field>
         <formula>Email</formula>
+        <name>Contact.WorkEmail.Update</name>
         <notifyAssignee>false</notifyAssignee>
         <operation>Formula</operation>
         <protected>false</protected>
     </fieldUpdates>
     <fieldUpdates>
-        <fullName>Contact%2EWorkPhone%2EUpdate</fullName>
+        <fullName>ContactWorkPhoneUpdate</fullName>
         <field>WorkPhone__c</field>
         <formula>Phone</formula>
+        <name>Contact.WorkPhone.Update</name>
         <notifyAssignee>false</notifyAssignee>
         <operation>Formula</operation>
         <protected>false</protected>
     </fieldUpdates>
     <fieldUpdates>
-        <fullName>Preferred Phone to Work</fullName>
+        <fullName>PreferredPhonetoWork</fullName>
         <field>PreferredPhone__c</field>
         <literalValue>Work</literalValue>
+        <name>Preferred Phone to Work</name>
         <notifyAssignee>false</notifyAssignee>
         <operation>Literal</operation>
         <protected>false</protected>
     </fieldUpdates>
     <fieldUpdates>
-        <fullName>Set Pref Email to Work</fullName>
+        <fullName>SetPrefEmailtoWork</fullName>
         <field>Preferred_Email__c</field>
         <literalValue>Work</literalValue>
+        <name>Set Pref Email to Work</name>
         <notifyAssignee>false</notifyAssignee>
         <operation>Literal</operation>
         <protected>false</protected>
     </fieldUpdates>
     <fieldUpdates>
-        <fullName>Set Work Email to Email</fullName>
+        <fullName>SetWorkEmailtoEmail</fullName>
         <field>WorkEmail__c</field>
         <formula>Email</formula>
+        <name>Set Work Email to Email</name>
         <notifyAssignee>false</notifyAssignee>
         <operation>Formula</operation>
         <protected>false</protected>
     </fieldUpdates>
     <fieldUpdates>
-        <fullName>Update Pref Phone Pick to Work</fullName>
+        <fullName>UpdatePrefPhonePicktoWork</fullName>
         <field>PreferredPhone__c</field>
         <literalValue>Work</literalValue>
+        <name>Update Pref Phone Pick to Work</name>
         <notifyAssignee>false</notifyAssignee>
         <operation>Literal</operation>
         <protected>false</protected>
     </fieldUpdates>
     <fieldUpdates>
-        <fullName>Update Work Phone with Phone</fullName>
+        <fullName>UpdateWorkPhonewithPhone</fullName>
         <field>WorkPhone__c</field>
         <formula>Phone</formula>
+        <name>Update Work Phone with Phone</name>
         <notifyAssignee>false</notifyAssignee>
         <operation>Formula</operation>
         <protected>false</protected>
     </fieldUpdates>
     <fieldUpdates>
-        <fullName>Work Phone to Phone</fullName>
+        <fullName>WorkPhonetoPhone</fullName>
         <field>WorkPhone__c</field>
         <formula>Phone</formula>
+        <name>Work Phone to Phone</name>
         <notifyAssignee>false</notifyAssignee>
         <operation>Formula</operation>
         <protected>false</protected>
@@ -149,7 +179,7 @@ OtherPhone
     <rules>
         <fullName>Contact%2EEmailChanged_Alternate</fullName>
         <actions>
-            <name>Contact%2EAlternateEmail%2EUpdate</name>
+            <name>ContactAlternateEmailUpdate</name>
             <type>FieldUpdate</type>
         </actions>
         <active>true</active>
@@ -168,12 +198,12 @@ OtherPhone
     <rules>
         <fullName>Contact%2EEmailChanged_Personal</fullName>
         <actions>
-            <name>Contact%2EPersonalEmail%2EUpdate</name>
+            <name>ContactPersonalEmailUpdate</name>
             <type>FieldUpdate</type>
         </actions>
         <active>true</active>
         <formula>AND(
-     ISPICKVAL( Preferred_Email__c ,&quot;Personal&quot;),
+    OR( ISPICKVAL( Preferred_Email__c ,&quot;Personal&quot;),ISPICKVAL( Preferred_Email__c ,&quot;Home&quot;)),
      OR(
           AND(
                ISNEW(),
@@ -187,7 +217,7 @@ OtherPhone
     <rules>
         <fullName>Contact%2EEmailChanged_Work</fullName>
         <actions>
-            <name>Contact%2EWorkEmail%2EUpdate</name>
+            <name>ContactWorkEmailUpdate</name>
             <type>FieldUpdate</type>
         </actions>
         <active>true</active>
@@ -206,7 +236,7 @@ OtherPhone
     <rules>
         <fullName>Contact%2EPhoneChanged_Home</fullName>
         <actions>
-            <name>Contact%2EHomePhone%2EUpdate</name>
+            <name>ContactHomePhoneUpdate</name>
             <type>FieldUpdate</type>
         </actions>
         <active>true</active>
@@ -225,7 +255,7 @@ OtherPhone
     <rules>
         <fullName>Contact%2EPhoneChanged_Mobile</fullName>
         <actions>
-            <name>Contact%2EMobilePhone%2EUpdate</name>
+            <name>ContactMobilePhoneUpdate</name>
             <type>FieldUpdate</type>
         </actions>
         <active>true</active>
@@ -244,7 +274,7 @@ OtherPhone
     <rules>
         <fullName>Contact%2EPhoneChanged_Other</fullName>
         <actions>
-            <name>Contact%2EOtherEmail%2EUpdate</name>
+            <name>ContactOtherEmailUpdate</name>
             <type>FieldUpdate</type>
         </actions>
         <active>true</active>
@@ -263,7 +293,7 @@ OtherPhone
     <rules>
         <fullName>Contact%2EPhoneChanged_Work</fullName>
         <actions>
-            <name>Contact%2EWorkPhone%2EUpdate</name>
+            <name>ContactWorkPhoneUpdate</name>
             <type>FieldUpdate</type>
         </actions>
         <active>true</active>
@@ -282,7 +312,7 @@ OtherPhone
     <rules>
         <fullName>Contact%2EPreferred_Email%5F%5Fc</fullName>
         <actions>
-            <name>Contact%2EPreferredEmail</name>
+            <name>ContactPreferredEmail</name>
             <type>FieldUpdate</type>
         </actions>
         <active>true</active>
@@ -299,7 +329,7 @@ ISCHANGED(AlternateEmail__c)
     <rules>
         <fullName>Contact%2EPreferred_Phone%5F%5Fc</fullName>
         <actions>
-            <name>Contact%2EPreferredPhone</name>
+            <name>ContactPreferredPhone</name>
             <type>FieldUpdate</type>
         </actions>
         <active>true</active>
@@ -317,11 +347,11 @@ ISCHANGED(OtherPhone)
     <rules>
         <fullName>Email only%3A Paste to Work</fullName>
         <actions>
-            <name>Set Pref Email to Work</name>
+            <name>SetPrefEmailtoWork</name>
             <type>FieldUpdate</type>
         </actions>
         <actions>
-            <name>Set Work Email to Email</name>
+            <name>SetWorkEmailtoEmail</name>
             <type>FieldUpdate</type>
         </actions>
         <active>true</active>
@@ -351,11 +381,11 @@ ISCHANGED(OtherPhone)
     <rules>
         <fullName>Phone only%3A Paste to Work</fullName>
         <actions>
-            <name>Preferred Phone to Work</name>
+            <name>PreferredPhonetoWork</name>
             <type>FieldUpdate</type>
         </actions>
         <actions>
-            <name>Work Phone to Phone</name>
+            <name>WorkPhonetoPhone</name>
             <type>FieldUpdate</type>
         </actions>
         <active>true</active>
