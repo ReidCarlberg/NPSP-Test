@@ -13,7 +13,7 @@
     <fields>
         <fullName>Disable_Account_Model_Trigger__c</fullName>
         <defaultValue>false</defaultValue>
-        <inlineHelpText>Check this to turn off the Account Model trigger. Only use this if you understand the ramificatiosn. Turning off the account model will get your data into an inconsistent state.</inlineHelpText>
+        <inlineHelpText>Check this to turn off the Account Model trigger. Only use this if you understand the ramifications. Turning off the account model will get your data into an inconsistent state.</inlineHelpText>
         <label>Disable Account Model Trigger</label>
         <type>Checkbox</type>
     </fields>
