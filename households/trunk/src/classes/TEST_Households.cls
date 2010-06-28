@@ -33,6 +33,8 @@ private class TEST_Households {
     static testMethod void newIndContactAllContactsProcessor() {
     	
     	Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(new Households_Settings__c (Household_Rules__c = Households.ALL_PROCESSOR));
+        
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR));
                 
         String street = '2345 Elm St.';
         String city = 'Seattle';
@@ -80,6 +82,9 @@ private class TEST_Households {
     static testMethod void newIndContactIndividualsProcessor() {
     	
     	Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(new Households_Settings__c (Household_Rules__c = Households.ALL_INDIVIDUALS_PROCESSOR));
+        
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR));
+                
         String street = '2345 Elm St.';
         String city = 'Seattle';
         String state = 'WA';
@@ -123,6 +128,8 @@ private class TEST_Households {
     
     static testMethod void newNoHouseholdProcessor() {
     	
+    	npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR));
+      
     	Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(new Households_Settings__c (Household_Rules__c = Households.NO_HOUSEHOLDS_PROCESSOR));
         String street = '2345 Elm St.';
         String city = 'Seattle';
@@ -150,6 +157,8 @@ private class TEST_Households {
     /// <summary> test insert org contact with all contacts processor </summary>
     static testMethod void newOrgContactAllContactsProcessor() {
     	
+    	npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR));
+        
     	Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(new Households_Settings__c (Household_Rules__c = Households.ALL_PROCESSOR));
     	
         Account acct = new Account(
@@ -203,6 +212,8 @@ private class TEST_Households {
     /// <summary> test insert org contact with Individuals processor </summary>
     static testMethod void newOrgContactIndividualsProcessor() {
     	
+    	npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR));
+        
     	Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(new Households_Settings__c (Household_Rules__c = Households.ALL_INDIVIDUALS_PROCESSOR));
     	
         Account acct = new Account(
@@ -244,6 +255,8 @@ private class TEST_Households {
     /// <summary> test delete a contact that has it's own household </summary>
     static testMethod void contactDeleteWithOwnHousehold() {
     	
+    	npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR));
+        
     	Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(new Households_Settings__c (Household_Rules__c = Households.ALL_INDIVIDUALS_PROCESSOR));
     	
         String lastname = 'SmithForTest99';
@@ -266,6 +279,8 @@ private class TEST_Households {
     /// <summary> test delete a contact that has shared household </summary>
     static testMethod void contactDeleteWithSharedHousehold() {
     	
+    	npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR));
+        
     	Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(new Households_Settings__c (Household_Rules__c = Households.ALL_INDIVIDUALS_PROCESSOR));
     	
         String lastname = 'SmithForTest99';
