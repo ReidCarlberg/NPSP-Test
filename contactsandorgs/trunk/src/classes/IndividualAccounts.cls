@@ -40,7 +40,7 @@ global class IndividualAccounts
     /// <param name="contacts"> Contact objects that are being triggered </param>
     /// <param name="oldContacts"> Contact object values before trigger event </param>
     /// <param name="ta"> Trigger action that is occuring </param>
-    public IndividualAccounts(Contact[] contacts, Contact[] oldContacts, IndividualAccounts_Utils.triggerAction ta)
+    public IndividualAccounts(Contact[] contacts, Contact[] oldContacts, Constants.triggerAction ta)
     {
         Contacts_and_Orgs_Settings__c ContactsSettings = Constants.getContactsSettings();
             if(!ContactsSettings.Disable_Account_Model_Trigger__c){
@@ -60,7 +60,7 @@ global class IndividualAccounts
             
             Integer i = 0;
             //if this is after a delete
-            if(ta==IndividualAccounts_Utils.triggerAction.afterDelete){
+            if(ta==Constants.triggerAction.afterDelete){
                 
                 for(Contact c : oldContacts) {
                     contactDeletes.add(c);
@@ -70,7 +70,7 @@ global class IndividualAccounts
                 for(Contact c : contacts)
                 {
                     //BEFORE INSERT
-                    if ( ta==IndividualAccounts_Utils.triggerAction.beforeInsert )
+                    if ( ta==Constants.triggerAction.beforeInsert )
                     {
                         /*one-to-one account should be created if:
                             1. The account isn't set by the user
@@ -98,7 +98,7 @@ global class IndividualAccounts
                     }
         
                     //AFTER INSERT
-                    if ( ta==IndividualAccounts_Utils.triggerAction.afterInsert )            
+                    if ( ta==Constants.triggerAction.afterInsert )            
                     {
                         /*grab the Accounts that need to have the newly assigned Contact Id to them if:
                             1. If the contact is connected to an Account
@@ -115,7 +115,7 @@ global class IndividualAccounts
                     }
         
                     //BEFORE UPDATE
-                    if ( ta==IndividualAccounts_Utils.triggerAction.beforeUpdate )
+                    if ( ta==Constants.triggerAction.beforeUpdate )
                     {
                         /*one-to-one account should be created if:
                             1. The account has been blanked out by the user
@@ -144,7 +144,7 @@ global class IndividualAccounts
                     }
         
                     //AFTER UPDATE
-                    if ( ta==IndividualAccounts_Utils.triggerAction.afterUpdate )
+                    if ( ta==Constants.triggerAction.afterUpdate )
                     {
                         /*if the contact is in the one-to-one model, changes to fields on the Contact
                         will require data changes on the Account to keep some fields in sync
@@ -225,7 +225,7 @@ global class IndividualAccounts
         //grab the first Account that is named Individual
         List<Account> individuals = [Select Id from Account where name = :Constants.BUCKET_ACCOUNT_NAME ORDER BY CreatedDate Desc Limit 1];
         
-        Id individualAccountId = IndividualAccounts_Utils.GetIndividualAccountId();
+        Id individualAccountId = Constants.GetIndividualAccountId();
         
         if (individuals.size() > 0)
         {

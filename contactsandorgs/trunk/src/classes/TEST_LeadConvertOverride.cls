@@ -26,7 +26,7 @@ private class TEST_LeadConvertOverride {
     public static testMethod void newLeadConversion_Test() {
         
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
-        IndividualAccounts_Utils.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+        Constants.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
         
         Test.setCurrentPageReference(new PageReference('Page.LeadConvertOverride'));
  
@@ -84,7 +84,7 @@ private class TEST_LeadConvertOverride {
     public static testMethod void newLeadConversionMerge_Test() {
 
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
-        IndividualAccounts_Utils.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+        Constants.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
         
         Test.setCurrentPageReference(new PageReference('Page.LeadConvertOverride'));
  
@@ -147,7 +147,7 @@ private class TEST_LeadConvertOverride {
     public static testMethod void newLeadConversionNamedCompany_Test() {
 
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
-        IndividualAccounts_Utils.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+        Constants.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
         
         Test.setCurrentPageReference(new PageReference('Page.LeadConvertOverride'));
         
@@ -175,7 +175,7 @@ private class TEST_LeadConvertOverride {
     public static testMethod void newLeadConversionNamedCompanyNoFirstName_Test() {
 
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
-        IndividualAccounts_Utils.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+        Constants.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
         
         Test.setCurrentPageReference(new PageReference('Page.LeadConvertOverride')); 
         
@@ -204,7 +204,7 @@ private class TEST_LeadConvertOverride {
     public static testMethod void newLeadWithCompanyMatchingLeadName_Test() {
         
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
-        IndividualAccounts_Utils.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+        Constants.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
         
         Test.setCurrentPageReference(new PageReference('Page.LeadConvertOverride'));
         

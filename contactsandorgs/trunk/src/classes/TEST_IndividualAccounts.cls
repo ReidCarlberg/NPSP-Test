@@ -34,7 +34,7 @@ private class TEST_IndividualAccounts {
     static testMethod void insertPrivate()
     {
         
-        IndividualAccounts_Utils.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+        Constants.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
 
         Contact con = new Contact(
             FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
@@ -58,7 +58,7 @@ private class TEST_IndividualAccounts {
     {
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
         
-        IndividualAccounts_Utils.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+        Constants.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
 
         Contact con = new Contact(
             FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
@@ -85,7 +85,7 @@ private class TEST_IndividualAccounts {
     {
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR,Disable_Account_Model_Trigger__c=true));
         
-        IndividualAccounts_Utils.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+        Constants.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
 
         Contact con = new Contact(
             FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
@@ -271,7 +271,7 @@ private class TEST_IndividualAccounts {
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.BUCKET_PROCESSOR));
         
         
-        IndividualAccounts_Utils.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+        Constants.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
 
         Contact con = new Contact(
         	FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
@@ -298,7 +298,7 @@ private class TEST_IndividualAccounts {
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.BUCKET_PROCESSOR));
         
         
-        IndividualAccounts_Utils.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+        Constants.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
 
         Contact con = new Contact(
         	FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
@@ -335,7 +335,7 @@ private class TEST_IndividualAccounts {
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.BUCKET_PROCESSOR));
         
         
-        IndividualAccounts_Utils.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+        Constants.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
         
         Account acct = new Account(Name='Test Account 876');
         insert acct;
@@ -381,7 +381,7 @@ private class TEST_IndividualAccounts {
         
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
         
-        IndividualAccounts_Utils.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+        Constants.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
 
         Contact con = new Contact(
         	FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
@@ -412,7 +412,7 @@ private class TEST_IndividualAccounts {
     {
         
         
-        IndividualAccounts_Utils.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+        Constants.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
         
         String acctName = 'Test Account 876';
         Account acct = new Account(Name=acctName);
@@ -456,7 +456,7 @@ private class TEST_IndividualAccounts {
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
         
         
-        IndividualAccounts_Utils.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+        Constants.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
         
         Account acct = new Account(Name='Test Account 876');
         insert acct;
@@ -502,7 +502,7 @@ private class TEST_IndividualAccounts {
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
 
         
-        IndividualAccounts_Utils.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+        Constants.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
         
         String newContactMailingStreet = '123 Elm St';
 
@@ -537,7 +537,7 @@ private class TEST_IndividualAccounts {
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
         
         
-        IndividualAccounts_Utils.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+        Constants.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
         
         
         
@@ -579,7 +579,7 @@ private class TEST_IndividualAccounts {
     public static testMethod void deleteContactNormalAccount() {
         
         
-        IndividualAccounts_Utils.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+        Constants.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
         
         Account orgAccount = new Account(
             Name='Fake account'
@@ -1016,7 +1016,7 @@ private class TEST_IndividualAccounts {
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
         
         
-        IndividualAccounts_Utils.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+        Constants.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
 
         Contact con = new Contact(
         	FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
@@ -1043,7 +1043,7 @@ private class TEST_IndividualAccounts {
     {
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
         
-        IndividualAccounts_Utils.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+        Constants.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
 
         Contact con = new Contact(
         	FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
@@ -1076,7 +1076,7 @@ private class TEST_IndividualAccounts {
     {
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
         
-        IndividualAccounts_Utils.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+        Constants.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
 
         Contact con = new Contact(
         	FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
@@ -1113,7 +1113,7 @@ private class TEST_IndividualAccounts {
         Integer day = 10;
         
         
-        IndividualAccounts_Utils.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+        Constants.setIndividualAccountForTests(Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
 
         Contact con = new Contact(
         	FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,

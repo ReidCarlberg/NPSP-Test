@@ -33,46 +33,47 @@
 */
 global class Constants {
     //One-to-One value for system processor field
-    public static String ONE_TO_ONE_PROCESSOR = 'One-to-One';
+    global static final String ONE_TO_ONE_PROCESSOR = 'One-to-One';
     //One-to-One org type value
-    public static String ONE_TO_ONE_ORGANIZATION_TYPE = 'One-to-One Individual';
+    global static final String ONE_TO_ONE_ORGANIZATION_TYPE = 'One-to-One Individual';
     
     //Bucket value for system processor field
-    public static String BUCKET_PROCESSOR = 'Individual';
+    global static final String BUCKET_PROCESSOR = 'Individual';
     //Buck org type value
-    public static String BUCKET_ORGANIZATION_TYPE = 'Bucket Individual';
+    global static final String BUCKET_ORGANIZATION_TYPE = 'Bucket Individual';
     //Bucket Account name
-    public static String BUCKET_ACCOUNT_NAME = 'Individual';
+    global static  String BUCKET_ACCOUNT_NAME = 'Individual';
     
-    public static Contacts_and_Orgs_Settings__c ContactsSettings;
+    global static Contacts_and_Orgs_Settings__c ContactsSettings;
     
-    public static final string CONTACT_FIRSTNAME_FOR_TESTS = 'test';
-    public static final string CONTACT_LASTNAME_FOR_TESTS = 'Contact_forTests';
+    global static  string CONTACT_FIRSTNAME_FOR_TESTS = 'test';
+    global static  string CONTACT_LASTNAME_FOR_TESTS = 'Contact_forTests';
     
-    public static final string CONTACT_EMAIL_FOR_TESTS = 'junk@test.net';
-    public static final string CONTACT_PREFERRED_EMAIL_FOR_TESTS = 'Work';
-    public static final string CONTACT_PHONE_FOR_TESTS = '206-777-8888';
-    public static final string CONTACT_PREFERRED_PHONE_FOR_TESTS = 'Work';
+    global static  string CONTACT_EMAIL_FOR_TESTS = 'junk@test.net';
+    global static  string CONTACT_PREFERRED_EMAIL_FOR_TESTS = 'Work';
+    global static  string CONTACT_PHONE_FOR_TESTS = '206-777-8888';
+    global static  string CONTACT_PREFERRED_PHONE_FOR_TESTS = 'Work';
     
-    public static final string INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS = 'IndividualAccountNameForTests';
+    global static  string INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS = 'IndividualAccountNameForTests';
     
     
     
     //get the settings. handles the case where the managed value doesn't exist yet
-    public static Contacts_and_Orgs_Settings__c getContactsSettings() {
+    global static Contacts_and_Orgs_Settings__c getContactsSettings() {
         boolean usedToBeOneToOne = false;
         //if no settings exist, create defaults
         if (ContactsSettings == null) {
             //first see if we already have settings
             ContactsSettings = Contacts_and_Orgs_Settings__c.getOrgDefaults();
             system.debug(Contacts_and_Orgs_Settings__c.getOrgDefaults());
-            if (ContactsSettings == null) {
-                //get the model they used to be in
+            if (ContactsSettings == null) { 
+                //get the model they used to be in 
                 Schema.DescribeFieldResult F = Schema.sObjectType.Contact.fields.SystemAccountProcessor__c; 
                 List<Schema.PicklistEntry> P = F.getPicklistValues();
                 
                 for(Schema.PicklistEntry pe : P){
                 	system.debug(pe.getValue() + ' : ' + pe.isDefaultValue());
+                	system.debug('default value: ' + Constants.ONE_TO_ONE_PROCESSOR);
                     if (pe.isDefaultValue()){
                         if(pe.getValue()==Constants.ONE_TO_ONE_PROCESSOR){
                             usedToBeOneToOne = true;
@@ -98,7 +99,7 @@ global class Constants {
         return ContactsSettings;
     }
     
-    public static Contacts_and_Orgs_Settings__c getContactsSettingsForTests(Contacts_and_Orgs_Settings__c mySettings) {
+    global static Contacts_and_Orgs_Settings__c getContactsSettingsForTests(Contacts_and_Orgs_Settings__c mySettings) {
         
         //clear out whatever settings exist
         delete [select id from Contacts_and_Orgs_Settings__c];
@@ -131,7 +132,7 @@ global class Constants {
         return isOneToOneModel;
     }
     */
-     public static boolean isOneToOne() {
+     global static boolean isOneToOne() {
         
         
         //if no settings exist, create defaults
@@ -142,6 +143,50 @@ global class Constants {
         }
         
     }
+    /// <name> triggerAction </name>
+    /// <summary> contains possible actions for a trigger </summary>
+    public enum triggerAction {beforeInsert, beforeUpdate, beforeDelete, afterInsert, afterUpdate, afterDelete, afterUndelete}
     
+    public static Id IndividualAccountId; 
+    
+    //variable for Account Name
+	private static String IndividualAccountName = Constants.BUCKET_ACCOUNT_NAME;
+
+	global static id GetIndividualAccountId () {
+	
+		// look up the ID if we haven't already done it
+		if ( IndividualAccountId == null ) {
+			List<Account> acct = [select id,SYSTEMISINDIVIDUAL__c,SYSTEM_AccountType__c from account where Name =:IndividualAccountName LIMIT 1];
+			if(acct.size()>0){
+				
+				if(acct[0].SYSTEMISINDIVIDUAL__c==false || acct[0].SYSTEM_AccountType__c<>Constants.BUCKET_ORGANIZATION_TYPE){
+					acct[0].SYSTEMISINDIVIDUAL__c = true;
+					acct[0].SYSTEM_AccountType__c = Constants.BUCKET_ORGANIZATION_TYPE;
+				}
+				update acct[0];
+				
+				IndividualAccountId = acct[0].id;	
+			}			
+		}
+		return IndividualAccountId;
+	}
+	
+	global static Id setIndividualAccountForTests(String accountName) {
+		//create a fake Individual Account for tests
+
+		Account individualAccountForTests = new Account(
+			Name=accountName,
+   	        SYSTEMISINDIVIDUAL__c = true,
+   	        SYSTEM_AccountType__c = Constants.BUCKET_ORGANIZATION_TYPE
+		);
+		
+		insert individualAccountForTests;
+		
+		Constants.BUCKET_ACCOUNT_NAME = accountName;
+		IndividualAccountName = accountName;
+		
+		return individualAccountForTests.id;
+		
+	}
 
 }

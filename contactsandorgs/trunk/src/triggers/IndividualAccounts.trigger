@@ -32,24 +32,24 @@ trigger IndividualAccounts on Contact (before insert, before update, after inser
 	
  
     if(Trigger.isInsert && Trigger.isBefore){
-        IndividualAccounts process = new IndividualAccounts(Trigger.new, Trigger.old, IndividualAccounts_Utils.triggerAction.beforeInsert);
+        IndividualAccounts process = new IndividualAccounts(Trigger.new, Trigger.old, Constants.triggerAction.beforeInsert);
     }
     if(Trigger.isUpdate && Trigger.isBefore){
-        IndividualAccounts process = new IndividualAccounts(Trigger.new, Trigger.old, IndividualAccounts_Utils.triggerAction.beforeUpdate);
+        IndividualAccounts process = new IndividualAccounts(Trigger.new, Trigger.old, Constants.triggerAction.beforeUpdate);
     }
     if( Trigger.isAfter && Trigger.isInsert ){
     	//requery to get correct Account values
     	Contact[] newContacts = [select id,SystemAccountProcessor__c,Private__c,AccountId,Account.SYSTEMIsIndividual__c,Account.Name,firstname, lastname from Contact where Id IN :trigger.New];
 	        
-        IndividualAccounts process = new IndividualAccounts(newContacts, Trigger.old, IndividualAccounts_Utils.triggerAction.afterInsert);
+        IndividualAccounts process = new IndividualAccounts(newContacts, Trigger.old, Constants.triggerAction.afterInsert);
     }
     if( Trigger.isAfter && Trigger.isUpdate ){
 	    //requery to get correct Account values
     	Contact[] newContacts = [select id,SystemAccountProcessor__c,Private__c,AccountId,Account.SYSTEMIsIndividual__c,Organization_Type__c,Account.Name,firstname, lastname,MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, OtherStreet, OtherCity, OtherState, OtherPostalCode, OtherCountry, Phone, Fax from Contact where Id IN :trigger.New];
 	    
-        IndividualAccounts process = new IndividualAccounts(newContacts, Trigger.old, IndividualAccounts_Utils.triggerAction.afterUpdate);
+        IndividualAccounts process = new IndividualAccounts(newContacts, Trigger.old, Constants.triggerAction.afterUpdate);
     }
     if( Trigger.isAfter && Trigger.isDelete ){
-        IndividualAccounts process = new IndividualAccounts(Trigger.new, Trigger.old, IndividualAccounts_Utils.triggerAction.afterDelete);
+        IndividualAccounts process = new IndividualAccounts(Trigger.new, Trigger.old, Constants.triggerAction.afterDelete);
     }
 }
