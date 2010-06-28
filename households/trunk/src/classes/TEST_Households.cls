@@ -31,28 +31,30 @@ private class TEST_Households {
     /// <name> newIndContactAllContactsProcessor </name>
     /// <summary> test insert individual with all contacts processor </summary>
     static testMethod void newIndContactAllContactsProcessor() {
-    	String street = '2345 Elm St.';
-    	String city = 'Seattle';
-    	String state = 'WA';
-    	String zip = '88777';
-    	String country = 'US';
-    	String lastname = 'SmithForTest99';
-		Contact con = new Contact(
-			FirstName='test',
-			LastName=lastname,
-			MailingStreet = street,
-			MailingCity = city,
-			MailingState = state,
-			MailingPostalCode = zip,
-			MailingCountry = country,
-			SystemHouseholdProcessor__c = 'All New or Edited Contacts'
-		);
+    	
+    	Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(new Households_Settings__c (Household_Rules__c = Households.ALL_PROCESSOR));
+                
+        String street = '2345 Elm St.';
+        String city = 'Seattle';
+        String state = 'WA';
+        String zip = '88777';
+        String country = 'US';
+        String lastname = 'SmithForTest99';
+        Contact con = new Contact(
+            FirstName='test',
+            LastName=lastname,
+            MailingStreet = street,
+            MailingCity = city,
+            MailingState = state,
+            MailingPostalCode = zip,
+            MailingCountry = country
+        );
         insert con;
         Contact[] createdContacts = [select Household__r.Name,Household__r.MailingStreet__c,Household__r.MailingCity__c,Household__r.MailingState__c,Household__r.MailingPostalCode__c,Household__r.MailingCountry__c,Household__c from Contact where id=:con.id];
         
         Id firstHouseholdId = createdContacts[0].Household__c;
         system.assertEquals(street,createdContacts[0].Household__r.MailingStreet__c);
-       	system.assertEquals(city,createdContacts[0].Household__r.MailingCity__c);
+        system.assertEquals(city,createdContacts[0].Household__r.MailingCity__c);
         system.assertEquals(state,createdContacts[0].Household__r.MailingState__c);
         system.assertEquals(zip,createdContacts[0].Household__r.MailingPostalCode__c);
         system.assertEquals(country,createdContacts[0].Household__r.MailingCountry__c);
@@ -66,7 +68,7 @@ private class TEST_Households {
         
         system.assertNotEquals(firstHouseholdId,createdContacts[0].Household__c);
         system.assertEquals(street,createdContacts[0].Household__r.MailingStreet__c);
-       	system.assertEquals(city,createdContacts[0].Household__r.MailingCity__c);
+        system.assertEquals(city,createdContacts[0].Household__r.MailingCity__c);
         system.assertEquals(state,createdContacts[0].Household__r.MailingState__c);
         system.assertEquals(zip,createdContacts[0].Household__r.MailingPostalCode__c);
         system.assertEquals(country,createdContacts[0].Household__r.MailingCountry__c);
@@ -76,28 +78,29 @@ private class TEST_Households {
     /// <name> newIndContactIndividualsProcessor </name>
     /// <summary> test insert individual with individuals processor </summary>
     static testMethod void newIndContactIndividualsProcessor() {
-		String street = '2345 Elm St.';
-    	String city = 'Seattle';
-    	String state = 'WA';
-    	String zip = '88777';
-    	String country = 'US';
-    	String lastname = 'SmithForTest99';
-		Contact con = new Contact(
-			FirstName='test',
-			LastName=lastname,
-			MailingStreet = street,
-			MailingCity = city,
-			MailingState = state,
-			MailingPostalCode = zip,
-			MailingCountry = country,
-			SystemHouseholdProcessor__c = 'All Individual Contacts'
-		);
+    	
+    	Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(new Households_Settings__c (Household_Rules__c = Households.ALL_INDIVIDUALS_PROCESSOR));
+        String street = '2345 Elm St.';
+        String city = 'Seattle';
+        String state = 'WA';
+        String zip = '88777';
+        String country = 'US';
+        String lastname = 'SmithForTest99';
+        Contact con = new Contact(
+            FirstName='test',
+            LastName=lastname,
+            MailingStreet = street,
+            MailingCity = city,
+            MailingState = state,
+            MailingPostalCode = zip,
+            MailingCountry = country
+        );
         insert con;
         Contact[] createdContacts = [select Household__r.Name,Household__r.MailingStreet__c,Household__r.MailingCity__c,Household__r.MailingState__c,Household__r.MailingPostalCode__c,Household__r.MailingCountry__c,Household__c from Contact where id=:con.id];
         
         Id firstHouseholdId = createdContacts[0].Household__c;
         system.assertEquals(street,createdContacts[0].Household__r.MailingStreet__c);
-       	system.assertEquals(city,createdContacts[0].Household__r.MailingCity__c);
+        system.assertEquals(city,createdContacts[0].Household__r.MailingCity__c);
         system.assertEquals(state,createdContacts[0].Household__r.MailingState__c);
         system.assertEquals(zip,createdContacts[0].Household__r.MailingPostalCode__c);
         system.assertEquals(country,createdContacts[0].Household__r.MailingCountry__c);
@@ -111,44 +114,71 @@ private class TEST_Households {
         
         system.assertNotEquals(firstHouseholdId,createdContacts[0].Household__c);
         system.assertEquals(street,createdContacts[0].Household__r.MailingStreet__c);
-       	system.assertEquals(city,createdContacts[0].Household__r.MailingCity__c);
+        system.assertEquals(city,createdContacts[0].Household__r.MailingCity__c);
         system.assertEquals(state,createdContacts[0].Household__r.MailingState__c);
         system.assertEquals(zip,createdContacts[0].Household__r.MailingPostalCode__c);
         system.assertEquals(country,createdContacts[0].Household__r.MailingCountry__c);
         system.assertEquals(lastname + ' Household',createdContacts[0].Household__r.Name);
     }
     
+    static testMethod void newNoHouseholdProcessor() {
+    	
+    	Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(new Households_Settings__c (Household_Rules__c = Households.NO_HOUSEHOLDS_PROCESSOR));
+        String street = '2345 Elm St.';
+        String city = 'Seattle';
+        String state = 'WA';
+        String zip = '88777';
+        String country = 'US';
+        String lastname = 'SmithForTest99';
+        Contact con = new Contact(
+            FirstName='test',
+            LastName=lastname,
+            MailingStreet = street,
+            MailingCity = city,
+            MailingState = state,
+            MailingPostalCode = zip,
+            MailingCountry = country
+        );
+        insert con;
+        Contact[] createdContacts = [select Household__r.Name,Household__r.MailingStreet__c,Household__r.MailingCity__c,Household__r.MailingState__c,Household__r.MailingPostalCode__c,Household__r.MailingCountry__c,Household__c from Contact where id=:con.id];
+        
+        
+        system.assertEquals(null,createdContacts[0].Household__c);
+    }
+    
     /// <name> newOrgContactAllContactsProcessor </name>
     /// <summary> test insert org contact with all contacts processor </summary>
     static testMethod void newOrgContactAllContactsProcessor() {
-		Account acct = new Account(
-			Name = 'Test Organization 888'
-		);
+    	
+    	Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(new Households_Settings__c (Household_Rules__c = Households.ALL_PROCESSOR));
+    	
+        Account acct = new Account(
+            Name = 'Test Organization 888'
+        );
         insert acct;
-		
-		String street = '2345 Elm St.';
-    	String city = 'Seattle';
-    	String state = 'WA';
-    	String zip = '88777';
-    	String country = 'US';
-    	String lastname = 'SmithForTest99';
-		Contact con = new Contact(
-			FirstName='test',
-			LastName=lastname,
-			MailingStreet = street,
-			MailingCity = city,
-			MailingState = state,
-			MailingPostalCode = zip,
-			MailingCountry = country,
-			AccountId = acct.id,
-			SystemHouseholdProcessor__c = 'All New or Edited Contacts'
-		);
+        
+        String street = '2345 Elm St.';
+        String city = 'Seattle';
+        String state = 'WA';
+        String zip = '88777';
+        String country = 'US';
+        String lastname = 'SmithForTest99';
+        Contact con = new Contact(
+            FirstName='test',
+            LastName=lastname,
+            MailingStreet = street,
+            MailingCity = city,
+            MailingState = state,
+            MailingPostalCode = zip,
+            MailingCountry = country,
+            AccountId = acct.id
+        );
         insert con;
         Contact[] createdContacts = [select Household__r.Name,Household__r.MailingStreet__c,Household__r.MailingCity__c,Household__r.MailingState__c,Household__r.MailingPostalCode__c,Household__r.MailingCountry__c,Household__c from Contact where id=:con.id];
         
         Id firstHouseholdId = createdContacts[0].Household__c;
         system.assertEquals(street,createdContacts[0].Household__r.MailingStreet__c);
-       	system.assertEquals(city,createdContacts[0].Household__r.MailingCity__c);
+        system.assertEquals(city,createdContacts[0].Household__r.MailingCity__c);
         system.assertEquals(state,createdContacts[0].Household__r.MailingState__c);
         system.assertEquals(zip,createdContacts[0].Household__r.MailingPostalCode__c);
         system.assertEquals(country,createdContacts[0].Household__r.MailingCountry__c);
@@ -162,7 +192,7 @@ private class TEST_Households {
         
         system.assertNotEquals(firstHouseholdId,createdContacts[0].Household__c);
         system.assertEquals(street,createdContacts[0].Household__r.MailingStreet__c);
-       	system.assertEquals(city,createdContacts[0].Household__r.MailingCity__c);
+        system.assertEquals(city,createdContacts[0].Household__r.MailingCity__c);
         system.assertEquals(state,createdContacts[0].Household__r.MailingState__c);
         system.assertEquals(zip,createdContacts[0].Household__r.MailingPostalCode__c);
         system.assertEquals(country,createdContacts[0].Household__r.MailingCountry__c);
@@ -172,28 +202,30 @@ private class TEST_Households {
     /// <name> newOrgContactIndividualsProcessor </name>
     /// <summary> test insert org contact with Individuals processor </summary>
     static testMethod void newOrgContactIndividualsProcessor() {
-		Account acct = new Account(
-			Name = 'Test Organization 888'
-		);
+    	
+    	Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(new Households_Settings__c (Household_Rules__c = Households.ALL_INDIVIDUALS_PROCESSOR));
+    	
+        Account acct = new Account(
+            Name = 'Test Organization 888'
+        );
         insert acct;
-		
-		String street = '2345 Elm St.';
-    	String city = 'Seattle';
-    	String state = 'WA';
-    	String zip = '88777';
-    	String country = 'US';
-    	String lastname = 'SmithForTest99';
-		Contact con = new Contact(
-			FirstName='test',
-			LastName=lastname,
-			MailingStreet = street,
-			MailingCity = city,
-			MailingState = state,
-			MailingPostalCode = zip,
-			MailingCountry = country,
-			AccountId = acct.id,
-			SystemHouseholdProcessor__c = 'All Individual Contacts'
-		);
+        
+        String street = '2345 Elm St.';
+        String city = 'Seattle';
+        String state = 'WA';
+        String zip = '88777';
+        String country = 'US';
+        String lastname = 'SmithForTest99';
+        Contact con = new Contact(
+            FirstName='test',
+            LastName=lastname,
+            MailingStreet = street,
+            MailingCity = city,
+            MailingState = state,
+            MailingPostalCode = zip,
+            MailingCountry = country,
+            AccountId = acct.id
+        );
         insert con;
         Contact[] createdContacts = [select Household__c from Contact where id=:con.id];
         
@@ -211,12 +243,14 @@ private class TEST_Households {
     /// <name> contactDeleteWithOwnHousehold </name>
     /// <summary> test delete a contact that has it's own household </summary>
     static testMethod void contactDeleteWithOwnHousehold() {
-    	String lastname = 'SmithForTest99';
-		Contact con = new Contact(
-			FirstName='test',
-			LastName=lastname,
-			SystemHouseholdProcessor__c = 'All Individual Contacts'
-		);
+    	
+    	Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(new Households_Settings__c (Household_Rules__c = Households.ALL_INDIVIDUALS_PROCESSOR));
+    	
+        String lastname = 'SmithForTest99';
+        Contact con = new Contact(
+            FirstName='test',
+            LastName=lastname
+        );
         insert con;
         Contact[] createdContacts = [select Household__c from Contact where id=:con.id];
         
@@ -231,23 +265,24 @@ private class TEST_Households {
     /// <name> contactDeleteWithSharedHousehold </name>
     /// <summary> test delete a contact that has shared household </summary>
     static testMethod void contactDeleteWithSharedHousehold() {
-		String lastname = 'SmithForTest99';
-		Contact con = new Contact(
-			FirstName='test',
-			LastName=lastname,
-			SystemHouseholdProcessor__c = 'All Individual Contacts'
-		);
+    	
+    	Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(new Households_Settings__c (Household_Rules__c = Households.ALL_INDIVIDUALS_PROCESSOR));
+    	
+        String lastname = 'SmithForTest99';
+        Contact con = new Contact(
+            FirstName='test',
+            LastName=lastname
+        );
         insert con;
         Contact[] createdContacts = [select Household__c from Contact where id=:con.id];
         
         Id firstHouseholdId = createdContacts[0].Household__c;
         
         Contact con2 = new Contact(
-			FirstName='test again',
-			LastName=lastname,
-			Household__c = firstHouseholdId,
-			SystemHouseholdProcessor__c = 'All Individual Contacts'
-		);
+            FirstName='test again',
+            LastName=lastname,
+            Household__c = firstHouseholdId
+        );
         insert con2;
         
         delete con;
@@ -258,81 +293,81 @@ private class TEST_Households {
 
     /// <name> getHouseholdTransactionTotal </name>
     /// <summary>  </summary>
-	static testMethod void getHouseholdTransactionTotal_test()
-	{
-		Household__c h = new Household__c(Name='Test Household');
-		insert h;
-		Contact c = new Contact(FirstName='test',LastName='test',Household__c=h.Id);
-		insert c;
-		Opportunity o = new Opportunity(Name='test oppty',CloseDate=System.Today(),StageName='Closed Won',Amount=100);
-		insert o;
-		OpportunityContactRole ocr = new OpportunityContactRole(OpportunityId=o.Id,ContactId=c.Id,Role='Test');
-		insert ocr;
-		system.assertEquals('$100.00',Households.getHouseholdTransactionTotal(h.id));
-	}
-	
-	/// <name> getHouseholdTransactionTotal </name>
+    static testMethod void getHouseholdTransactionTotal_test()
+    {
+        Household__c h = new Household__c(Name='Test Household');
+        insert h;
+        Contact c = new Contact(FirstName='test',LastName='test',Household__c=h.Id);
+        insert c;
+        Opportunity o = new Opportunity(Name='test oppty',CloseDate=System.Today(),StageName='Closed Won',Amount=100);
+        insert o;
+        OpportunityContactRole ocr = new OpportunityContactRole(OpportunityId=o.Id,ContactId=c.Id,Role='Test');
+        insert ocr;
+        system.assertEquals('$100.00',Households.getHouseholdTransactionTotal(h.id));
+    }
+    
+    /// <name> getHouseholdTransactionTotal </name>
     /// <summary>  </summary>
-	static testMethod void getHouseholdLastTransaction_test()
-	{
-		Integer year = 2005;
-		Integer month = 10;
-		Integer day = 10;
-		Household__c h = new Household__c(Name='Test Household');
-		insert h;
-		Contact c = new Contact(FirstName='test',LastName='test',Household__c=h.Id);
-		insert c;
-		Opportunity o = new Opportunity(Name='test oppty',CloseDate=date.newInstance(year,month,day),StageName='Closed Won',Amount=100);
-		insert o;
-		OpportunityContactRole ocr = new OpportunityContactRole(OpportunityId=o.Id,ContactId=c.Id,Role='Test');
-		insert ocr;
-		system.assertEquals(String.valueOf(year)+'-'+String.valueOf(month)+'-'+String.valueOf(day),Households.getHouseholdLastTransaction(h.id));
-	}
-	
-	 /// visualforce and apex methods for totals
-	static testMethod void getHouseholdTransactionAmount_test()
-	{
-		
-		Household__c h = new Household__c(Name='Test Household');
-		insert h;
-		Contact c = new Contact(FirstName='test',LastName='test',Household__c=h.Id);
-		insert c;
-		Opportunity o = new Opportunity(Name='test oppty',CloseDate=date.newInstance(2007,3,3),StageName='Closed Won',Amount=100);
-		insert o;
-		OpportunityContactRole ocr = new OpportunityContactRole(OpportunityId=o.Id,ContactId=c.Id,Role='Test');
-		insert ocr;
-		
-		//pass contact into the controller
-		ApexPages.StandardController sc = new ApexPages.standardController(h);
-		//pass the controller into the extension
-		HouseholdTransactionHistory_EXT ext = new HouseholdTransactionHistory_EXT(sc);  
-		
-		system.assertEquals(system.Label.DefaultHouseholdTransactionCurrency + '100.00',ext.getHouseholdTransactionTotal());
-	}
-	
-	/// visualforce and apex methods for totals
-	static testMethod void getHouseholdLastTransactionDate_test()
-	{
-		Integer year = 2005;
-		Integer month = 10;
-		Integer day = 10;
-		
-		Household__c h = new Household__c(Name='Test Household');
-		insert h;
-		Contact c = new Contact(FirstName='test',LastName='test',Household__c=h.Id);
-		insert c;
-		Opportunity o = new Opportunity(Name='test oppty',CloseDate=date.newInstance(year,month,day),StageName='Closed Won',Amount=100);
-		insert o;
-		OpportunityContactRole ocr = new OpportunityContactRole(OpportunityId=o.Id,ContactId=c.Id,Role='Test');
-		insert ocr;
-		
-		//pass contact into the controller
-		ApexPages.StandardController sc = new ApexPages.standardController(h);
-		//pass the controller into the extension
-		HouseholdTransactionHistory_EXT ext = new HouseholdTransactionHistory_EXT(sc);
-		
-		system.assertEquals(String.valueOf(day) + '/' + String.valueOf(month) + '/' + String.valueOf(year),ext.getLastTransactionDate());
-	}
-	
+    static testMethod void getHouseholdLastTransaction_test()
+    {
+        Integer year = 2005;
+        Integer month = 10;
+        Integer day = 10;
+        Household__c h = new Household__c(Name='Test Household');
+        insert h;
+        Contact c = new Contact(FirstName='test',LastName='test',Household__c=h.Id);
+        insert c;
+        Opportunity o = new Opportunity(Name='test oppty',CloseDate=date.newInstance(year,month,day),StageName='Closed Won',Amount=100);
+        insert o;
+        OpportunityContactRole ocr = new OpportunityContactRole(OpportunityId=o.Id,ContactId=c.Id,Role='Test');
+        insert ocr;
+        system.assertEquals(String.valueOf(year)+'-'+String.valueOf(month)+'-'+String.valueOf(day),Households.getHouseholdLastTransaction(h.id));
+    }
+    
+     /// visualforce and apex methods for totals
+    static testMethod void getHouseholdTransactionAmount_test()
+    {
+        
+        Household__c h = new Household__c(Name='Test Household');
+        insert h;
+        Contact c = new Contact(FirstName='test',LastName='test',Household__c=h.Id);
+        insert c;
+        Opportunity o = new Opportunity(Name='test oppty',CloseDate=date.newInstance(2007,3,3),StageName='Closed Won',Amount=100);
+        insert o;
+        OpportunityContactRole ocr = new OpportunityContactRole(OpportunityId=o.Id,ContactId=c.Id,Role='Test');
+        insert ocr;
+        
+        //pass contact into the controller
+        ApexPages.StandardController sc = new ApexPages.standardController(h);
+        //pass the controller into the extension
+        HouseholdTransactionHistory_EXT ext = new HouseholdTransactionHistory_EXT(sc);  
+        
+        system.assertEquals(system.Label.DefaultHouseholdTransactionCurrency + '100.00',ext.getHouseholdTransactionTotal());
+    }
+    
+    /// visualforce and apex methods for totals
+    static testMethod void getHouseholdLastTransactionDate_test()
+    {
+        Integer year = 2005;
+        Integer month = 10;
+        Integer day = 10;
+        
+        Household__c h = new Household__c(Name='Test Household');
+        insert h;
+        Contact c = new Contact(FirstName='test',LastName='test',Household__c=h.Id);
+        insert c;
+        Opportunity o = new Opportunity(Name='test oppty',CloseDate=date.newInstance(year,month,day),StageName='Closed Won',Amount=100);
+        insert o;
+        OpportunityContactRole ocr = new OpportunityContactRole(OpportunityId=o.Id,ContactId=c.Id,Role='Test');
+        insert ocr;
+        
+        //pass contact into the controller
+        ApexPages.StandardController sc = new ApexPages.standardController(h);
+        //pass the controller into the extension
+        HouseholdTransactionHistory_EXT ext = new HouseholdTransactionHistory_EXT(sc);
+        
+        system.assertEquals(String.valueOf(day) + '/' + String.valueOf(month) + '/' + String.valueOf(year),ext.getLastTransactionDate());
+    }
+    
 
 }

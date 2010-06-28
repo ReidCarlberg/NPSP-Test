@@ -1,33 +1,40 @@
 /*
-	Copyright (c) 2009, Salesforce.com Foundation
-	All rights reserved.
-	
-	Redistribution and use in source and binary forms, with or without
-	modification, are permitted provided that the following conditions are met:
-	
-	* Redistributions of source code must retain the above copyright
-	  notice, this list of conditions and the following disclaimer.
-	* Redistributions in binary form must reproduce the above copyright
-	  notice, this list of conditions and the following disclaimer in the
-	  documentation and/or other materials provided with the distribution.
-	* Neither the name of the Salesforce.com Foundation nor the names of
-	  its contributors may be used to endorse or promote products derived
-  	  from this software without specific prior written permission.
+    Copyright (c) 2009, Salesforce.com Foundation
+    All rights reserved.
+    
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+    
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of the Salesforce.com Foundation nor the names of
+      its contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
 
-	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-	"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-	LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-	FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-	COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-	INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-	BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-	LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-	CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-	LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-	ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
-	POSSIBILITY OF SUCH DAMAGE.
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    POSSIBILITY OF SUCH DAMAGE.
 */
 global class Households {
+	
+	//One-to-One value for system processor field
+    public static String ALL_PROCESSOR = 'All New or Edited Contacts';
+    public static String ALL_INDIVIDUALS_PROCESSOR = 'All Individual Contacts';
+    public static String NO_HOUSEHOLDS_PROCESSOR = 'No Contacts';
+	
+	public static Households_Settings__c householdsSettings;
 
     /// <name> Households </name>
     /// <summary> Default Constructor </summary>
@@ -44,6 +51,8 @@ global class Households {
     /// <param name="ta"> Trigger action that is occuring </param>
     public Households(Contact[] contacts, Contact[] oldContacts, triggerAction ta)
     {
+    	
+    	Households_Settings__c currentHouseholdsSettings = getHouseholdsSettings();
         List<Contact> householdInserts = new List<Contact>();
         List<Contact> contactEvaluations = new List<Contact>();
         List<Contact> householdDeletes = new List<Contact>();
@@ -53,32 +62,32 @@ global class Households {
             //AFTER INSERT
             if ( ta==triggerAction.afterInsert )
             {
-            	//If the user has chosen for all Contacts to have households, add them all to the list
-            	//for Household creation
-                if (c.Household__c == null && c.SystemHouseholdProcessor__c == 'All New or Edited Contacts')
+                //If the user has chosen for all Contacts to have households, add them all to the list
+                //for Household creation
+                if (c.Household__c == null && currentHouseholdsSettings.Household_Rules__c == ALL_PROCESSOR)
                 {
                     householdInserts.add(c);
                 }
                 //If the user has chosen for only Contacts connected to Individual Accounts to have Households
                 //add them all to a list for evaluation
-                else if (c.Household__c == null && c.SystemHouseholdProcessor__c == 'All Individual Contacts')
+                else if (c.Household__c == null && currentHouseholdsSettings.Household_Rules__c == ALL_INDIVIDUALS_PROCESSOR)
                 {
-					contactEvaluations.add(c);
-	            }
+                    contactEvaluations.add(c);
+                }
             }
 
             //AFTER UPDATE
             if ( ta==triggerAction.afterUpdate )
             {
-                if (c.Household__c == null && c.SystemHouseholdProcessor__c == 'All New or Edited Contacts')
+                if (c.Household__c == null && currentHouseholdsSettings.Household_Rules__c == ALL_PROCESSOR)
                 {
                     householdInserts.add(c);
                 } else
-                if (c.Household__c == null && c.SystemHouseholdProcessor__c == 'All Individual Contacts')
+                if (c.Household__c == null && currentHouseholdsSettings.Household_Rules__c == ALL_INDIVIDUALS_PROCESSOR)
                 {
-					contactEvaluations.add(c);
-	            }
-			}
+                    contactEvaluations.add(c);
+                }
+            }
 
             //AFTER DELETE
             if ( ta==triggerAction.afterDelete )
@@ -116,21 +125,21 @@ global class Households {
         List<Household__c> householdInserts = new List<Household__c>();
         for(Contact c : contacts)
         {
-			Household__c h = new Household__c();
-			String hName = c.LastName;
-			hName += ' ' + system.label.DefaultHouseholdName;
-			h.Name = hName;
-			//sync the primary address block
-			h.MailingStreet__c = c.MailingStreet;
-			h.MailingCity__c = c.MailingCity;
-			h.MailingState__c = c.MailingState;
-			h.MailingPostalCode__c  = c.MailingPostalCode;
-			h.MailingCountry__c = c.MailingCountry;
-			h.HouseholdPhone__c = c.HomePhone;
-			h.HouseholdEmail__c = c.Email;
-			householdInserts.add(h);
+            Household__c h = new Household__c();
+            String hName = c.LastName;
+            hName += ' ' + system.label.DefaultHouseholdName;
+            h.Name = hName;
+            //sync the primary address block
+            h.MailingStreet__c = c.MailingStreet;
+            h.MailingCity__c = c.MailingCity;
+            h.MailingState__c = c.MailingState;
+            h.MailingPostalCode__c  = c.MailingPostalCode;
+            h.MailingCountry__c = c.MailingCountry;
+            h.HouseholdPhone__c = c.HomePhone;
+            h.HouseholdEmail__c = c.Email;
+            householdInserts.add(h);
         }
-		List<Contact> contactUpdates = new List<Contact>();
+        List<Contact> contactUpdates = new List<Contact>();
         if (householdInserts.size() > 0)
         {
             Database.SaveResult[] lsr = Database.insert(householdInserts, false);
@@ -139,7 +148,7 @@ global class Households {
             {
                 if (lsr[i].isSuccess() == true)
                 {
-                	//write the new Household Ids to the Contacts
+                    //write the new Household Ids to the Contacts
                     Contact clone = c.Clone(true,false);
                     clone.Household__c = lsr[i].getId();
                     contactUpdates.add(clone);
@@ -164,12 +173,12 @@ global class Households {
         List<Id> accountIds = new List<Id>();
         for(Contact c : contacts)
         {
-        	if (c.accountId != null)
-        	{
-	            accountIds.add(c.AccountId);
-        	}
+            if (c.accountId != null)
+            {
+                accountIds.add(c.AccountId);
+            }
         }
-		//get all the Accounts so we can test to see if they are individuals
+        //get all the Accounts so we can test to see if they are individuals
         Map<Id,Account> contactAccountMap = new Map<Id,Account>([Select Id, npe01__SYSTEMIsIndividual__c, Name from Account where Id in :accountIds]);
         for(Contact c : contacts)
         {
@@ -184,14 +193,14 @@ global class Households {
             } else
             if (c.AccountId == null)
             {
-				householdInserts.add(c);
+                householdInserts.add(c);
             }
         }
-		if ( householdInserts.size() > 0)
-		{
-			//hand any Contacts that need Households over to the insert method
-        	insertHousehold(householdInserts);
-		}
+        if ( householdInserts.size() > 0)
+        {
+            //hand any Contacts that need Households over to the insert method
+            insertHousehold(householdInserts);
+        }
     }
 
 
@@ -201,34 +210,34 @@ global class Households {
     public static void deleteHousehold(Contact[] contacts)
     {
         List<Id> householdDeletes = new List<Id>();
-		Map<Id,Integer> householdCountMap = new Map<Id,Integer>();
+        Map<Id,Integer> householdCountMap = new Map<Id,Integer>();
 
-		//Generate a list of Household Ids
+        //Generate a list of Household Ids
         for(Contact c : contacts)
         {
-        	if (c.Household__c != null)
-        	{
-				householdCountMap.put(c.Household__c,0);
-        	}
+            if (c.Household__c != null)
+            {
+                householdCountMap.put(c.Household__c,0);
+            }
         }
 
-		//Loop through all Contacts at one of the Household Ids
+        //Loop through all Contacts at one of the Household Ids
         for (Contact c : [Select Id, Household__c from Contact where Household__c in :householdCountMap.keyset()])
         {
-			Integer lastCount = householdCountMap.get(c.Household__c);
-			lastCount += 1;
-			householdCountMap.put(c.Household__c,lastCount);
+            Integer lastCount = householdCountMap.get(c.Household__c);
+            lastCount += 1;
+            householdCountMap.put(c.Household__c,lastCount);
         }
 
-		//Loop through all the contacts to determine if they can be deleted
-		for (Contact c : contacts)
-		{
-			//If there are no other Contacts on the Account
-			if ( householdCountMap.get(c.Household__c) < 1 )
-			{
-				householdDeletes.add(c.Household__c);
-			}
-		}
+        //Loop through all the contacts to determine if they can be deleted
+        for (Contact c : contacts)
+        {
+            //If there are no other Contacts on the Account
+            if ( householdCountMap.get(c.Household__c) < 1 )
+            {
+                householdDeletes.add(c.Household__c);
+            }
+        }
 
         if (householdDeletes.size() > 0)
         {
@@ -240,103 +249,160 @@ global class Households {
     /// <name> getHouseholdLastTransaction </name>
     /// <summary>  </summary>
     webservice static String getHouseholdLastTransaction(Id householdId)
-	{
-		List<Id> contactIds = new List<Id>();
-		List<Contact> contacts = [Select Id from Contact where Household__c = :householdId];
-		for (contact c : contacts)
-		{
-			contactIds.add(c.Id);
-		}
-		Double total = 0;
-		List<OpportunityContactRole> ocr = [Select Opportunity.Amount, Opportunity.CloseDate from OpportunityContactRole where ContactId in :contactIds AND Opportunity.isWon = true Order By Opportunity.CloseDate DESC];
-		if (ocr.size() > 0)
-		{
-			Date lastTransaction = ocr[0].Opportunity.CloseDate;
-			return String.valueOf(lastTransaction);
-		}
-		return null;
-	}
+    {
+        List<Id> contactIds = new List<Id>();
+        List<Contact> contacts = [Select Id from Contact where Household__c = :householdId];
+        for (contact c : contacts)
+        {
+            contactIds.add(c.Id);
+        }
+        Double total = 0;
+        List<OpportunityContactRole> ocr = [Select Opportunity.Amount, Opportunity.CloseDate from OpportunityContactRole where ContactId in :contactIds AND Opportunity.isWon = true Order By Opportunity.CloseDate DESC];
+        if (ocr.size() > 0)
+        {
+            Date lastTransaction = ocr[0].Opportunity.CloseDate;
+            return String.valueOf(lastTransaction);
+        }
+        return null;
+    }
 
 
     /// <name> getHouseholdTransactionTotal </name>
     /// <summary>  </summary>
-	webservice static String getHouseholdTransactionTotal(Id householdId)
-	{
-		List<Id> contactIds = new List<Id>();
-		List<Contact> contacts = [Select Id from Contact where Household__c = :householdId];
-		for (contact c : contacts)
-		{
-			contactIds.add(c.Id);
-		}
-		Double total = 0;
-		Set<Id> opps = new Set<Id>();
-		
-		for( OpportunityContactRole ocr : [Select Opportunity.Amount, OpportunityId From OpportunityContactRole where ContactId in :contactIds AND Opportunity.isWon = true])
-		{
-			if ( ocr.Opportunity.Amount != null )
-			{
-				opps.add(ocr.OpportunityId);
+    webservice static String getHouseholdTransactionTotal(Id householdId)
+    {
+        List<Id> contactIds = new List<Id>();
+        List<Contact> contacts = [Select Id from Contact where Household__c = :householdId];
+        for (contact c : contacts)
+        {
+            contactIds.add(c.Id);
+        }
+        Double total = 0;
+        Set<Id> opps = new Set<Id>();
+        
+        for( OpportunityContactRole ocr : [Select Opportunity.Amount, OpportunityId From OpportunityContactRole where ContactId in :contactIds AND Opportunity.isWon = true])
+        {
+            if ( ocr.Opportunity.Amount != null )
+            {
+                opps.add(ocr.OpportunityId);
 
-			}
-		}
-		for( Opportunity wonOpps : [Select Amount From Opportunity where Id in :opps])
-		{
-			total += wonOpps.Amount;
-		}
-		String totalString = system.label.DefaultHouseholdTransactionCurrency;
-		Decimal totalFormat = Decimal.valueOf(total).setScale(2);
-		totalString += totalFormat;
-		return String.valueOf(totalString);
-	}
-	
-	/// <name> getHouseholdLastTransaction </name>
+            }
+        }
+        for( Opportunity wonOpps : [Select Amount From Opportunity where Id in :opps])
+        {
+            total += wonOpps.Amount;
+        }
+        String totalString = system.label.DefaultHouseholdTransactionCurrency;
+        Decimal totalFormat = Decimal.valueOf(total).setScale(2);
+        totalString += totalFormat;
+        return String.valueOf(totalString);
+    }
+    
+    /// <name> getHouseholdLastTransaction </name>
     /// <summary>  </summary>
     public static String getHouseholdLastTransactionDate(Id householdId)
-	{
-		List<Id> contactIds = new List<Id>();
-		List<Contact> contacts = [Select Id from Contact where Household__c = :householdId];
-		for (contact c : contacts)
-		{
-			contactIds.add(c.Id);
-		}
-		Double total = 0;
-		List<OpportunityContactRole> ocr = [Select Opportunity.Amount, Opportunity.CloseDate from OpportunityContactRole where ContactId in :contactIds AND Opportunity.isWon = true Order By Opportunity.CloseDate DESC];
-		if (ocr.size() > 0)
-		{
-			return ocr[0].Opportunity.CloseDate.month() + '/' + ocr[0].Opportunity.CloseDate.day() + '/' + ocr[0].Opportunity.CloseDate.year();
-		}
-		return null;
-	}
-	
-	 /// <name> getHouseholdTransactionTotal </name>
+    {
+        List<Id> contactIds = new List<Id>();
+        List<Contact> contacts = [Select Id from Contact where Household__c = :householdId];
+        for (contact c : contacts)
+        {
+            contactIds.add(c.Id);
+        }
+        Double total = 0;
+        List<OpportunityContactRole> ocr = [Select Opportunity.Amount, Opportunity.CloseDate from OpportunityContactRole where ContactId in :contactIds AND Opportunity.isWon = true Order By Opportunity.CloseDate DESC];
+        if (ocr.size() > 0)
+        {
+            return ocr[0].Opportunity.CloseDate.month() + '/' + ocr[0].Opportunity.CloseDate.day() + '/' + ocr[0].Opportunity.CloseDate.year();
+        }
+        return null;
+    }
+    
+     /// <name> getHouseholdTransactionTotal </name>
     /// <summary>  </summary>
-	public static String getHouseholdTransactionAmount(Id householdId)
-	{
-		List<Id> contactIds = new List<Id>();
-		List<Contact> contacts = [Select Id from Contact where Household__c = :householdId];
-		for (contact c : contacts)
-		{
-			contactIds.add(c.Id);
-		}
-		Double total = 0;
-		Set<Id> opps = new Set<Id>();
-		
-		for( OpportunityContactRole ocr : [Select Opportunity.Amount, OpportunityId From OpportunityContactRole where ContactId in :contactIds AND Opportunity.isWon = true])
-		{
-			if ( ocr.Opportunity.Amount != null )
-			{
-				opps.add(ocr.OpportunityId);
+    public static String getHouseholdTransactionAmount(Id householdId)
+    {
+        List<Id> contactIds = new List<Id>();
+        List<Contact> contacts = [Select Id from Contact where Household__c = :householdId];
+        for (contact c : contacts)
+        {
+            contactIds.add(c.Id);
+        }
+        Double total = 0;
+        Set<Id> opps = new Set<Id>();
+        
+        for( OpportunityContactRole ocr : [Select Opportunity.Amount, OpportunityId From OpportunityContactRole where ContactId in :contactIds AND Opportunity.isWon = true])
+        {
+            if ( ocr.Opportunity.Amount != null )
+            {
+                opps.add(ocr.OpportunityId);
 
-			}
-		}
-		for( Opportunity wonOpps : [Select Amount From Opportunity where Id in :opps])
-		{
-			total += wonOpps.Amount;
-		}
-		String totalString = system.label.DefaultHouseholdTransactionCurrency;
-		Decimal totalFormat = Decimal.valueOf(total).setScale(2);
-		totalString += totalFormat;
-		return String.valueOf(totalString);
-	}
+            }
+        }
+        for( Opportunity wonOpps : [Select Amount From Opportunity where Id in :opps])
+        {
+            total += wonOpps.Amount;
+        }
+        String totalString = system.label.DefaultHouseholdTransactionCurrency;
+        Decimal totalFormat = Decimal.valueOf(total).setScale(2);
+        totalString += totalFormat;
+        return String.valueOf(totalString);
+    }
+    
+     //get the settings. handles the case where the managed value doesn't exist yet
+    public static Households_Settings__c getHouseholdsSettings() {
+        String oldProcessor = '';
+        //if no settings exist, create defaults
+        if (householdsSettings == null) {
+            //first see if we already have settings
+            householdsSettings = Households_Settings__c.getOrgDefaults();
+            system.debug(Households_Settings__c.getOrgDefaults());
+            if (householdsSettings == null) { 
+                //get the model they used to be in 
+                Schema.DescribeFieldResult F = Schema.sObjectType.Contact.fields.SystemHouseholdProcessor__c; 
+                List<Schema.PicklistEntry> P = F.getPicklistValues();
+                
+                for(Schema.PicklistEntry pe : P){
+                	system.debug(pe.getValue() + ' : ' + pe.isDefaultValue());
+                    if (pe.isDefaultValue()){
+                        if(pe.getValue()==ALL_PROCESSOR){
+                            oldProcessor = ALL_PROCESSOR;
+                        } else if(pe.getValue()==ALL_INDIVIDUALS_PROCESSOR){
+                        	oldProcessor = ALL_INDIVIDUALS_PROCESSOR;
+                        } else if(pe.getValue()==NO_HOUSEHOLDS_PROCESSOR){
+                        	oldProcessor = NO_HOUSEHOLDS_PROCESSOR;
+                        }
+                    }
+                }
+                householdsSettings = new Households_Settings__c();
+                //set them up with their old setting in the new settings object
+                if(oldProcessor==ALL_PROCESSOR){
+                    householdsSettings.Household_Rules__c = ALL_PROCESSOR;
+                } else if(oldProcessor==ALL_INDIVIDUALS_PROCESSOR){
+                	householdsSettings.Household_Rules__c = ALL_INDIVIDUALS_PROCESSOR;
+                } else if(oldProcessor==NO_HOUSEHOLDS_PROCESSOR){
+                	householdsSettings.Household_Rules__c = NO_HOUSEHOLDS_PROCESSOR;
+                }
+               
+                householdsSettings.Setupownerid = UserInfo.getOrganizationId();
+                //this is not allowed...
+                insert householdsSettings;
+            }
+        }
+        return householdsSettings;
+    }
+    
+    public static Households_Settings__c getHouseholdsSettingsForTests(Households_Settings__c mySettings) {
+        
+        //clear out whatever settings exist
+        delete [select id from Households_Settings__c];
+        
+        //create our own based on what's passed in from the test
+        householdsSettings = new Households_Settings__c (
+            Household_Rules__c = mySettings.Household_Rules__c
+            );
+        insert householdsSettings;
+            
+        return householdsSettings;
+    }
 
 }
