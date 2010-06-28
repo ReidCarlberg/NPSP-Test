@@ -72,5 +72,21 @@ public with sharing class contactsSettings {
         controller.updateSettings();
         
     }
+    /*
+    static testMethod void testDefault()
+    {
+
+        boolean aDefaultIsSelected = false;
+        Schema.DescribeFieldResult F = Schema.sObjectType.Contact.fields.SystemAccountProcessor__c; 
+            List<Schema.PicklistEntry> P = F.getPicklistValues();
+            for(Schema.PicklistEntry pe : P){
+                system.debug(pe.getValue() + ' : ' + pe.isDefaultValue());
+                if (pe.isDefaultValue()){
+                        aDefaultIsSelected = true;
+                }
+            }
+         system.assert(aDefaultIsSelected); 
+    }
+    */
 
 }
