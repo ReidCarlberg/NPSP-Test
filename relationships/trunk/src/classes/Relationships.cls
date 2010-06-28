@@ -134,10 +134,10 @@ public class Relationships {
 		
 	}
 
-
 	/// <name> deleteEmptyRelationships </name>
 	/// <summary> Deletes Relationships when a Contact is deleted </summary>
 	/// <param name="contacts"> List of Contacts that were deleted </param>
+	@future
 	public static void deleteEmptyRelationships()
 	{
 		List<Relationship__c> relationshipsToDelete = new List<Relationship__c>();
@@ -151,7 +151,6 @@ public class Relationships {
 		}
 	}
 	
-
 	/// <name> reciprocate </name>
 	/// <summary>  </summary>
 	/// <param name="Relationships">  </param>
@@ -165,7 +164,6 @@ public class Relationships {
 		}
 		update relationshipsToUpdate;
 	}
-
 	
 	/// <name> createRelationship </name>
 	/// <summary> Inserts a new reciprocal Relationship After a relationship is Inserted</summary>
@@ -189,7 +187,6 @@ public class Relationships {
 		insert relationshipsToCreate;
 
 	}
-
 
 	/// <name> updateRelationship </name>
 	/// <summary> Updates the Status and/or Type of a relationship After its reciprocal has been updated </summary>
@@ -221,5 +218,4 @@ public class Relationships {
 		}
 		update relationshipsToUpdate;
 	}
-
 }

@@ -97,9 +97,7 @@ private class TEST_Relationships {
 	}
 	/// <name> TestOrphanedRelDelete </name>
 	/// <summary> test method for relationships and deleting the mirror record </summary>
-	static testMethod void TestOrphanedRelDelete() {	 
-		
-		
+	static testMethod void TestOrphanedRelDelete() {	
 		Contact firstContact = new Contact (
 			FirstName='Joe',
 			LastName='Johanssen'
@@ -127,13 +125,12 @@ private class TEST_Relationships {
 		//mirror should reference the original
 		System.assertEquals(crel_mirror.reciprocalrelationship__c, crel_original.Id);
 		Contact secondContactForDelete = [select id from contact where id=:secondContact.id];
+		Test.startTest();
 		delete secondContactForDelete;
-		
+		Test.stopTest();
 		// test change to the rel
 		Relationship__c[] orphanedCrel = [select id from Relationship__c where id = :crel_original.Id];
 		//original should have updated relationship
 		System.assertEquals(0, orphanedCrel.size());
-		
-
 	}
 }
