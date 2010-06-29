@@ -1,31 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
-        <article>None</article>
         <value><!-- Affiliation --></value>
     </caseValues>
     <caseValues>
-        <article>Indefinite</article>
-        <value><!-- Affiliation --></value>
-    </caseValues>
-    <caseValues>
-        <article>Definite</article>
-        <value><!-- Affiliation --></value>
-    </caseValues>
-    <caseValues>
-        <article>None</article>
         <plural>true</plural>
-        <value><!-- Affiliation --></value>
-    </caseValues>
-    <caseValues>
-        <article>Indefinite</article>
-        <plural>true</plural>
-        <value><!-- Affiliation --></value>
-    </caseValues>
-    <caseValues>
-        <article>Definite</article>
-        <plural>true</plural>
-        <value><!-- Affiliation --></value>
+        <value><!-- Affiliations --></value>
     </caseValues>
     <fields>
         <label>Contact</label>
@@ -56,8 +36,16 @@
     <fields>
         <label>Statut</label>
         <name>Status__c</name>
+        <picklistValues>
+            <masterLabel>Current</masterLabel>
+            <translation><!-- Current --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Former</masterLabel>
+            <translation><!-- Former --></translation>
+        </picklistValues>
     </fields>
-    <gender><!-- Feminine --></gender>
+    <gender><!-- Masculine --></gender>
     <layouts>
         <layout>Affiliation Layout</layout>
         <sections>

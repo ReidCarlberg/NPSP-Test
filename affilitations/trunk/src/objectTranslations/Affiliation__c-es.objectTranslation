@@ -5,7 +5,7 @@
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- Affiliation --></value>
+        <value><!-- Affiliations --></value>
     </caseValues>
     <fields>
         <label>Contacto</label>

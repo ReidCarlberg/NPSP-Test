@@ -31,15 +31,18 @@ private class TEST_Affiliations {
     /// <name> newContactOnOrgAccount </name>
     /// <summary> test creation of affiliation for contact on an Org account </summary>
     static testMethod void newContactOnOrgAccount() {
+    	
+    	Affiliations_Settings__c affiliationsSettingsForTests = Affiliations.getAffiliationsSettingsForTests(new Affiliations_Settings__c (Automatic_Affiliation_Creation_Turned_On__c = true));
+        
         Account acc = new Account(Name='test77');
         insert acc;
         
         String title = 'CEO';
         Contact con = new Contact(
-        	FirstName='test',
-        	LastName='contact66',
-        	Title=title,
-        	AccountId = acc.Id
+            FirstName='test',
+            LastName='contact66',
+            Title=title,
+            AccountId = acc.Id
         );
         insert con;
         
@@ -68,14 +71,39 @@ private class TEST_Affiliations {
         createdAffiliations = [select id, Status__c, StartDate__c, Role__c, Organization__c, EndDate__c, Contact__c from Affiliation__c where id=:firstAffiliationId];
         
         system.assertEquals(system.label.DefaultFormerStatus, createdAffiliations[0].Status__c);
-        system.assertEquals(System.Today(), createdAffiliations[0].EndDate__c);
+        system.assertEquals(System.Today(), createdAffiliations[0].EndDate__c);        
+    }
+    
+    static testMethod void newContactOnOrgAccountAutoOff() {
+    	
+    	Affiliations_Settings__c affiliationsSettingsForTests = Affiliations.getAffiliationsSettingsForTests(new Affiliations_Settings__c (Automatic_Affiliation_Creation_Turned_On__c = false));
         
+        Account acc = new Account(Name='test77');
+        insert acc;
+        
+        String title = 'CEO';
+        Contact con = new Contact(
+            FirstName='test',
+            LastName='contact66',
+            Title=title,
+            AccountId = acc.Id
+        );
+        insert con;
+        
+        Id firstAffiliationId;
+        
+        Affiliation__c[] createdAffiliations = [select id, Status__c, StartDate__c, Role__c, Organization__c, EndDate__c, Contact__c from Affiliation__c where Contact__c=:con.id AND Organization__c = :acc.id];
+        
+        system.assertEquals(0, createdAffiliations.size());        
     }
 
 
     /// <name> createAffiliation_Test </name>
     /// <summary> test method for createAffiliation_Test function </summary>
     static testMethod void newContactOnIndividualAccount() {
+    	
+    	Affiliations_Settings__c affiliationsSettingsForTests = Affiliations.getAffiliationsSettingsForTests(new Affiliations_Settings__c (Automatic_Affiliation_Creation_Turned_On__c = true));
+        
         Account acc = new Account(Name='Individual');
         insert acc;
         
@@ -84,14 +112,16 @@ private class TEST_Affiliations {
         
         Affiliation__c[] createdAffiliations = [select id, Status__c, StartDate__c, Role__c, Organization__c, EndDate__c, Contact__c from Affiliation__c where Contact__c=:con.id AND Organization__c = :acc.id];
         
-        system.assertEquals(0, createdAffiliations.size());
-    
+        system.assertEquals(0, createdAffiliations.size());    
     }
 
 
     /// <name> newContactOnOrgAccount </name>
     /// <summary> test creation of affiliation for contact on an Org account </summary>
     static testMethod void contactWithMultipleAffiliations() {
+    	
+    	Affiliations_Settings__c affiliationsSettingsForTests = Affiliations.getAffiliationsSettingsForTests(new Affiliations_Settings__c (Automatic_Affiliation_Creation_Turned_On__c = true));
+        
         Account acc = new Account(Name='test77');
         insert acc;
         
@@ -103,10 +133,10 @@ private class TEST_Affiliations {
         
         String title = 'CEO';
         Contact con = new Contact(
-        	FirstName='test',
-        	LastName='contact66',
-        	Title=title,
-        	AccountId = acc.Id
+            FirstName='test',
+            LastName='contact66',
+            Title=title,
+            AccountId = acc.Id
         );
         insert con;
         
@@ -134,7 +164,6 @@ private class TEST_Affiliations {
         
         system.assertEquals(system.label.DefaultCurrentStatus, createdAffiliations3[0].Status__c);
         system.assertEquals(system.label.DefaultFormerStatus, createdAffiliations[0].Status__c);
-        system.assertEquals(system.label.DefaultFormerStatus, createdAffiliations2[0].Status__c);
-        
+        system.assertEquals(system.label.DefaultFormerStatus, createdAffiliations2[0].Status__c);        
     }
 }

@@ -1,33 +1,35 @@
 /*
-	Copyright (c) 2009, Salesforce.com Foundation
-	All rights reserved.
-	
-	Redistribution and use in source and binary forms, with or without
-	modification, are permitted provided that the following conditions are met:
-	
-	* Redistributions of source code must retain the above copyright
-	  notice, this list of conditions and the following disclaimer.
-	* Redistributions in binary form must reproduce the above copyright
-	  notice, this list of conditions and the following disclaimer in the
-	  documentation and/or other materials provided with the distribution.
-	* Neither the name of the Salesforce.com Foundation nor the names of
-	  its contributors may be used to endorse or promote products derived
-  	  from this software without specific prior written permission.
+    Copyright (c) 2009, Salesforce.com Foundation
+    All rights reserved.
+    
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+    
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of the Salesforce.com Foundation nor the names of
+      its contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
 
-	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-	"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-	LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-	FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-	COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-	INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-	BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-	LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-	CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-	LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-	ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
-	POSSIBILITY OF SUCH DAMAGE.
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    POSSIBILITY OF SUCH DAMAGE.
 */
 public class Affiliations {
+	
+	public static Affiliations_Settings__c affiliationsSettings;
 
     /// <name> Affiliations </name>
     /// <summary> Default Constructor </summary>
@@ -47,44 +49,48 @@ public class Affiliations {
     /// <param name="ta"> Trigger action that is occuring </param>
     public Affiliations(Contact[] contacts, Contact[] oldContacts, triggerAction ta)
     {
+    	Affiliations_Settings__c currentAffiliationsSettings = getAffiliationsSettings();
+    	
         List<Contact> affiliationInserts = new List<Contact>();
         List<Contact> affiliationUpdates = new List<Contact>();
         
         Integer i = 0;
-        for(Contact c : contacts) {
-            // AFTER INSERT
-            if ( ta==triggerAction.afterInsert )
-            {
-            	//insert affiliations for contacts with an Account
-                if ( c.AccountId != null )
-                {
-                    affiliationInserts.add(c);
-                }
-            }
-            
-            // AFTER UPDATE
-            if ( ta==triggerAction.afterUpdate )
-            {
-                if (c.AccountId != oldContacts[i].AccountId )
-                {
-                    if (oldContacts[i].AccountId != null){
-                        affiliationUpdates.add(oldContacts[i]);
-                    }
-                    if (c.AccountId != null){
-                        affiliationInserts.add(c);
-                    }
-                }
-            }
-            i += 1;
-        }
-
-        if (affiliationInserts.size() > 0)
-        {
-            insertAffiliation(affiliationInserts);
-        }
-        if (affiliationUpdates.size() > 0)
-        {
-            updateAffiliation(affiliationUpdates);
+        if(currentAffiliationsSettings.Automatic_Affiliation_Creation_Turned_On__c){
+	        for(Contact c : contacts) {
+	            // AFTER INSERT
+	            if ( ta==triggerAction.afterInsert )
+	            {
+	                //insert affiliations for contacts with an Account
+	                if ( c.AccountId != null )
+	                {
+	                    affiliationInserts.add(c);
+	                }
+	            }
+	            
+	            // AFTER UPDATE
+	            if ( ta==triggerAction.afterUpdate )
+	            {
+	                if (c.AccountId != oldContacts[i].AccountId )
+	                {
+	                    if (oldContacts[i].AccountId != null){
+	                        affiliationUpdates.add(oldContacts[i]);
+	                    }
+	                    if (c.AccountId != null){
+	                        affiliationInserts.add(c);
+	                    }
+	                }
+	            }
+	            i += 1;
+	        }
+	
+	        if (affiliationInserts.size() > 0)
+	        {
+	            insertAffiliation(affiliationInserts);
+	        }
+	        if (affiliationUpdates.size() > 0)
+	        {
+	            updateAffiliation(affiliationUpdates);
+	        }
         }
 
     }
@@ -100,17 +106,17 @@ public class Affiliations {
         {
             accountIds.add(c.AccountId);
         }
-		//get all the accounts associated wth these contacts
+        //get all the accounts associated wth these contacts
         Map<Id,Account> accountMap = new Map<Id,Account>([Select Id, Name from Account where Id in :accountIds]);
 
         List<Affiliation__c> affiliationInserts = new List<Affiliation__c>();
         for(Contact c : contacts)
         {
-			String cName = c.FirstName;
-			cName += ' ';
-			cName += c.LastName;
-			//check to see if this account isn't an individual. Can't use the real systemisindividual field on account
-			//because that would make this dependent on the Contacts and Organizations package
+            String cName = c.FirstName;
+            cName += ' ';
+            cName += c.LastName;
+            //check to see if this account isn't an individual. Can't use the real systemisindividual field on account
+            //because that would make this dependent on the Contacts and Organizations package
             if ( accountMap.get(c.AccountId).Name != cName && accountMap.get(c.AccountId).Name != 'Individual' )
             {
                 Affiliation__c a = new Affiliation__c();
@@ -121,7 +127,7 @@ public class Affiliations {
                 //user title as Role
                 if (c.Title != null)
                 {
-                	a.Role__c = c.Title;
+                    a.Role__c = c.Title;
                 }
                 affiliationInserts.add(a);
             }
@@ -153,7 +159,7 @@ public class Affiliations {
             List<Affiliation__c> existingAffiliations = [Select Id, Contact__c, Organization__c from Affiliation__c where EndDate__c = null and Contact__c in :contactIds and Organization__c in :accountIds];
             for(Affiliation__c a : existingAffiliations)
             {
-            	//concatenate the contact and account id for a unique string we can access later
+                //concatenate the contact and account id for a unique string we can access later
                 String unique = a.Contact__c;
                 unique += a.Organization__c;
                 conAccMap.put(unique,a.Id);
@@ -171,7 +177,7 @@ public class Affiliations {
             //get the affiliation based on that unique string
             if (conAccMap.containsKey(u))
             {
-            	//flag it as former ending today
+                //flag it as former ending today
                 Affiliation__c a = new Affiliation__c(Id=conAccMap.get(u));
                 a.Status__c = system.label.DefaultFormerStatus;
                 a.EndDate__c = System.Today();
@@ -183,5 +189,38 @@ public class Affiliations {
         {
             Database.SaveResult[] lsr = Database.update(affiliationUpdates, false);
         }
+    }
+    
+       //get the settings. handles the case where the managed value doesn't exist yet
+    public static Affiliations_Settings__c getAffiliationsSettings() {
+        //if no settings exist, create defaults
+        if (affiliationsSettings == null) {
+            //first see if we already have settings
+            affiliationsSettings = Affiliations_Settings__c.getOrgDefaults();
+            system.debug(Affiliations_Settings__c.getOrgDefaults());
+            if (affiliationsSettings == null) { 
+                affiliationsSettings = new Affiliations_Settings__c();
+				affiliationsSettings.Automatic_Affiliation_Creation_Turned_On__c = true;
+               
+                affiliationsSettings.Setupownerid = UserInfo.getOrganizationId();
+
+                insert affiliationsSettings;
+            }
+        }
+        return affiliationsSettings;
+    }
+    
+    public static Affiliations_Settings__c getAffiliationsSettingsForTests(Affiliations_Settings__c mySettings) {
+        
+        //clear out whatever settings exist
+        delete [select id from Affiliations_Settings__c];
+        
+        //create our own based on what's passed in from the test
+        affiliationsSettings = new Affiliations_Settings__c (
+            Automatic_Affiliation_Creation_Turned_On__c = mySettings.Automatic_Affiliation_Creation_Turned_On__c
+            );
+        insert affiliationsSettings;
+            
+        return affiliationsSettings;
     }
 }

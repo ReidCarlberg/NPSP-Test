@@ -5,20 +5,20 @@ public class bulkTests {
         insert acc;
         
         String newContactfirstName = 'test';
-    	String newContactLastName = 'Contact_forTests';
-    	String newContactTitle = 'CEO';
-    	List<Contact> cons = new List<contact>();
-    	Integer conCount = 200;
-    	for(Integer i=0;i<conCount;i++){
-	        Contact con = new Contact(
-	        	FirstName=newContactfirstName,
-	        	LastName=newContactLastName,
-	        	Title=newContactTitle,
-	        	AccountId = acc.Id
-	        );
-	        cons.add(con);
-    	}
-    	Test.startTest();
+        String newContactLastName = 'Contact_forTests';
+        String newContactTitle = 'CEO';
+        List<Contact> cons = new List<contact>();
+        Integer conCount = 200;
+        for(Integer i=0;i<conCount;i++){
+            Contact con = new Contact(
+                FirstName=newContactfirstName,
+                LastName=newContactLastName,
+                Title=newContactTitle,
+                AccountId = acc.Id
+            );
+            cons.add(con);
+        }
+        Test.startTest();
         insert cons;
         
         Id firstAffiliationId;
@@ -36,8 +36,8 @@ public class bulkTests {
         Account acc2 = new Account(Name='test88');
         insert acc2;
         
-        for(Contact thisContact : cons){	
-	        thisContact.AccountId = acc2.id;
+        for(Contact thisContact : cons){    
+            thisContact.AccountId = acc2.id;
         }
         update cons;
         Test.stopTest();
@@ -56,20 +56,20 @@ public class bulkTests {
         insert acc;
         
         String newContactfirstName = 'test';
-    	String newContactLastName = 'Contact_forTests';
-    	String newContactTitle = 'CEO';
-    	List<Contact> cons = new List<contact>();
-    	Integer conCount = 200;
-    	for(Integer i=0;i<conCount;i++){
-	        Contact con = new Contact(
-	        	FirstName=newContactfirstName,
-	        	LastName=newContactLastName,
-	        	Title=newContactTitle,
-	        	AccountId = acc.Id
-	        );
-	        cons.add(con);
-    	}
-    	Test.startTest();
+        String newContactLastName = 'Contact_forTests';
+        String newContactTitle = 'CEO';
+        List<Contact> cons = new List<contact>();
+        Integer conCount = 200;
+        for(Integer i=0;i<conCount;i++){
+            Contact con = new Contact(
+                FirstName=newContactfirstName,
+                LastName=newContactLastName,
+                Title=newContactTitle,
+                AccountId = acc.Id
+            );
+            cons.add(con);
+        }
+        Test.startTest();
         insert cons;
         Test.stopTest();
         
@@ -90,20 +90,20 @@ public class bulkTests {
         insert acc3;
         
         String newContactfirstName = 'test';
-    	String newContactLastName = 'Contact_forTests';
-    	String newContactTitle = 'CEO';
-    	List<Contact> cons = new List<contact>();
-    	Integer conCount = 200;
-    	for(Integer i=0;i<conCount;i++){
-	        Contact con = new Contact(
-	        	FirstName=newContactfirstName,
-	        	LastName=newContactLastName,
-	        	Title=newContactTitle,
-	        	AccountId = acc.Id
-	        );
-	        cons.add(con);
-    	}
-    	Test.startTest();
+        String newContactLastName = 'Contact_forTests';
+        String newContactTitle = 'CEO';
+        List<Contact> cons = new List<contact>();
+        Integer conCount = 200;
+        for(Integer i=0;i<conCount;i++){
+            Contact con = new Contact(
+                FirstName=newContactfirstName,
+                LastName=newContactLastName,
+                Title=newContactTitle,
+                AccountId = acc.Id
+            );
+            cons.add(con);
+        }
+        Test.startTest();
         insert cons;
         
         Id firstAffiliationId;
@@ -114,8 +114,8 @@ public class bulkTests {
         
         firstAffiliationId = createdAffiliations[0].Id;
         
-        for(Contact thisContact : cons){	
-	        thisContact.AccountId = acc2.id;
+        for(Contact thisContact : cons){    
+            thisContact.AccountId = acc2.id;
         }
         update cons;
         
@@ -127,8 +127,8 @@ public class bulkTests {
         
         secondAffiliationId = createdAffiliations2[0].id;
         
-        for(Contact thisContact : cons){	
-	        thisContact.AccountId = acc3.id;
+        for(Contact thisContact : cons){    
+            thisContact.AccountId = acc3.id;
         }
         update cons;
         Test.stopTest();

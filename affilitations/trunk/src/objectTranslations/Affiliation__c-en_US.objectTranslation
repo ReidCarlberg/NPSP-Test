@@ -36,7 +36,22 @@
     <fields>
         <label><!-- Status --></label>
         <name>Status__c</name>
+        <picklistValues>
+            <masterLabel>Current</masterLabel>
+            <translation><!-- Current --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Former</masterLabel>
+            <translation><!-- Former --></translation>
+        </picklistValues>
     </fields>
+    <layouts>
+        <layout>Affiliation Layout</layout>
+        <sections>
+            <label><!-- Affiliation Information --></label>
+            <section>Affiliation Information</section>
+        </sections>
+    </layouts>
     <nameFieldLabel>Affiliation Name</nameFieldLabel>
     <startsWith>Consonant</startsWith>
 </CustomObjectTranslation>
