@@ -3,12 +3,11 @@ public class HouseholdOpportunity {
 
     public HouseholdOpportunity(Opportunity[] opportunities, Opportunity[] oldOpportunities, Households.triggerAction ta)
     {
-    	String householdContactRolesOn = system.label.Household_Contact_Role_Processor_On;
-    	
-    	String primaryDonorContactRole = system.label.Primary_Donor_Contact_Role;
-    	String householdMemberContactRole = system.label.Household_Member_Contact_Role;
+    	npe01__Contacts_and_Orgs_Settings__c ContactsSettings = npe01.Constants.getContactsSettings();
+    	Households_Settings__c currentHouseholdsSettings = Households.getHouseholdsSettings();
+		if(currentHouseholdsSettings.Household_Contact_Roles_On__c){
     	//get all Opps in the trigger set that are for individual accounts 
-    	List<Opportunity> oppsForContactRoles = [select Id, AccountId, account.npe01__One2OneContact__c,account.npe01__SYSTEMIsIndividual__c from Opportunity where Id IN :opportunities AND account.npe01__SYSTEMIsIndividual__c = true AND systemHouseholdContactRoleProcessor__c = :householdContactRolesOn];
+    	List<Opportunity> oppsForContactRoles = [select Id, AccountId, account.npe01__One2OneContact__c,account.npe01__SYSTEMIsIndividual__c from Opportunity where Id IN :opportunities AND account.npe01__SYSTEMIsIndividual__c = true];
     	
     	if(oppsForContactRoles.size()>0){
     		
@@ -91,14 +90,14 @@ public class HouseholdOpportunity {
 			    				uniqueConRole = string.valueOf(thisOpp.Id)+string.valueOf(householdMember.Id);
 			    				if(contactOppToContactRole.get(uniqueConRole)!=null){
 			    					OpportunityContactRole thisRole = new OpportunityContactRole(id=contactOppToContactRole.get(uniqueConRole));
-					    			thisRole.Role = primaryDonorContactRole;
+					    			thisRole.Role = ContactsSettings.npe01__Opportunity_Contact_Role_Default_role__c;
 				    				contactRolesForUpdate.add(thisRole);
 			    					
 			    				} else {
 				    				OpportunityContactRole thisRole = new OpportunityContactRole();
 					    			thisRole.OpportunityId = thisOpp.Id;
 					    			thisRole.ContactId = householdMember.Id;
-				    				thisRole.Role = primaryDonorContactRole;
+				    				thisRole.Role = ContactsSettings.npe01__Opportunity_Contact_Role_Default_role__c;
 				    				thisRole.isPrimary = true;
 				    				contactRolesForCreation.add(thisRole);
 			    				}
@@ -106,7 +105,7 @@ public class HouseholdOpportunity {
 			    				OpportunityContactRole thisRole = new OpportunityContactRole();
 				    			thisRole.OpportunityId = thisOpp.Id;
 				    			thisRole.ContactId = householdMember.Id;
-			    				thisRole.Role = householdMemberContactRole;
+			    				thisRole.Role = currentHouseholdsSettings.Household_Member_Contact_Role__c;
 			    				contactRolesForCreation.add(thisRole);
 			    			}
 			    			
@@ -121,5 +120,6 @@ public class HouseholdOpportunity {
 	    		update contactRolesForUpdate;	
 	    	}  	
     	}
+    }
     }
 }

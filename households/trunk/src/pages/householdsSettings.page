@@ -17,6 +17,23 @@
 		        	</apex:selectList>
 		       	</apex:pageBlockSectionItem>
 	       	</apex:pageBlockSection>
+	       	
+	       	<apex:pageBlockSection id="householdrolesection" title="Household Contact Role" columns="1">
+				<apex:outputPanel >{!$Label.Household_Rules_Help_Text}</apex:outputPanel>
+				
+				<apex:pageBlockSectionItem >
+		        	<apex:outputLabel value="Households Contact Roles"/>
+		        	<apex:inputField value="{!settings.Household_Contact_Roles_On__c}"/>
+		       	</apex:pageBlockSectionItem>
+		       	
+				<apex:pageBlockSectionItem helpText="Select the role all Household Members should receive for Opportunities.">
+		        	<apex:outputLabel value="Households Contact Roles"/>
+		        	<apex:selectList value="{!settings.Household_Member_Contact_Role__c}" multiselect="false" size="1">
+		            	<apex:selectOptions value="{!contactroles}"/>
+		        	</apex:selectList>
+		       	</apex:pageBlockSectionItem>
+	       	</apex:pageBlockSection>
+	       	
 			<apex:pageBlockButtons id="householdssettingsbuttons">
 				<apex:commandButton id="updatesettingsbutton" action="{!updateSettings}" value="Update the Households Settings" /> 
 			</apex:pageBlockButtons> 

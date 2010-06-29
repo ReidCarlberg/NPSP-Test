@@ -28,13 +28,13 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 global class Households {
-	
-	//One-to-One value for system processor field
+    
+    //One-to-One value for system processor field
     public static String ALL_PROCESSOR = 'All New or Edited Contacts';
     public static String ALL_INDIVIDUALS_PROCESSOR = 'All Individual Contacts';
     public static String NO_HOUSEHOLDS_PROCESSOR = 'No Contacts';
-	
-	public static Households_Settings__c householdsSettings;
+    
+    public static Households_Settings__c householdsSettings;
 
     /// <name> Households </name>
     /// <summary> Default Constructor </summary>
@@ -51,8 +51,8 @@ global class Households {
     /// <param name="ta"> Trigger action that is occuring </param>
     public Households(Contact[] contacts, Contact[] oldContacts, triggerAction ta)
     {
-    	
-    	Households_Settings__c currentHouseholdsSettings = getHouseholdsSettings();
+        
+        Households_Settings__c currentHouseholdsSettings = getHouseholdsSettings();
         List<Contact> householdInserts = new List<Contact>();
         List<Contact> contactEvaluations = new List<Contact>();
         List<Contact> householdDeletes = new List<Contact>();
@@ -362,14 +362,14 @@ global class Households {
                 List<Schema.PicklistEntry> P = F.getPicklistValues();
                 
                 for(Schema.PicklistEntry pe : P){
-                	system.debug(pe.getValue() + ' : ' + pe.isDefaultValue());
+                    system.debug(pe.getValue() + ' : ' + pe.isDefaultValue());
                     if (pe.isDefaultValue()){
                         if(pe.getValue()==ALL_PROCESSOR){
                             oldProcessor = ALL_PROCESSOR;
                         } else if(pe.getValue()==ALL_INDIVIDUALS_PROCESSOR){
-                        	oldProcessor = ALL_INDIVIDUALS_PROCESSOR;
+                            oldProcessor = ALL_INDIVIDUALS_PROCESSOR;
                         } else if(pe.getValue()==NO_HOUSEHOLDS_PROCESSOR){
-                        	oldProcessor = NO_HOUSEHOLDS_PROCESSOR;
+                            oldProcessor = NO_HOUSEHOLDS_PROCESSOR;
                         }
                     }
                 }
@@ -378,10 +378,12 @@ global class Households {
                 if(oldProcessor==ALL_PROCESSOR){
                     householdsSettings.Household_Rules__c = ALL_PROCESSOR;
                 } else if(oldProcessor==ALL_INDIVIDUALS_PROCESSOR){
-                	householdsSettings.Household_Rules__c = ALL_INDIVIDUALS_PROCESSOR;
+                    householdsSettings.Household_Rules__c = ALL_INDIVIDUALS_PROCESSOR;
                 } else if(oldProcessor==NO_HOUSEHOLDS_PROCESSOR){
-                	householdsSettings.Household_Rules__c = NO_HOUSEHOLDS_PROCESSOR;
+                    householdsSettings.Household_Rules__c = NO_HOUSEHOLDS_PROCESSOR;
                 }
+
+				householdsSettings.Household_Member_Contact_Role__c = label.Household_Member_Contact_Role;
                
                 householdsSettings.Setupownerid = UserInfo.getOrganizationId();
                 //this is not allowed...
@@ -398,7 +400,9 @@ global class Households {
         
         //create our own based on what's passed in from the test
         householdsSettings = new Households_Settings__c (
-            Household_Rules__c = mySettings.Household_Rules__c
+            Household_Rules__c = mySettings.Household_Rules__c,
+            Household_Contact_Roles_On__c = mySettings.Household_Contact_Roles_On__c,
+            Household_Member_Contact_Role__c = mySettings.Household_Member_Contact_Role__c
             );
         insert householdsSettings;
             

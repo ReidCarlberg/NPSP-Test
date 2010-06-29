@@ -36,15 +36,19 @@ private class TEST_Households {
         
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR));
                 
+        	
         String street = '2345 Elm St.';
         String city = 'Seattle';
         String state = 'WA';
         String zip = '88777';
         String country = 'US';
-        String lastname = 'SmithForTest99';
         Contact con = new Contact(
-            FirstName='test',
-            LastName=lastname,
+            FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
+            npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
             MailingStreet = street,
             MailingCity = city,
             MailingState = state,
@@ -60,7 +64,7 @@ private class TEST_Households {
         system.assertEquals(state,createdContacts[0].Household__r.MailingState__c);
         system.assertEquals(zip,createdContacts[0].Household__r.MailingPostalCode__c);
         system.assertEquals(country,createdContacts[0].Household__r.MailingCountry__c);
-        system.assertEquals(lastname + ' Household',createdContacts[0].Household__r.Name);
+        system.assertEquals(npe01.Constants.CONTACT_LASTNAME_FOR_TESTS + ' Household',createdContacts[0].Household__r.Name);
         
         //blank out the HH
         con.Household__c = null;
@@ -74,7 +78,7 @@ private class TEST_Households {
         system.assertEquals(state,createdContacts[0].Household__r.MailingState__c);
         system.assertEquals(zip,createdContacts[0].Household__r.MailingPostalCode__c);
         system.assertEquals(country,createdContacts[0].Household__r.MailingCountry__c);
-        system.assertEquals(lastname + ' Household',createdContacts[0].Household__r.Name);
+        system.assertEquals(npe01.Constants.CONTACT_LASTNAME_FOR_TESTS + ' Household',createdContacts[0].Household__r.Name);
     }
 
     /// <name> newIndContactIndividualsProcessor </name>
@@ -90,10 +94,13 @@ private class TEST_Households {
         String state = 'WA';
         String zip = '88777';
         String country = 'US';
-        String lastname = 'SmithForTest99';
         Contact con = new Contact(
-            FirstName='test',
-            LastName=lastname,
+            FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
+            npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
             MailingStreet = street,
             MailingCity = city,
             MailingState = state,
@@ -109,7 +116,7 @@ private class TEST_Households {
         system.assertEquals(state,createdContacts[0].Household__r.MailingState__c);
         system.assertEquals(zip,createdContacts[0].Household__r.MailingPostalCode__c);
         system.assertEquals(country,createdContacts[0].Household__r.MailingCountry__c);
-        system.assertEquals(lastname + ' Household',createdContacts[0].Household__r.Name);
+        system.assertEquals(npe01.Constants.CONTACT_LASTNAME_FOR_TESTS + ' Household',createdContacts[0].Household__r.Name);
         
         //blank out the HH
         con.Household__c = null;
@@ -123,7 +130,7 @@ private class TEST_Households {
         system.assertEquals(state,createdContacts[0].Household__r.MailingState__c);
         system.assertEquals(zip,createdContacts[0].Household__r.MailingPostalCode__c);
         system.assertEquals(country,createdContacts[0].Household__r.MailingCountry__c);
-        system.assertEquals(lastname + ' Household',createdContacts[0].Household__r.Name);
+        system.assertEquals(npe01.Constants.CONTACT_LASTNAME_FOR_TESTS + ' Household',createdContacts[0].Household__r.Name);
     }
     
     static testMethod void newNoHouseholdProcessor() {
@@ -136,10 +143,14 @@ private class TEST_Households {
         String state = 'WA';
         String zip = '88777';
         String country = 'US';
-        String lastname = 'SmithForTest99';
+
         Contact con = new Contact(
-            FirstName='test',
-            LastName=lastname,
+            FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
+            npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
             MailingStreet = street,
             MailingCity = city,
             MailingState = state,
@@ -171,10 +182,13 @@ private class TEST_Households {
         String state = 'WA';
         String zip = '88777';
         String country = 'US';
-        String lastname = 'SmithForTest99';
         Contact con = new Contact(
-            FirstName='test',
-            LastName=lastname,
+            FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
+            npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
             MailingStreet = street,
             MailingCity = city,
             MailingState = state,
@@ -191,7 +205,7 @@ private class TEST_Households {
         system.assertEquals(state,createdContacts[0].Household__r.MailingState__c);
         system.assertEquals(zip,createdContacts[0].Household__r.MailingPostalCode__c);
         system.assertEquals(country,createdContacts[0].Household__r.MailingCountry__c);
-        system.assertEquals(lastname + ' Household',createdContacts[0].Household__r.Name);
+        system.assertEquals(npe01.Constants.CONTACT_LASTNAME_FOR_TESTS + ' Household',createdContacts[0].Household__r.Name);
         
         //blank out the HH
         con.Household__c = null;
@@ -205,7 +219,7 @@ private class TEST_Households {
         system.assertEquals(state,createdContacts[0].Household__r.MailingState__c);
         system.assertEquals(zip,createdContacts[0].Household__r.MailingPostalCode__c);
         system.assertEquals(country,createdContacts[0].Household__r.MailingCountry__c);
-        system.assertEquals(lastname + ' Household',createdContacts[0].Household__r.Name);
+        system.assertEquals(npe01.Constants.CONTACT_LASTNAME_FOR_TESTS + ' Household',createdContacts[0].Household__r.Name);
     }
 
     /// <name> newOrgContactIndividualsProcessor </name>
@@ -226,10 +240,13 @@ private class TEST_Households {
         String state = 'WA';
         String zip = '88777';
         String country = 'US';
-        String lastname = 'SmithForTest99';
         Contact con = new Contact(
-            FirstName='test',
-            LastName=lastname,
+            FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
+            npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
             MailingStreet = street,
             MailingCity = city,
             MailingState = state,
@@ -261,8 +278,12 @@ private class TEST_Households {
     	
         String lastname = 'SmithForTest99';
         Contact con = new Contact(
-            FirstName='test',
-            LastName=lastname
+            FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
+            npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         insert con;
         Contact[] createdContacts = [select Household__c from Contact where id=:con.id];
@@ -285,8 +306,12 @@ private class TEST_Households {
     	
         String lastname = 'SmithForTest99';
         Contact con = new Contact(
-            FirstName='test',
-            LastName=lastname
+            FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
+            npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         insert con;
         Contact[] createdContacts = [select Household__c from Contact where id=:con.id];
@@ -312,7 +337,15 @@ private class TEST_Households {
     {
         Household__c h = new Household__c(Name='Test Household');
         insert h;
-        Contact c = new Contact(FirstName='test',LastName='test',Household__c=h.Id);
+        Contact c = new Contact(
+        	FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
+            npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
+            Household__c=h.Id
+        );
         insert c;
         Opportunity o = new Opportunity(Name='test oppty',CloseDate=System.Today(),StageName='Closed Won',Amount=100);
         insert o;
@@ -330,7 +363,15 @@ private class TEST_Households {
         Integer day = 10;
         Household__c h = new Household__c(Name='Test Household');
         insert h;
-        Contact c = new Contact(FirstName='test',LastName='test',Household__c=h.Id);
+        Contact c = new Contact(
+        	FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
+            npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
+            Household__c=h.Id
+        );
         insert c;
         Opportunity o = new Opportunity(Name='test oppty',CloseDate=date.newInstance(year,month,day),StageName='Closed Won',Amount=100);
         insert o;
@@ -345,7 +386,15 @@ private class TEST_Households {
         
         Household__c h = new Household__c(Name='Test Household');
         insert h;
-        Contact c = new Contact(FirstName='test',LastName='test',Household__c=h.Id);
+        Contact c = new Contact(
+        	FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
+            npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
+            Household__c=h.Id
+        );
         insert c;
         Opportunity o = new Opportunity(Name='test oppty',CloseDate=date.newInstance(2007,3,3),StageName='Closed Won',Amount=100);
         insert o;
@@ -369,7 +418,15 @@ private class TEST_Households {
         
         Household__c h = new Household__c(Name='Test Household');
         insert h;
-        Contact c = new Contact(FirstName='test',LastName='test',Household__c=h.Id);
+        Contact c = new Contact(
+			FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
+            npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
+            Household__c=h.Id
+        );
         insert c;
         Opportunity o = new Opportunity(Name='test oppty',CloseDate=date.newInstance(year,month,day),StageName='Closed Won',Amount=100);
         insert o;
@@ -383,6 +440,4 @@ private class TEST_Households {
         
         system.assertEquals(String.valueOf(day) + '/' + String.valueOf(month) + '/' + String.valueOf(year),ext.getLastTransactionDate());
     }
-    
-
 }

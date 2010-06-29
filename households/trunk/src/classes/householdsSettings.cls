@@ -16,7 +16,9 @@ public with sharing class householdsSettings {
         pageSettings = Households.getHouseholdsSettings();
         return null;
     }
-    /*
+    
+    public List<SelectOption> contactRoles = new List<SelectOption>();
+    
     public List<SelectOption> getcontactRoles() {
     
         if(contactRoles.size()==0){
@@ -29,7 +31,7 @@ public with sharing class householdsSettings {
         }
         return contactRoles;
     }
-    */
+    
     List<SelectOption> householdrules;
    
    // List<SelectOption> contactRoles = new List<SelectOption>();

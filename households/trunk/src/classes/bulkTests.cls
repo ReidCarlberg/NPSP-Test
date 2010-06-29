@@ -25,25 +25,32 @@ private class bulkTests {
      /// <name> newIndContactAllContactsProcessor </name>
     /// <summary> test insert individual with all contacts processor </summary>
     static testMethod void newIndContactAllContactsProcessor() {
+    	
+    	npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'));
+        
+        Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(new Households_Settings__c (Household_Rules__c = Households.ALL_PROCESSOR, Household_Contact_Roles_On__c = true,Household_Member_Contact_Role__c='Household Credit'));
+        
     	String street = '2345 Elm St.';
     	String city = 'Seattle';
     	String state = 'WA';
     	String zip = '88777';
     	String country = 'US';
-    	String lastname = 'SmithForTest99';
     	
     	List<Contact> cons = new List<contact>();
-    	Integer conCount = 200;
+    	Integer conCount = 50; 
     	for(Integer i=0;i<conCount;i++){
 			Contact con = new Contact(
-				FirstName='test',
-				LastName=lastname,
+				FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+	            LastName=npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
+	            npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
+	            npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+	            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
+	            npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
 				MailingStreet = street,
 				MailingCity = city,
 				MailingState = state,
 				MailingPostalCode = zip,
-				MailingCountry = country,
-				SystemHouseholdProcessor__c = 'All New or Edited Contacts'
+				MailingCountry = country
 			);
 			cons.add(con);
     	}
@@ -57,7 +64,7 @@ private class bulkTests {
         system.assertEquals(state,createdContacts[0].Household__r.MailingState__c);
         system.assertEquals(zip,createdContacts[0].Household__r.MailingPostalCode__c);
         system.assertEquals(country,createdContacts[0].Household__r.MailingCountry__c);
-        system.assertEquals(lastname + ' Household',createdContacts[0].Household__r.Name);
+        system.assertEquals(npe01.Constants.CONTACT_LASTNAME_FOR_TESTS + ' Household',createdContacts[0].Household__r.Name);
         
         //blank out the HH
         for(Contact thisContact : createdContacts){
@@ -73,25 +80,33 @@ private class bulkTests {
         system.assertEquals(state,createdContacts[0].Household__r.MailingState__c);
         system.assertEquals(zip,createdContacts[0].Household__r.MailingPostalCode__c);
         system.assertEquals(country,createdContacts[0].Household__r.MailingCountry__c);
-        system.assertEquals(lastname + ' Household',createdContacts[0].Household__r.Name);
+        system.assertEquals(npe01.Constants.CONTACT_LASTNAME_FOR_TESTS + ' Household',createdContacts[0].Household__r.Name);
     }
 
     /// <name> newIndContactIndividualsProcessor </name>
     /// <summary> test insert individual with individuals processor </summary>
     static testMethod void newIndContactIndividualsProcessor() {
+    	
+    	npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'));
+        
+        Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(new Households_Settings__c (Household_Rules__c = Households.ALL_PROCESSOR, Household_Contact_Roles_On__c = true,Household_Member_Contact_Role__c='Household Credit'));
+        
 		String street = '2345 Elm St.';
     	String city = 'Seattle';
     	String state = 'WA';
     	String zip = '88777';
     	String country = 'US';
-    	String lastname = 'SmithForTest99';
     	
     	List<Contact> cons = new List<contact>();
     	Integer conCount = 200;
     	for(Integer i=0;i<conCount;i++){
 			Contact con = new Contact(
-				FirstName='test',
-				LastName=lastname,
+				FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+	            LastName=npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
+	            npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
+	            npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+	            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
+	            npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
 				MailingStreet = street,
 				MailingCity = city,
 				MailingState = state,
@@ -111,7 +126,7 @@ private class bulkTests {
         system.assertEquals(state,createdContacts[0].Household__r.MailingState__c);
         system.assertEquals(zip,createdContacts[0].Household__r.MailingPostalCode__c);
         system.assertEquals(country,createdContacts[0].Household__r.MailingCountry__c);
-        system.assertEquals(lastname + ' Household',createdContacts[0].Household__r.Name);
+        system.assertEquals(npe01.Constants.CONTACT_LASTNAME_FOR_TESTS + ' Household',createdContacts[0].Household__r.Name);
         
         //blank out the HH
         for(Contact thisContact : createdContacts){
@@ -127,7 +142,7 @@ private class bulkTests {
         system.assertEquals(state,createdContacts[0].Household__r.MailingState__c);
         system.assertEquals(zip,createdContacts[0].Household__r.MailingPostalCode__c);
         system.assertEquals(country,createdContacts[0].Household__r.MailingCountry__c);
-        system.assertEquals(lastname + ' Household',createdContacts[0].Household__r.Name);
+        system.assertEquals(npe01.Constants.CONTACT_LASTNAME_FOR_TESTS + ' Household',createdContacts[0].Household__r.Name);
     }
     
     /// <name> newOrgContactAllContactsProcessor </name>
@@ -143,20 +158,22 @@ private class bulkTests {
     	String state = 'WA';
     	String zip = '88777';
     	String country = 'US';
-    	String lastname = 'SmithForTest99';
     	List<Contact> cons = new List<contact>();
     	Integer conCount = 200;
     	for(Integer i=0;i<conCount;i++){
 			Contact con = new Contact(
-				FirstName='test',
-				LastName=lastname,
+				FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+	            LastName=npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
+	            npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
+	            npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+	            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
+	            npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
 				MailingStreet = street,
 				MailingCity = city,
 				MailingState = state,
 				MailingPostalCode = zip,
 				MailingCountry = country,
-				AccountId = acct.id,
-				SystemHouseholdProcessor__c = 'All New or Edited Contacts'
+				AccountId = acct.id
 			);
 			cons.add(con);
     	}
@@ -170,7 +187,7 @@ private class bulkTests {
         system.assertEquals(state,createdContacts[0].Household__r.MailingState__c);
         system.assertEquals(zip,createdContacts[0].Household__r.MailingPostalCode__c);
         system.assertEquals(country,createdContacts[0].Household__r.MailingCountry__c);
-        system.assertEquals(lastname + ' Household',createdContacts[0].Household__r.Name);
+        system.assertEquals(npe01.Constants.CONTACT_LASTNAME_FOR_TESTS + ' Household',createdContacts[0].Household__r.Name);
         
         //blank out the HH
         for(Contact thisContact : createdContacts){
@@ -186,12 +203,17 @@ private class bulkTests {
         system.assertEquals(state,createdContacts[0].Household__r.MailingState__c);
         system.assertEquals(zip,createdContacts[0].Household__r.MailingPostalCode__c);
         system.assertEquals(country,createdContacts[0].Household__r.MailingCountry__c);
-        system.assertEquals(lastname + ' Household',createdContacts[0].Household__r.Name);
+        system.assertEquals(npe01.Constants.CONTACT_LASTNAME_FOR_TESTS + ' Household',createdContacts[0].Household__r.Name);
     }
 
     /// <name> newOrgContactIndividualsProcessor </name>
     /// <summary> test insert org contact with Individuals processor </summary>
     static testMethod void newOrgContactIndividualsProcessor() {
+    	
+    	npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'));
+        
+        Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(new Households_Settings__c (Household_Rules__c = Households.ALL_INDIVIDUALS_PROCESSOR, Household_Contact_Roles_On__c = true,Household_Member_Contact_Role__c='Household Credit'));
+        
 		Account acct = new Account(
 			Name = 'Test Organization 888'
 		);
@@ -202,20 +224,22 @@ private class bulkTests {
     	String state = 'WA';
     	String zip = '88777';
     	String country = 'US';
-    	String lastname = 'SmithForTest99';
     	List<Contact> cons = new List<contact>();
     	Integer conCount = 200;
     	for(Integer i=0;i<conCount;i++){
 			Contact con = new Contact(
-				FirstName='test',
-				LastName=lastname,
+				FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+	            LastName=npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
+	            npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
+	            npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+	            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
+	            npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
 				MailingStreet = street,
 				MailingCity = city,
 				MailingState = state,
 				MailingPostalCode = zip,
 				MailingCountry = country,
-				AccountId = acct.id,
-				SystemHouseholdProcessor__c = 'All Individual Contacts'
+				AccountId = acct.id
 			);
 			cons.add(con);
     	}
@@ -239,14 +263,21 @@ private class bulkTests {
     /// <name> contactDeleteWithOwnHousehold </name>
     /// <summary> test delete a contact that has it's own household </summary>
     static testMethod void contactDeleteWithOwnHousehold() {
-    	String lastname = 'SmithForTest99';
+    	
+    	npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'));
+        
+        Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(new Households_Settings__c (Household_Rules__c = Households.ALL_INDIVIDUALS_PROCESSOR, Household_Contact_Roles_On__c = true,Household_Member_Contact_Role__c='Household Credit'));
+        
     	List<Contact> cons = new List<contact>();
     	Integer conCount = 200;
     	for(Integer i=0;i<conCount;i++){
 			Contact con = new Contact(
-				FirstName='test',
-				LastName=lastname,
-				SystemHouseholdProcessor__c = 'All Individual Contacts'
+				FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+	            LastName=npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
+	            npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
+	            npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+	            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
+	            npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
 			);
 			cons.add(con);
     	}
@@ -267,18 +298,25 @@ private class bulkTests {
     /// <name> contactDeleteWithSharedHousehold </name>
     /// <summary> test delete a contact that has shared household </summary>
     static testMethod void contactDeleteWithSharedHousehold() {
-		String lastname = 'SmithForTest99';
+    	
+    	npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'));
+        
+        Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(new Households_Settings__c (Household_Rules__c = Households.ALL_INDIVIDUALS_PROCESSOR, Household_Contact_Roles_On__c = true,Household_Member_Contact_Role__c='Household Credit'));
+        
 		List<Contact> cons = new List<contact>();
-    	Integer conCount = 200;
+    	Integer conCount = 10;
     	for(Integer i=0;i<conCount;i++){
 			Contact con = new Contact(
-				FirstName='test',
-				LastName=lastname,
-				SystemHouseholdProcessor__c = 'All Individual Contacts'
+				FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+	            LastName=npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
+	            npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
+	            npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+	            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
+	            npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
 			);
 			cons.add(con);
     	}
-    	Test.startTest();
+    	
         insert cons;
         Contact[] createdContacts = [select Household__c from Contact where id IN :cons];
         
@@ -289,15 +327,18 @@ private class bulkTests {
         List<Contact> cons2 = new List<contact>();
         for(Integer i=0;i<conCount;i++){
 	        Contact con2 = new Contact(
-				FirstName='test again',
-				LastName=lastname,
-				Household__c = householdIds[i],
-				SystemHouseholdProcessor__c = 'All Individual Contacts'
+				FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+	            LastName=npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
+	            npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
+	            npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+	            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
+	            npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
+				Household__c = householdIds[i]
 			);
 			cons2.add(con2);
         }
         insert cons2;
-        
+        Test.startTest();
         delete cons;
         Test.stopTest();
         Household__c[] remainingHousehold = [select id from Household__c where id IN :householdIds];
@@ -308,9 +349,21 @@ private class bulkTests {
     /// <summary>  </summary>
 	static testMethod void getHouseholdTransactionTotal_test()
 	{
+		npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'));
+        
+        Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(new Households_Settings__c (Household_Rules__c = Households.ALL_PROCESSOR, Household_Contact_Roles_On__c = true,Household_Member_Contact_Role__c='Household Credit'));
+        
 		Household__c h = new Household__c(Name='Test Household');
 		insert h;
-		Contact c = new Contact(FirstName='test',LastName='test',Household__c=h.Id);
+		Contact c = new Contact(
+			FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
+            npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
+            Household__c=h.Id
+        );
 		insert c;
 		Opportunity o = new Opportunity(Name='test oppty',CloseDate=System.Today(),StageName='Closed Won',Amount=100);
 		insert o;
@@ -323,12 +376,24 @@ private class bulkTests {
     /// <summary>  </summary>
 	static testMethod void getHouseholdLastTransaction_test()
 	{
+		npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'));
+        
+        Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(new Households_Settings__c (Household_Rules__c = Households.ALL_PROCESSOR, Household_Contact_Roles_On__c = true,Household_Member_Contact_Role__c='Household Credit'));
+        
 		Integer year = 2005;
 		Integer month = 10;
 		Integer day = 10;
 		Household__c h = new Household__c(Name='Test Household');
 		insert h;
-		Contact c = new Contact(FirstName='test',LastName='test',Household__c=h.Id);
+		Contact c = new Contact(
+			FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
+            npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
+            Household__c=h.Id
+        );
 		insert c;
 		Opportunity o = new Opportunity(Name='test oppty',CloseDate=date.newInstance(year,month,day),StageName='Closed Won',Amount=100);
 		insert o;
