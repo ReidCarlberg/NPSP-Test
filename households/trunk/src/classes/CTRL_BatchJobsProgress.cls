@@ -19,8 +19,8 @@ public class CTRL_BatchJobsProgress {
  
         //Query the Batch apex jobs
         for(AsyncApexJob a : [select TotalJobItems, Status, NumberOfErrors, MethodName, JobType, JobItemsProcessed, Id, 
-        							CreatedDate, CreatedById, CompletedDate, ApexClassId, ApexClass.Name 
-        							From AsyncApexJob order by CreatedDate desc limit :numberOfJobs]) {
+                                    CreatedDate, CreatedById, CompletedDate, ApexClassId, ApexClass.Name 
+                                    From AsyncApexJob order by CreatedDate desc limit :numberOfJobs]) {
             Double itemsProcessed = a.JobItemsProcessed;
             Double totalItems = a.TotalJobItems;
  
@@ -29,7 +29,7 @@ public class CTRL_BatchJobsProgress {
  
             //Determine the pecent complete based on the number of batches complete
             if(a.status == 'Completed') {
-            	j.percentComplete = 100;
+                j.percentComplete = 100;
             //Determine the pecent complete based on the number of batches complete
             } else if (totalItems == 0) {
                 //A little check here as we don't want to divide by 0.

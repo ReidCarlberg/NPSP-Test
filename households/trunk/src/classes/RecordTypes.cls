@@ -33,10 +33,10 @@ global class RecordTypes {
             recordTypesById.put(objectName, d.getRecordTypeInfosById());
             recordTypesList = d.getRecordTypeInfos();
             for(integer i=0;i<recordTypesList.size();i++){
-            	if(recordTypesList[i].getName()=='Master'){
-            		recordTypesList.remove(i);
-            		break;
-            	}
+                if(recordTypesList[i].getName()=='Master'){
+                    recordTypesList.remove(i);
+                    break;
+                }
             }
         }
     }
@@ -60,35 +60,35 @@ global class RecordTypes {
     
     global static string getRecordTypeNameForGiftsTests(String objectName){  
 
-    	if (giftRecordTypeNameForTests == null){
-    		 // make sure we have this object's record types mapped
-	        if (!recordTypesByName.containsKey(objectName)) 
-	            fillMapsForObject(objectName);
-	            
-	        if(recordTypesList.size()==0){
-	        	giftRecordTypeNameForTests = '';
-	        } else{
-		        giftRecordTypeNameForTests = recordTypesList[0].getName();	        
-	        }
-    	}      
+        if (giftRecordTypeNameForTests == null){
+             // make sure we have this object's record types mapped
+            if (!recordTypesByName.containsKey(objectName)) 
+                fillMapsForObject(objectName);
+                
+            if(recordTypesList.size()==0){
+                giftRecordTypeNameForTests = '';
+            } else{
+                giftRecordTypeNameForTests = recordTypesList[0].getName();          
+            }
+        }      
        
         return giftRecordTypeNameForTests;
     }
     
     global static string getRecordTypeNameForMembershipTests(String objectName){      
-    	if (membershipRecordTypeNameForTests == null){        
-	        // make sure we have this object's record types mapped
-	        if (!recordTypesByName.containsKey(objectName)) 
-	            fillMapsForObject(objectName);
-	            
-	        if(recordTypesList.size()==0){
-	        	membershipRecordTypeNameForTests = '';
-	        } else if(recordTypesList.size()==1){
-	        	membershipRecordTypeNameForTests = recordTypesList[0].getName();
-	        } else {
-		        membershipRecordTypeNameForTests = recordTypesList[1].getName();	        
-	        }
-    	}
+        if (membershipRecordTypeNameForTests == null){        
+            // make sure we have this object's record types mapped
+            if (!recordTypesByName.containsKey(objectName)) 
+                fillMapsForObject(objectName);
+                
+            if(recordTypesList.size()==0){
+                membershipRecordTypeNameForTests = '';
+            } else if(recordTypesList.size()==1){
+                membershipRecordTypeNameForTests = recordTypesList[0].getName();
+            } else {
+                membershipRecordTypeNameForTests = recordTypesList[1].getName();            
+            }
+        }
         return membershipRecordTypeNameForTests;
     }
         

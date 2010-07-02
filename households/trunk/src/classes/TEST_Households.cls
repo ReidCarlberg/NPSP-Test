@@ -31,12 +31,12 @@ private class TEST_Households {
     /// <name> newIndContactAllContactsProcessor </name>
     /// <summary> test insert individual with all contacts processor </summary>
     static testMethod void newIndContactAllContactsProcessor() {
-    	
-    	Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(new Households_Settings__c (Household_Rules__c = Households.ALL_PROCESSOR));
+        
+        Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(new Households_Settings__c (Household_Rules__c = Households.ALL_PROCESSOR));
         
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR));
                 
-        	
+            
         String street = '2345 Elm St.';
         String city = 'Seattle';
         String state = 'WA';
@@ -82,12 +82,12 @@ private class TEST_Households {
     }
     
     static testMethod void newPrivateContactAllContactsProcessor() {
-    	
-    	Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(new Households_Settings__c (Household_Rules__c = Households.ALL_PROCESSOR));
+        
+        Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(new Households_Settings__c (Household_Rules__c = Households.ALL_PROCESSOR));
         
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR));
                 
-        	
+            
         String street = '2345 Elm St.';
         String city = 'Seattle';
         String state = 'WA';
@@ -134,17 +134,17 @@ private class TEST_Households {
     }
     
      static testMethod void noHouseholdSetting() {
-     	
-     	delete [select id from Households_Settings__c];
-     	Households.getHouseholdsSettings();
-     	system.Assert(!Households.householdsSettings.Always_Rollup_to_Primary_Contact__c);
+        
+        delete [select id from Households_Settings__c];
+        Households.getHouseholdsSettings();
+        system.Assert(!Households.householdsSettings.Always_Rollup_to_Primary_Contact__c);
      }
 
     /// <name> newIndContactIndividualsProcessor </name>
     /// <summary> test insert individual with individuals processor </summary>
     static testMethod void newIndContactIndividualsProcessor() {
-    	
-    	Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(new Households_Settings__c (Household_Rules__c = Households.ALL_INDIVIDUALS_PROCESSOR));
+        
+        Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(new Households_Settings__c (Household_Rules__c = Households.ALL_INDIVIDUALS_PROCESSOR));
         
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR));
                 
@@ -193,10 +193,10 @@ private class TEST_Households {
     }
     
     static testMethod void newNoHouseholdProcessor() {
-    	
-    	npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR));
+        
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR));
       
-    	Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(new Households_Settings__c (Household_Rules__c = Households.NO_HOUSEHOLDS_PROCESSOR));
+        Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(new Households_Settings__c (Household_Rules__c = Households.NO_HOUSEHOLDS_PROCESSOR));
         String street = '2345 Elm St.';
         String city = 'Seattle';
         String state = 'WA';
@@ -226,11 +226,11 @@ private class TEST_Households {
     /// <name> newOrgContactAllContactsProcessor </name>
     /// <summary> test insert org contact with all contacts processor </summary>
     static testMethod void newOrgContactAllContactsProcessor() {
-    	
-    	npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR));
         
-    	Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(new Households_Settings__c (Household_Rules__c = Households.ALL_PROCESSOR));
-    	
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR));
+        
+        Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(new Households_Settings__c (Household_Rules__c = Households.ALL_PROCESSOR));
+        
         Account acct = new Account(
             Name = 'Test Organization 888'
         );
@@ -284,11 +284,11 @@ private class TEST_Households {
     /// <name> newOrgContactIndividualsProcessor </name>
     /// <summary> test insert org contact with Individuals processor </summary>
     static testMethod void newOrgContactIndividualsProcessor() {
-    	
-    	npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR));
         
-    	Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(new Households_Settings__c (Household_Rules__c = Households.ALL_INDIVIDUALS_PROCESSOR));
-    	
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR));
+        
+        Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(new Households_Settings__c (Household_Rules__c = Households.ALL_INDIVIDUALS_PROCESSOR));
+        
         Account acct = new Account(
             Name = 'Test Organization 888'
         );
@@ -330,11 +330,11 @@ private class TEST_Households {
     /// <name> contactDeleteWithOwnHousehold </name>
     /// <summary> test delete a contact that has it's own household </summary>
     static testMethod void contactDeleteWithOwnHousehold() {
-    	
-    	npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR));
         
-    	Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(new Households_Settings__c (Household_Rules__c = Households.ALL_INDIVIDUALS_PROCESSOR));
-    	
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR));
+        
+        Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(new Households_Settings__c (Household_Rules__c = Households.ALL_INDIVIDUALS_PROCESSOR));
+        
         String lastname = 'SmithForTest99';
         Contact con = new Contact(
             FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
@@ -358,11 +358,11 @@ private class TEST_Households {
     /// <name> contactDeleteWithSharedHousehold </name>
     /// <summary> test delete a contact that has shared household </summary>
     static testMethod void contactDeleteWithSharedHousehold() {
-    	
-    	npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR));
         
-    	Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(new Households_Settings__c (Household_Rules__c = Households.ALL_INDIVIDUALS_PROCESSOR));
-    	
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR));
+        
+        Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(new Households_Settings__c (Household_Rules__c = Households.ALL_INDIVIDUALS_PROCESSOR));
+        
         String lastname = 'SmithForTest99';
         Contact con = new Contact(
             FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
@@ -397,7 +397,7 @@ private class TEST_Households {
         Household__c h = new Household__c(Name='Test Household');
         insert h;
         Contact c = new Contact(
-        	FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
             LastName=npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
             npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
             npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
@@ -406,7 +406,7 @@ private class TEST_Households {
             Household__c=h.Id
         );
         insert c;
-        Opportunity o = new Opportunity(Name='test oppty',CloseDate=System.Today(),StageName='Closed Won',Amount=100);
+        Opportunity o = new Opportunity(Name='test oppty',CloseDate=System.Today(),StageName=UnitTestData.getClosedWonStage(),Amount=100);
         insert o;
         OpportunityContactRole ocr = new OpportunityContactRole(OpportunityId=o.Id,ContactId=c.Id,Role='Test');
         insert ocr;
@@ -423,7 +423,7 @@ private class TEST_Households {
         Household__c h = new Household__c(Name='Test Household');
         insert h;
         Contact c = new Contact(
-        	FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
             LastName=npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
             npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
             npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
@@ -432,7 +432,7 @@ private class TEST_Households {
             Household__c=h.Id
         );
         insert c;
-        Opportunity o = new Opportunity(Name='test oppty',CloseDate=date.newInstance(year,month,day),StageName='Closed Won',Amount=100);
+        Opportunity o = new Opportunity(Name='test oppty',CloseDate=date.newInstance(year,month,day),StageName=UnitTestData.getClosedWonStage(),Amount=100);
         insert o;
         OpportunityContactRole ocr = new OpportunityContactRole(OpportunityId=o.Id,ContactId=c.Id,Role='Test');
         insert ocr;
@@ -446,7 +446,7 @@ private class TEST_Households {
         Household__c h = new Household__c(Name='Test Household');
         insert h;
         Contact c = new Contact(
-        	FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
             LastName=npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
             npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
             npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
@@ -455,7 +455,7 @@ private class TEST_Households {
             Household__c=h.Id
         );
         insert c;
-        Opportunity o = new Opportunity(Name='test oppty',CloseDate=date.newInstance(2007,3,3),StageName='Closed Won',Amount=100);
+        Opportunity o = new Opportunity(Name='test oppty',CloseDate=date.newInstance(2007,3,3),StageName=UnitTestData.getClosedWonStage(),Amount=100);
         insert o;
         OpportunityContactRole ocr = new OpportunityContactRole(OpportunityId=o.Id,ContactId=c.Id,Role='Test');
         insert ocr;
@@ -478,7 +478,7 @@ private class TEST_Households {
         Household__c h = new Household__c(Name='Test Household');
         insert h;
         Contact c = new Contact(
-			FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
             LastName=npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
             npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
             npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
@@ -487,7 +487,7 @@ private class TEST_Households {
             Household__c=h.Id
         );
         insert c;
-        Opportunity o = new Opportunity(Name='test oppty',CloseDate=date.newInstance(year,month,day),StageName='Closed Won',Amount=100);
+        Opportunity o = new Opportunity(Name='test oppty',CloseDate=date.newInstance(year,month,day),StageName=UnitTestData.getClosedWonStage(),Amount=100);
         insert o;
         OpportunityContactRole ocr = new OpportunityContactRole(OpportunityId=o.Id,ContactId=c.Id,Role='Test');
         insert ocr;

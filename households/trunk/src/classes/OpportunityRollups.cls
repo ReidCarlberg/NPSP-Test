@@ -165,7 +165,7 @@ public class OpportunityRollups {
 		        	//SUM(Total_Unpaid__c) TotalUnpaid, MAX(Amount) LargestAmount, 
 		        	//AVG(Amount) AverageAmount, MIN(Amount) SmallestAmount,
 					MAX(CloseDate) LastCloseDate,
-					MIN(npo02__membership_start_date__c) FirstStartDate, MAX(npo02__membership_start_date__c) LastEndDate, 
+					MIN(npe01__membership_start_date__c) FirstStartDate, MAX(npe01__membership_start_date__c) LastEndDate, 
 					COUNT_DISTINCT(Id) NumberOfClosedOpps, MAX(npo02__CombinedRollupFieldset__c) RollupFieldset 
 					FROM Opportunity
 		    		WHERE isWon=true 
@@ -414,8 +414,8 @@ public class OpportunityRollups {
 				    	MAX(Opportunity.CloseDate) LastCloseDate, 
 				    	//AVG(Opportunity.Amount) AverageAmount, MIN(Opportunity.Amount) SmallestAmount,
 				    	//MAX(Opportunity.Amount) LargestAmount, SUM(Total_Unpaid__c) TotalUnpaid,
-				    	MIN(Opportunity.npo02__membership_start_date__c) FirstStartDate, 
-				    	MAX(Opportunity.npo02__Membership_End_Date__c) LastEndDate, 
+				    	MIN(Opportunity.npe01__membership_start_date__c) FirstStartDate, 
+				    	MAX(Opportunity.npe01__Membership_End_Date__c) LastEndDate, 
 				    	COUNT_DISTINCT(Opportunity.Id) NumberOfClosedOpps,
 				    	MAX(Opportunity.npo02__CombinedRollupFieldset__c) RollupFieldset
 				    	FROM OpportunityContactRole 
@@ -538,8 +538,8 @@ public class OpportunityRollups {
 				    	MAX(Opportunity.CloseDate) LastCloseDate, 
 				    	//AVG(Opportunity.Amount) AverageAmount, MIN(Opportunity.Amount) SmallestAmount,
 				    	//MAX(Opportunity.Amount) LargestAmount, SUM(Total_Unpaid__c) TotalUnpaid,
-				    	MIN(Opportunity.npo02__membership_start_date__c) FirstStartDate, 
-				    	MAX(Opportunity.npo02__Membership_End_Date__c) LastEndDate, 
+				    	MIN(Opportunity.npe01__membership_start_date__c) FirstStartDate, 
+				    	MAX(Opportunity.npe01__Membership_End_Date__c) LastEndDate, 
 				    	COUNT_DISTINCT(Opportunity.Id) NumberOfClosedOpps,
 				    	MAX(Opportunity.npo02__CombinedRollupFieldset__c) RollupFieldset
 				    	FROM OpportunityContactRole 
@@ -693,7 +693,7 @@ public class OpportunityRollups {
 					rollupHouseholdsFuture(modifiedContactOpps);
 					
 				} else {
-					system.debug(Logginglevel.WARN, 'Did not roll up because there were too few future calls available.');
+					system.debug(Logginglevel.WARN, Label.Opportunity_Rollup_Future_Call_Limit);
 				}
 			}
 
@@ -717,7 +717,7 @@ public class OpportunityRollups {
 				else if ((Limits.getLimitFutureCalls() - Limits.getFutureCalls()) > 5)
 					rollupAccountsFuture( acctsToReroll );
 				else
-					system.debug(Logginglevel.WARN, 'Did not roll up because there were too few future calls available.');				
+					system.debug(Logginglevel.WARN, Label.Opportunity_Rollup_Future_Call_Limit);				
 			}
 		}	
 	}
@@ -875,24 +875,19 @@ public class OpportunityRollups {
 	
 	static testMethod void testGivingRollup () {
 		isTest = true;
+		
 		String giftRecordTypeNameForTests = RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
 		if(giftRecordTypeNameForTests!=''){
 			Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
 				new Households_Settings__c (
 					Household_Rules__c = Households.ALL_PROCESSOR,
-					Always_Rollup_to_Primary_Contact__c = true,
+					Always_Rollup_to_Primary_Contact__c = false,
 					Enable_Opp_Rollup_Triggers__c = true,
 					Excluded_Account_Opp_Rectypes__c = null,
 					Excluded_Account_Opp_Types__c = null,
 					Excluded_Contact_Opp_Rectypes__c = null,
 					Excluded_Contact_Opp_Types__c = null,
-					Membership_Record_Types__c = null,
-					Opp_Gift_Role_Contact_Donor__c = 'Donor',
-					Opp_Rectype_For_Tests_Default__c = giftRecordTypeNameForTests,
-					Opp_Stage_Closed_Lost__c = 'Closed Lost',
-					Opp_Stage_Closed_Won__c = 'Closed Won',
-					Opp_Stage_Default__c = 'Prospecting',
-					Opp_Stage_Won_Not_Thanked__c = 'Won, Not Thanked'
+					Membership_Record_Types__c = null
 				));
 	        
 	        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
@@ -913,10 +908,10 @@ public class OpportunityRollups {
 	            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
 	            npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
 			) };
-			insert TestCons;
+			insert TestCons; 
 	
 			// create new opps
-			Opportunity[] newOpps = UnitTestData.OppsForContactList ( TestCons, null, 'Closed Won', datClose, 100 , householdSettingsForTests.Opp_Rectype_For_Tests_Default__c ,null);
+			Opportunity[] newOpps = UnitTestData.OppsForContactList ( TestCons, null, UnitTestData.getClosedWonStage(), datClose, 100 , giftRecordTypeNameForTests ,null);
 	
 			// insert the opp(s)
 			Test.StartTest();
@@ -960,19 +955,13 @@ public class OpportunityRollups {
 			Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
 				new Households_Settings__c (
 					Household_Rules__c = Households.ALL_PROCESSOR,
-					Always_Rollup_to_Primary_Contact__c = true,
+					Always_Rollup_to_Primary_Contact__c = false,
 					Enable_Opp_Rollup_Triggers__c = true,
 					Excluded_Account_Opp_Rectypes__c = null,
 					Excluded_Account_Opp_Types__c = null,
 					Excluded_Contact_Opp_Rectypes__c = null,
 					Excluded_Contact_Opp_Types__c = null,
-					Membership_Record_Types__c = null,
-					Opp_Gift_Role_Contact_Donor__c = 'Donor',
-					Opp_Rectype_For_Tests_Default__c = giftRecordTypeNameForTests,
-					Opp_Stage_Closed_Lost__c = 'Closed Lost',
-					Opp_Stage_Closed_Won__c = 'Closed Won',
-					Opp_Stage_Default__c = 'Prospecting',
-					Opp_Stage_Won_Not_Thanked__c = 'Won, Not Thanked'
+					Membership_Record_Types__c = null
 				));
 	        
 	        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
@@ -996,7 +985,7 @@ public class OpportunityRollups {
 			insert TestCons;
 	
 			// create new opps
-			Opportunity[] newOpps = UnitTestData.OppsForContactList ( TestCons, null, 'Closed Won', datClose, 100 , householdSettingsForTests.Opp_Rectype_For_Tests_Default__c ,null);
+			Opportunity[] newOpps = UnitTestData.OppsForContactList ( TestCons, null, UnitTestData.getClosedWonStage(), datClose, 100 , giftRecordTypeNameForTests ,null);
 	
 			// insert the opp(s)
 			Test.StartTest();
@@ -1046,13 +1035,7 @@ public class OpportunityRollups {
 					Excluded_Account_Opp_Types__c = null,
 					Excluded_Contact_Opp_Rectypes__c = giftRecordTypeNameForTests,
 					Excluded_Contact_Opp_Types__c = null,
-					Membership_Record_Types__c = null,
-					Opp_Gift_Role_Contact_Donor__c = 'Donor',
-					Opp_Rectype_For_Tests_Default__c = giftRecordTypeNameForTests,
-					Opp_Stage_Closed_Lost__c = 'Closed Lost',
-					Opp_Stage_Closed_Won__c = 'Closed Won',
-					Opp_Stage_Default__c = 'Prospecting',
-					Opp_Stage_Won_Not_Thanked__c = 'Won, Not Thanked'
+					Membership_Record_Types__c = null
 				));
 	        
 	        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
@@ -1076,7 +1059,7 @@ public class OpportunityRollups {
 			insert TestCons;
 	
 			// create new opps
-			Opportunity[] newOpps = UnitTestData.OppsForContactList ( TestCons, null, 'Closed Won', datClose, 100 , householdSettingsForTests.Opp_Rectype_For_Tests_Default__c ,null);
+			Opportunity[] newOpps = UnitTestData.OppsForContactList ( TestCons, null, UnitTestData.getClosedWonStage(), datClose, 100 , giftRecordTypeNameForTests ,null);
 	
 			// insert the opp(s)
 			Test.StartTest();
@@ -1120,19 +1103,13 @@ public class OpportunityRollups {
 			Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
 				new Households_Settings__c (
 					Household_Rules__c = Households.ALL_PROCESSOR,
-					Always_Rollup_to_Primary_Contact__c = false,
+					Always_Rollup_to_Primary_Contact__c = true,
 					Enable_Opp_Rollup_Triggers__c = true,
 					Excluded_Account_Opp_Rectypes__c = null,
 					Excluded_Account_Opp_Types__c = null,
 					Excluded_Contact_Opp_Rectypes__c = null,
 					Excluded_Contact_Opp_Types__c = null,
-					Membership_Record_Types__c = null,
-					Opp_Gift_Role_Contact_Donor__c = 'Donor',
-					Opp_Rectype_For_Tests_Default__c = giftRecordTypeNameForTests,
-					Opp_Stage_Closed_Lost__c = 'Closed Lost',
-					Opp_Stage_Closed_Won__c = 'Closed Won',
-					Opp_Stage_Default__c = 'Prospecting',
-					Opp_Stage_Won_Not_Thanked__c = 'Won, Not Thanked'
+					Membership_Record_Types__c = null
 				));
 	        
 	        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
@@ -1142,12 +1119,15 @@ public class OpportunityRollups {
 	        ));
 			
 			Date datClose = System.Today();
-				
+			// create account
+			account testacct = new account(name='testacct');
+			insert testacct;
 			// create & insert contact(s)
 			Contact[] TestCons = new contact[]{ new contact(
 				FirstName= npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
 	            LastName= npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
 	            npe01__Private__c=false,
+	            AccountId = testacct.id,
 	            npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
 	            npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
 	            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
@@ -1156,7 +1136,7 @@ public class OpportunityRollups {
 			insert TestCons;
 	
 			// create new opps
-			Opportunity[] newOpps = UnitTestData.OppsForContactList ( TestCons, null, 'Closed Won', datClose, 100 , householdSettingsForTests.Opp_Rectype_For_Tests_Default__c ,null);
+			Opportunity[] newOpps = UnitTestData.OppsForContactList ( TestCons, null, UnitTestData.getClosedWonStage(), datClose, 100 , giftRecordTypeNameForTests ,null);
 	
 			// insert the opp(s)
 			Test.StartTest();
@@ -1201,19 +1181,13 @@ public class OpportunityRollups {
 			Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
 				new Households_Settings__c (
 					Household_Rules__c = Households.ALL_PROCESSOR,
-					Always_Rollup_to_Primary_Contact__c = true,
+					Always_Rollup_to_Primary_Contact__c = false,
 					Enable_Opp_Rollup_Triggers__c = true,
 					Excluded_Account_Opp_Rectypes__c = null,
 					Excluded_Account_Opp_Types__c = null,
 					Excluded_Contact_Opp_Rectypes__c = null,
 					Excluded_Contact_Opp_Types__c = null,
-					Membership_Record_Types__c = membershipRecordTypeNameForTests,
-					Opp_Gift_Role_Contact_Donor__c = 'Donor',
-					Opp_Rectype_For_Tests_Default__c = giftRecordTypeNameForTests,
-					Opp_Stage_Closed_Lost__c = 'Closed Lost',
-					Opp_Stage_Closed_Won__c = 'Closed Won',
-					Opp_Stage_Default__c = 'Prospecting',
-					Opp_Stage_Won_Not_Thanked__c = 'Won, Not Thanked'
+					Membership_Record_Types__c = membershipRecordTypeNameForTests
 				));
 				
 			npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
@@ -1240,7 +1214,7 @@ public class OpportunityRollups {
 			Opportunity[] newOpps = UnitTestData.OppsForContactList (
 				TestCons,
 				null,
-				'Closed Won',
+				UnitTestData.getClosedWonStage(),
 				datClose,
 				100,
 				householdSettingsForTests.Membership_Record_Types__c,
@@ -1251,7 +1225,7 @@ public class OpportunityRollups {
 			
 			// insert the opp(s)
 			Test.StartTest();
-			newOpps[0].Membership_Origin__c = 'Renewal';
+			newOpps[0].npe01__Membership_Origin__c = 'Renewal';
 			insert newOpps;
 			Test.StopTest();
 			
@@ -1281,13 +1255,7 @@ public class OpportunityRollups {
 					Excluded_Account_Opp_Types__c = null,
 					Excluded_Contact_Opp_Rectypes__c = null,
 					Excluded_Contact_Opp_Types__c = null,
-					Membership_Record_Types__c = null,
-					Opp_Gift_Role_Contact_Donor__c = 'Donor',
-					Opp_Rectype_For_Tests_Default__c = giftRecordTypeNameForTests,
-					Opp_Stage_Closed_Lost__c = 'Closed Lost',
-					Opp_Stage_Closed_Won__c = 'Closed Won',
-					Opp_Stage_Default__c = 'Prospecting',
-					Opp_Stage_Won_Not_Thanked__c = 'Won, Not Thanked'
+					Membership_Record_Types__c = null
 				));
 				
 			npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
@@ -1302,9 +1270,9 @@ public class OpportunityRollups {
 			account testacct = new account(name='testacct');
 			insert testacct;
 			opportunity newOpp =
-				 new opportunity (RecordTypeId = RecordTypes.GetRecordTypeId('Opportunity', householdSettingsForTests.Opp_Rectype_For_Tests_Default__c), 
+				 new opportunity (RecordTypeId = RecordTypes.GetRecordTypeId('Opportunity', giftRecordTypeNameForTests), 
 				 					name = 'testopp', accountid = testacct.id, 
-				 					stagename='Closed Won', closedate=datClose, amount=33333);
+				 					stagename=UnitTestData.getClosedWonStage(), closedate=datClose, amount=33333);
 			
 			// insert the opp(s)
 			Test.StartTest();
@@ -1338,13 +1306,7 @@ public class OpportunityRollups {
 					Excluded_Account_Opp_Types__c = null,
 					Excluded_Contact_Opp_Rectypes__c = null,
 					Excluded_Contact_Opp_Types__c = null,
-					Membership_Record_Types__c = membershipRecordTypeNameForTests,
-					Opp_Gift_Role_Contact_Donor__c = 'Donor',
-					Opp_Rectype_For_Tests_Default__c = giftRecordTypeNameForTests,
-					Opp_Stage_Closed_Lost__c = 'Closed Lost',
-					Opp_Stage_Closed_Won__c = 'Closed Won',
-					Opp_Stage_Default__c = 'Prospecting',
-					Opp_Stage_Won_Not_Thanked__c = 'Won, Not Thanked'
+					Membership_Record_Types__c = membershipRecordTypeNameForTests
 				));
 				
 			npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
@@ -1361,8 +1323,8 @@ public class OpportunityRollups {
 			opportunity newOpp =
 				 new opportunity (RecordTypeId = RecordTypes.GetRecordTypeId('Opportunity', householdSettingsForTests.Membership_Record_Types__c), 
 				 					name = 'testopp', accountid = testacct.id, 
-				 					member_level__c = 'Gold', membership_origin__c = 'New',
-				 					stagename='Closed Won', closedate=datClose, amount=33333);
+				 					npe01__member_level__c = 'Gold', npe01__membership_origin__c = 'New',
+				 					stagename=UnitTestData.getClosedWonStage(), closedate=datClose, amount=33333);
 			
 			// insert the opp(s)
 			Test.StartTest();
@@ -1400,13 +1362,7 @@ public class OpportunityRollups {
 					Excluded_Account_Opp_Types__c = null,
 					Excluded_Contact_Opp_Rectypes__c = null,
 					Excluded_Contact_Opp_Types__c = null,
-					Membership_Record_Types__c = null,
-					Opp_Gift_Role_Contact_Donor__c = 'Donor',
-					Opp_Rectype_For_Tests_Default__c = giftRecordTypeNameForTests,
-					Opp_Stage_Closed_Lost__c = 'Closed Lost',
-					Opp_Stage_Closed_Won__c = 'Closed Won',
-					Opp_Stage_Default__c = 'Prospecting',
-					Opp_Stage_Won_Not_Thanked__c = 'Won, Not Thanked'
+					Membership_Record_Types__c = null
 				));
 				
 			npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
@@ -1422,7 +1378,7 @@ public class OpportunityRollups {
 			insert TestCons;
 	
 			// create new opps
-			Opportunity[] newOpps = UnitTestData.OppsForContactList ( TestCons, null, 'Closed Won', datClose, 1000 , householdSettingsForTests.Opp_Rectype_For_Tests_Default__c ,null);
+			Opportunity[] newOpps = UnitTestData.OppsForContactList ( TestCons, null, UnitTestData.getClosedWonStage(), datClose, 1000 , giftRecordTypeNameForTests ,null);
 	
 			account testacct = new account(name='testacct');
 			insert testacct;
@@ -1449,13 +1405,7 @@ public class OpportunityRollups {
 					Excluded_Account_Opp_Types__c = null,
 					Excluded_Contact_Opp_Rectypes__c = null,
 					Excluded_Contact_Opp_Types__c = null,
-					Membership_Record_Types__c = membershipRecordTypeNameForTests,
-					Opp_Gift_Role_Contact_Donor__c = 'Donor',
-					Opp_Rectype_For_Tests_Default__c = giftRecordTypeNameForTests,
-					Opp_Stage_Closed_Lost__c = 'Closed Lost',
-					Opp_Stage_Closed_Won__c = 'Closed Won',
-					Opp_Stage_Default__c = 'Prospecting',
-					Opp_Stage_Won_Not_Thanked__c = 'Won, Not Thanked'
+					Membership_Record_Types__c = membershipRecordTypeNameForTests
 				));
 				
 			npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
@@ -1478,13 +1428,13 @@ public class OpportunityRollups {
 			system.debug ( 'TEST>>>>> inserting gift 1...');
 			
 			// create a new gift for this yr
-			Opportunity[] testGift1 = UnitTestData.OppsForContactList ( TestCons, null, 'Closed Won', datToday, 100 , householdSettingsForTests.Membership_Record_Types__c,null);
+			Opportunity[] testGift1 = UnitTestData.OppsForContactList ( TestCons, null, UnitTestData.getClosedWonStage(), datToday, 100 , householdSettingsForTests.Membership_Record_Types__c,null);
 			insert testGift1 ;
 	
 			system.debug ( 'TEST>>>>> inserting gift 2...');
 			
 			//create a 2nd gift for last yr
-			Opportunity[] testGift2 = UnitTestData.OppsForContactList ( TestCons, null, 'Closed Won', dat1YearAgo, 60, householdSettingsForTests.Membership_Record_Types__c,null);
+			Opportunity[] testGift2 = UnitTestData.OppsForContactList ( TestCons, null, UnitTestData.getClosedWonStage(), dat1YearAgo, 60, householdSettingsForTests.Membership_Record_Types__c,null);
 	
 			insert testGift2;
 			
@@ -1523,7 +1473,7 @@ public class OpportunityRollups {
 			system.debug ( 'TEST>>>>> inserting gift 3...');
 	
 			// now create a gift from 2 yrs ago
-			Opportunity[] testGift3 = UnitTestData.OppsForContactList ( TestCons, null, 'Closed Won', dat2YearAgo, 10 , householdSettingsForTests.Opp_Rectype_For_Tests_Default__c,null);
+			Opportunity[] testGift3 = UnitTestData.OppsForContactList ( TestCons, null, UnitTestData.getClosedWonStage(), dat2YearAgo, 10 , giftRecordTypeNameForTests,null);
 	
 			insert testGift3;
 			
@@ -1541,7 +1491,7 @@ public class OpportunityRollups {
 	
 			// add another from this year (to test adding)
 			system.debug ( 'TEST>>>>> inserting gift 4...');
-			Opportunity[] testGift4 = UnitTestData.OppsForContactList ( TestCons, null, 'Closed Won', datToday, 25 , householdSettingsForTests.Opp_Rectype_For_Tests_Default__c,null);
+			Opportunity[] testGift4 = UnitTestData.OppsForContactList ( TestCons, null, UnitTestData.getClosedWonStage(), datToday, 25 , giftRecordTypeNameForTests,null);
 	
 			insert testGift4;
 			
@@ -1558,7 +1508,7 @@ public class OpportunityRollups {
 	
 			// TBD add a gift from longer ago
 			system.debug ( 'TEST>>>>> inserting gift 5...');
-			Opportunity[] testGift5 = UnitTestData.OppsForContactList ( TestCons, null, 'Closed Won', dat4YearAgo, 200 , householdSettingsForTests.Opp_Rectype_For_Tests_Default__c,null);
+			Opportunity[] testGift5 = UnitTestData.OppsForContactList ( TestCons, null, UnitTestData.getClosedWonStage(), dat4YearAgo, 200 , giftRecordTypeNameForTests,null);
 	
 			insert testGift5;
 			
@@ -1576,7 +1526,7 @@ public class OpportunityRollups {
 			
 			// TBD add non-won gift
 			system.debug ( 'TEST>>>>> inserting gift 6...');
-			Opportunity[] testGift6 = UnitTestData.OppsForContactList ( TestCons, null, 'Prospecting', dat4YearAgo, 35 , householdSettingsForTests.Opp_Rectype_For_Tests_Default__c,null);
+			Opportunity[] testGift6 = UnitTestData.OppsForContactList ( TestCons, null, UnitTestData.getOpenStage(), dat4YearAgo, 35 , giftRecordTypeNameForTests,null);
 	
 			insert testGift6;
 			
@@ -1610,7 +1560,7 @@ public class OpportunityRollups {
 			/*
 			// finally add a larger gift from several yrs ago to test the best gift yr going earlier than other stats
 			system.debug ( 'TEST>>>>> inserting gift 7...');
-			Opportunity[] testGift7 = UnitTestData.OppsForContactList ( TestCons, null, 'Closed Won', datToday.addYears(-5), 200 , 'Gift',null);
+			Opportunity[] testGift7 = UnitTestData.OppsForContactList ( TestCons, null, UnitTestData.getClosedWonStage(), datToday.addYears(-5), 200 , 'Gift',null);
 			ONEN_OpportunityContactRoles.haveCheckedContactRoles = false;
 			insert testGift7;
 	
@@ -1634,13 +1584,7 @@ public class OpportunityRollups {
 					Excluded_Account_Opp_Types__c = 'In Kind',
 					Excluded_Contact_Opp_Rectypes__c = null,
 					Excluded_Contact_Opp_Types__c = 'In Kind',
-					Membership_Record_Types__c = null,
-					Opp_Gift_Role_Contact_Donor__c = 'Donor',
-					Opp_Rectype_For_Tests_Default__c = giftRecordTypeNameForTests,
-					Opp_Stage_Closed_Lost__c = 'Closed Lost',
-					Opp_Stage_Closed_Won__c = 'Closed Won',
-					Opp_Stage_Default__c = 'Prospecting',
-					Opp_Stage_Won_Not_Thanked__c = 'Won, Not Thanked'
+					Membership_Record_Types__c = null
 				));
 				
 			npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
@@ -1659,7 +1603,7 @@ public class OpportunityRollups {
 			system.debug ( 'TEST>>>>> inserting gift 1...');
 			
 			// create a new gift for this yr
-			Opportunity[] testGift1 = UnitTestData.OppsForContactList ( TestCons, null, 'Closed Won', datToday, 100 , householdSettingsForTests.Opp_Rectype_For_Tests_Default__c,'In Kind');
+			Opportunity[] testGift1 = UnitTestData.OppsForContactList ( TestCons, null, UnitTestData.getClosedWonStage(), datToday, 100 , giftRecordTypeNameForTests,'In Kind');
 			Test.StartTest();
 			insert testGift1 ;
 			Test.StopTest();
@@ -1692,13 +1636,7 @@ public class OpportunityRollups {
 					Excluded_Account_Opp_Types__c = null,
 					Excluded_Contact_Opp_Rectypes__c = null,
 					Excluded_Contact_Opp_Types__c = null,
-					Membership_Record_Types__c = null,
-					Opp_Gift_Role_Contact_Donor__c = 'Donor',
-					Opp_Rectype_For_Tests_Default__c = giftRecordTypeNameForTests,
-					Opp_Stage_Closed_Lost__c = 'Closed Lost',
-					Opp_Stage_Closed_Won__c = 'Closed Won',
-					Opp_Stage_Default__c = 'Prospecting',
-					Opp_Stage_Won_Not_Thanked__c = 'Won, Not Thanked'
+					Membership_Record_Types__c = null
 				));
 				
 			npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
@@ -1717,8 +1655,8 @@ public class OpportunityRollups {
 			insert TestCons;
 			
 			// create new opps
-			Opportunity[] newOpps1 = UnitTestData.OppsForContactList ( TestCons, null, 'Closed Won', datClose, 100 , householdSettingsForTests.Opp_Rectype_For_Tests_Default__c,null);
-			Opportunity[] newOpps2 = UnitTestData.OppsForContactList ( TestCons, null, 'Closed Won', datClose.addYears(-1), 50 , householdSettingsForTests.Opp_Rectype_For_Tests_Default__c,null);
+			Opportunity[] newOpps1 = UnitTestData.OppsForContactList ( TestCons, null, UnitTestData.getClosedWonStage(), datClose, 100 , giftRecordTypeNameForTests,null);
+			Opportunity[] newOpps2 = UnitTestData.OppsForContactList ( TestCons, null, UnitTestData.getClosedWonStage(), datClose.addYears(-1), 50 , giftRecordTypeNameForTests,null);
 	
 			// insert the opp(s)
 			Test.StartTest();
@@ -1751,13 +1689,7 @@ public class OpportunityRollups {
 					Excluded_Account_Opp_Types__c = null,
 					Excluded_Contact_Opp_Rectypes__c = null,
 					Excluded_Contact_Opp_Types__c = null,
-					Membership_Record_Types__c = null,
-					Opp_Gift_Role_Contact_Donor__c = 'Donor',
-					Opp_Rectype_For_Tests_Default__c = giftRecordTypeNameForTests,
-					Opp_Stage_Closed_Lost__c = 'Closed Lost',
-					Opp_Stage_Closed_Won__c = 'Closed Won',
-					Opp_Stage_Default__c = 'Prospecting',
-					Opp_Stage_Won_Not_Thanked__c = 'Won, Not Thanked'
+					Membership_Record_Types__c = null
 				));
 				
 			npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
@@ -1776,10 +1708,10 @@ public class OpportunityRollups {
 			// create new opps
 			Opportunity[] newOpps1 = new Opportunity[0];
 			for (integer n = 0; n < 450; n++) {
-				newOpps1.add( new opportunity(RecordTypeId = RecordTypes.GetRecordTypeId('Opportunity', householdSettingsForTests.Opp_Rectype_For_Tests_Default__c), 
+				newOpps1.add( new opportunity(RecordTypeId = RecordTypes.GetRecordTypeId('Opportunity', giftRecordTypeNameForTests), 
 					npe01__Contact_Id_for_Role__c = TestCons[0].id,
 					name = 'test opp ' + n, 
-					stagename = 'Closed Won', closedate = system.today().adddays(-n), amount = 100));
+					stagename = UnitTestData.getClosedWonStage(), closedate = system.today().adddays(-n), amount = 100));
 			}
 			
 			// insert the opp(s)
@@ -1807,13 +1739,7 @@ public class OpportunityRollups {
 					Excluded_Account_Opp_Types__c = null,
 					Excluded_Contact_Opp_Rectypes__c = null,
 					Excluded_Contact_Opp_Types__c = null,
-					Membership_Record_Types__c = null,
-					Opp_Gift_Role_Contact_Donor__c = 'Donor',
-					Opp_Rectype_For_Tests_Default__c = giftRecordTypeNameForTests,
-					Opp_Stage_Closed_Lost__c = 'Closed Lost',
-					Opp_Stage_Closed_Won__c = 'Closed Won',
-					Opp_Stage_Default__c = 'Prospecting',
-					Opp_Stage_Won_Not_Thanked__c = 'Won, Not Thanked'
+					Membership_Record_Types__c = null
 				));
 				
 			npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
@@ -1854,9 +1780,9 @@ public class OpportunityRollups {
 			Contact[] TestCons = new Contact[] {Con1}; 
 		
 			// create new opps
-			Opportunity[] newOpps1 = UnitTestData.OppsForContactList ( TestCons, null, 'Closed Won', datClose, 100 , householdSettingsForTests.Opp_Rectype_For_Tests_Default__c ,null);
-			Opportunity[] newOpps2 = UnitTestData.OppsForContactList ( TestCons, null, 'Closed Won', datClose.addYears(-2), 200 , householdSettingsForTests.Opp_Rectype_For_Tests_Default__c ,null);
-			Opportunity[] newOpps3 = UnitTestData.OppsForContactList ( TestCons, null, 'Closed Won', datClose.addYears(-3), 75 , householdSettingsForTests.Opp_Rectype_For_Tests_Default__c ,null);
+			Opportunity[] newOpps1 = UnitTestData.OppsForContactList ( TestCons, null, UnitTestData.getClosedWonStage(), datClose, 100 , giftRecordTypeNameForTests ,null);
+			Opportunity[] newOpps2 = UnitTestData.OppsForContactList ( TestCons, null, UnitTestData.getClosedWonStage(), datClose.addYears(-2), 200 , giftRecordTypeNameForTests ,null);
+			Opportunity[] newOpps3 = UnitTestData.OppsForContactList ( TestCons, null, UnitTestData.getClosedWonStage(), datClose.addYears(-3), 75 , giftRecordTypeNameForTests ,null);
 	
 			Opportunity[] testOpps = new Opportunity[0];
 			testOpps.addAll (newOpps1);

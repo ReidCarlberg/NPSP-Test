@@ -19,93 +19,56 @@
 	       	</apex:pageBlockSection>
 	       	
 	       	<apex:pageBlockSection id="householdrolesection" title="Household Contact Roles" columns="1">
-				<apex:outputPanel >{!$Label.Household_Rules_Help_Text}</apex:outputPanel>
-				
-				<apex:pageBlockSectionItem >
-		        	<apex:outputLabel value="Households Contact Roles"/>
-		        	<apex:inputField value="{!settings.Household_Contact_Roles_On__c}"/>
-		       	</apex:pageBlockSectionItem>
+				<apex:outputPanel >{!$Label.Household_Contact_Roles_Help_Text}</apex:outputPanel>
+			</apex:pageBlockSection>
+			<apex:pageBlockSection id="householdrolesection2" showHeader="false" columns="2">
+		        <apex:inputField value="{!settings.Household_Contact_Roles_On__c}"/>
 		       	
 				<apex:pageBlockSectionItem helpText="Select the role all Household Members should receive for Opportunities.">
-		        	<apex:outputLabel value="Households Contact Roles"/>
+		        	<apex:outputLabel value="Households Member Contact Role"/>
 		        	<apex:selectList value="{!settings.Household_Member_Contact_Role__c}" multiselect="false" size="1">
 		            	<apex:selectOptions value="{!contactroles}"/>
 		        	</apex:selectList>
 		       	</apex:pageBlockSectionItem>
 	       	</apex:pageBlockSection>
-	       	<apex:pageBlockSection id="householdsettingssection2" title="Opportunity Rollups">
-			<apex:inputfield value="{!settings.Enable_Opp_Rollup_Triggers__c}"/>
-			<apex:inputfield value="{!settings.Always_Rollup_to_Primary_Contact__c}"/>
+	       	<apex:pageBlockSection id="householdsettingssection3" title="Opportunity Rollups">
+				<apex:inputfield value="{!settings.Enable_Opp_Rollup_Triggers__c}"/>
+				<apex:inputfield value="{!settings.Always_Rollup_to_Primary_Contact__c}"/>
+			</apex:pageBlockSection>
 			
-			<apex:pageBlockSectionItem helpText="Select the gift Contact Role">
-	        	<apex:outputLabel value="Default Gift Contact Role"/>
-	        	<apex:selectList value="{!settings.Opp_Gift_Role_Contact_Donor__c}" multiselect="false" size="1">
-	            	<apex:selectOptions value="{!contactRoles}"/>
-	        	</apex:selectList>
-        	</apex:pageBlockSectionItem>
-			
-			<apex:pageBlockSectionItem >
-	        	<apex:outputLabel value="Default Gift Record Type for Tests"/>
-	        	<apex:selectList value="{!settings.Opp_Rectype_For_Tests_Default__c}" multiselect="false" size="1">
-	            	<apex:selectOptions value="{!rtypes}"/>
-	        	</apex:selectList>
-        	</apex:pageBlockSectionItem>
-			
-			
-			<apex:pageBlockSectionItem >
-	        	<apex:outputLabel value="Closed Lost Stage"/>
-	        	<apex:selectList value="{!settings.Opp_Stage_Closed_Lost__c}" multiselect="false" size="1">
-	            	<apex:selectOptions value="{!oppStages}"/>
-	        	</apex:selectList>
-        	</apex:pageBlockSectionItem>
-        	
-        	<apex:pageBlockSectionItem >
-	        	<apex:outputLabel value="Won Not Thanked Stage"/>
-	        	<apex:selectList value="{!settings.Opp_Stage_Won_Not_Thanked__c}" multiselect="false" size="1">
-	            	<apex:selectOptions value="{!oppStages}"/>
-	        	</apex:selectList>
-        	</apex:pageBlockSectionItem>
-        	
-        	<apex:pageBlockSectionItem >
-	        	<apex:outputLabel value="Closed Won Stage"/>
-	        	<apex:selectList value="{!settings.Opp_Stage_Closed_Won__c}" multiselect="false" size="1">
-	            	<apex:selectOptions value="{!oppStages}"/>
-	        	</apex:selectList>
-        	</apex:pageBlockSectionItem>
-        	
-		
-			<apex:pageBlockSectionItem >
-	        	<apex:outputLabel value="Membership Record Type Names"/>
-	        	<apex:selectList value="{!settings.Membership_Record_Types__c}" multiselect="false" size="1">
-	            	<apex:selectOptions value="{!rtypes}"/>
-	        	</apex:selectList>
-        	</apex:pageBlockSectionItem>
-			<apex:pageBlockSectionItem >
-				<apex:outputLabel value="Opportunity Record Types to Exclude from Account Rollups"/>
-				<apex:selectList value="{!acctrts}" multiselect="true"> 
-	            	<apex:selectOptions value="{!rtypes}"/>
-	        	</apex:selectList>
-	        </apex:pageBlockSectionItem>
-	       	<apex:pageBlockSectionItem >
-	       		<apex:outputLabel value="Opportunity Types to Exclude from Account Rollups"/>
-	        	<apex:selectList value="{!accttypes}" multiselect="true">
-	            	<apex:selectOptions value="{!types}"/>
-	        	</apex:selectList>
-	        </apex:pageBlockSectionItem>
-	        <apex:pageBlockSectionItem >
-	        	<apex:outputLabel value="Opportunity Record Types to Exclude from Contact Rollups"/>
-	        	<apex:selectList value="{!contactrts}" multiselect="true">
-	            	<apex:selectOptions value="{!rtypes}"/>
-	        	</apex:selectList>
-        	</apex:pageBlockSectionItem>
-        	<apex:pageBlockSectionItem >
-        		<apex:outputLabel value="Opportunity Types to Exclude from Contact Rollups"/>
-	        	<apex:selectList value="{!contacttypes}" multiselect="true">
-	            	<apex:selectOptions value="{!types}"/>
-	        	</apex:selectList>
-        	</apex:pageBlockSectionItem>
-		
-		</apex:pageBlockSection>
+			<apex:pageBlockSection id="householdsettingssection4" title="Opportunity Rollups Record Types">
+				
+				<apex:pageBlockSectionItem helpText="All Opportunity Record Types will be included in rollups to Accounts unless they are selected here for exclusion.">
+					<apex:outputLabel value="Opportunity Record Types to Exclude from Account Rollups"/>
+					<apex:selectList value="{!acctrts}" multiselect="true"> 
+		            	<apex:selectOptions value="{!rtypes}"/>
+		        	</apex:selectList>
+		        </apex:pageBlockSectionItem>
+		       	<apex:pageBlockSectionItem helpText="All Opportunity Types will be included in rollups to Accounts unless they are selected here for exclusion.">
+		       		<apex:outputLabel value="Opportunity Types to Exclude from Account Rollups"/>
+		        	<apex:selectList value="{!accttypes}" multiselect="true">
+		            	<apex:selectOptions value="{!types}"/>
+		        	</apex:selectList>
+		        </apex:pageBlockSectionItem>
+		        <apex:pageBlockSectionItem helpText="All Opportunity Record Types will be included in rollups to Contacts unless they are selected here for exclusion." >
+		        	<apex:outputLabel value="Opportunity Record Types to Exclude from Contact Rollups"/>
+		        	<apex:selectList value="{!contactrts}" multiselect="true">
+		            	<apex:selectOptions value="{!rtypes}"/>
+		        	</apex:selectList>
+	        	</apex:pageBlockSectionItem>
+	        	<apex:pageBlockSectionItem helpText="All Opportunity Types will be included in rollups to Accounts unless they are selected here for exclusion.">
+	        		<apex:outputLabel value="Opportunity Types to Exclude from Contact Rollups"/>
+		        	<apex:selectList value="{!contacttypes}" multiselect="true">
+		            	<apex:selectOptions value="{!types}"/>
+		        	</apex:selectList>
+	        	</apex:pageBlockSectionItem>
+				<apex:pageBlockSectionItem helpText="One Opportunity Record Type can be called out for Membership calculations.">
+		        	<apex:outputLabel value="Membership Record Type Names"/>
+		        	<apex:selectList value="{!settings.Membership_Record_Types__c}" multiselect="false" size="1">
+		            	<apex:selectOptions value="{!rtypes}"/>
+		        	</apex:selectList>
+	        	</apex:pageBlockSectionItem>
+			</apex:pageBlockSection>
 	       	
 			<apex:pageBlockButtons id="householdssettingsbuttons">
 				<apex:commandButton id="updatesettingsbutton" action="{!updateSettings}" value="Update the Households Settings" /> 

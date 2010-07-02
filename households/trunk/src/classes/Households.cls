@@ -146,7 +146,7 @@ global class Households {
             Integer i = 0;
             for (Contact c : contacts)
             {
-            	//TODO: if household insert fails, there is no notification to the user
+                //TODO: if household insert fails, there is no notification to the user
                 if (lsr[i].isSuccess() == true)
                 {
                     //write the new Household Ids to the Contacts
@@ -381,21 +381,15 @@ global class Households {
                     householdsSettings.Household_Rules__c = NO_HOUSEHOLDS_PROCESSOR;
                 }
 
-				householdsSettings.Household_Member_Contact_Role__c = label.Household_Member_Contact_Role;
-               	householdsSettings.Always_Rollup_to_Primary_Contact__c = false;
-				householdsSettings.Enable_Opp_Rollup_Triggers__c = false;
-				householdsSettings.Excluded_Account_Opp_Rectypes__c = null;
-				householdsSettings.Excluded_Account_Opp_Types__c = null;
-				householdsSettings.Excluded_Contact_Opp_Rectypes__c = null;
-				householdsSettings.Excluded_Contact_Opp_Types__c = null;
-				householdsSettings.Membership_Record_Types__c = null;
-				householdsSettings.Opp_Gift_Role_Contact_Donor__c = '';
-				householdsSettings.Opp_Rectype_For_Tests_Default__c = '';
-				householdsSettings.Opp_Stage_Closed_Lost__c = '';
-				householdsSettings.Opp_Stage_Closed_Won__c = '';
-				householdsSettings.Opp_Stage_Default__c = '';
-				householdsSettings.Opp_Stage_Won_Not_Thanked__c = '';
-				
+                householdsSettings.Household_Member_Contact_Role__c = label.Household_Member_Contact_Role;
+                householdsSettings.Always_Rollup_to_Primary_Contact__c = false;
+                householdsSettings.Enable_Opp_Rollup_Triggers__c = false;
+                householdsSettings.Excluded_Account_Opp_Rectypes__c = null;
+                householdsSettings.Excluded_Account_Opp_Types__c = null;
+                householdsSettings.Excluded_Contact_Opp_Rectypes__c = null;
+                householdsSettings.Excluded_Contact_Opp_Types__c = null;
+                householdsSettings.Membership_Record_Types__c = null;
+                
                 householdsSettings.Setupownerid = UserInfo.getOrganizationId();
                 //this is not allowed...
                 insert householdsSettings;
@@ -415,18 +409,12 @@ global class Households {
             Household_Contact_Roles_On__c = mySettings.Household_Contact_Roles_On__c,
             Household_Member_Contact_Role__c = mySettings.Household_Member_Contact_Role__c,
             Always_Rollup_to_Primary_Contact__c = mySettings.Always_Rollup_to_Primary_Contact__c,
-			Enable_Opp_Rollup_Triggers__c = mySettings.Enable_Opp_Rollup_Triggers__c,
-			Excluded_Account_Opp_Rectypes__c = mySettings.Excluded_Account_Opp_Rectypes__c,
-			Excluded_Account_Opp_Types__c = mySettings.Excluded_Account_Opp_Types__c,
-			Excluded_Contact_Opp_Rectypes__c = mySettings.Excluded_Contact_Opp_Rectypes__c,
-			Excluded_Contact_Opp_Types__c = mySettings.Excluded_Contact_Opp_Types__c,
-			Membership_Record_Types__c = mySettings.Membership_Record_Types__c,
-			Opp_Gift_Role_Contact_Donor__c = mySettings.Opp_Gift_Role_Contact_Donor__c,
-			Opp_Rectype_For_Tests_Default__c = mySettings.Opp_Rectype_For_Tests_Default__c,
-			Opp_Stage_Closed_Lost__c = mySettings.Opp_Stage_Closed_Lost__c,
-			Opp_Stage_Closed_Won__c = mySettings.Opp_Stage_Closed_Won__c,
-			Opp_Stage_Default__c = mySettings.Opp_Stage_Default__c,
-			Opp_Stage_Won_Not_Thanked__c = mySettings.Opp_Stage_Won_Not_Thanked__c
+            Enable_Opp_Rollup_Triggers__c = mySettings.Enable_Opp_Rollup_Triggers__c,
+            Excluded_Account_Opp_Rectypes__c = mySettings.Excluded_Account_Opp_Rectypes__c,
+            Excluded_Account_Opp_Types__c = mySettings.Excluded_Account_Opp_Types__c,
+            Excluded_Contact_Opp_Rectypes__c = mySettings.Excluded_Contact_Opp_Rectypes__c,
+            Excluded_Contact_Opp_Types__c = mySettings.Excluded_Contact_Opp_Types__c,
+            Membership_Record_Types__c = mySettings.Membership_Record_Types__c
             );
         insert householdsSettings;
             

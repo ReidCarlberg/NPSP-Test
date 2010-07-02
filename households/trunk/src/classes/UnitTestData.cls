@@ -2,7 +2,51 @@ public class UnitTestData {
 
 // create data for use in unit tests
 // should not be referenced by production code
-
+    public static string closedWonStage;
+    public static string closedLostStage;
+    public static string openStage;
+    
+    public static String getClosedWonStage(){
+        if (closedWonStage == null){
+            List<OpportunityStage> closedWonStages = [select masterlabel from opportunitystage where isActive = true and iswon = true];
+            
+            if(closedWonStages.size()>0){
+                closedWonStage = closedWonStages[0].masterlabel;
+            } else {
+                closedWonStage = '';
+            }
+        }
+        
+        return closedWonStage;
+    }
+    
+    public static String getClosedLostStage(){
+        if (closedLostStage == null){
+            List<OpportunityStage> closedLostStages = [select masterlabel from opportunitystage where isActive = true and iswon = false and isClosed = true];
+            
+            if(closedLostStages.size()>0){
+                closedLostStage = closedLostStages[0].masterlabel;
+            } else {
+                closedLostStage = '';
+            }
+        }
+        
+        return closedLostStage;
+    }
+    
+    public static String getOpenStage(){
+        if (openStage == null){
+            List<OpportunityStage> openStages = [select masterlabel from opportunitystage where isActive = true and iswon = false];
+            
+            if(openStages.size()>0){
+                openStage = openStages[0].masterlabel;
+            } else {
+                openStage = '';
+            }
+        }
+        
+        return openStage;
+    }
     
     Public static list<Contact> CreateMultipleTestContacts (integer n) {
         
@@ -11,12 +55,12 @@ public class UnitTestData {
         for (integer i=0;i<n;i++) {
             Contact newCon = New Contact (
                 FirstName= npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS + i,
-	            LastName= npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
-	            npe01__Private__c=false,
-	            npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
-	            npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-	            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
-	            npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
+                LastName= npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
+                npe01__Private__c=false,
+                npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
+                npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+                npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
+                npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
                 OtherCity = 'Seattle'
             );
             ContactsToAdd.add (newCon);
@@ -35,12 +79,12 @@ public class UnitTestData {
         for (integer i=0;i<firstContactList.size();i++) {
             Contact newCon = New Contact (
                 FirstName= npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS + i,
-	            LastName= npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
-	            npe01__Private__c=false,
-	            npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
-	            npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-	            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
-	            npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
+                LastName= npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
+                npe01__Private__c=false,
+                npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
+                npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+                npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
+                npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
                 OtherCity = 'Seattle',
                 Household__c = firstContactList[i].Household__c
             );
@@ -73,7 +117,7 @@ public class UnitTestData {
                 type = oppType                
             );  
             if(rtid != null){
-            	newOpp.RecordTypeId = rtid;
+                newOpp.RecordTypeId = rtid;
             }
             OppsToAdd.add (newOpp);
         }

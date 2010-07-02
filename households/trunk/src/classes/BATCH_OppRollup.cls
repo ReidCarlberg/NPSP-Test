@@ -40,13 +40,7 @@ global class BATCH_OppRollup implements Database.Batchable<SObject> {
 					Excluded_Account_Opp_Types__c = null,
 					Excluded_Contact_Opp_Rectypes__c = null,
 					Excluded_Contact_Opp_Types__c = null,
-					Membership_Record_Types__c = null,
-					Opp_Gift_Role_Contact_Donor__c = 'Donor',
-					Opp_Rectype_For_Tests_Default__c = giftRecordTypeNameForTests,
-					Opp_Stage_Closed_Lost__c = 'Closed Lost',
-					Opp_Stage_Closed_Won__c = 'Closed Won',
-					Opp_Stage_Default__c = 'Prospecting',
-					Opp_Stage_Won_Not_Thanked__c = 'Won, Not Thanked'
+					Membership_Record_Types__c = null
 				));
 	        
 	        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
@@ -70,9 +64,9 @@ global class BATCH_OppRollup implements Database.Batchable<SObject> {
 			insert TestCons;
 			
 			Contact insertedContact = [select accountid from Contact where id IN :TestCons];
-	
+
 			// create new opps
-			Opportunity[] newOpps = UnitTestData.OppsForContactList ( TestCons, null, 'Closed Won', datClose, 100 , householdSettingsForTests.Opp_Rectype_For_Tests_Default__c ,null);
+			Opportunity[] newOpps = UnitTestData.OppsForContactList ( TestCons, null, UnitTestData.getClosedWonStage(), datClose, 100 , giftRecordTypeNameForTests ,null);
 			String contactAccountId = insertedContact.accountid;
 		
 			BATCH_OppRollup batch = new BATCH_OppRollup(

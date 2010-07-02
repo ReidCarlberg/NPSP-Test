@@ -75,44 +75,9 @@
         <type>Text</type>
     </fields>
     <fields>
-        <fullName>Opp_Gift_Role_Contact_Donor__c</fullName>
-        <defaultValue>&quot;Individual Donor&quot;</defaultValue>
-        <label>Opp Gift Role Contact Donor</label>
-        <length>255</length>
-        <type>Text</type>
-    </fields>
-    <fields>
-        <fullName>Opp_Rectype_For_Tests_Default__c</fullName>
-        <defaultValue>&quot;Gift&quot;</defaultValue>
-        <label>Opp Rectype For Tests Default</label>
-        <length>255</length>
-        <type>Text</type>
-    </fields>
-    <fields>
-        <fullName>Opp_Stage_Closed_Lost__c</fullName>
-        <defaultValue>&quot;Closed Lost&quot;</defaultValue>
-        <label>Opp Stage Closed Lost</label>
-        <length>255</length>
-        <type>Text</type>
-    </fields>
-    <fields>
-        <fullName>Opp_Stage_Closed_Won__c</fullName>
-        <defaultValue>&quot;Closed Won&quot;</defaultValue>
-        <label>Opp Stage Closed Won</label>
-        <length>255</length>
-        <type>Text</type>
-    </fields>
-    <fields>
-        <fullName>Opp_Stage_Default__c</fullName>
-        <defaultValue>&quot;Prospecting&quot;</defaultValue>
-        <label>Opp Stage Default</label>
-        <length>255</length>
-        <type>Text</type>
-    </fields>
-    <fields>
-        <fullName>Opp_Stage_Won_Not_Thanked__c</fullName>
-        <defaultValue>&quot;Won, Not Thanked&quot;</defaultValue>
-        <label>Opp Stage Won Not Thanked</label>
+        <fullName>Opp_Rollup_Scheduled_Job_Id__c</fullName>
+        <inlineHelpText>Id for the currently scheduled Opportunity Rollup Job</inlineHelpText>
+        <label>Opp Rollup Scheduled Job Id</label>
         <length>255</length>
         <type>Text</type>
     </fields>

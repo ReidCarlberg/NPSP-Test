@@ -8,7 +8,7 @@ private class TEST_HouseholdOpportunity {
     
     static testMethod void opportunityWithHousehold() {
         
-		npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'));
         
         Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(new Households_Settings__c (Household_Rules__c = Households.ALL_PROCESSOR, Household_Contact_Roles_On__c = true,Household_Member_Contact_Role__c='Household Credit'));
                 
@@ -41,7 +41,7 @@ private class TEST_HouseholdOpportunity {
         Opportunity o = new Opportunity(
             Name='test oppty',
             CloseDate=date.newInstance(2001,12,12),
-            StageName='Closed Won',
+            StageName=UnitTestData.getClosedWonStage(),
             Amount=100,
             AccountId=accountId
         );
@@ -82,7 +82,7 @@ private class TEST_HouseholdOpportunity {
         Opportunity o = new Opportunity(
             Name='test oppty',
             CloseDate=date.newInstance(2001,12,12),
-            StageName='Closed Won',
+            StageName=UnitTestData.getClosedWonStage(),
             Amount=100,
             AccountId=accountId,
             systemHouseholdContactRoleProcessor__c = householdContactRolesOn
@@ -132,7 +132,7 @@ private class TEST_HouseholdOpportunity {
         Opportunity o = new Opportunity(
             Name='test oppty',
             CloseDate=date.newInstance(2001,12,12),
-            StageName='Closed Won',
+            StageName=UnitTestData.getClosedWonStage(),
             Amount=100,
             AccountId=accountId
         );
@@ -142,8 +142,8 @@ private class TEST_HouseholdOpportunity {
         system.AssertEquals(0,createdRoles.size());
     }
     static testMethod void opportunityWithNoHousehold() {
-    	
-    	npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR));
+        
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR));
                 
         Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(new Households_Settings__c (Household_Rules__c = Households.NO_HOUSEHOLDS_PROCESSOR, Household_Contact_Roles_On__c = true));
         
@@ -175,7 +175,7 @@ private class TEST_HouseholdOpportunity {
         Opportunity o = new Opportunity(
             Name='test oppty',
             CloseDate=date.newInstance(2001,12,12),
-            StageName='Closed Won',
+            StageName=UnitTestData.getClosedWonStage(),
             Amount=100,
             AccountId=accountId
         );
@@ -185,9 +185,9 @@ private class TEST_HouseholdOpportunity {
         system.AssertEquals(0,createdRoles.size());
     }
     static testMethod void opportunityRegularAccount() {
-    	
-    	Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(new Households_Settings__c (Household_Rules__c = Households.ALL_PROCESSOR, Household_Contact_Roles_On__c = true));
-    	
+        
+        Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(new Households_Settings__c (Household_Rules__c = Households.ALL_PROCESSOR, Household_Contact_Roles_On__c = true));
+        
         //create contact
         Account acct = new Account(
             Name = 'fake account'
@@ -213,7 +213,7 @@ private class TEST_HouseholdOpportunity {
         Opportunity o = new Opportunity(
             Name='test oppty',
             CloseDate=date.newInstance(2001,12,12),
-            StageName='Closed Won',
+            StageName=UnitTestData.getClosedWonStage(),
             Amount=100,
             AccountId=accountId
         );
