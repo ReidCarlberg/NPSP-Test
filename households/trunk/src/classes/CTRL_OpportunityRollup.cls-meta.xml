@@ -3,7 +3,7 @@
     <apiVersion>19.0</apiVersion>
     <packageVersions>
         <majorNumber>1</majorNumber>
-        <minorNumber>70</minorNumber>
+        <minorNumber>72</minorNumber>
         <namespace>npe01</namespace>
     </packageVersions>
     <status>Active</status>
