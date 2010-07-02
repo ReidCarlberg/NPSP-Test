@@ -148,6 +148,11 @@ private class bulkTests {
     /// <name> newOrgContactAllContactsProcessor </name>
     /// <summary> test insert org contact with all contacts processor </summary>
     static testMethod void newOrgContactAllContactsProcessor() {
+    	
+    	npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'));
+        
+        Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(new Households_Settings__c (Household_Rules__c = Households.ALL_PROCESSOR, Household_Contact_Roles_On__c = true,Household_Member_Contact_Role__c='Household Credit'));
+       
 		Account acct = new Account(
 			Name = 'Test Organization 888'
 		);

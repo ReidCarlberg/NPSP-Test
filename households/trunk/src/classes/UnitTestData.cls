@@ -3,30 +3,6 @@ public class UnitTestData {
 // create data for use in unit tests
 // should not be referenced by production code
 
-    Public static contact CreateTestContact (integer n) {
-        
-        // create one contact
-        // integer identifies unique set of field values
-        
-        Contact newCon = New Contact ();
-        
-        if ( n == 1 ) {
-            newCon.FirstName = 'Stringer';
-            newCon.LastName = 'Bell';
-            newCon.OtherCity = 'Baltimore';
-        } else if (n==2) {
-            newCon.FirstName = 'Avon';
-            newCon.LastName = 'Barksdale';
-            newCon.OtherCity = 'Baltimore';
-        } else if (n==3) {
-            newCon.FirstName = 'Lester';
-            newCon.LastName = 'Freamon';
-            newCon.OtherCity = 'Baltimore';
-        }
-        
-//      insert newCon;
-        return newCon;
-    }
     
     Public static list<Contact> CreateMultipleTestContacts (integer n) {
         
@@ -34,8 +10,13 @@ public class UnitTestData {
         
         for (integer i=0;i<n;i++) {
             Contact newCon = New Contact (
-                FirstName = 'Number' + i,
-                LastName = 'Doppleganger',
+                FirstName= npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS + i,
+	            LastName= npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
+	            npe01__Private__c=false,
+	            npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
+	            npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+	            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
+	            npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
                 OtherCity = 'Seattle'
             );
             ContactsToAdd.add (newCon);
@@ -46,15 +27,20 @@ public class UnitTestData {
         
         return ContactsToAdd;
     }
-    
+    /*
     Public static list<Contact> CreateMultipleTestContactsInHouseholds (List<Contact> firstContactList) {
         
         list<contact> ContactsToAdd = New list<contact> ();
         
         for (integer i=0;i<firstContactList.size();i++) {
             Contact newCon = New Contact (
-                FirstName = 'Second Number' + i,
-                LastName = 'Doppleganger',
+                FirstName= npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS + i,
+	            LastName= npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
+	            npe01__Private__c=false,
+	            npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
+	            npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+	            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
+	            npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
                 OtherCity = 'Seattle',
                 Household__c = firstContactList[i].Household__c
             );
@@ -66,7 +52,7 @@ public class UnitTestData {
         
         return ContactsToAdd;
     }
-    
+    */
     Public static list<Opportunity> OppsForContactList (list<Contact> Cons, id CampId, string Stage, date Close, double Amt, string rectype, string oppType) {
      
         // given a list of Contacts,
@@ -97,7 +83,7 @@ public class UnitTestData {
     }
     
 
-
+/*
     Public static list<Account> CreateMultipleTestAccounts (integer n) {
         
         list<Account> AcctsToAdd = New list<Account> ();
@@ -111,8 +97,8 @@ public class UnitTestData {
         
         return AcctsToAdd;
     }
-    
-
+  */  
+/*
         Public static list<Opportunity> OppsForAccountList (list<Account> Accts, id CampId, string Stage, date Close, double Amt, string rectype) {
     
         // given a list of accounts,
@@ -139,10 +125,10 @@ public class UnitTestData {
         return OppsToAdd;
         
     }
+    */
     
     
-    
-    
+  /*  
     Public Static CampaignMember CreateCampaignMember (id CampId, id ConId, string CMStatus) {
     
         CampaignMember newCM = new CampaignMember (
@@ -152,8 +138,7 @@ public class UnitTestData {
         );
         
         insert newCM;
-        return newCm;   
-        
+        return newCm;           
     }
-
+*/
 }

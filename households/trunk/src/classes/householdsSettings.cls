@@ -101,7 +101,7 @@ public with sharing class householdsSettings {
     		if (rt!=null)
     		s += ';' + rt;
     	}
-    	if (s != '') settingsToUpdate.Excluded_Account_Opp_Rectypes__c = s.substring(1);
+    	if (s != '') pageSettings.Excluded_Account_Opp_Rectypes__c = s.substring(1);
 
     	
     	s = '';
@@ -109,7 +109,7 @@ public with sharing class householdsSettings {
     		if (rt!=null)
     		s += ';' + rt;
     	}
-    	if (s != '') settingsToUpdate.Excluded_Contact_Opp_Rectypes__c = s.substring(1);
+    	if (s != '') pageSettings.Excluded_Contact_Opp_Rectypes__c = s.substring(1);
     	
     	
     	s = '';
@@ -117,14 +117,14 @@ public with sharing class householdsSettings {
     		if (tp!=null)
     		s += ';' + tp;
     	}
-    	if (s != '') settingsToUpdate.Excluded_Account_Opp_Types__c = s.substring(1);
+    	if (s != '') pageSettings.Excluded_Account_Opp_Types__c = s.substring(1);
     	
     	s = '';
     	for (String tp : contactTypes) {
     		if (tp!=null)
     		s += ';' + tp;
     	}
-    	if (s != '') settingsToUpdate.Excluded_Contact_Opp_Types__c = s.substring(1);
+    	if (s != '') pageSettings.Excluded_Contact_Opp_Types__c = s.substring(1);
         update pageSettings;
         showInfoMsg('Households Settings updated');
     }
@@ -133,6 +133,7 @@ public with sharing class householdsSettings {
         
         Test.setCurrentPageReference(new PageReference('Page.householdsSettings'));
         
+        
         //pass the controller into the extension
         householdsSettings controller = new householdsSettings(); 
         controller.getSettingsFirstTime();
@@ -140,10 +141,23 @@ public with sharing class householdsSettings {
         
         List<SelectOption> householdrules =  controller.gethouseholdrules(); 
         system.assertEquals(3,householdrules.size());
-        /*
+        
+        List<SelectOption> oppStages = controller.getoppStages();
+        system.assertNotEquals(null,oppStages);
+        
         List<SelectOption> conRoles = controller.getcontactRoles();
         system.assertNotEquals(null,conRoles);
-        */
+        
+        List<SelectOption> opptypes = controller.getTypes();
+        system.assertNotEquals(null,opptypes);
+        
+        List<SelectOption> oppRTypes = controller.getRTypes();
+        system.assertNotEquals(null,oppRTypes);
+        controller.acctRTs.add(RecordTypes.getRecordTypeNameForGiftsTests('Opportunity'));
+        controller.contactRTs.add(RecordTypes.getRecordTypeNameForGiftsTests('Opportunity'));
+        
+        controller.acctTypes.add('In-Kind');
+        controller.contactTypes.add('In-Kind');
         controller.updateSettings();
         
     }

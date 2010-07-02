@@ -250,6 +250,13 @@
         <type>Text</type>
     </fields>
     <fields>
+        <fullName>npe01__Is_Opp_From_Individual__c</fullName>
+        <formula>IF( Account.npe01__SYSTEMIsIndividual__c, &apos;true&apos;, &apos;false&apos; )</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Is Opp From Individual</label>
+        <type>Text</type>
+    </fields>
+    <fields>
         <fullName>systemHouseholdContactRoleProcessor__c</fullName>
         <inlineHelpText>Controls if Household contact roles are created for Opportunities</inlineHelpText>
         <label>_SYSTEM: HOUSEHOLD CONTACT ROLEPROCESSOR</label>
@@ -352,10 +359,10 @@
         <label>Won</label>
     </listViews>
     <recordTypes>
-        <fullName>Gift</fullName>
+        <fullName>Gifty</fullName>
         <active>true</active>
         <businessProcess>Gift</businessProcess>
-        <label>Gift</label>
+        <label>Gifty</label>
         <picklistValues>
             <picklist>DeliveryInstallationStatus__c</picklist>
             <values>

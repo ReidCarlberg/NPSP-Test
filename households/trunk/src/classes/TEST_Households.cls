@@ -80,6 +80,65 @@ private class TEST_Households {
         system.assertEquals(country,createdContacts[0].Household__r.MailingCountry__c);
         system.assertEquals(npe01.Constants.CONTACT_LASTNAME_FOR_TESTS + ' Household',createdContacts[0].Household__r.Name);
     }
+    
+    static testMethod void newPrivateContactAllContactsProcessor() {
+    	
+    	Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(new Households_Settings__c (Household_Rules__c = Households.ALL_PROCESSOR));
+        
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR));
+                
+        	
+        String street = '2345 Elm St.';
+        String city = 'Seattle';
+        String state = 'WA';
+        String zip = '88777';
+        String country = 'US';
+        Contact con = new Contact(
+            FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
+            npe01__Private__c = true,
+            npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
+            MailingStreet = street,
+            MailingCity = city,
+            MailingState = state,
+            MailingPostalCode = zip,
+            MailingCountry = country
+        );
+        insert con;
+        Contact[] createdContacts = [select Household__r.Name,Household__r.MailingStreet__c,Household__r.MailingCity__c,Household__r.MailingState__c,Household__r.MailingPostalCode__c,Household__r.MailingCountry__c,Household__c from Contact where id=:con.id];
+        
+        Id firstHouseholdId = createdContacts[0].Household__c;
+        system.assertEquals(street,createdContacts[0].Household__r.MailingStreet__c);
+        system.assertEquals(city,createdContacts[0].Household__r.MailingCity__c);
+        system.assertEquals(state,createdContacts[0].Household__r.MailingState__c);
+        system.assertEquals(zip,createdContacts[0].Household__r.MailingPostalCode__c);
+        system.assertEquals(country,createdContacts[0].Household__r.MailingCountry__c);
+        system.assertEquals(npe01.Constants.CONTACT_LASTNAME_FOR_TESTS + ' Household',createdContacts[0].Household__r.Name);
+        
+        //blank out the HH
+        con.Household__c = null;
+        update con;
+        
+        createdContacts = [select Household__r.Name,Household__r.MailingStreet__c,Household__r.MailingCity__c,Household__r.MailingState__c,Household__r.MailingPostalCode__c,Household__r.MailingCountry__c,Household__c from Contact where id=:con.id];
+        
+        system.assertNotEquals(firstHouseholdId,createdContacts[0].Household__c);
+        system.assertEquals(street,createdContacts[0].Household__r.MailingStreet__c);
+        system.assertEquals(city,createdContacts[0].Household__r.MailingCity__c);
+        system.assertEquals(state,createdContacts[0].Household__r.MailingState__c);
+        system.assertEquals(zip,createdContacts[0].Household__r.MailingPostalCode__c);
+        system.assertEquals(country,createdContacts[0].Household__r.MailingCountry__c);
+        system.assertEquals(npe01.Constants.CONTACT_LASTNAME_FOR_TESTS + ' Household',createdContacts[0].Household__r.Name);
+    }
+    
+     static testMethod void noHouseholdSetting() {
+     	
+     	delete [select id from Households_Settings__c];
+     	Households.getHouseholdsSettings();
+     	system.Assert(!Households.householdsSettings.Always_Rollup_to_Primary_Contact__c);
+     }
 
     /// <name> newIndContactIndividualsProcessor </name>
     /// <summary> test insert individual with individuals processor </summary>

@@ -15,6 +15,9 @@ global class RecordTypes {
     private static Map<String, Schema.SObjectType> gd;
     private static Map<String,Map<Id,Schema.RecordTypeInfo>> recordTypesById = new Map<String,Map<Id,Schema.RecordTypeInfo>>();
     private static Map<String,Map<String,Schema.RecordTypeInfo>> recordTypesByName = new Map<String,Map<String,Schema.RecordTypeInfo>>();
+    private static List<Schema.Recordtypeinfo> recordTypesList = New List<Schema.Recordtypeinfo>();
+    global static String giftRecordTypeNameForTests;
+    global static String membershipRecordTypeNameForTests;    
         
     /*******************************************
     * Gets record type maps for a new object
@@ -28,6 +31,13 @@ global class RecordTypes {
             Schema.DescribeSObjectResult d = gd.get(objectName).getDescribe();
             recordTypesByName.put(objectName, d.getRecordTypeInfosByName());
             recordTypesById.put(objectName, d.getRecordTypeInfosById());
+            recordTypesList = d.getRecordTypeInfos();
+            for(integer i=0;i<recordTypesList.size();i++){
+            	if(recordTypesList[i].getName()=='Master'){
+            		recordTypesList.remove(i);
+            		break;
+            	}
+            }
         }
     }
 
@@ -46,6 +56,40 @@ global class RecordTypes {
         } else {
             return null;
         }
+    }
+    
+    global static string getRecordTypeNameForGiftsTests(String objectName){  
+
+    	if (giftRecordTypeNameForTests == null){
+    		 // make sure we have this object's record types mapped
+	        if (!recordTypesByName.containsKey(objectName)) 
+	            fillMapsForObject(objectName);
+	            
+	        if(recordTypesList.size()==0){
+	        	giftRecordTypeNameForTests = '';
+	        } else{
+		        giftRecordTypeNameForTests = recordTypesList[0].getName();	        
+	        }
+    	}      
+       
+        return giftRecordTypeNameForTests;
+    }
+    
+    global static string getRecordTypeNameForMembershipTests(String objectName){      
+    	if (membershipRecordTypeNameForTests == null){        
+	        // make sure we have this object's record types mapped
+	        if (!recordTypesByName.containsKey(objectName)) 
+	            fillMapsForObject(objectName);
+	            
+	        if(recordTypesList.size()==0){
+	        	membershipRecordTypeNameForTests = '';
+	        } else if(recordTypesList.size()==1){
+	        	membershipRecordTypeNameForTests = recordTypesList[0].getName();
+	        } else {
+		        membershipRecordTypeNameForTests = recordTypesList[1].getName();	        
+	        }
+    	}
+        return membershipRecordTypeNameForTests;
     }
         
     /*******************************************
@@ -181,23 +225,18 @@ global class RecordTypes {
     
     static testMethod void TestRecordTypes() {
 
-        ID idGift = RecordTypes.GetRecordTypeId('Opportunity', 'Gift');
-        ID idGrant = RecordTypes.GetRecordTypeId('Opportunity', 'Grant');
-        system.Assert(idGift != idGrant);
+        ID idGift = RecordTypes.GetRecordTypeId('Opportunity', getRecordTypeNameForGiftsTests('Opportunity'));
         
-        Set<String> setStr = new Set<String>{'Gift', 'Grant'};
+        Set<String> setStr = new Set<String>{getRecordTypeNameForGiftsTests('Opportunity')};
         Set<Id> setId = RecordTypes.GetRecordTypeIdSet('Opportunity', setStr);
         system.Assert(setId.contains(idGift));
-        system.Assert(setId.contains(idGrant));
         
         Map<String, Id> mapRCId = RecordTypes.GetRecordTypeIdMap('Opportunity');
-        system.AssertEquals(idGift, mapRCId.get('Gift'));       
-        system.AssertEquals(idGrant, mapRCId.get('Grant'));
+        system.AssertEquals(idGift, mapRCId.get(getRecordTypeNameForGiftsTests('Opportunity')));       
         
-        system.AssertEquals('Gift', RecordTypes.GetRecordTypeName('Opportunity', idGift));      
-        system.AssertEquals('Grant', RecordTypes.GetRecordTypeName('Opportunity', idGrant));        
+        system.AssertEquals(getRecordTypeNameForGiftsTests('Opportunity'), RecordTypes.GetRecordTypeName('Opportunity', idGift));        
         
-        system.AssertEquals('Gift', RecordTypes.GetOppNamingSuffix('Gift'));        
+        system.AssertEquals(getRecordTypeNameForGiftsTests('Opportunity'), RecordTypes.GetOppNamingSuffix(getRecordTypeNameForGiftsTests('Opportunity')));        
 
         List<SelectOption> listSO = RecordTypes.getRecordTypesForSelectList('Opportunity');
         system.Assert(listSO.IsEmpty() == false);       

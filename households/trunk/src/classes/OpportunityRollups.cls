@@ -53,9 +53,9 @@ public class OpportunityRollups {
 	// roll up a single account's opps
 		
 		map<id, account> amap = new map<id, account>(
-			[select id, TotalOppAmount__c, OppAmountThisYear__c, OppAmountLastNDays__c, 
-				TotalMembershipOppAmount__c, LastCloseDate__c, NumberOfClosedOpps__c  
-				from account where id = : aid AND NumberOfClosedOpps__c < 3000]);
+			[select id, npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastNDays__c, 
+				npo02__TotalMembershipOppAmount__c, npo02__LastCloseDate__c, npo02__NumberOfClosedOpps__c  
+				from account where id = : aid AND npo02__NumberOfClosedOpps__c < 3000]);
 		
 		if (!amap.isEmpty()) 
 			rollupAccounts( amap );
@@ -67,9 +67,9 @@ public class OpportunityRollups {
 		
 		if (acctIds != null && !acctIds.isEmpty()) { 
 			map<id, account> amap = new map<id, account>(
-				[select id, TotalOppAmount__c, OppAmountThisYear__c, OppAmountLastNDays__c, 
-					TotalMembershipOppAmount__c, LastCloseDate__c, NumberOfClosedOpps__c  
-					from account where id in :acctIds AND NumberOfClosedOpps__c < 3000 ]);
+				[select id, npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastNDays__c, 
+					npo02__TotalMembershipOppAmount__c, npo02__LastCloseDate__c, npo02__NumberOfClosedOpps__c  
+					from account where id in :acctIds AND npo02__NumberOfClosedOpps__c < 3000 ]);
 			
 			OpportunityRollups rg = new OpportunityRollups();
 			rg.rollupAccounts( amap );
@@ -92,19 +92,19 @@ public class OpportunityRollups {
 		map<id, account> accountsToUpdate = new map<id, account>();
 		set<id> allAccts = amap.keyset();
 		for (id aid : allAccts) {
-		 	accountsToUpdate.put(aid, new Account(id = aid, TotalOppAmount__c = 0, AverageAmount__c = 0, 
-				SmallestAmount__c = 0, LargestAmount__c = 0, FirstCloseDate__c = null,
-				LastCloseDate__c = null, NumberOfClosedOpps__c = 0, OppAmountThisYear__c = 0, 
-				OppsClosedThisYear__c = 0, OppAmountLastYear__c = 0, OppsClosedLastYear__c = 0,
-				OppsClosed2YearsAgo__c = 0, OppAmount2YearsAgo__c = 0,
-				OppsClosedLastNDays__c = 0, OppAmountLastNDays__c = 0, 
-//				MembershipOppsClosedThisYear__c = 0, MembershipOppAmountLastYear__c = 0, MembershipOppsClosedLastYear__c = 0,
-//				MembershipOppsClosed2YearsAgo__c = 0, MembershipOppAmount2YearsAgo__c = 0, 
-				TotalMembershipOppAmount__c = 0, NumberOfMembershipOpps__c = 0, 				
-	        	LastMembershipDate__c = null, LastMembershipAmount__c = 0, 				
-	        	LastMembershipLevel__c = null, LastMembershipOrigin__c = null, 				
-	        	MembershipJoinDate__c = null, MembershipEndDate__c = null,
-	        	LastOppAmount__c = null  				
+		 	accountsToUpdate.put(aid, new Account(id = aid, npo02__TotalOppAmount__c = 0, npo02__AverageAmount__c = 0, 
+				npo02__SmallestAmount__c = 0, npo02__LargestAmount__c = 0, npo02__FirstCloseDate__c = null,
+				npo02__LastCloseDate__c = null, npo02__NumberOfClosedOpps__c = 0, npo02__OppAmountThisYear__c = 0, 
+				npo02__OppsClosedThisYear__c = 0, npo02__OppAmountLastYear__c = 0, npo02__OppsClosedLastYear__c = 0,
+				npo02__OppsClosed2YearsAgo__c = 0, npo02__OppAmount2YearsAgo__c = 0,
+				npo02__OppsClosedLastNDays__c = 0, npo02__OppAmountLastNDays__c = 0, 
+//				Membershipnpo02__OppsClosedThisYear__c = 0, Membershipnpo02__OppAmountLastYear__c = 0, Membershipnpo02__OppsClosedLastYear__c = 0,
+//				Membershipnpo02__OppsClosed2YearsAgo__c = 0, Membershipnpo02__OppAmount2YearsAgo__c = 0, 
+				npo02__TotalMembershipOppAmount__c = 0, npo02__NumberOfMembershipOpps__c = 0, 				
+	        	npo02__LastMembershipDate__c = null, npo02__LastMembershipAmount__c = 0, 				
+	        	npo02__LastMembershipLevel__c = null, npo02__LastMembershipOrigin__c = null, 				
+	        	npo02__MembershipJoinDate__c = null, npo02__MembershipEndDate__c = null,
+	        	npo02__LastOppAmount__c = null  				
 			));
 		}
 
@@ -114,7 +114,7 @@ public class OpportunityRollups {
 			[SELECT accountId, Calendar_Year(CloseDate) CalendarYr,
 	        	SUM(Amount) TotalOppAmount, AVG(Amount) AverageAmount, MIN(Amount) SmallestAmount,
 				MAX(Amount) LargestAmount, MIN(CloseDate) FirstCloseDate, MAX(CloseDate) LastCloseDate, 
-				COUNT_DISTINCT(Id) NumberOfClosedOpps, MAX(CombinedRollupFieldset__c) RollupFieldset 
+				COUNT_DISTINCT(Id) NumberOfClosedOpps, MAX(npo02__CombinedRollupFieldset__c) RollupFieldset 
 				FROM Opportunity
 	    		WHERE isWon=true 
 	    		AND (Amount > 0 OR Amount < 0) 
@@ -165,8 +165,8 @@ public class OpportunityRollups {
 		        	//SUM(Total_Unpaid__c) TotalUnpaid, MAX(Amount) LargestAmount, 
 		        	//AVG(Amount) AverageAmount, MIN(Amount) SmallestAmount,
 					MAX(CloseDate) LastCloseDate,
-					MIN(membership_start_date__c) FirstStartDate, MAX(membership_start_date__c) LastEndDate, 
-					COUNT_DISTINCT(Id) NumberOfClosedOpps, MAX(CombinedRollupFieldset__c) RollupFieldset 
+					MIN(npo02__membership_start_date__c) FirstStartDate, MAX(npo02__membership_start_date__c) LastEndDate, 
+					COUNT_DISTINCT(Id) NumberOfClosedOpps, MAX(npo02__CombinedRollupFieldset__c) RollupFieldset 
 					FROM Opportunity
 		    		WHERE isWon=true 
 		    		AND (Amount > 0 OR Amount < 0) 
@@ -191,11 +191,11 @@ public class OpportunityRollups {
 		for (id aid : allAccts) {
 			account a1 = amap.get(aid);
 			account a2 = accountsToUpdate.get(aid);
-			if (a1.TotalOppAmount__c == a2.TotalOppAmount__c && 
-					a1.OppAmountThisYear__c == a2.OppAmountThisYear__c &&
-					a1.OppAmountLastNDays__c == a2.OppAmountLastNDays__c &&
-					a1.TotalMembershipOppAmount__c == a2.TotalMembershipOppAmount__c &&
-					a1.LastCloseDate__c == a2.LastCloseDate__c)
+			if (a1.npo02__TotalOppAmount__c == a2.npo02__TotalOppAmount__c && 
+					a1.npo02__OppAmountThisYear__c == a2.npo02__OppAmountThisYear__c &&
+					a1.npo02__OppAmountLastNDays__c == a2.npo02__OppAmountLastNDays__c &&
+					a1.npo02__TotalMembershipOppAmount__c == a2.npo02__TotalMembershipOppAmount__c &&
+					a1.npo02__LastCloseDate__c == a2.npo02__LastCloseDate__c)
 				accountsToUpdate.remove(aid);
 		}
 		
@@ -205,12 +205,12 @@ public class OpportunityRollups {
 
 	public void rollupContact( id cid ) {
 		// roll up opps for one contact
-		list<contact> cc = [select id, household__c, TotalOppAmount__c, OppAmountThisYear__c, 
-				OppAmountLastNDays__c, TotalMembershipOppAmount__c, 
-				household__r.TotalOppAmount__c, household__r.OppAmountThisYear__c, 
-				household__r.OppAmountLastNDays__c, household__r.TotalMembershipOppAmount__c,
-				household__r.LastCloseDate__c, household__r.NumberOfClosedOpps__c,
-				LastCloseDate__c, NumberOfClosedOpps__c	from contact where id = :cid ];
+		list<contact> cc = [select id, household__c, npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, 
+				npo02__OppAmountLastNDays__c, npo02__TotalMembershipOppAmount__c, 
+				household__r.npo02__TotalOppAmount__c, household__r.npo02__OppAmountThisYear__c, 
+				household__r.npo02__OppAmountLastNDays__c, household__r.npo02__TotalMembershipOppAmount__c,
+				household__r.npo02__LastCloseDate__c, household__r.npo02__NumberOfClosedOpps__c,
+				npo02__LastCloseDate__c, npo02__NumberOfClosedOpps__c	from contact where id = :cid ];
 	
 		if (!cc.isEmpty()) { 
 			map<id, household__c> hhmap = new map<id, household__c>();
@@ -223,8 +223,8 @@ public class OpportunityRollups {
 	
 	public void rollupHousehold( id hhid ) {
 		// roll up opps for one household
-		list<household__c> hhs = [select id, TotalOppAmount__c, OppAmountThisYear__c, 
-			OppAmountLastNDays__c, LastCloseDate__c, NumberOfClosedOpps__c, TotalMembershipOppAmount__c
+		list<household__c> hhs = [select id, npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, 
+			npo02__OppAmountLastNDays__c, npo02__LastCloseDate__c, npo02__NumberOfClosedOpps__c, npo02__TotalMembershipOppAmount__c
 			from household__c where id = :hhid ];
 		
 		if (!hhs.isEmpty()) 
@@ -239,9 +239,9 @@ public class OpportunityRollups {
 			map<id, household__c> hhmap = new map<id, household__c>( hhs );
 		
 			// get household contacts
-			map<id, contact> cmap = new map<id, contact>([select id, household__c, LastCloseDate__c, 
-				OppAmountThisYear__c, NumberOfClosedOpps__c, TotalOppAmount__c, TotalMembershipOppAmount__c,
-				OppAmountLastNDays__c from contact where household__c in :hhmap.keyset() ]);
+			map<id, contact> cmap = new map<id, contact>([select id, household__c, npo02__LastCloseDate__c, 
+				npo02__OppAmountThisYear__c, npo02__NumberOfClosedOpps__c, npo02__TotalOppAmount__c, npo02__TotalMembershipOppAmount__c,
+				npo02__OppAmountLastNDays__c from contact where household__c in :hhmap.keyset() ]);
 			
 			// roll up totals
 			rollupContacts( cmap, hhmap );
@@ -259,11 +259,11 @@ public class OpportunityRollups {
 				
 				for (OpportunityContactRole r : 
 					[SELECT contactId, contact.household__c,
-						contact.TotalOppAmount__c, contact.OppAmountThisYear__c, contact.OppAmountLastNDays__c, 
-						contact.LastCloseDate__c, contact.NumberOfClosedOpps__c, contact.TotalMembershipOppAmount__c,
-						contact.household__r.TotalOppAmount__c, contact.household__r.OppAmountThisYear__c, 
-						contact.household__r.OppAmountLastNDays__c, contact.household__r.TotalMembershipOppAmount__c, 
-						contact.household__r.LastCloseDate__c, contact.household__r.NumberOfClosedOpps__c
+						contact.npo02__TotalOppAmount__c, contact.npo02__OppAmountThisYear__c, contact.npo02__OppAmountLastNDays__c, 
+						contact.npo02__LastCloseDate__c, contact.npo02__NumberOfClosedOpps__c, contact.npo02__TotalMembershipOppAmount__c,
+						contact.household__r.npo02__TotalOppAmount__c, contact.household__r.npo02__OppAmountThisYear__c, 
+						contact.household__r.npo02__OppAmountLastNDays__c, contact.household__r.npo02__TotalMembershipOppAmount__c, 
+						contact.household__r.npo02__LastCloseDate__c, contact.household__r.npo02__NumberOfClosedOpps__c
 				    	FROM OpportunityContactRole WHERE Opportunity.Id In : modifiedContactOpps and isPrimary = true ALL ROWS ] ) {		
 					
 					cmap.put(r.contactId, r.contact);
@@ -290,35 +290,35 @@ public class OpportunityRollups {
 		map<id, contact> contactsToUpdate = new map<id, contact>();
 		map<id, household__c> householdsToUpdate = new map<id, household__c>();
 		for (id cid : conIds) {
-		 	contactsToUpdate.put(cid, new Contact(id = cid, TotalOppAmount__c = 0, AverageAmount__c = 0, 
-				SmallestAmount__c = 0, LargestAmount__c = 0, FirstCloseDate__c = null, 
-				LastCloseDate__c = null, NumberOfClosedOpps__c = 0, OppAmountThisYear__c = 0, 
-				OppsClosedThisYear__c = 0, OppAmountLastYear__c = 0, OppsClosedLastYear__c = 0,
-				OppsClosed2YearsAgo__c = 0, OppAmount2YearsAgo__c = 0, 
-				OppsClosedLastNDays__c = 0, OppAmountLastNDays__c = 0,
-//				MembershipOppsClosedThisYear__c = 0, MembershipOppAmountLastYear__c = 0, MembershipOppsClosedLastYear__c = 0,
-//				MembershipOppsClosed2YearsAgo__c = 0, MembershipOppAmount2YearsAgo__c = 0, 
-				TotalMembershipOppAmount__c = 0, NumberOfMembershipOpps__c = 0, 				
-	        	LastMembershipDate__c = null, LastMembershipAmount__c = 0, 				
-	        	LastMembershipLevel__c = null, LastMembershipOrigin__c = null, 				
-	        	MembershipJoinDate__c = null, MembershipEndDate__c = null, 				
-				LastOppAmount__c = null
+		 	contactsToUpdate.put(cid, new Contact(id = cid, npo02__TotalOppAmount__c = 0, npo02__AverageAmount__c = 0, 
+				npo02__SmallestAmount__c = 0, npo02__LargestAmount__c = 0, npo02__FirstCloseDate__c = null, 
+				npo02__LastCloseDate__c = null, npo02__NumberOfClosedOpps__c = 0, npo02__OppAmountThisYear__c = 0, 
+				npo02__OppsClosedThisYear__c = 0, npo02__OppAmountLastYear__c = 0, npo02__OppsClosedLastYear__c = 0,
+				npo02__OppsClosed2YearsAgo__c = 0, npo02__OppAmount2YearsAgo__c = 0, 
+				npo02__OppsClosedLastNDays__c = 0, npo02__OppAmountLastNDays__c = 0,
+//				Membershipnpo02__OppsClosedThisYear__c = 0, Membershipnpo02__OppAmountLastYear__c = 0, Membershipnpo02__OppsClosedLastYear__c = 0,
+//				Membershipnpo02__OppsClosed2YearsAgo__c = 0, Membershipnpo02__OppAmount2YearsAgo__c = 0, 
+				npo02__TotalMembershipOppAmount__c = 0, npo02__NumberOfMembershipOpps__c = 0, 				
+	        	npo02__LastMembershipDate__c = null, npo02__LastMembershipAmount__c = 0, 				
+	        	npo02__LastMembershipLevel__c = null, npo02__LastMembershipOrigin__c = null, 				
+	        	npo02__MembershipJoinDate__c = null, npo02__MembershipEndDate__c = null, 				
+				npo02__LastOppAmount__c = null
 			));
 		}
 		for (id hhid : hhIds) {
-		 	householdsToUpdate.put(hhid, new household__c(id = hhid, TotalOppAmount__c = 0, AverageAmount__c = 0, 
-				SmallestAmount__c = 0, LargestAmount__c = 0, FirstCloseDate__c = null, 
-				LastCloseDate__c = null, NumberOfClosedOpps__c = 0, OppAmountThisYear__c = 0,
-				OppsClosedThisYear__c = 0, OppAmountLastYear__c = 0, OppsClosedLastYear__c = 0,
-				OppsClosed2YearsAgo__c = 0, OppAmount2YearsAgo__c = 0, 
-				OppsClosedLastNDays__c = 0, OppAmountLastNDays__c = 0,
-//				MembershipOppsClosedThisYear__c = 0, MembershipOppAmountLastYear__c = 0, MembershipOppsClosedLastYear__c = 0,
-//				MembershipOppsClosed2YearsAgo__c = 0, MembershipOppAmount2YearsAgo__c = 0, 
-				TotalMembershipOppAmount__c = 0, NumberOfMembershipOpps__c = 0, 				
-	        	LastMembershipDate__c = null, LastMembershipAmount__c = 0, 				
-	        	LastMembershipLevel__c = null, LastMembershipOrigin__c = null, 				
-	        	MembershipJoinDate__c = null, MembershipEndDate__c = null, 				
-				LastOppAmount__c = null
+		 	householdsToUpdate.put(hhid, new household__c(id = hhid, npo02__TotalOppAmount__c = 0, npo02__AverageAmount__c = 0, 
+				npo02__SmallestAmount__c = 0, npo02__LargestAmount__c = 0, npo02__FirstCloseDate__c = null, 
+				npo02__LastCloseDate__c = null, npo02__NumberOfClosedOpps__c = 0, npo02__OppAmountThisYear__c = 0,
+				npo02__OppsClosedThisYear__c = 0, npo02__OppAmountLastYear__c = 0, npo02__OppsClosedLastYear__c = 0,
+				npo02__OppsClosed2YearsAgo__c = 0, npo02__OppAmount2YearsAgo__c = 0, 
+				npo02__OppsClosedLastNDays__c = 0, npo02__OppAmountLastNDays__c = 0,
+//				Membershipnpo02__OppsClosedThisYear__c = 0, Membershipnpo02__OppAmountLastYear__c = 0, Membershipnpo02__OppsClosedLastYear__c = 0,
+//				Membershipnpo02__OppsClosed2YearsAgo__c = 0, Membershipnpo02__OppAmount2YearsAgo__c = 0, 
+				npo02__TotalMembershipOppAmount__c = 0, npo02__NumberOfMembershipOpps__c = 0, 				
+	        	npo02__LastMembershipDate__c = null, npo02__LastMembershipAmount__c = 0, 				
+	        	npo02__LastMembershipLevel__c = null, npo02__LastMembershipOrigin__c = null, 				
+	        	npo02__MembershipJoinDate__c = null, npo02__MembershipEndDate__c = null, 				
+				npo02__LastOppAmount__c = null
 			));
 		}
 
@@ -332,7 +332,7 @@ public class OpportunityRollups {
 			    	AVG(Opportunity.Amount) AverageAmount, MIN(Opportunity.Amount) SmallestAmount,
 			    	MAX(Opportunity.Amount) LargestAmount, MIN(Opportunity.CloseDate) FirstCloseDate, 
 			    	MAX(Opportunity.CloseDate) LastCloseDate, COUNT_DISTINCT(Opportunity.Id) NumberOfClosedOpps,
-			    	MAX(Opportunity.CombinedRollupFieldset__c) RollupFieldset
+			    	MAX(Opportunity.npo02__CombinedRollupFieldset__c) RollupFieldset
 			    	FROM OpportunityContactRole 
 			    	WHERE isPrimary=true AND opportunity.isWon=true 
 			    	AND (Opportunity.Amount > 0 OR Opportunity.Amount < 0) 
@@ -414,10 +414,10 @@ public class OpportunityRollups {
 				    	MAX(Opportunity.CloseDate) LastCloseDate, 
 				    	//AVG(Opportunity.Amount) AverageAmount, MIN(Opportunity.Amount) SmallestAmount,
 				    	//MAX(Opportunity.Amount) LargestAmount, SUM(Total_Unpaid__c) TotalUnpaid,
-				    	MIN(Opportunity.Membership_Start_Date__c) FirstStartDate, 
-				    	MAX(Opportunity.Membership_End_Date__c) LastEndDate, 
+				    	MIN(Opportunity.npo02__membership_start_date__c) FirstStartDate, 
+				    	MAX(Opportunity.npo02__Membership_End_Date__c) LastEndDate, 
 				    	COUNT_DISTINCT(Opportunity.Id) NumberOfClosedOpps,
-				    	MAX(Opportunity.CombinedRollupFieldset__c) RollupFieldset
+				    	MAX(Opportunity.npo02__CombinedRollupFieldset__c) RollupFieldset
 				    	FROM OpportunityContactRole 
 				    	WHERE isPrimary=true AND opportunity.isWon=true 
 				    	AND (Opportunity.Amount > 0 OR Opportunity.Amount < 0) 
@@ -454,7 +454,7 @@ public class OpportunityRollups {
 			    	AVG(Opportunity.Amount) AverageAmount, MIN(Opportunity.Amount) SmallestAmount,
 			    	MAX(Opportunity.Amount) LargestAmount, MIN(Opportunity.CloseDate) FirstCloseDate, 
 			    	MAX(Opportunity.CloseDate) LastCloseDate, COUNT_DISTINCT(Opportunity.Id) NumberOfClosedOpps,
-			    	MAX(Opportunity.CombinedRollupFieldset__c) RollupFieldset
+			    	MAX(Opportunity.npo02__CombinedRollupFieldset__c) RollupFieldset
 			    	FROM OpportunityContactRole 
 			    	WHERE isPrimary=true AND opportunity.isWon=true 
 			    	AND (Opportunity.Amount > 0 OR Opportunity.Amount < 0) 
@@ -538,10 +538,10 @@ public class OpportunityRollups {
 				    	MAX(Opportunity.CloseDate) LastCloseDate, 
 				    	//AVG(Opportunity.Amount) AverageAmount, MIN(Opportunity.Amount) SmallestAmount,
 				    	//MAX(Opportunity.Amount) LargestAmount, SUM(Total_Unpaid__c) TotalUnpaid,
-				    	MIN(Opportunity.Membership_Start_Date__c) FirstStartDate, 
-				    	MAX(Opportunity.Membership_End_Date__c) LastEndDate, 
+				    	MIN(Opportunity.npo02__membership_start_date__c) FirstStartDate, 
+				    	MAX(Opportunity.npo02__Membership_End_Date__c) LastEndDate, 
 				    	COUNT_DISTINCT(Opportunity.Id) NumberOfClosedOpps,
-				    	MAX(Opportunity.CombinedRollupFieldset__c) RollupFieldset
+				    	MAX(Opportunity.npo02__CombinedRollupFieldset__c) RollupFieldset
 				    	FROM OpportunityContactRole 
 				    	WHERE isPrimary=true AND opportunity.isWon=true 
 				    	AND (Opportunity.Amount > 0 OR Opportunity.Amount < 0) 
@@ -578,21 +578,21 @@ public class OpportunityRollups {
 		for (id cid : conIds) {
 			contact c1 = cmap.get(cid);
 			contact c2 = contactsToUpdate.get(cid);
-			if (c1.TotalOppAmount__c == c2.TotalOppAmount__c && 
-					c1.OppAmountLastNDays__c == c2.OppAmountLastNDays__c &&
-					c1.OppAmountThisYear__c == c2.OppAmountThisYear__c &&
-					c1.TotalMembershipOppAmount__c == c2.TotalMembershipOppAmount__c &&
-					c1.LastCloseDate__c == c2.LastCloseDate__c)
+			if (c1.npo02__TotalOppAmount__c == c2.npo02__TotalOppAmount__c && 
+					c1.npo02__OppAmountLastNDays__c == c2.npo02__OppAmountLastNDays__c &&
+					c1.npo02__OppAmountThisYear__c == c2.npo02__OppAmountThisYear__c &&
+					c1.npo02__TotalMembershipOppAmount__c == c2.npo02__TotalMembershipOppAmount__c &&
+					c1.npo02__LastCloseDate__c == c2.npo02__LastCloseDate__c)
 				contactsToUpdate.remove(cid);
 		}
 		for (id hhid : hhIds) {
 			household__c hh1 = hhmap.get(hhid); 
 			household__c hh2 = householdsToUpdate.get(hhid);
-			if (hh1.TotalOppAmount__c == hh2.TotalOppAmount__c && 
-					hh1.OppAmountLastNDays__c == hh2.OppAmountLastNDays__c &&
-					hh1.OppAmountThisYear__c == hh2.OppAmountThisYear__c &&
-					hh1.TotalMembershipOppAmount__c == hh2.TotalMembershipOppAmount__c &&
-					hh1.LastCloseDate__c == hh2.LastCloseDate__c)
+			if (hh1.npo02__TotalOppAmount__c == hh2.npo02__TotalOppAmount__c && 
+					hh1.npo02__OppAmountLastNDays__c == hh2.npo02__OppAmountLastNDays__c &&
+					hh1.npo02__OppAmountThisYear__c == hh2.npo02__OppAmountThisYear__c &&
+					hh1.npo02__TotalMembershipOppAmount__c == hh2.npo02__TotalMembershipOppAmount__c &&
+					hh1.npo02__LastCloseDate__c == hh2.npo02__LastCloseDate__c)
 				householdsToUpdate.remove(hhid);
 		}
 
@@ -704,10 +704,10 @@ public class OpportunityRollups {
 				map<id, account> amap;
 				if (acctsToReroll.size() == 1) {
 					amap = new map<id, account>(
-						[select id, TotalOppAmount__c, OppAmountThisYear__c, OppAmountLastNDays__c, 
-						LastCloseDate__c, NumberOfClosedOpps__c, TotalMembershipOppAmount__c 
+						[select id, npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastNDays__c, 
+						npo02__LastCloseDate__c, npo02__NumberOfClosedOpps__c, npo02__TotalMembershipOppAmount__c 
 						from account where id in :acctsToReroll ]);
-					decimal oppCount = amap.values()[0].NumberOfClosedOpps__c;
+					decimal oppCount = amap.values()[0].npo02__NumberOfClosedOpps__c;
 					//rollupNow = (oppCount == null || oppCount < 200);
 				}
 						
@@ -732,20 +732,20 @@ public class OpportunityRollups {
 		// we can handle up to 10000 query rows total, which is about 3000 opps in a batch
 		// this calculation very conservatively reduces batch size to avoid hitting the limit
 		integer batchSize = 200;
-		list<account> topAccount = [select NumberOfClosedOpps__c from account 
-			where NumberOfClosedOpps__c != null 
-			order by NumberOfClosedOpps__c desc limit 1];
+		list<account> topAccount = [select npo02__NumberOfClosedOpps__c from account 
+			where npo02__NumberOfClosedOpps__c != null 
+			order by npo02__NumberOfClosedOpps__c desc limit 1];
 		if (!topAccount.isEmpty()) {
-			decimal highestCount = topAccount[0].NumberOfClosedOpps__c;
+			decimal highestCount = topAccount[0].npo02__NumberOfClosedOpps__c;
 			if (highestCount > 15) {
 				batchSize = (3000 / highestCount).intValue() + 1;
 			}
 		}
 
 		// start the batch to roll up all accounts
-		BATCH_OppRollup batch = new BATCH_OppRollup( 'SELECT id, TotalOppAmount__c, ' +
-			'OppAmountThisYear__c, TotalMembershipOppAmount__c, ' +
-			'OppAmountLastNDays__c, LastCloseDate__c, NumberOfClosedOpps__c FROM account' + 
+		BATCH_OppRollup batch = new BATCH_OppRollup( 'SELECT id, npo02__TotalOppAmount__c, ' +
+			'npo02__OppAmountThisYear__c, npo02__TotalMembershipOppAmount__c, ' +
+			'npo02__OppAmountLastNDays__c, npo02__LastCloseDate__c, npo02__NumberOfClosedOpps__c FROM account' + 
 			(isTest ? ' WHERE name like \'%test%\' LIMIT 200' : '') );
 		id batchProcessId = database.executeBatch(batch, batchSize);		
 	}	
@@ -755,19 +755,19 @@ public class OpportunityRollups {
 		// we can handle up to 10000 query rows total, which is about 3000 opps in a batch
 		// this calculation very conservatively reduces batch size to avoid hitting the limit
 		integer batchSize = 200;
-		list<household__c> topHousehold = [select NumberOfClosedOpps__c from household__c 
-			where NumberOfClosedOpps__c != null 
-			order by NumberOfClosedOpps__c desc limit 1];
+		list<household__c> topHousehold = [select npo02__NumberOfClosedOpps__c from household__c 
+			where npo02__NumberOfClosedOpps__c != null 
+			order by npo02__NumberOfClosedOpps__c desc limit 1];
 		if (!topHousehold.isEmpty()) {
-			decimal highestCount = topHousehold[0].NumberOfClosedOpps__c;
+			decimal highestCount = topHousehold[0].npo02__NumberOfClosedOpps__c;
 			if (highestCount > 15) {
 				batchSize = (3000 / highestCount).intValue() + 1;
 			}
 		}
 
-		BATCH_OppRollup batch = new BATCH_OppRollup( 'SELECT id, TotalOppAmount__c, ' +
-			'OppAmountThisYear__c, TotalMembershipOppAmount__c, ' +
-			'OppAmountLastNDays__c, LastCloseDate__c, NumberOfClosedOpps__c FROM household__c' + 
+		BATCH_OppRollup batch = new BATCH_OppRollup( 'SELECT id, npo02__TotalOppAmount__c, ' +
+			'npo02__OppAmountThisYear__c, npo02__TotalMembershipOppAmount__c, ' +
+			'npo02__OppAmountLastNDays__c, npo02__LastCloseDate__c, npo02__NumberOfClosedOpps__c FROM household__c' + 
 			(isTest ? ' WHERE lastname like \'%doppleganger%\' LIMIT 200' : '') );
 		id batchProcessId = database.executeBatch(batch, batchSize);		
 	}
@@ -790,27 +790,27 @@ public class OpportunityRollups {
 			// put the fiscal year total in the right fields
 			integer thisYear = system.today().year();
 			if (fy == thisYear) {
-				obj.put('OppAmountThisYear__c', amt); 
-				obj.put('OppsClosedThisYear__c', cnt); 
+				obj.put('npo02__OppAmountThisYear__c', amt); 
+				obj.put('npo02__OppsClosedThisYear__c', cnt); 
 			} else if (fy == (thisYear - 1)) {
-				obj.put('OppAmountLastYear__c', amt); 
-				obj.put('OppsClosedLastYear__c', cnt); 
+				obj.put('npo02__OppAmountLastYear__c', amt); 
+				obj.put('npo02__OppsClosedLastYear__c', cnt); 
 			} else if (fy == (thisYear - 2) ) {
-				obj.put('OppAmount2YearsAgo__c', amt); 
-				obj.put('OppsClosed2YearsAgo__c', cnt); 
+				obj.put('npo02__OppAmount2YearsAgo__c', amt); 
+				obj.put('npo02__OppsClosed2YearsAgo__c', cnt); 
 			} 
 				
 		} else {
 
 			// fill in summary totals
-			obj.put('TotalOppAmount__c', amt);
-	        obj.put('NumberOfClosedOpps__c', cnt); 				
-	        obj.put('LastOppAmount__c', lastAmt); 				
-	        obj.put('AverageAmount__c', (decimal)(r.get('AverageAmount'))); 
-	        obj.put('SmallestAmount__c', (decimal)(r.get('SmallestAmount'))); 
-	        obj.put('LargestAmount__c', (decimal)(r.get('LargestAmount'))); 
-	        obj.put('FirstCloseDate__c', (date)(r.get('FirstCloseDate'))); 
-	        obj.put('LastCloseDate__c', (date)(r.get('LastCloseDate'))); 
+			obj.put('npo02__TotalOppAmount__c', amt);
+	        obj.put('npo02__NumberOfClosedOpps__c', cnt); 				
+	        obj.put('npo02__LastOppAmount__c', lastAmt); 				
+	        obj.put('npo02__AverageAmount__c', (decimal)(r.get('AverageAmount'))); 
+	        obj.put('npo02__SmallestAmount__c', (decimal)(r.get('SmallestAmount'))); 
+	        obj.put('npo02__LargestAmount__c', (decimal)(r.get('LargestAmount'))); 
+	        obj.put('npo02__FirstCloseDate__c', (date)(r.get('FirstCloseDate'))); 
+	        obj.put('npo02__LastCloseDate__c', (date)(r.get('LastCloseDate'))); 
 		}
 	}
 
@@ -822,8 +822,8 @@ public class OpportunityRollups {
 		integer cnt = (integer)(r.get('NumberOfClosedOpps'));				
 		
 		// fill in totals
-        obj.put('OppAmountLastNDays__c', amt); 				
-		obj.put('OppsClosedLastNDays__c', cnt);
+        obj.put('npo02__OppAmountLastNDays__c', amt); 				
+		obj.put('npo02__OppsClosedLastNDays__c', cnt);
 	}
 
 	public static void updateRollupFromResultMembership(sobject obj, sobject r) {
@@ -848,740 +848,1033 @@ public class OpportunityRollups {
 			integer thisYear = system.today().year();
 			
 			if (fy == thisYear) {
-				obj.put('MembershipOppAmountThisYear__c', amt); 
+				obj.put('Membershipnpo02__OppAmountThisYear__c', amt); 
 				obj.put('MembershipOppsThisYear__c', cnt); 
 			} else if (fy == (thisYear - 1)) {
-				obj.put('MembershipOppAmountLastYear__c', amt); 
+				obj.put('Membershipnpo02__OppAmountLastYear__c', amt); 
 				obj.put('MembershipOppsLastYear__c', cnt); 
 			} else if (fy == (thisYear - 2) ) {
-				obj.put('MembershipOppAmount2YearsAgo__c', amt); 
+				obj.put('Membershipnpo02__OppAmount2YearsAgo__c', amt); 
 				obj.put('MembershipOpps2YearsAgo__c', cnt); 
 			} 
 		} else {
 */				
 			// fill in summary totals
-			obj.put('TotalMembershipOppAmount__c', amt);
-	        obj.put('NumberOfMembershipOpps__c', cnt); 				
-	        obj.put('LastMembershipDate__c', (date)(r.get('LastCloseDate'))); 				
-	        obj.put('LastMembershipAmount__c', lastAmt); 				
-	        obj.put('LastMembershipLevel__c', lastMemberLevel); 				
-	        obj.put('LastMembershipOrigin__c', lastMemberOrigin); 				
-	        obj.put('MembershipJoinDate__c', (date)(r.get('FirstStartDate'))); 
-	        obj.put('MembershipEndDate__c', (date)(r.get('LastEndDate'))); 				
+			obj.put('npo02__TotalMembershipOppAmount__c', amt);
+	        obj.put('npo02__NumberOfMembershipOpps__c', cnt); 				
+	        obj.put('npo02__LastMembershipDate__c', (date)(r.get('LastCloseDate'))); 				
+	        obj.put('npo02__LastMembershipAmount__c', lastAmt); 				
+	        obj.put('npo02__LastMembershipLevel__c', lastMemberLevel); 				
+	        obj.put('npo02__LastMembershipOrigin__c', lastMemberOrigin); 				
+	        obj.put('npo02__MembershipJoinDate__c', (date)(r.get('FirstStartDate'))); 
+	        obj.put('npo02__MembershipEndDate__c', (date)(r.get('LastEndDate'))); 				
 //		}
 	}
 
 	/************ TESTS ***************/
 	
 	static testMethod void testGivingRollup () {
-		Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
-			new Households_Settings__c (
-				Household_Rules__c = Households.ALL_PROCESSOR,
-				Always_Rollup_to_Primary_Contact__c = false,
-				Enable_Opp_Rollup_Triggers__c = true,
-				Excluded_Account_Opp_Rectypes__c = null,
-				Excluded_Account_Opp_Types__c = null,
-				Excluded_Contact_Opp_Rectypes__c = null,
-				Excluded_Contact_Opp_Types__c = null,
-				Membership_Record_Types__c = null,
-				Opp_Gift_Role_Contact_Donor__c = 'Donor',
-				Opp_Rectype_For_Tests_Default__c = 'Gift',
-				Opp_Stage_Closed_Lost__c = 'Closed Lost',
-				Opp_Stage_Closed_Won__c = 'Closed Won',
-				Opp_Stage_Default__c = 'Prospecting',
-				Opp_Stage_Won_Not_Thanked__c = 'Won, Not Thanked'
-			));
-        
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
-        	npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
-        	npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
-        	npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
-        ));
-        
-		
-		Date datClose = System.Today();
-			
-		// create & insert contact(s)
-		Contact[] TestCons = new contact[]{ new contact(firstname='Daddy', lastname='Longlegs') };
-		insert TestCons;
-
-		// create new opps
-		Opportunity[] newOpps = UnitTestData.OppsForContactList ( TestCons, null, 'Closed Won', datClose, 100 , 'Gift' ,null);
-
-		// insert the opp(s)
 		isTest = true;
-		Test.StartTest();
-		insert newOpps;
-		Test.StopTest();
-		
-		//now test that a contact has received the proper member stats from the trigger
-		id FirstConId = TestCons[0].id;
-		Contact UpdatedCon = [SELECT id, account.TotalOppAmount__c, OppAmountThisYear__c, OppAmountLastYear__c, household__c, household__r.TotalOppAmount__c, TotalOppAmount__c FROM Contact WHERE Id = :FirstConId];
-
-		System.AssertEquals ( 100 , UpdatedCon.TotalOppAmount__c );
-		System.AssertEquals ( 100 , UpdatedCon.household__r.TotalOppAmount__c );		
-		System.AssertEquals ( 100 , UpdatedCon.OppAmountThisYear__c);
-		System.AssertEquals ( 0 , UpdatedCon.OppAmountLastYear__c);
-
-		// now roll up manually
-		OpportunityRollups rg = new OpportunityRollups();
-		rg.rollupContact(testcons[0].id);
-		
-		//also exercise the non-future methods to make sure the code runs
-		Household__c[] hhs = [SELECT id, totalOppAmount__c, LastCloseDate__c, TotalMembershipOppAmount__c, OppAmountLastNDays__c, OppAmountThisYear__c, OppAmountLastYear__c, OppAmount2YearsAgo__c FROM Household__c WHERE id = :UpdatedCon.Household__r.id LIMIT 1];
-		rg = new OpportunityRollups();
-		rg.rollupHousehold(hhs[0].id);
-		rg = new OpportunityRollups();
-		rg.rollupHouseholds(hhs);
-
-		//make sure the values are still right
-		UpdatedCon = [SELECT id, account.TotalOppAmount__c, OppAmountThisYear__c, OppAmountLastYear__c, household__c, household__r.TotalOppAmount__c, TotalOppAmount__c FROM Contact WHERE Id = :FirstConId];
-
-		System.AssertEquals ( 100 , UpdatedCon.TotalOppAmount__c );
-		System.AssertEquals ( 100 , UpdatedCon.household__r.TotalOppAmount__c );		
-		System.AssertEquals ( 100 , UpdatedCon.OppAmountThisYear__c);
-		System.AssertEquals ( 0 , UpdatedCon.OppAmountLastYear__c);
-		
+		String giftRecordTypeNameForTests = RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
+		if(giftRecordTypeNameForTests!=''){
+			Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
+				new Households_Settings__c (
+					Household_Rules__c = Households.ALL_PROCESSOR,
+					Always_Rollup_to_Primary_Contact__c = true,
+					Enable_Opp_Rollup_Triggers__c = true,
+					Excluded_Account_Opp_Rectypes__c = null,
+					Excluded_Account_Opp_Types__c = null,
+					Excluded_Contact_Opp_Rectypes__c = null,
+					Excluded_Contact_Opp_Types__c = null,
+					Membership_Record_Types__c = null,
+					Opp_Gift_Role_Contact_Donor__c = 'Donor',
+					Opp_Rectype_For_Tests_Default__c = giftRecordTypeNameForTests,
+					Opp_Stage_Closed_Lost__c = 'Closed Lost',
+					Opp_Stage_Closed_Won__c = 'Closed Won',
+					Opp_Stage_Default__c = 'Prospecting',
+					Opp_Stage_Won_Not_Thanked__c = 'Won, Not Thanked'
+				));
+	        
+	        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+	        	npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
+	        	npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
+	        	npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
+	        ));
+			
+			Date datClose = System.Today();
+				
+			// create & insert contact(s)
+			Contact[] TestCons = new contact[]{ new contact(
+				FirstName= npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+	            LastName= npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
+	            npe01__Private__c=false,
+	            npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
+	            npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+	            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
+	            npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+			) };
+			insert TestCons;
+	
+			// create new opps
+			Opportunity[] newOpps = UnitTestData.OppsForContactList ( TestCons, null, 'Closed Won', datClose, 100 , householdSettingsForTests.Opp_Rectype_For_Tests_Default__c ,null);
+	
+			// insert the opp(s)
+			Test.StartTest();
+			insert newOpps;
+			Test.StopTest();
+			
+			//now test that a contact has received the proper member stats from the trigger
+			id FirstConId = TestCons[0].id;
+			Contact UpdatedCon = [SELECT id, account.npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, household__c, household__r.npo02__TotalOppAmount__c, npo02__TotalOppAmount__c FROM Contact WHERE Id = :FirstConId];
+	
+			System.AssertEquals ( 100 , UpdatedCon.npo02__TotalOppAmount__c );
+			System.AssertEquals ( 100 , UpdatedCon.household__r.npo02__TotalOppAmount__c );		
+			System.AssertEquals ( 100 , UpdatedCon.npo02__OppAmountThisYear__c);
+			System.AssertEquals ( 0 , UpdatedCon.npo02__OppAmountLastYear__c);
+	
+			// now roll up manually
+			OpportunityRollups rg = new OpportunityRollups();
+			rg.rollupContact(testcons[0].id);
+			
+			//also exercise the non-future methods to make sure the code runs
+			Household__c[] hhs = [SELECT id, npo02__TotalOppAmount__c, npo02__LastCloseDate__c, npo02__TotalMembershipOppAmount__c, npo02__OppAmountLastNDays__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c FROM Household__c WHERE id = :UpdatedCon.Household__r.id LIMIT 1];
+			rg = new OpportunityRollups();
+			rg.rollupHousehold(hhs[0].id);
+			rg = new OpportunityRollups();
+			rg.rollupHouseholds(hhs);
+	
+			//make sure the values are still right
+			UpdatedCon = [SELECT id, account.npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, household__c, household__r.npo02__TotalOppAmount__c, npo02__TotalOppAmount__c FROM Contact WHERE Id = :FirstConId];
+	
+			System.AssertEquals ( 100 , UpdatedCon.npo02__TotalOppAmount__c );
+			System.AssertEquals ( 100 , UpdatedCon.household__r.npo02__TotalOppAmount__c );		
+			System.AssertEquals ( 100 , UpdatedCon.npo02__OppAmountThisYear__c);
+			System.AssertEquals ( 0 , UpdatedCon.npo02__OppAmountLastYear__c);
+		}
+	}
+	
+	static testMethod void testGivingRollupIndividual () {
+		isTest = true;
+		String giftRecordTypeNameForTests = RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
+		if(giftRecordTypeNameForTests!=''){
+			Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
+				new Households_Settings__c (
+					Household_Rules__c = Households.ALL_PROCESSOR,
+					Always_Rollup_to_Primary_Contact__c = true,
+					Enable_Opp_Rollup_Triggers__c = true,
+					Excluded_Account_Opp_Rectypes__c = null,
+					Excluded_Account_Opp_Types__c = null,
+					Excluded_Contact_Opp_Rectypes__c = null,
+					Excluded_Contact_Opp_Types__c = null,
+					Membership_Record_Types__c = null,
+					Opp_Gift_Role_Contact_Donor__c = 'Donor',
+					Opp_Rectype_For_Tests_Default__c = giftRecordTypeNameForTests,
+					Opp_Stage_Closed_Lost__c = 'Closed Lost',
+					Opp_Stage_Closed_Won__c = 'Closed Won',
+					Opp_Stage_Default__c = 'Prospecting',
+					Opp_Stage_Won_Not_Thanked__c = 'Won, Not Thanked'
+				));
+	        
+	        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+	        	npe01__Account_Processor__c = npe01.Constants.BUCKET_PROCESSOR,
+	        	npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
+	        	npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
+	        ));
+			
+			Date datClose = System.Today();
+				
+			// create & insert contact(s)
+			Contact[] TestCons = new contact[]{ new contact(
+				FirstName= npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+	            LastName= npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
+	            npe01__Private__c=false,
+	            npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
+	            npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+	            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
+	            npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+			) };
+			insert TestCons;
+	
+			// create new opps
+			Opportunity[] newOpps = UnitTestData.OppsForContactList ( TestCons, null, 'Closed Won', datClose, 100 , householdSettingsForTests.Opp_Rectype_For_Tests_Default__c ,null);
+	
+			// insert the opp(s)
+			Test.StartTest();
+			insert newOpps;
+			Test.StopTest();
+			
+			//now test that a contact has received the proper member stats from the trigger
+			id FirstConId = TestCons[0].id;
+			Contact UpdatedCon = [SELECT id, account.npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, household__c, household__r.npo02__TotalOppAmount__c, npo02__TotalOppAmount__c FROM Contact WHERE Id = :FirstConId];
+	
+			System.AssertEquals ( 100 , UpdatedCon.npo02__TotalOppAmount__c );
+			System.AssertEquals ( 100 , UpdatedCon.household__r.npo02__TotalOppAmount__c );		
+			System.AssertEquals ( 100 , UpdatedCon.npo02__OppAmountThisYear__c);
+			System.AssertEquals ( 0 , UpdatedCon.npo02__OppAmountLastYear__c);
+	
+			// now roll up manually
+			OpportunityRollups rg = new OpportunityRollups();
+			rg.rollupContact(testcons[0].id);
+			
+			//also exercise the non-future methods to make sure the code runs
+			Household__c[] hhs = [SELECT id, npo02__TotalOppAmount__c, npo02__LastCloseDate__c, npo02__TotalMembershipOppAmount__c, npo02__OppAmountLastNDays__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c FROM Household__c WHERE id = :UpdatedCon.Household__r.id LIMIT 1];
+			rg = new OpportunityRollups();
+			rg.rollupHousehold(hhs[0].id);
+			rg = new OpportunityRollups();
+			rg.rollupHouseholds(hhs);
+	
+			//make sure the values are still right
+			UpdatedCon = [SELECT id, account.npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, household__c, household__r.npo02__TotalOppAmount__c, npo02__TotalOppAmount__c FROM Contact WHERE Id = :FirstConId];
+	
+			System.AssertEquals ( 100 , UpdatedCon.npo02__TotalOppAmount__c );
+			System.AssertEquals ( 100 , UpdatedCon.household__r.npo02__TotalOppAmount__c );		
+			System.AssertEquals ( 100 , UpdatedCon.npo02__OppAmountThisYear__c);
+			System.AssertEquals ( 0 , UpdatedCon.npo02__OppAmountLastYear__c);
+		}
+	}
+	
+	static testMethod void testGivingRollupExcludedRT () {
+		isTest = true;
+		String giftRecordTypeNameForTests = RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
+		if(giftRecordTypeNameForTests!=''){
+			Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
+				new Households_Settings__c (
+					Household_Rules__c = Households.ALL_PROCESSOR,
+					Always_Rollup_to_Primary_Contact__c = false,
+					Enable_Opp_Rollup_Triggers__c = true,
+					Excluded_Account_Opp_Rectypes__c = giftRecordTypeNameForTests,
+					Excluded_Account_Opp_Types__c = null,
+					Excluded_Contact_Opp_Rectypes__c = giftRecordTypeNameForTests,
+					Excluded_Contact_Opp_Types__c = null,
+					Membership_Record_Types__c = null,
+					Opp_Gift_Role_Contact_Donor__c = 'Donor',
+					Opp_Rectype_For_Tests_Default__c = giftRecordTypeNameForTests,
+					Opp_Stage_Closed_Lost__c = 'Closed Lost',
+					Opp_Stage_Closed_Won__c = 'Closed Won',
+					Opp_Stage_Default__c = 'Prospecting',
+					Opp_Stage_Won_Not_Thanked__c = 'Won, Not Thanked'
+				));
+	        
+	        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+	        	npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
+	        	npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
+	        	npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
+	        ));
+			
+			Date datClose = System.Today();
+				
+			// create & insert contact(s)
+			Contact[] TestCons = new contact[]{ new contact(
+				FirstName= npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+	            LastName= npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
+	            npe01__Private__c=false,
+	            npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
+	            npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+	            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
+	            npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+			) };
+			insert TestCons;
+	
+			// create new opps
+			Opportunity[] newOpps = UnitTestData.OppsForContactList ( TestCons, null, 'Closed Won', datClose, 100 , householdSettingsForTests.Opp_Rectype_For_Tests_Default__c ,null);
+	
+			// insert the opp(s)
+			Test.StartTest();
+			insert newOpps;
+			Test.StopTest();
+			
+			//now test that a contact has received the proper member stats from the trigger
+			id FirstConId = TestCons[0].id;
+			Contact UpdatedCon = [SELECT id, account.npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, household__c, household__r.npo02__TotalOppAmount__c, npo02__TotalOppAmount__c FROM Contact WHERE Id = :FirstConId];
+	
+			System.AssertEquals ( 0 , UpdatedCon.npo02__TotalOppAmount__c );
+			System.AssertEquals ( 0 , UpdatedCon.household__r.npo02__TotalOppAmount__c );		
+			System.AssertEquals ( 0 , UpdatedCon.npo02__OppAmountThisYear__c);
+	
+			// now roll up manually
+			OpportunityRollups rg = new OpportunityRollups();
+			rg.rollupContact(testcons[0].id);
+			
+			//also exercise the non-future methods to make sure the code runs
+			Household__c[] hhs = [SELECT id, npo02__TotalOppAmount__c, npo02__LastCloseDate__c, npo02__TotalMembershipOppAmount__c, npo02__OppAmountLastNDays__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c FROM Household__c WHERE id = :UpdatedCon.Household__r.id LIMIT 1];
+			rg = new OpportunityRollups();
+			rg.rollupHousehold(hhs[0].id);
+			rg = new OpportunityRollups();
+			rg.rollupHouseholds(hhs);
+	
+			//make sure the values are still right
+			UpdatedCon = [SELECT id, account.npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, household__c, household__r.npo02__TotalOppAmount__c, npo02__TotalOppAmount__c FROM Contact WHERE Id = :FirstConId];
+	
+			System.AssertEquals ( 0 , UpdatedCon.npo02__TotalOppAmount__c );
+			System.AssertEquals ( 0 , UpdatedCon.household__r.npo02__TotalOppAmount__c );		
+			System.AssertEquals ( 0 , UpdatedCon.npo02__OppAmountThisYear__c);
+			System.AssertEquals ( 0 , UpdatedCon.npo02__OppAmountLastYear__c);
+		}
+	}
+	
+	
+	static testMethod void testGivingRollupAlwaysPrimary () {
+		isTest = true;
+		String giftRecordTypeNameForTests = RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
+		if(giftRecordTypeNameForTests!=''){
+			Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
+				new Households_Settings__c (
+					Household_Rules__c = Households.ALL_PROCESSOR,
+					Always_Rollup_to_Primary_Contact__c = false,
+					Enable_Opp_Rollup_Triggers__c = true,
+					Excluded_Account_Opp_Rectypes__c = null,
+					Excluded_Account_Opp_Types__c = null,
+					Excluded_Contact_Opp_Rectypes__c = null,
+					Excluded_Contact_Opp_Types__c = null,
+					Membership_Record_Types__c = null,
+					Opp_Gift_Role_Contact_Donor__c = 'Donor',
+					Opp_Rectype_For_Tests_Default__c = giftRecordTypeNameForTests,
+					Opp_Stage_Closed_Lost__c = 'Closed Lost',
+					Opp_Stage_Closed_Won__c = 'Closed Won',
+					Opp_Stage_Default__c = 'Prospecting',
+					Opp_Stage_Won_Not_Thanked__c = 'Won, Not Thanked'
+				));
+	        
+	        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+	        	npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
+	        	npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
+	        	npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
+	        ));
+			
+			Date datClose = System.Today();
+				
+			// create & insert contact(s)
+			Contact[] TestCons = new contact[]{ new contact(
+				FirstName= npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+	            LastName= npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
+	            npe01__Private__c=false,
+	            npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
+	            npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+	            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
+	            npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+			) };
+			insert TestCons;
+	
+			// create new opps
+			Opportunity[] newOpps = UnitTestData.OppsForContactList ( TestCons, null, 'Closed Won', datClose, 100 , householdSettingsForTests.Opp_Rectype_For_Tests_Default__c ,null);
+	
+			// insert the opp(s)
+			Test.StartTest();
+			insert newOpps;
+			Test.StopTest();
+			
+			//now test that a contact has received the proper member stats from the trigger
+			id FirstConId = TestCons[0].id;
+			Contact UpdatedCon = [SELECT id, account.npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, household__c, household__r.npo02__TotalOppAmount__c, npo02__TotalOppAmount__c FROM Contact WHERE Id = :FirstConId];
+	
+			System.AssertEquals ( 100 , UpdatedCon.npo02__TotalOppAmount__c );
+			System.AssertEquals ( 100 , UpdatedCon.household__r.npo02__TotalOppAmount__c );		
+			System.AssertEquals ( 100 , UpdatedCon.npo02__OppAmountThisYear__c);
+			System.AssertEquals ( 0 , UpdatedCon.npo02__OppAmountLastYear__c);
+	
+			// now roll up manually
+			OpportunityRollups rg = new OpportunityRollups();
+			rg.rollupContact(testcons[0].id);
+			
+			//also exercise the non-future methods to make sure the code runs
+			Household__c[] hhs = [SELECT id, npo02__TotalOppAmount__c, npo02__LastCloseDate__c, npo02__TotalMembershipOppAmount__c, npo02__OppAmountLastNDays__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c FROM Household__c WHERE id = :UpdatedCon.Household__r.id LIMIT 1];
+			rg = new OpportunityRollups();
+			rg.rollupHousehold(hhs[0].id);
+			rg = new OpportunityRollups();
+			rg.rollupHouseholds(hhs);
+	
+			//make sure the values are still right
+			UpdatedCon = [SELECT id, account.npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, household__c, household__r.npo02__TotalOppAmount__c, npo02__TotalOppAmount__c FROM Contact WHERE Id = :FirstConId];
+	
+			System.AssertEquals ( 100 , UpdatedCon.npo02__TotalOppAmount__c );
+			System.AssertEquals ( 100 , UpdatedCon.household__r.npo02__TotalOppAmount__c );		
+			System.AssertEquals ( 100 , UpdatedCon.npo02__OppAmountThisYear__c);
+			System.AssertEquals ( 0 , UpdatedCon.npo02__OppAmountLastYear__c);
+		}
 	}
 	
 	static testMethod void testMemberRollup () {
-		Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
-			new Households_Settings__c (
-				Household_Rules__c = Households.ALL_PROCESSOR,
-				Always_Rollup_to_Primary_Contact__c = false,
-				Enable_Opp_Rollup_Triggers__c = true,
-				Excluded_Account_Opp_Rectypes__c = null,
-				Excluded_Account_Opp_Types__c = null,
-				Excluded_Contact_Opp_Rectypes__c = null,
-				Excluded_Contact_Opp_Types__c = null,
-				Membership_Record_Types__c = 'Membership',
-				Opp_Gift_Role_Contact_Donor__c = 'Donor',
-				Opp_Rectype_For_Tests_Default__c = 'Gift',
-				Opp_Stage_Closed_Lost__c = 'Closed Lost',
-				Opp_Stage_Closed_Won__c = 'Closed Won',
-				Opp_Stage_Default__c = 'Prospecting',
-				Opp_Stage_Won_Not_Thanked__c = 'Won, Not Thanked'
-			));
-			
-		npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
-        	npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
-        	npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
-        	npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
-        ));
-        		
-		Date datClose = System.Today();
-			
-		// create & insert contact(s)
-		Contact[] TestCons = new contact[]{ new contact(firstname='Daddy', lastname='Longlegs') };
-		insert TestCons;
-
-		// create new opps
-		Opportunity[] newOpps = UnitTestData.OppsForContactList ( TestCons, null, 'Closed Won',
-			datClose, 100 , 'Membership' ,null);
-
-		system.debug(newOpps);
-		
-		// insert the opp(s)
 		isTest = true;
-		Test.StartTest();
-		newOpps[0].Membership_Origin__c = 'Renewal';
-		insert newOpps;
-		Test.StopTest();
-		
-		//now test that a contact has received the proper member stats from the trigger
-		id FirstConId = TestCons[0].id;
-		Contact UpdatedCon = [SELECT id, TotalMembershipOppAmount__c,LastMembershipOrigin__c,
-			LastMembershipAmount__c, LastMembershipDate__c 
-			from contact where id =: firstconid];
-		System.AssertEquals ( 100 , updatedcon.TotalMembershipOppAmount__c );		
-		System.AssertEquals ( 100 , updatedcon.LastMembershipAmount__c );		
-		System.AssertEquals ( 'Renewal' , updatedcon.LastMembershipOrigin__c );		
-		System.AssertEquals ( system.today() , updatedcon.LastMembershipDate__c );		
+		String giftRecordTypeNameForTests = RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
+		String membershipRecordTypeNameForTests = RecordTypes.getRecordTypeNameForMembershipTests('Opportunity');
+		if(membershipRecordTypeNameForTests!=''){
+			Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
+				new Households_Settings__c (
+					Household_Rules__c = Households.ALL_PROCESSOR,
+					Always_Rollup_to_Primary_Contact__c = true,
+					Enable_Opp_Rollup_Triggers__c = true,
+					Excluded_Account_Opp_Rectypes__c = null,
+					Excluded_Account_Opp_Types__c = null,
+					Excluded_Contact_Opp_Rectypes__c = null,
+					Excluded_Contact_Opp_Types__c = null,
+					Membership_Record_Types__c = membershipRecordTypeNameForTests,
+					Opp_Gift_Role_Contact_Donor__c = 'Donor',
+					Opp_Rectype_For_Tests_Default__c = giftRecordTypeNameForTests,
+					Opp_Stage_Closed_Lost__c = 'Closed Lost',
+					Opp_Stage_Closed_Won__c = 'Closed Won',
+					Opp_Stage_Default__c = 'Prospecting',
+					Opp_Stage_Won_Not_Thanked__c = 'Won, Not Thanked'
+				));
+				
+			npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+	        	npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
+	        	npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
+	        	npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
+	        ));
+	        		
+			Date datClose = System.Today();
+				
+			// create & insert contact(s)
+			Contact[] TestCons = new contact[]{ new contact(
+				FirstName= npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+	            LastName= npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
+	            npe01__Private__c=false,
+	            npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
+	            npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+	            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
+	            npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+			) };
+			insert TestCons;
+	
+			// create new opps
+			Opportunity[] newOpps = UnitTestData.OppsForContactList (
+				TestCons,
+				null,
+				'Closed Won',
+				datClose,
+				100,
+				householdSettingsForTests.Membership_Record_Types__c,
+				null
+			);
+	
+			system.debug(newOpps);
+			
+			// insert the opp(s)
+			Test.StartTest();
+			newOpps[0].Membership_Origin__c = 'Renewal';
+			insert newOpps;
+			Test.StopTest();
+			
+			//now test that a contact has received the proper member stats from the trigger
+			id FirstConId = TestCons[0].id;
+			Contact UpdatedCon = [SELECT id, npo02__TotalMembershipOppAmount__c,npo02__LastMembershipOrigin__c,
+				npo02__LastMembershipAmount__c, npo02__LastMembershipDate__c 
+				from contact where id =: firstconid];
+			System.AssertEquals ( 100 , updatedcon.npo02__TotalMembershipOppAmount__c );		
+			System.AssertEquals ( 100 , updatedcon.npo02__LastMembershipAmount__c );		
+			System.AssertEquals ( 'Renewal' , updatedcon.npo02__LastMembershipOrigin__c );		
+			System.AssertEquals ( system.today() , updatedcon.npo02__LastMembershipDate__c );	
+		}	
 	}
 	
 	static testMethod void testGivingRollupAcct () {
-		Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
-			new Households_Settings__c (
-				Household_Rules__c = Households.ALL_PROCESSOR,
-				Always_Rollup_to_Primary_Contact__c = false,
-				Enable_Opp_Rollup_Triggers__c = true,
-				Excluded_Account_Opp_Rectypes__c = null,
-				Excluded_Account_Opp_Types__c = null,
-				Excluded_Contact_Opp_Rectypes__c = null,
-				Excluded_Contact_Opp_Types__c = null,
-				Membership_Record_Types__c = null,
-				Opp_Gift_Role_Contact_Donor__c = 'Donor',
-				Opp_Rectype_For_Tests_Default__c = 'Gift',
-				Opp_Stage_Closed_Lost__c = 'Closed Lost',
-				Opp_Stage_Closed_Won__c = 'Closed Won',
-				Opp_Stage_Default__c = 'Prospecting',
-				Opp_Stage_Won_Not_Thanked__c = 'Won, Not Thanked'
-			));
-			
-		npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
-        	npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
-        	npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
-        	npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
-        ));
-        
-		Date datClose = System.Today();
-
-		// create account
-		account testacct = new account(name='testacct');
-		insert testacct;
-		opportunity newOpp =
-			 new opportunity (RecordTypeId = RecordTypes.GetRecordTypeId('Opportunity', 'Gift'), 
-			 					name = 'testopp', accountid = testacct.id, 
-			 					stagename='Closed Won', closedate=datClose, amount=33333);
-		
-		// insert the opp(s)
-		Test.StartTest();
 		isTest = true;
-		insert newOpp;
-		Test.StopTest();
-		
-		// test whether the trigger worked		
-		account updatedAcct = [select id, totalOppAmount__c from account where id =: testacct.id];		
-		System.AssertEquals ( 33333 , updatedAcct.TotalOppAmount__c );		
-
-		// now roll up manually
-		OpportunityRollups rg = new OpportunityRollups();
-		rg.rollupAccount(testacct.id);
-
-		updatedAcct = [select id, totalOppAmount__c from account where id =: testacct.id];
-		System.AssertEquals ( 33333 , updatedAcct.TotalOppAmount__c );			
+		String giftRecordTypeNameForTests = RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
+		String membershipRecordTypeNameForTests = RecordTypes.getRecordTypeNameForMembershipTests('Opportunity');
+		if(giftRecordTypeNameForTests!=''){
+			Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
+				new Households_Settings__c (
+					Household_Rules__c = Households.ALL_PROCESSOR,
+					Always_Rollup_to_Primary_Contact__c = false,
+					Enable_Opp_Rollup_Triggers__c = true,
+					Excluded_Account_Opp_Rectypes__c = null,
+					Excluded_Account_Opp_Types__c = null,
+					Excluded_Contact_Opp_Rectypes__c = null,
+					Excluded_Contact_Opp_Types__c = null,
+					Membership_Record_Types__c = null,
+					Opp_Gift_Role_Contact_Donor__c = 'Donor',
+					Opp_Rectype_For_Tests_Default__c = giftRecordTypeNameForTests,
+					Opp_Stage_Closed_Lost__c = 'Closed Lost',
+					Opp_Stage_Closed_Won__c = 'Closed Won',
+					Opp_Stage_Default__c = 'Prospecting',
+					Opp_Stage_Won_Not_Thanked__c = 'Won, Not Thanked'
+				));
+				
+			npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+	        	npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
+	        	npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
+	        	npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
+	        ));
+	        
+			Date datClose = System.Today();
 	
+			// create account
+			account testacct = new account(name='testacct');
+			insert testacct;
+			opportunity newOpp =
+				 new opportunity (RecordTypeId = RecordTypes.GetRecordTypeId('Opportunity', householdSettingsForTests.Opp_Rectype_For_Tests_Default__c), 
+				 					name = 'testopp', accountid = testacct.id, 
+				 					stagename='Closed Won', closedate=datClose, amount=33333);
+			
+			// insert the opp(s)
+			Test.StartTest();
+			insert newOpp;
+			Test.StopTest();
+			
+			// test whether the trigger worked		
+			account updatedAcct = [select id, npo02__TotalOppAmount__c from account where id =: testacct.id];		
+			System.AssertEquals ( 33333 , updatedAcct.npo02__TotalOppAmount__c );		
+	
+			// now roll up manually
+			OpportunityRollups rg = new OpportunityRollups();
+			rg.rollupAccount(testacct.id);
+	
+			updatedAcct = [select id, npo02__TotalOppAmount__c from account where id =: testacct.id];
+			System.AssertEquals ( 33333 , updatedAcct.npo02__TotalOppAmount__c );			
+		}
 	}	
 
 	static testMethod void testGivingRollupAcctMembership () {
-		Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
-			new Households_Settings__c (
-				Household_Rules__c = Households.ALL_PROCESSOR,
-				Always_Rollup_to_Primary_Contact__c = false,
-				Enable_Opp_Rollup_Triggers__c = true,
-				Excluded_Account_Opp_Rectypes__c = null,
-				Excluded_Account_Opp_Types__c = null,
-				Excluded_Contact_Opp_Rectypes__c = null,
-				Excluded_Contact_Opp_Types__c = null,
-				Membership_Record_Types__c = 'Membership',
-				Opp_Gift_Role_Contact_Donor__c = 'Donor',
-				Opp_Rectype_For_Tests_Default__c = 'Gift',
-				Opp_Stage_Closed_Lost__c = 'Closed Lost',
-				Opp_Stage_Closed_Won__c = 'Closed Won',
-				Opp_Stage_Default__c = 'Prospecting',
-				Opp_Stage_Won_Not_Thanked__c = 'Won, Not Thanked'
-			));
-			
-		npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
-        	npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
-        	npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
-        	npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
-        ));
-        
-		Date datClose = System.Today();
-
-		// create account
-		account testacct = new account(name='testacct');
-		insert testacct;
-		opportunity newOpp =
-			 new opportunity (RecordTypeId = RecordTypes.GetRecordTypeId('Opportunity', 'Membership'), 
-			 					name = 'testopp', accountid = testacct.id, 
-			 					member_level__c = 'Gold', membership_origin__c = 'New',
-			 					stagename='Closed Won', closedate=datClose, amount=33333);
-		
-		// insert the opp(s)
-		Test.StartTest();
 		isTest = true;
-		insert newOpp;
-		Test.StopTest();
-		// test whether the trigger worked		
-		account updatedAcct = [select id, totalMembershipOppAmount__c, LastMembershipDate__c,
-			LastMembershipAmount__c, LastMembershipLevel__c, LastMembershipOrigin__c
-			from account where id =: testacct.id];		
-		System.AssertEquals ( 33333 , updatedAcct.TotalMembershipOppAmount__c );		
-		System.AssertEquals ( system.today() , updatedAcct.LastMembershipDate__c );		
-		System.AssertEquals ( 33333 , updatedAcct.LastMembershipAmount__c );		
-		System.AssertEquals ( 'Gold' , updatedAcct.LastMembershipLevel__c );		
-		System.AssertEquals ( 'New' , updatedAcct.LastMembershipOrigin__c );		
- 
-		// now roll up manually
-		OpportunityRollups rg = new OpportunityRollups();
-		rg.rollupAccount(testacct.id);
-
-		updatedAcct = [select id, TotalMembershipOppAmount__c from account where id =: testacct.id];
-		System.AssertEquals ( 33333 , updatedAcct.TotalMembershipOppAmount__c );		
+		String giftRecordTypeNameForTests = RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
+		String membershipRecordTypeNameForTests = RecordTypes.getRecordTypeNameForMembershipTests('Opportunity');
+		if(membershipRecordTypeNameForTests!=''){
+			Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
+				new Households_Settings__c (
+					Household_Rules__c = Households.ALL_PROCESSOR,
+					Always_Rollup_to_Primary_Contact__c = true,
+					Enable_Opp_Rollup_Triggers__c = true,
+					Excluded_Account_Opp_Rectypes__c = null,
+					Excluded_Account_Opp_Types__c = null,
+					Excluded_Contact_Opp_Rectypes__c = null,
+					Excluded_Contact_Opp_Types__c = null,
+					Membership_Record_Types__c = membershipRecordTypeNameForTests,
+					Opp_Gift_Role_Contact_Donor__c = 'Donor',
+					Opp_Rectype_For_Tests_Default__c = giftRecordTypeNameForTests,
+					Opp_Stage_Closed_Lost__c = 'Closed Lost',
+					Opp_Stage_Closed_Won__c = 'Closed Won',
+					Opp_Stage_Default__c = 'Prospecting',
+					Opp_Stage_Won_Not_Thanked__c = 'Won, Not Thanked'
+				));
+				
+			npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+	        	npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
+	        	npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
+	        	npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
+	        ));
+	        
+			Date datClose = System.Today();
 	
+			// create account
+			account testacct = new account(name='testacct');
+			insert testacct;
+			opportunity newOpp =
+				 new opportunity (RecordTypeId = RecordTypes.GetRecordTypeId('Opportunity', householdSettingsForTests.Membership_Record_Types__c), 
+				 					name = 'testopp', accountid = testacct.id, 
+				 					member_level__c = 'Gold', membership_origin__c = 'New',
+				 					stagename='Closed Won', closedate=datClose, amount=33333);
+			
+			// insert the opp(s)
+			Test.StartTest();
+			insert newOpp;
+			Test.StopTest();
+			// test whether the trigger worked		
+			account updatedAcct = [select id, npo02__TotalMembershipOppAmount__c, npo02__LastMembershipDate__c,
+				npo02__LastMembershipAmount__c, npo02__LastMembershipLevel__c, npo02__LastMembershipOrigin__c
+				from account where id =: testacct.id];		
+			System.AssertEquals ( 33333 , updatedAcct.npo02__TotalMembershipOppAmount__c );		
+			System.AssertEquals ( system.today() , updatedAcct.npo02__LastMembershipDate__c );		
+			System.AssertEquals ( 33333 , updatedAcct.npo02__LastMembershipAmount__c );		
+			System.AssertEquals ( 'Gold' , updatedAcct.npo02__LastMembershipLevel__c );		
+			System.AssertEquals ( 'New' , updatedAcct.npo02__LastMembershipOrigin__c );
+			
+			// now roll up manually
+			OpportunityRollups rg = new OpportunityRollups();
+			rg.rollupAccount(testacct.id);
+	
+			updatedAcct = [select id, npo02__TotalMembershipOppAmount__c from account where id =: testacct.id];
+			System.AssertEquals ( 33333 , updatedAcct.npo02__TotalMembershipOppAmount__c );		
+		}
 	}	
 
 	static testMethod void testGivingRollupBatch () {
-		Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
-			new Households_Settings__c (
-				Household_Rules__c = Households.ALL_PROCESSOR,
-				Always_Rollup_to_Primary_Contact__c = false,
-				Enable_Opp_Rollup_Triggers__c = true,
-				Excluded_Account_Opp_Rectypes__c = null,
-				Excluded_Account_Opp_Types__c = null,
-				Excluded_Contact_Opp_Rectypes__c = null,
-				Excluded_Contact_Opp_Types__c = null,
-				Membership_Record_Types__c = 'Membership',
-				Opp_Gift_Role_Contact_Donor__c = 'Donor',
-				Opp_Rectype_For_Tests_Default__c = 'Gift',
-				Opp_Stage_Closed_Lost__c = 'Closed Lost',
-				Opp_Stage_Closed_Won__c = 'Closed Won',
-				Opp_Stage_Default__c = 'Prospecting',
-				Opp_Stage_Won_Not_Thanked__c = 'Won, Not Thanked'
-			));
-			
-		npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
-        	npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
-        	npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
-        	npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
-        ));
-        	
-		Date datClose = System.Today();
-			
-		// create & insert contact(s)
-		Contact[] TestCons = UnitTestData.CreateMultipleTestContacts ( 50 ) ;
-		insert TestCons;
-
-		// create new opps
-		Opportunity[] newOpps = UnitTestData.OppsForContactList ( TestCons, null, 'Closed Won', datClose, 1000 , 'Gift' ,null);
-
-		account testacct = new account(name='testacct');
-		insert testacct;
-
-		// test the batch rollup method
-		isTest = true; 
-		Test.StartTest();
-		OpportunityRollups rg = new OpportunityRollups();
-		rg.rollupAll();
-		Test.StopTest();
+		isTest = true;
+		String giftRecordTypeNameForTests = RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
+		if(giftRecordTypeNameForTests!=''){
+			Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
+				new Households_Settings__c (
+					Household_Rules__c = Households.ALL_PROCESSOR,
+					Always_Rollup_to_Primary_Contact__c = false,
+					Enable_Opp_Rollup_Triggers__c = true,
+					Excluded_Account_Opp_Rectypes__c = null,
+					Excluded_Account_Opp_Types__c = null,
+					Excluded_Contact_Opp_Rectypes__c = null,
+					Excluded_Contact_Opp_Types__c = null,
+					Membership_Record_Types__c = null,
+					Opp_Gift_Role_Contact_Donor__c = 'Donor',
+					Opp_Rectype_For_Tests_Default__c = giftRecordTypeNameForTests,
+					Opp_Stage_Closed_Lost__c = 'Closed Lost',
+					Opp_Stage_Closed_Won__c = 'Closed Won',
+					Opp_Stage_Default__c = 'Prospecting',
+					Opp_Stage_Won_Not_Thanked__c = 'Won, Not Thanked'
+				));
+				
+			npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+	        	npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
+	        	npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
+	        	npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
+	        ));
+	        	
+			Date datClose = System.Today();
+				
+			// create & insert contact(s)
+			Contact[] TestCons = UnitTestData.CreateMultipleTestContacts ( 50 ) ;
+			insert TestCons;
+	
+			// create new opps
+			Opportunity[] newOpps = UnitTestData.OppsForContactList ( TestCons, null, 'Closed Won', datClose, 1000 , householdSettingsForTests.Opp_Rectype_For_Tests_Default__c ,null);
+	
+			account testacct = new account(name='testacct');
+			insert testacct;
+	
+			// test the batch rollup method
+			Test.StartTest();
+			OpportunityRollups rg = new OpportunityRollups();
+			rg.rollupAll();
+			Test.StopTest();
+		}
 	}	
 
 	static testMethod void OneContactMultipleOpps() {
-		
-		Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
-			new Households_Settings__c (
-				Household_Rules__c = Households.ALL_PROCESSOR,
-				Always_Rollup_to_Primary_Contact__c = false,
-				Enable_Opp_Rollup_Triggers__c = true,
-				Excluded_Account_Opp_Rectypes__c = null,
-				Excluded_Account_Opp_Types__c = null,
-				Excluded_Contact_Opp_Rectypes__c = null,
-				Excluded_Contact_Opp_Types__c = null,
-				Membership_Record_Types__c = 'Membership',
-				Opp_Gift_Role_Contact_Donor__c = 'Donor',
-				Opp_Rectype_For_Tests_Default__c = 'Gift',
-				Opp_Stage_Closed_Lost__c = 'Closed Lost',
-				Opp_Stage_Closed_Won__c = 'Closed Won',
-				Opp_Stage_Default__c = 'Prospecting',
-				Opp_Stage_Won_Not_Thanked__c = 'Won, Not Thanked'
-			));
-			
-		npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
-        	npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
-        	npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
-        	npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
-        ));
-        	
-		integer howMany = 1;
-		Date datToday = System.Today();
-		Date dat1YearAgo = Date.newInstance( datToday.year()-1,1,1);
-		Date dat2YearAgo = Date.newInstance( datToday.year()-2,1,1);
-		Date dat4YearAgo = Date.newInstance( datToday.year()-4,1,1);
-			
-		// create & insert contact(s)
-		Contact[] TestCons = UnitTestData.CreateMultipleTestContacts ( howMany ) ;
-		insert TestCons;
-		
-		test.starttest();
 		isTest = true;
-		system.debug ( 'TEST>>>>> inserting gift 1...');
-		
-		// create a new gift for this yr
-		Opportunity[] testGift1 = UnitTestData.OppsForContactList ( TestCons, null, 'Closed Won', datToday, 100 , 'Membership',null);
-		insert testGift1 ;
-
-		system.debug ( 'TEST>>>>> inserting gift 2...');
-		
-		//create a 2nd gift for last yr
-		Opportunity[] testGift2 = UnitTestData.OppsForContactList ( TestCons, null, 'Closed Won', dat1YearAgo, 60, 'Membership',null);
-
-		insert testGift2;
-		
-		test.stopTest();
-		
-		//now test that the contact has received the proper stats from the trigger
-		id ThisConId = TestCons[0].id;
-		Contact UpdatedCon = [SELECT Id,  totalOppAmount__c, OppAmountThisYear__c, OppAmountLastYear__c FROM Contact WHERE Id = :ThisConId];
-		
-		System.AssertEquals ( 160 , UpdatedCon.totalOppAmount__c );
-		System.AssertEquals ( 100 , UpdatedCon.OppAmountThisYear__c );
-		System.AssertEquals ( 60 , UpdatedCon.OppAmountLastYear__c );
-
-		system.debug ( 'TEST>>>>> changing gift 1...');
-		
-		// now chg the amts for both opps (cheapskate!)
-		testGift1[0].Amount = 50;
-		update TestGift1;
-
-		system.debug ( 'TEST>>>>> changing gift 2...');
-		
-		testGift2[0].Amount=25;
-		update TestGift2;
-		
-		// now roll up manually
-		OpportunityRollups rg = new OpportunityRollups();
-		rg.rollupContact(testcons[0].id);
-
-		ThisConId = TestCons[0].id;
-		UpdatedCon = [SELECT Id, totalOppAmount__c, OppAmountThisYear__c, OppAmountLastYear__c  FROM Contact WHERE Id = :ThisConId];
-		
-		System.AssertEquals ( 75 , UpdatedCon.totalOppAmount__c );
-		System.AssertEquals ( 50 , UpdatedCon.OppAmountThisYear__c );		
-		System.AssertEquals ( 25 , UpdatedCon.OppAmountLastYear__c );
-		
-		system.debug ( 'TEST>>>>> inserting gift 3...');
-
-		// now create a gift from 2 yrs ago
-		Opportunity[] testGift3 = UnitTestData.OppsForContactList ( TestCons, null, 'Closed Won', dat2YearAgo, 10 , 'Gift',null);
-
-		insert testGift3;
-		
-		// now roll up manually
-		rg = new OpportunityRollups();
-		rg.rollupContact(testcons[0].id);
-
-		ThisConId = TestCons[0].id;
-		UpdatedCon = [SELECT Id,  totalOppAmount__c, OppAmountThisYear__c, OppAmountLastYear__c, OppAmount2YearsAgo__c FROM Contact WHERE Id = :ThisConId];
-		
-		System.AssertEquals ( 85 , UpdatedCon.totalOppAmount__c );
-		System.AssertEquals ( 50 , UpdatedCon.OppAmountThisYear__c );		
-		System.AssertEquals ( 25 , UpdatedCon.OppAmountLastYear__c );
-		System.AssertEquals ( 10 , UpdatedCon.OppAmount2YearsAgo__c );
-
-		// add another from this year (to test adding)
-		system.debug ( 'TEST>>>>> inserting gift 4...');
-		Opportunity[] testGift4 = UnitTestData.OppsForContactList ( TestCons, null, 'Closed Won', datToday, 25 , 'Gift',null);
-
-		insert testGift4;
-		
-		// now roll up manually
-		rg = new OpportunityRollups();
-		rg.rollupContact(testcons[0].id);
-
-		UpdatedCon = [SELECT Id,  totalOppAmount__c, OppAmountThisYear__c, OppAmountLastYear__c, OppAmount2YearsAgo__c FROM Contact WHERE Id = :ThisConId];
-		
-		System.AssertEquals ( 110 , UpdatedCon.totalOppAmount__c );
-		System.AssertEquals ( 75 , UpdatedCon.OppAmountThisYear__c );		
-		System.AssertEquals ( 25 , UpdatedCon.OppAmountLastYear__c );
-		System.AssertEquals ( 10 , UpdatedCon.OppAmount2YearsAgo__c );
-
-		// TBD add a gift from longer ago
-		system.debug ( 'TEST>>>>> inserting gift 5...');
-		Opportunity[] testGift5 = UnitTestData.OppsForContactList ( TestCons, null, 'Closed Won', dat4YearAgo, 200 , 'Gift',null);
-
-		insert testGift5;
-		
-		// now roll up manually
-		rg = new OpportunityRollups();
-		rg.rollupContact(testcons[0].id);
-		
-		// totals should not have changed, except lifetime & best yr
-		UpdatedCon = [SELECT Id,  totalOppAmount__c, OppAmountThisYear__c, OppAmountLastYear__c, OppAmount2YearsAgo__c FROM Contact WHERE Id = :ThisConId];
-		
-		System.AssertEquals ( 310 , UpdatedCon.totalOppAmount__c );
-		System.AssertEquals ( 75 , UpdatedCon.OppAmountThisYear__c );		
-		System.AssertEquals ( 25 , UpdatedCon.OppAmountLastYear__c );
-		System.AssertEquals ( 10 , UpdatedCon.OppAmount2YearsAgo__c );		
-		
-		// TBD add non-won gift
-		system.debug ( 'TEST>>>>> inserting gift 6...');
-		Opportunity[] testGift6 = UnitTestData.OppsForContactList ( TestCons, null, 'Prospecting', dat4YearAgo, 35 , 'Gift',null);
-
-		insert testGift6;
-		
-		// now roll up manually
-		rg = new OpportunityRollups();
-		rg.rollupContact(testcons[0].id);
-		
-		// totals should not have changed at all
-		UpdatedCon = [SELECT Id,  totalOppAmount__c, OppAmountThisYear__c, OppAmountLastYear__c, OppAmount2YearsAgo__c FROM Contact WHERE Id = :ThisConId];
-		
-		System.AssertEquals ( 310 , UpdatedCon.totalOppAmount__c );
-		System.AssertEquals ( 75 , UpdatedCon.OppAmountThisYear__c );		
-		System.AssertEquals ( 25 , UpdatedCon.OppAmountLastYear__c );
-		System.AssertEquals ( 10 , UpdatedCon.OppAmount2YearsAgo__c );		
+		String giftRecordTypeNameForTests = RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
+		String membershipRecordTypeNameForTests = RecordTypes.getRecordTypeNameForMembershipTests('Opportunity');
+		if(membershipRecordTypeNameForTests!=''){
+			Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
+				new Households_Settings__c (
+					Household_Rules__c = Households.ALL_PROCESSOR,
+					Always_Rollup_to_Primary_Contact__c = false,
+					Enable_Opp_Rollup_Triggers__c = true,
+					Excluded_Account_Opp_Rectypes__c = null,
+					Excluded_Account_Opp_Types__c = null,
+					Excluded_Contact_Opp_Rectypes__c = null,
+					Excluded_Contact_Opp_Types__c = null,
+					Membership_Record_Types__c = membershipRecordTypeNameForTests,
+					Opp_Gift_Role_Contact_Donor__c = 'Donor',
+					Opp_Rectype_For_Tests_Default__c = giftRecordTypeNameForTests,
+					Opp_Stage_Closed_Lost__c = 'Closed Lost',
+					Opp_Stage_Closed_Won__c = 'Closed Won',
+					Opp_Stage_Default__c = 'Prospecting',
+					Opp_Stage_Won_Not_Thanked__c = 'Won, Not Thanked'
+				));
 				
-		// now delete the 1st gift (now at $50), totals should decrease
-		system.debug ( 'TEST>>>>> deleting gift 1...');	
-		delete testGift1;
-		
-		// now roll up manually
-		rg = new OpportunityRollups();
-		rg.rollupContact(testcons[0].id);
-		
-		UpdatedCon = [SELECT Id,  totalOppAmount__c, OppAmountThisYear__c, OppAmountLastYear__c, OppAmount2YearsAgo__c FROM Contact WHERE Id = :ThisConId];
-		
-		System.AssertEquals ( 260 , UpdatedCon.totalOppAmount__c );
-		System.AssertEquals ( 25 , UpdatedCon.OppAmountThisYear__c );		
-		System.AssertEquals ( 25 , UpdatedCon.OppAmountLastYear__c );
-		System.AssertEquals ( 10 , UpdatedCon.OppAmount2YearsAgo__c );				
-		
-		/*
-		// finally add a larger gift from several yrs ago to test the best gift yr going earlier than other stats
-		system.debug ( 'TEST>>>>> inserting gift 7...');
-		Opportunity[] testGift7 = UnitTestData.OppsForContactList ( TestCons, null, 'Closed Won', datToday.addYears(-5), 200 , 'Gift',null);
-		ONEN_OpportunityContactRoles.haveCheckedContactRoles = false;
-		insert testGift7;
-
-		UpdatedCon = [SELECT Id,  totalOppAmount__c, OppAmountThisYear__c, OppAmountLastYear__c, OppAmount2YearsAgo__c, Best_Gift_Year__c, Best_Gift_Year_Total__c  FROM Contact WHERE Id = :ThisConId];
-		System.AssertEquals ( datToday.addYears(-5).year() , UpdatedCon.Best_Gift_Year__c );
-		System.AssertEquals ( 200 , UpdatedCon.Best_Gift_Year_Total__c );
-		*/		
+			npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+	        	npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
+	        	npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
+	        	npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
+	        ));
+	        	
+			integer howMany = 1;
+			Date datToday = System.Today();
+			Date dat1YearAgo = Date.newInstance( datToday.year()-1,1,1);
+			Date dat2YearAgo = Date.newInstance( datToday.year()-2,1,1);
+			Date dat4YearAgo = Date.newInstance( datToday.year()-4,1,1);
+				
+			// create & insert contact(s)
+			Contact[] TestCons = UnitTestData.CreateMultipleTestContacts ( howMany ) ;
+			insert TestCons;
+			
+			test.starttest();
+			system.debug ( 'TEST>>>>> inserting gift 1...');
+			
+			// create a new gift for this yr
+			Opportunity[] testGift1 = UnitTestData.OppsForContactList ( TestCons, null, 'Closed Won', datToday, 100 , householdSettingsForTests.Membership_Record_Types__c,null);
+			insert testGift1 ;
+	
+			system.debug ( 'TEST>>>>> inserting gift 2...');
+			
+			//create a 2nd gift for last yr
+			Opportunity[] testGift2 = UnitTestData.OppsForContactList ( TestCons, null, 'Closed Won', dat1YearAgo, 60, householdSettingsForTests.Membership_Record_Types__c,null);
+	
+			insert testGift2;
+			
+			test.stopTest();
+			
+			//now test that the contact has received the proper stats from the trigger
+			id ThisConId = TestCons[0].id;
+			Contact UpdatedCon = [SELECT Id,  npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c FROM Contact WHERE Id = :ThisConId];
+			
+			System.AssertEquals ( 160 , UpdatedCon.npo02__TotalOppAmount__c );
+			System.AssertEquals ( 100 , UpdatedCon.npo02__OppAmountThisYear__c );
+			System.AssertEquals ( 60 , UpdatedCon.npo02__OppAmountLastYear__c );
+	
+			system.debug ( 'TEST>>>>> changing gift 1...');
+			
+			// now chg the amts for both opps (cheapskate!)
+			testGift1[0].Amount = 50;
+			update TestGift1;
+	
+			system.debug ( 'TEST>>>>> changing gift 2...');
+			
+			testGift2[0].Amount=25;
+			update TestGift2;
+			
+			// now roll up manually
+			OpportunityRollups rg = new OpportunityRollups();
+			rg.rollupContact(testcons[0].id);
+	
+			ThisConId = TestCons[0].id;
+			UpdatedCon = [SELECT Id, npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c  FROM Contact WHERE Id = :ThisConId];
+			
+			System.AssertEquals ( 75 , UpdatedCon.npo02__TotalOppAmount__c );
+			System.AssertEquals ( 50 , UpdatedCon.npo02__OppAmountThisYear__c );		
+			System.AssertEquals ( 25 , UpdatedCon.npo02__OppAmountLastYear__c );
+			
+			system.debug ( 'TEST>>>>> inserting gift 3...');
+	
+			// now create a gift from 2 yrs ago
+			Opportunity[] testGift3 = UnitTestData.OppsForContactList ( TestCons, null, 'Closed Won', dat2YearAgo, 10 , householdSettingsForTests.Opp_Rectype_For_Tests_Default__c,null);
+	
+			insert testGift3;
+			
+			// now roll up manually
+			rg = new OpportunityRollups();
+			rg.rollupContact(testcons[0].id);
+	
+			ThisConId = TestCons[0].id;
+			UpdatedCon = [SELECT Id,  npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c FROM Contact WHERE Id = :ThisConId];
+			
+			System.AssertEquals ( 85 , UpdatedCon.npo02__TotalOppAmount__c );
+			System.AssertEquals ( 50 , UpdatedCon.npo02__OppAmountThisYear__c );		
+			System.AssertEquals ( 25 , UpdatedCon.npo02__OppAmountLastYear__c );
+			System.AssertEquals ( 10 , UpdatedCon.npo02__OppAmount2YearsAgo__c );
+	
+			// add another from this year (to test adding)
+			system.debug ( 'TEST>>>>> inserting gift 4...');
+			Opportunity[] testGift4 = UnitTestData.OppsForContactList ( TestCons, null, 'Closed Won', datToday, 25 , householdSettingsForTests.Opp_Rectype_For_Tests_Default__c,null);
+	
+			insert testGift4;
+			
+			// now roll up manually
+			rg = new OpportunityRollups();
+			rg.rollupContact(testcons[0].id);
+	
+			UpdatedCon = [SELECT Id,  npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c FROM Contact WHERE Id = :ThisConId];
+			
+			System.AssertEquals ( 110 , UpdatedCon.npo02__TotalOppAmount__c );
+			System.AssertEquals ( 75 , UpdatedCon.npo02__OppAmountThisYear__c );		
+			System.AssertEquals ( 25 , UpdatedCon.npo02__OppAmountLastYear__c );
+			System.AssertEquals ( 10 , UpdatedCon.npo02__OppAmount2YearsAgo__c );
+	
+			// TBD add a gift from longer ago
+			system.debug ( 'TEST>>>>> inserting gift 5...');
+			Opportunity[] testGift5 = UnitTestData.OppsForContactList ( TestCons, null, 'Closed Won', dat4YearAgo, 200 , householdSettingsForTests.Opp_Rectype_For_Tests_Default__c,null);
+	
+			insert testGift5;
+			
+			// now roll up manually
+			rg = new OpportunityRollups();
+			rg.rollupContact(testcons[0].id);
+			
+			// totals should not have changed, except lifetime & best yr
+			UpdatedCon = [SELECT Id,  npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c FROM Contact WHERE Id = :ThisConId];
+			
+			System.AssertEquals ( 310 , UpdatedCon.npo02__TotalOppAmount__c );
+			System.AssertEquals ( 75 , UpdatedCon.npo02__OppAmountThisYear__c );		
+			System.AssertEquals ( 25 , UpdatedCon.npo02__OppAmountLastYear__c );
+			System.AssertEquals ( 10 , UpdatedCon.npo02__OppAmount2YearsAgo__c );		
+			
+			// TBD add non-won gift
+			system.debug ( 'TEST>>>>> inserting gift 6...');
+			Opportunity[] testGift6 = UnitTestData.OppsForContactList ( TestCons, null, 'Prospecting', dat4YearAgo, 35 , householdSettingsForTests.Opp_Rectype_For_Tests_Default__c,null);
+	
+			insert testGift6;
+			
+			// now roll up manually
+			rg = new OpportunityRollups();
+			rg.rollupContact(testcons[0].id);
+			
+			// totals should not have changed at all
+			UpdatedCon = [SELECT Id,  npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c FROM Contact WHERE Id = :ThisConId];
+			
+			System.AssertEquals ( 310 , UpdatedCon.npo02__TotalOppAmount__c );
+			System.AssertEquals ( 75 , UpdatedCon.npo02__OppAmountThisYear__c );		
+			System.AssertEquals ( 25 , UpdatedCon.npo02__OppAmountLastYear__c );
+			System.AssertEquals ( 10 , UpdatedCon.npo02__OppAmount2YearsAgo__c );		
+					
+			// now delete the 1st gift (now at $50), totals should decrease
+			system.debug ( 'TEST>>>>> deleting gift 1...');	
+			delete testGift1;
+			
+			// now roll up manually
+			rg = new OpportunityRollups();
+			rg.rollupContact(testcons[0].id);
+			
+			UpdatedCon = [SELECT Id,  npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c FROM Contact WHERE Id = :ThisConId];
+			
+			System.AssertEquals ( 260 , UpdatedCon.npo02__TotalOppAmount__c );
+			System.AssertEquals ( 25 , UpdatedCon.npo02__OppAmountThisYear__c );		
+			System.AssertEquals ( 25 , UpdatedCon.npo02__OppAmountLastYear__c );
+			System.AssertEquals ( 10 , UpdatedCon.npo02__OppAmount2YearsAgo__c );				
+			
+			/*
+			// finally add a larger gift from several yrs ago to test the best gift yr going earlier than other stats
+			system.debug ( 'TEST>>>>> inserting gift 7...');
+			Opportunity[] testGift7 = UnitTestData.OppsForContactList ( TestCons, null, 'Closed Won', datToday.addYears(-5), 200 , 'Gift',null);
+			ONEN_OpportunityContactRoles.haveCheckedContactRoles = false;
+			insert testGift7;
+	
+			UpdatedCon = [SELECT Id,  npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c, Best_Gift_Year__c, Best_Gift_Year_Total__c  FROM Contact WHERE Id = :ThisConId];
+			System.AssertEquals ( datToday.addYears(-5).year() , UpdatedCon.Best_Gift_Year__c );
+			System.AssertEquals ( 200 , UpdatedCon.Best_Gift_Year_Total__c );
+			*/		
+		}
 	}
 
 	static testMethod void OneContactOneInkind() {
-		Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
-			new Households_Settings__c (
-				Household_Rules__c = Households.ALL_PROCESSOR,
-				Always_Rollup_to_Primary_Contact__c = false,
-				Enable_Opp_Rollup_Triggers__c = true,
-				Excluded_Account_Opp_Rectypes__c = null,
-				Excluded_Account_Opp_Types__c = 'In Kind',
-				Excluded_Contact_Opp_Rectypes__c = null,
-				Excluded_Contact_Opp_Types__c = 'In Kind',
-				Membership_Record_Types__c = 'Membership',
-				Opp_Gift_Role_Contact_Donor__c = 'Donor',
-				Opp_Rectype_For_Tests_Default__c = 'Gift',
-				Opp_Stage_Closed_Lost__c = 'Closed Lost',
-				Opp_Stage_Closed_Won__c = 'Closed Won',
-				Opp_Stage_Default__c = 'Prospecting',
-				Opp_Stage_Won_Not_Thanked__c = 'Won, Not Thanked'
-			));
-			
-		npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
-        	npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
-        	npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
-        	npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
-        ));
-        
-		integer howMany = 1;
-		Date datToday = System.Today();
-		
-		// create & insert contact(s)
-		Contact[] TestCons = UnitTestData.CreateMultipleTestContacts ( howMany ) ;
-		insert TestCons;
-		
-		system.debug ( 'TEST>>>>> inserting gift 1...');
-		
-		// create a new gift for this yr
-		Opportunity[] testGift1 = UnitTestData.OppsForContactList ( TestCons, null, 'Closed Won', datToday, 100 , 'Gift','In Kind');
-		Test.StartTest();
 		isTest = true;
-		insert testGift1 ;
-		Test.StopTest();
+		String giftRecordTypeNameForTests = RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
+		if(giftRecordTypeNameForTests!=''){
+			Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
+				new Households_Settings__c (
+					Household_Rules__c = Households.ALL_PROCESSOR,
+					Always_Rollup_to_Primary_Contact__c = false,
+					Enable_Opp_Rollup_Triggers__c = true,
+					Excluded_Account_Opp_Rectypes__c = null,
+					Excluded_Account_Opp_Types__c = 'In Kind',
+					Excluded_Contact_Opp_Rectypes__c = null,
+					Excluded_Contact_Opp_Types__c = 'In Kind',
+					Membership_Record_Types__c = null,
+					Opp_Gift_Role_Contact_Donor__c = 'Donor',
+					Opp_Rectype_For_Tests_Default__c = giftRecordTypeNameForTests,
+					Opp_Stage_Closed_Lost__c = 'Closed Lost',
+					Opp_Stage_Closed_Won__c = 'Closed Won',
+					Opp_Stage_Default__c = 'Prospecting',
+					Opp_Stage_Won_Not_Thanked__c = 'Won, Not Thanked'
+				));
+				
+			npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+	        	npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
+	        	npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
+	        	npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
+	        ));
+	        
+			integer howMany = 1;
+			Date datToday = System.Today();
+			
+			// create & insert contact(s)
+			Contact[] TestCons = UnitTestData.CreateMultipleTestContacts ( howMany ) ;
+			insert TestCons;
+			
+			system.debug ( 'TEST>>>>> inserting gift 1...');
+			
+			// create a new gift for this yr
+			Opportunity[] testGift1 = UnitTestData.OppsForContactList ( TestCons, null, 'Closed Won', datToday, 100 , householdSettingsForTests.Opp_Rectype_For_Tests_Default__c,'In Kind');
+			Test.StartTest();
+			insert testGift1 ;
+			Test.StopTest();
+			
+			id ThisConId = TestCons[0].id;
+			contact UpdatedCon = [SELECT Id,  npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c FROM Contact WHERE Id = :ThisConId];
 		
-		id ThisConId = TestCons[0].id;
-		contact UpdatedCon = [SELECT Id,  totalOppAmount__c, OppAmountThisYear__c, OppAmountLastYear__c, OppAmount2YearsAgo__c FROM Contact WHERE Id = :ThisConId];
-	
-		System.Assert( !(UpdatedCon.totalOppAmount__c>0) );
-		
-		testGift1[0].Type = 'Cash';
-		update testGift1;
-		
-		UpdatedCon = [SELECT Id,  totalOppAmount__c, OppAmountThisYear__c, OppAmountLastYear__c, OppAmount2YearsAgo__c FROM Contact WHERE Id = :ThisConId];
-		//System.AssertEquals ( 100 , UpdatedCon.totalOppAmount__c );
-		
+			System.Assert( !(UpdatedCon.npo02__TotalOppAmount__c>0) );
+			
+			testGift1[0].Type = 'Cash';
+			update testGift1;
+			
+			UpdatedCon = [SELECT Id,  npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c FROM Contact WHERE Id = :ThisConId];
+			//System.AssertEquals ( 100 , UpdatedCon.npo02__TotalOppAmount__c );
+		}
 	
 	}
 
 	static testMethod void testGivingRollupBulk () {
-		
-		Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
-			new Households_Settings__c (
-				Household_Rules__c = Households.ALL_PROCESSOR,
-				Always_Rollup_to_Primary_Contact__c = false,
-				Enable_Opp_Rollup_Triggers__c = true,
-				Excluded_Account_Opp_Rectypes__c = null,
-				Excluded_Account_Opp_Types__c = null,
-				Excluded_Contact_Opp_Rectypes__c = null,
-				Excluded_Contact_Opp_Types__c = null,
-				Membership_Record_Types__c = 'Membership',
-				Opp_Gift_Role_Contact_Donor__c = 'Donor',
-				Opp_Rectype_For_Tests_Default__c = 'Gift',
-				Opp_Stage_Closed_Lost__c = 'Closed Lost',
-				Opp_Stage_Closed_Won__c = 'Closed Won',
-				Opp_Stage_Default__c = 'Prospecting',
-				Opp_Stage_Won_Not_Thanked__c = 'Won, Not Thanked'
-			));
-			
-		npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
-        	npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
-        	npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
-        	npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
-        ));
-        
-		// for a single contact w/ no previous mbrships, add a new membership
-		// and test mbr stats are created
-		integer howMany = 50;
-		Date datClose = System.Today();
-			
-		// create & insert contact(s)
-		Contact[] TestCons = UnitTestData.CreateMultipleTestContacts ( howMany ) ;
-		insert TestCons;
-		
-		// create new opps
-		Opportunity[] newOpps1 = UnitTestData.OppsForContactList ( TestCons, null, 'Closed Won', datClose, 100 , 'Gift',null);
-		Opportunity[] newOpps2 = UnitTestData.OppsForContactList ( TestCons, null, 'Closed Won', datClose.addYears(-1), 50 , 'Gift',null);
-
-		// insert the opp(s)
-		Test.StartTest();
 		isTest = true;
-		insert newOpps1;
-
-		insert newOpps2;
-
-		Test.StopTest();
+		String giftRecordTypeNameForTests = RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
 		
-		id FirstConId = TestCons[10].id;
-		Contact UpdatedCon = [SELECT Id,  totalOppAmount__c, OppAmountThisYear__c, OppAmountLastYear__c, OppAmount2YearsAgo__c FROM Contact WHERE Id = :FirstConId];
-		
-		System.AssertEquals ( 150 , UpdatedCon.totalOppAmount__c );
-		System.AssertEquals ( 100 , UpdatedCon.OppAmountThisYear__c );		
-		System.AssertEquals ( 50 , UpdatedCon.OppAmountLastYear__c );
-		System.AssertEquals ( 0 , UpdatedCon.OppAmount2YearsAgo__c );
-		
+		if(giftRecordTypeNameForTests!=''){
+			Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
+				new Households_Settings__c (
+					Household_Rules__c = Households.ALL_PROCESSOR,
+					Always_Rollup_to_Primary_Contact__c = false,
+					Enable_Opp_Rollup_Triggers__c = true,
+					Excluded_Account_Opp_Rectypes__c = null,
+					Excluded_Account_Opp_Types__c = null,
+					Excluded_Contact_Opp_Rectypes__c = null,
+					Excluded_Contact_Opp_Types__c = null,
+					Membership_Record_Types__c = null,
+					Opp_Gift_Role_Contact_Donor__c = 'Donor',
+					Opp_Rectype_For_Tests_Default__c = giftRecordTypeNameForTests,
+					Opp_Stage_Closed_Lost__c = 'Closed Lost',
+					Opp_Stage_Closed_Won__c = 'Closed Won',
+					Opp_Stage_Default__c = 'Prospecting',
+					Opp_Stage_Won_Not_Thanked__c = 'Won, Not Thanked'
+				));
+				
+			npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+	        	npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
+	        	npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
+	        	npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
+	        ));
+	        
+			// for a single contact w/ no previous mbrships, add a new membership
+			// and test mbr stats are created
+			integer howMany = 50;
+			Date datClose = System.Today();
+				
+			// create & insert contact(s)
+			Contact[] TestCons = UnitTestData.CreateMultipleTestContacts ( howMany ) ;
+			insert TestCons;
+			
+			// create new opps
+			Opportunity[] newOpps1 = UnitTestData.OppsForContactList ( TestCons, null, 'Closed Won', datClose, 100 , householdSettingsForTests.Opp_Rectype_For_Tests_Default__c,null);
+			Opportunity[] newOpps2 = UnitTestData.OppsForContactList ( TestCons, null, 'Closed Won', datClose.addYears(-1), 50 , householdSettingsForTests.Opp_Rectype_For_Tests_Default__c,null);
+	
+			// insert the opp(s)
+			Test.StartTest();
+			insert newOpps1;
+	
+			insert newOpps2;
+	
+			Test.StopTest();
+			
+			id FirstConId = TestCons[10].id;
+			Contact UpdatedCon = [SELECT Id,  npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c FROM Contact WHERE Id = :FirstConId];
+			
+			System.AssertEquals ( 150 , UpdatedCon.npo02__TotalOppAmount__c );
+			System.AssertEquals ( 100 , UpdatedCon.npo02__OppAmountThisYear__c );		
+			System.AssertEquals ( 50 , UpdatedCon.npo02__OppAmountLastYear__c );
+			System.AssertEquals ( 0 , UpdatedCon.npo02__OppAmount2YearsAgo__c );
+		}
 	}
 
 	static testMethod void testGivingRollupTooManyOpps () {
-		
-		Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
-			new Households_Settings__c (
-				Household_Rules__c = Households.ALL_PROCESSOR,
-				Always_Rollup_to_Primary_Contact__c = false,
-				Enable_Opp_Rollup_Triggers__c = true,
-				Excluded_Account_Opp_Rectypes__c = null,
-				Excluded_Account_Opp_Types__c = null,
-				Excluded_Contact_Opp_Rectypes__c = null,
-				Excluded_Contact_Opp_Types__c = null,
-				Membership_Record_Types__c = 'Membership',
-				Opp_Gift_Role_Contact_Donor__c = 'Donor',
-				Opp_Rectype_For_Tests_Default__c = 'Gift',
-				Opp_Stage_Closed_Lost__c = 'Closed Lost',
-				Opp_Stage_Closed_Won__c = 'Closed Won',
-				Opp_Stage_Default__c = 'Prospecting',
-				Opp_Stage_Won_Not_Thanked__c = 'Won, Not Thanked'
-			));
-			
-		npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
-        	npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
-        	npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
-        	npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
-        ));
-        
-		// for a single contact w/ no previous mbrships, add a new membership
-		// and test mbr stats are created
-	
-		// create & insert contact(s)
-		Contact[] TestCons = UnitTestData.CreateMultipleTestContacts ( 1 ) ;
-		insert TestCons;
-		
-		// create new opps
-		Opportunity[] newOpps1 = new Opportunity[0];
-		for (integer n = 0; n < 450; n++) {
-			newOpps1.add( new opportunity(RecordTypeId = RecordTypes.GetRecordTypeId('Opportunity', 'Gift'), 
-				npe01__Contact_Id_for_Role__c = TestCons[0].id,
-				name = 'test opp ' + n, 
-				stagename = 'Closed Won', closedate = system.today().adddays(-n), amount = 100));
-		}
-		
-		// insert the opp(s)
-		Test.StartTest();
 		isTest = true;
-		insert newOpps1;
-		Test.StopTest();
+		String giftRecordTypeNameForTests = RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
+		if(giftRecordTypeNameForTests!=''){
+			Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
+				new Households_Settings__c (
+					Household_Rules__c = Households.ALL_PROCESSOR,
+					Always_Rollup_to_Primary_Contact__c = false,
+					Enable_Opp_Rollup_Triggers__c = true,
+					Excluded_Account_Opp_Rectypes__c = null,
+					Excluded_Account_Opp_Types__c = null,
+					Excluded_Contact_Opp_Rectypes__c = null,
+					Excluded_Contact_Opp_Types__c = null,
+					Membership_Record_Types__c = null,
+					Opp_Gift_Role_Contact_Donor__c = 'Donor',
+					Opp_Rectype_For_Tests_Default__c = giftRecordTypeNameForTests,
+					Opp_Stage_Closed_Lost__c = 'Closed Lost',
+					Opp_Stage_Closed_Won__c = 'Closed Won',
+					Opp_Stage_Default__c = 'Prospecting',
+					Opp_Stage_Won_Not_Thanked__c = 'Won, Not Thanked'
+				));
+				
+			npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+	        	npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
+	        	npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
+	        	npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
+	        ));
+	        
+			// for a single contact w/ no previous mbrships, add a new membership
+			// and test mbr stats are created
 		
-		id FirstConId = TestCons[0].id;
-		Contact UpdatedCon = [SELECT Id,  totalOppAmount__c, OppAmountThisYear__c, OppAmountLastYear__c, OppAmount2YearsAgo__c FROM Contact WHERE Id = :FirstConId];
-		
-		System.AssertEquals ( 45000 , UpdatedCon.totalOppAmount__c );
-		
+			// create & insert contact(s)
+			Contact[] TestCons = UnitTestData.CreateMultipleTestContacts ( 1 ) ;
+			insert TestCons;
+			
+			// create new opps
+			Opportunity[] newOpps1 = new Opportunity[0];
+			for (integer n = 0; n < 450; n++) {
+				newOpps1.add( new opportunity(RecordTypeId = RecordTypes.GetRecordTypeId('Opportunity', householdSettingsForTests.Opp_Rectype_For_Tests_Default__c), 
+					npe01__Contact_Id_for_Role__c = TestCons[0].id,
+					name = 'test opp ' + n, 
+					stagename = 'Closed Won', closedate = system.today().adddays(-n), amount = 100));
+			}
+			
+			// insert the opp(s)
+			Test.StartTest();
+			insert newOpps1;
+			Test.StopTest();
+			
+			id FirstConId = TestCons[0].id;
+			Contact UpdatedCon = [SELECT Id,  npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c FROM Contact WHERE Id = :FirstConId];
+			
+			System.AssertEquals ( 45000 , UpdatedCon.npo02__TotalOppAmount__c );
+		}
 	} 
 	
 	static testMethod void testHouseholdStats () {
-		
-		Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
-			new Households_Settings__c (
-				Household_Rules__c = Households.ALL_PROCESSOR,
-				Always_Rollup_to_Primary_Contact__c = false,
-				Enable_Opp_Rollup_Triggers__c = true,
-				Excluded_Account_Opp_Rectypes__c = null,
-				Excluded_Account_Opp_Types__c = null,
-				Excluded_Contact_Opp_Rectypes__c = null,
-				Excluded_Contact_Opp_Types__c = null,
-				Membership_Record_Types__c = 'Membership',
-				Opp_Gift_Role_Contact_Donor__c = 'Donor',
-				Opp_Rectype_For_Tests_Default__c = 'Gift',
-				Opp_Stage_Closed_Lost__c = 'Closed Lost',
-				Opp_Stage_Closed_Won__c = 'Closed Won',
-				Opp_Stage_Default__c = 'Prospecting',
-				Opp_Stage_Won_Not_Thanked__c = 'Won, Not Thanked'
-			));
-			
-		npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
-        	npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
-        	npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
-        	npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
-        ));
-        
-		Date datClose = System.Today();
-			
-		// create & insert contact
-		Contact Con1 = new contact(
-			firstname='Daddy', 
-			lastname='Longlegs',
-			SystemHouseholdProcessor__c = 'All New or Edited Contacts'
-		);
-		insert Con1;
-		
-		Contact con = [SELECT Household__r.id FROM Contact WHERE id = :Con1.id LIMIT 1];
-		
-		// create & insert second household member
-		Contact Con2 = new contact(
-			firstname='MommyTEST', 
-			lastname='Longlegs',
-			Household__c = con.Household__c
-		);
-		insert Con2;
-		
-		Contact[] TestCons = new Contact[] {Con1}; 
-	
-		// create new opps
-		Opportunity[] newOpps1 = UnitTestData.OppsForContactList ( TestCons, null, 'Closed Won', datClose, 100 , 'Gift' ,null);
-		Opportunity[] newOpps2 = UnitTestData.OppsForContactList ( TestCons, null, 'Closed Won', datClose.addYears(-2), 200 , 'Gift' ,null);
-		Opportunity[] newOpps3 = UnitTestData.OppsForContactList ( TestCons, null, 'Closed Won', datClose.addYears(-3), 75 , 'Gift' ,null);
-
-		Opportunity[] testOpps = new Opportunity[0];
-		testOpps.addAll (newOpps1);
-		testOpps.addAll (newOpps2);
-		testOpps.addAll (newOpps3);
-
-		// insert the opp(s)
 		isTest = true;
-		Test.StartTest();
-		insert testOpps;
-		Test.StopTest();
+		String giftRecordTypeNameForTests = RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
+		if(giftRecordTypeNameForTests!=''){
+			Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
+				new Households_Settings__c (
+					Household_Rules__c = Households.ALL_PROCESSOR,
+					Always_Rollup_to_Primary_Contact__c = false,
+					Enable_Opp_Rollup_Triggers__c = true,
+					Excluded_Account_Opp_Rectypes__c = null,
+					Excluded_Account_Opp_Types__c = null,
+					Excluded_Contact_Opp_Rectypes__c = null,
+					Excluded_Contact_Opp_Types__c = null,
+					Membership_Record_Types__c = null,
+					Opp_Gift_Role_Contact_Donor__c = 'Donor',
+					Opp_Rectype_For_Tests_Default__c = giftRecordTypeNameForTests,
+					Opp_Stage_Closed_Lost__c = 'Closed Lost',
+					Opp_Stage_Closed_Won__c = 'Closed Won',
+					Opp_Stage_Default__c = 'Prospecting',
+					Opp_Stage_Won_Not_Thanked__c = 'Won, Not Thanked'
+				));
+				
+			npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+	        	npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
+	        	npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
+	        	npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
+	        ));
+	        
+			Date datClose = System.Today();
+				
+			// create & insert contact
+			Contact Con1 = new contact(
+				FirstName= npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+	            LastName= npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
+	            npe01__Private__c=false,
+	            npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
+	            npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+	            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
+	            npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+			);
+			insert Con1;
+			
+			Contact con = [SELECT Household__r.id FROM Contact WHERE id = :Con1.id LIMIT 1];
+			
+			// create & insert second household member
+			Contact Con2 = new contact(
+				FirstName= npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS+'second',
+	            LastName= npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
+	            npe01__Private__c=false,
+	            npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
+	            npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+	            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
+	            npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
+				Household__c = con.Household__c
+			);
+			insert Con2;
+			
+			Contact[] TestCons = new Contact[] {Con1}; 
 		
-		Contact c = [SELECT Id,Total_Household_Gifts__c,OppAmountThisYearHH__c,OppAmountLastYearHH__c,LastCloseDateHH__c
-			FROM Contact WHERE LastName='Longlegs' AND FirstName='MommyTEST' LIMIT 1];
-		System.assertEquals (375,c.Total_Household_Gifts__c);
-		System.assertEquals (100,c.OppAmountThisYearHH__c);
-		System.assertEquals (0,c.OppAmountLastYearHH__c);
-		System.assertEquals (datClose,c.LastCloseDateHH__c );
-		System.assertEquals (375,c.Total_Household_Gifts__c);
-		
-		
+			// create new opps
+			Opportunity[] newOpps1 = UnitTestData.OppsForContactList ( TestCons, null, 'Closed Won', datClose, 100 , householdSettingsForTests.Opp_Rectype_For_Tests_Default__c ,null);
+			Opportunity[] newOpps2 = UnitTestData.OppsForContactList ( TestCons, null, 'Closed Won', datClose.addYears(-2), 200 , householdSettingsForTests.Opp_Rectype_For_Tests_Default__c ,null);
+			Opportunity[] newOpps3 = UnitTestData.OppsForContactList ( TestCons, null, 'Closed Won', datClose.addYears(-3), 75 , householdSettingsForTests.Opp_Rectype_For_Tests_Default__c ,null);
+	
+			Opportunity[] testOpps = new Opportunity[0];
+			testOpps.addAll (newOpps1);
+			testOpps.addAll (newOpps2);
+			testOpps.addAll (newOpps3);
+	
+			// insert the opp(s)
+			Test.StartTest();
+			insert testOpps;
+			Test.StopTest();
+			
+			Contact c = [SELECT Id,Total_Household_Gifts__c,OppAmountThisYearHH__c,OppAmountLastYearHH__c,LastCloseDateHH__c
+				FROM Contact WHERE LastName=:npe01.Constants.CONTACT_LASTNAME_FOR_TESTS AND FirstName=:npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS+'second' LIMIT 1];
+			System.assertEquals (375,c.Total_Household_Gifts__c);
+			System.assertEquals (100,c.OppAmountThisYearHH__c);
+			System.assertEquals (0,c.OppAmountLastYearHH__c);
+			System.assertEquals (datClose,c.LastCloseDateHH__c );
+			System.assertEquals (375,c.Total_Household_Gifts__c);
+		}		
 	}
-
 }

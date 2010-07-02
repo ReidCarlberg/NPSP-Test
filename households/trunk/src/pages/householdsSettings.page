@@ -18,7 +18,7 @@
 		       	</apex:pageBlockSectionItem>
 	       	</apex:pageBlockSection>
 	       	
-	       	<apex:pageBlockSection id="householdrolesection" title="Household Contact Role" columns="1">
+	       	<apex:pageBlockSection id="householdrolesection" title="Household Contact Roles" columns="1">
 				<apex:outputPanel >{!$Label.Household_Rules_Help_Text}</apex:outputPanel>
 				
 				<apex:pageBlockSectionItem >
@@ -33,7 +33,7 @@
 		        	</apex:selectList>
 		       	</apex:pageBlockSectionItem>
 	       	</apex:pageBlockSection>
-	       	<apex:pageBlockSection id="householdsettingssection2">
+	       	<apex:pageBlockSection id="householdsettingssection2" title="Opportunity Rollups">
 			<apex:inputfield value="{!settings.Enable_Opp_Rollup_Triggers__c}"/>
 			<apex:inputfield value="{!settings.Always_Rollup_to_Primary_Contact__c}"/>
 			

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <enableFeeds>true</enableFeeds>
     <fields>
         <fullName>Active__c</fullName>
         <label>Active</label>
@@ -15,6 +16,14 @@
             <sorted>false</sorted>
         </picklist>
         <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>AverageAmount__c</fullName>
+        <defaultValue>0</defaultValue>
+        <label>Average Gift</label>
+        <precision>16</precision>
+        <scale>2</scale>
+        <type>Currency</type>
     </fields>
     <fields>
         <fullName>CustomerPriority__c</fullName>
@@ -35,6 +44,29 @@
             <sorted>false</sorted>
         </picklist>
         <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>FirstCloseDate__c</fullName>
+        <label>First Gift Date</label>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>FirstDonationDate__c</fullName>
+        <label>First Donation Date</label>
+        <summarizedField>Opportunity.CloseDate</summarizedField>
+        <summaryFilterItems>
+            <field>Opportunity.IsWon</field>
+            <operation>equals</operation>
+            <value>TRUE</value>
+        </summaryFilterItems>
+        <summaryFilterItems>
+            <field>Opportunity.Amount</field>
+            <operation>greaterThan</operation>
+            <value>0</value>
+        </summaryFilterItems>
+        <summaryForeignKey>Opportunity.AccountId</summaryForeignKey>
+        <summaryOperation>min</summaryOperation>
+        <type>Summary</type>
     </fields>
     <fields>
         <fullName>Industry</fullName>
@@ -172,9 +204,181 @@
         <type>Picklist</type>
     </fields>
     <fields>
+        <fullName>LargestAmount__c</fullName>
+        <defaultValue>0</defaultValue>
+        <label>Largest Gift</label>
+        <precision>16</precision>
+        <scale>2</scale>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>LastCloseDate__c</fullName>
+        <label>Last Gift Date</label>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>LastDonationDate__c</fullName>
+        <label>Last Donation Date</label>
+        <summarizedField>Opportunity.CloseDate</summarizedField>
+        <summaryFilterItems>
+            <field>Opportunity.IsWon</field>
+            <operation>equals</operation>
+            <value>TRUE</value>
+        </summaryFilterItems>
+        <summaryFilterItems>
+            <field>Opportunity.Amount</field>
+            <operation>greaterThan</operation>
+            <value>0</value>
+        </summaryFilterItems>
+        <summaryForeignKey>Opportunity.AccountId</summaryForeignKey>
+        <summaryOperation>max</summaryOperation>
+        <type>Summary</type>
+    </fields>
+    <fields>
+        <fullName>LastMembershipAmount__c</fullName>
+        <defaultValue>0</defaultValue>
+        <label>Last Membership Amount</label>
+        <precision>16</precision>
+        <scale>2</scale>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>LastMembershipDate__c</fullName>
+        <label>Last Membership Date</label>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>LastMembershipLevel__c</fullName>
+        <label>Last Membership Level</label>
+        <length>255</length>
+        <type>Text</type>
+    </fields>
+    <fields>
+        <fullName>LastMembershipOrigin__c</fullName>
+        <label>Last Membership Origin</label>
+        <length>255</length>
+        <type>Text</type>
+    </fields>
+    <fields>
+        <fullName>LastOppAmount__c</fullName>
+        <defaultValue>0</defaultValue>
+        <label>Last Gift Amount</label>
+        <precision>16</precision>
+        <scale>2</scale>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>MembershipEndDate__c</fullName>
+        <label>Membership End Date</label>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>MembershipJoinDate__c</fullName>
+        <label>Membership Join Date</label>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Membership_Span__c</fullName>
+        <formula>year(MembershipEndDate__c ) - year(MembershipJoinDate__c)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Membership Span</label>
+        <precision>18</precision>
+        <scale>0</scale>
+        <type>Number</type>
+    </fields>
+    <fields>
+        <fullName>Membership_Status__c</fullName>
+        <description>note: grace period term is hard coded as 1 month, may need to be changed for some clients</description>
+        <formula>if (  MembershipEndDate__c  &lt;today(), if ( MembershipEndDate__c  &gt; ( TODAY() - 31 ) , &quot;Grace Period&quot; , &quot;Expired&quot;) , if(isnull(MembershipEndDate__c ),&quot;&quot;,&quot;Current&quot;))</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Current, expired, or grace period</inlineHelpText>
+        <label>Membership Status</label>
+        <type>Text</type>
+    </fields>
+    <fields>
+        <fullName>NumberOfClosedOpps__c</fullName>
+        <defaultValue>0</defaultValue>
+        <label>Total Number of Gifts</label>
+        <precision>18</precision>
+        <scale>0</scale>
+        <type>Number</type>
+    </fields>
+    <fields>
+        <fullName>NumberOfMembershipOpps__c</fullName>
+        <defaultValue>0</defaultValue>
+        <label>Number of Memberships</label>
+        <precision>18</precision>
+        <scale>0</scale>
+        <type>Number</type>
+    </fields>
+    <fields>
         <fullName>NumberofLocations__c</fullName>
         <label>Number of Locations</label>
         <precision>3</precision>
+        <scale>0</scale>
+        <type>Number</type>
+    </fields>
+    <fields>
+        <fullName>OppAmount2YearsAgo__c</fullName>
+        <defaultValue>0</defaultValue>
+        <label>Total Gifts Two Years Ago</label>
+        <precision>16</precision>
+        <scale>2</scale>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>OppAmountLastNDays__c</fullName>
+        <defaultValue>0</defaultValue>
+        <label>Total Gifts Last 365 Days</label>
+        <precision>16</precision>
+        <scale>2</scale>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>OppAmountLastYear__c</fullName>
+        <defaultValue>0</defaultValue>
+        <label>Total Gifts Last Year</label>
+        <precision>16</precision>
+        <scale>2</scale>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>OppAmountThisYear__c</fullName>
+        <defaultValue>0</defaultValue>
+        <label>Total Gifts This Year</label>
+        <precision>16</precision>
+        <scale>2</scale>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>OppsClosed2YearsAgo__c</fullName>
+        <defaultValue>0</defaultValue>
+        <label>Number of Gifts Two Years Ago</label>
+        <precision>18</precision>
+        <scale>0</scale>
+        <type>Number</type>
+    </fields>
+    <fields>
+        <fullName>OppsClosedLastNDays__c</fullName>
+        <defaultValue>0</defaultValue>
+        <label>Number of Gifts Last N Days</label>
+        <precision>18</precision>
+        <scale>0</scale>
+        <type>Number</type>
+    </fields>
+    <fields>
+        <fullName>OppsClosedLastYear__c</fullName>
+        <defaultValue>0</defaultValue>
+        <label>Number of Gifts Last Year</label>
+        <precision>18</precision>
+        <scale>0</scale>
+        <type>Number</type>
+    </fields>
+    <fields>
+        <fullName>OppsClosedThisYear__c</fullName>
+        <defaultValue>0</defaultValue>
+        <label>Number of Gifts This Year</label>
+        <precision>18</precision>
         <scale>0</scale>
         <type>Number</type>
     </fields>
@@ -254,6 +458,30 @@
             <sorted>false</sorted>
         </picklist>
         <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>SmallestAmount__c</fullName>
+        <defaultValue>0</defaultValue>
+        <label>Smallest Gift</label>
+        <precision>16</precision>
+        <scale>2</scale>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>TotalMembershipOppAmount__c</fullName>
+        <defaultValue>0</defaultValue>
+        <label>Total Membership Amount</label>
+        <precision>16</precision>
+        <scale>2</scale>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>TotalOppAmount__c</fullName>
+        <defaultValue>0</defaultValue>
+        <label>Total Gifts</label>
+        <precision>16</precision>
+        <scale>2</scale>
+        <type>Currency</type>
     </fields>
     <fields>
         <fullName>Type</fullName>
@@ -397,6 +625,46 @@
         <length>100</length>
         <type>Text</type>
     </fields>
+    <listViews>
+        <fullName>AllAccounts</fullName>
+        <filterScope>Everything</filterScope>
+        <label>All Accounts</label>
+    </listViews>
+    <listViews>
+        <fullName>MyAccounts</fullName>
+        <filterScope>Mine</filterScope>
+        <label>My Accounts</label>
+    </listViews>
+    <listViews>
+        <fullName>NewLastWeek</fullName>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>ACCOUNT.CREATED_DATE</field>
+            <operation>equals</operation>
+            <value>LAST_WEEK</value>
+        </filters>
+        <label>New Last Week</label>
+    </listViews>
+    <listViews>
+        <fullName>NewThisWeek</fullName>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>ACCOUNT.CREATED_DATE</field>
+            <operation>equals</operation>
+            <value>THIS_WEEK</value>
+        </filters>
+        <label>New This Week</label>
+    </listViews>
+    <listViews>
+        <fullName>PlatinumandGoldSLACustomers</fullName>
+        <columns>ACCOUNT.NAME</columns>
+        <columns>ACCOUNT.SITE</columns>
+        <columns>ACCOUNT.ADDRESS1_STATE</columns>
+        <columns>ACCOUNT.PHONE1</columns>
+        <columns>CORE.USERS.ALIAS</columns>
+        <filterScope>Everything</filterScope>
+        <label>Platinum and Gold SLA Customers</label>
+    </listViews>
     <webLinks>
         <fullName>Billing</fullName>
         <availability>online</availability>
