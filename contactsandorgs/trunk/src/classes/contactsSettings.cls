@@ -43,16 +43,15 @@ public with sharing class contactsSettings {
         return accountmodels;
     }
     
-    
-    private void showInfoMsg(String arg){
-        ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.INFO,arg);
+    private void showMsg(String arg, ApexPages.Severity severity){
+        ApexPages.Message myMsg = new ApexPages.Message(severity,arg);
         ApexPages.addMessage(myMsg);
     }
     
     public void updateSettings(){
         
         update pageSettings;
-        showInfoMsg('Contacts and Organizations Settings updated');
+        showMsg('Contacts and Organizations Settings updated',ApexPages.Severity.INFO);
     }
     
      public static testMethod void TEST_contactSettings() {
