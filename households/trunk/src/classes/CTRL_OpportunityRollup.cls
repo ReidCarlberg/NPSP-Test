@@ -63,57 +63,55 @@ public class CTRL_OpportunityRollup {
 
     public static testMethod void testRollup() {
         String giftRecordTypeNameForTests = RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
-        if(giftRecordTypeNameForTests!=''){
-            Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
-                new Households_Settings__c (
-                    Household_Rules__c = Households.ALL_PROCESSOR,
-                    Always_Rollup_to_Primary_Contact__c = true,
-                    Enable_Opp_Rollup_Triggers__c = true,
-                    Excluded_Account_Opp_Rectypes__c = null,
-                    Excluded_Account_Opp_Types__c = null,
-                    Excluded_Contact_Opp_Rectypes__c = null,
-                    Excluded_Contact_Opp_Types__c = null,
-                    Membership_Record_Types__c = null
-                ));
-            
-            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
-                npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
-                npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
-                npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
+        Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
+            new Households_Settings__c (
+                Household_Rules__c = Households.ALL_PROCESSOR,
+                Always_Rollup_to_Primary_Contact__c = true,
+                Enable_Opp_Rollup_Triggers__c = true,
+                Excluded_Account_Opp_Rectypes__c = null,
+                Excluded_Account_Opp_Types__c = null,
+                Excluded_Contact_Opp_Rectypes__c = null,
+                Excluded_Contact_Opp_Types__c = null,
+                Membership_Record_Types__c = null
             ));
-            Date datClose = System.Today();
-                
-            // create & insert contact(s)
-            Contact[] TestCons = UnitTestData.CreateMultipleTestContacts ( 50 ) ;
-            insert TestCons;
-    
-            // create new opps
-            Opportunity[] newOpps = UnitTestData.OppsForContactList ( TestCons, null, UnitTestData.getClosedWonStage(), datClose, 1000 , giftRecordTypeNameForTests ,null);
-    
-            account testacct = new account(name='testacct');
-            insert testacct;
-    
-            Test.startTest();
-    
-            // create the page 
-            PageReference pageRef=Page.OpportunityRollup; 
-            Test.setCurrentPage(pageRef); 
-    
-            // set the parameter for the contact
-            ApexPages.currentPage().getParameters().put('id', testcons[3].id);
+        
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+            npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
+            npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
+            npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
+        ));
+        Date datClose = System.Today();
             
-            // instantiate the controller
-            CTRL_OpportunityRollup controller=new CTRL_OpportunityRollup();
-    
-            // rollup the contact
-            pageReference nextref = controller.startAction();       
-    
-            system.assert(nextref.getUrl().contains(testcons[3].id));
-            
-            // roll up everyone
-            controller.rollup();
-            controller.cancel();
-        }
+        // create & insert contact(s)
+        Contact[] TestCons = UnitTestData.CreateMultipleTestContacts ( 50 ) ;
+        insert TestCons;
+
+        // create new opps
+        Opportunity[] newOpps = UnitTestData.OppsForContactList ( TestCons, null, UnitTestData.getClosedWonStage(), datClose, 1000 , giftRecordTypeNameForTests ,null);
+
+        account testacct = new account(name='testacct');
+        insert testacct;
+
+        Test.startTest();
+
+        // create the page 
+        PageReference pageRef=Page.OpportunityRollup; 
+        Test.setCurrentPage(pageRef); 
+
+        // set the parameter for the contact
+        ApexPages.currentPage().getParameters().put('id', testcons[3].id);
+        
+        // instantiate the controller
+        CTRL_OpportunityRollup controller=new CTRL_OpportunityRollup();
+
+        // rollup the contact
+        pageReference nextref = controller.startAction();       
+
+        system.assert(nextref.getUrl().contains(testcons[3].id));
+        
+        // roll up everyone
+        controller.rollup();
+        controller.cancel();
     }
 
 }

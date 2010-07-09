@@ -32,10 +32,9 @@ global class RecordTypes {
             recordTypesByName.put(objectName, d.getRecordTypeInfosByName());
             recordTypesById.put(objectName, d.getRecordTypeInfosById());
             recordTypesList = d.getRecordTypeInfos();
-            for(integer i=0;i<recordTypesList.size();i++){
-                if(recordTypesList[i].getName()=='Master'){
+            for(integer i=recordTypesList.size()-1;i>=0;i--){
+                if(recordTypesList[i].getName()=='Master' || !recordTypesList[i].isAvailable()){
                     recordTypesList.remove(i);
-                    break;
                 }
             }
         }
@@ -229,17 +228,20 @@ global class RecordTypes {
         
         Set<String> setStr = new Set<String>{getRecordTypeNameForGiftsTests('Opportunity')};
         Set<Id> setId = RecordTypes.GetRecordTypeIdSet('Opportunity', setStr);
-        system.Assert(setId.contains(idGift));
+        if(idGift!=null){
+        	system.Assert(setId.contains(idGift));
         
-        Map<String, Id> mapRCId = RecordTypes.GetRecordTypeIdMap('Opportunity');
-        system.AssertEquals(idGift, mapRCId.get(getRecordTypeNameForGiftsTests('Opportunity')));       
+        	Map<String, Id> mapRCId = RecordTypes.GetRecordTypeIdMap('Opportunity');
         
-        system.AssertEquals(getRecordTypeNameForGiftsTests('Opportunity'), RecordTypes.GetRecordTypeName('Opportunity', idGift));        
-        
-        system.AssertEquals(getRecordTypeNameForGiftsTests('Opportunity'), RecordTypes.GetOppNamingSuffix(getRecordTypeNameForGiftsTests('Opportunity')));        
-
-        List<SelectOption> listSO = RecordTypes.getRecordTypesForSelectList('Opportunity');
-        system.Assert(listSO.IsEmpty() == false);       
+	        system.AssertEquals(idGift, mapRCId.get(getRecordTypeNameForGiftsTests('Opportunity')));       
+	        
+	        system.AssertEquals(getRecordTypeNameForGiftsTests('Opportunity'), RecordTypes.GetRecordTypeName('Opportunity', idGift));        
+	        
+	        system.AssertEquals(getRecordTypeNameForGiftsTests('Opportunity'), RecordTypes.GetOppNamingSuffix(getRecordTypeNameForGiftsTests('Opportunity')));        
+	
+	        List<SelectOption> listSO = RecordTypes.getRecordTypesForSelectList('Opportunity');
+	        system.Assert(listSO.IsEmpty() == false);       
+        }
     }       
 
 }

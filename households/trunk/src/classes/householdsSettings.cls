@@ -134,15 +134,15 @@ public with sharing class householdsSettings {
     public void updateSettings(){
         String s = '';
         for (String rt : acctRTs) {
-            if (rt!=null)
+            if (rt!=null&&rt!='')
             s += ';' + rt;
         }
+        system.debug('s: ' + s);
         if (s != '') pageSettings.Excluded_Account_Opp_Rectypes__c = s.substring(1);
-
         
         s = '';
         for (String rt : contactRTs) {
-            if (rt!=null)
+            if (rt!=null&&rt!='')
             s += ';' + rt;
         }
         if (s != '') pageSettings.Excluded_Contact_Opp_Rectypes__c = s.substring(1);
@@ -150,14 +150,14 @@ public with sharing class householdsSettings {
         
         s = '';
         for (String tp : acctTypes) {
-            if (tp!=null)
+            if (tp!=null&&tp!='')
             s += ';' + tp;
         }
         if (s != '') pageSettings.Excluded_Account_Opp_Types__c = s.substring(1);
         
         s = '';
         for (String tp : contactTypes) {
-            if (tp!=null)
+            if (tp!=null&&tp!='')
             s += ';' + tp;
         }
         if (s != '') pageSettings.Excluded_Contact_Opp_Types__c = s.substring(1);
@@ -171,9 +171,11 @@ public with sharing class householdsSettings {
         
         Test.setCurrentPageReference(new PageReference('Page.householdsSettings'));
         
+        Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(new Households_Settings__c (Household_Rules__c = Households.ALL_INDIVIDUALS_PROCESSOR));
         
         //pass the controller into the extension
         householdsSettings controller = new householdsSettings(); 
+        
         controller.getSettingsFirstTime();
         system.assertNotEquals(null,controller.getSettings());
         
