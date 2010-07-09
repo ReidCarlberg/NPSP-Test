@@ -19,7 +19,7 @@ public class UnitTestData {
         
         return closedWonStage;
     }
-    
+    /*
     public static String getClosedLostStage(){
         if (closedLostStage == null){
             List<OpportunityStage> closedLostStages = [select masterlabel from opportunitystage where isActive = true and iswon = false and isClosed = true];
@@ -33,7 +33,7 @@ public class UnitTestData {
         
         return closedLostStage;
     }
-    
+    */
     public static String getOpenStage(){
         if (openStage == null){
             List<OpportunityStage> openStages = [select masterlabel from opportunitystage where isActive = true and iswon = false];
@@ -117,7 +117,7 @@ public class UnitTestData {
                 type = oppType                
             );  
             if(rtid != null){
-                newOpp.RecordTypeId = rtid;
+                newOpp.put('RecordTypeId',rtid);
             }
             OppsToAdd.add (newOpp);
         }
