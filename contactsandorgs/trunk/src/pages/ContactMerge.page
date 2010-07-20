@@ -125,16 +125,19 @@
                             <tbody>
                             <apex:repeat var="row" value="{!fieldRows}">
                                 <tr class="{!row.styleclass}">
-                                    <td>
+                                    <td width="20%" colspan="{!IF(row.styleClass == 'separator', selectedRecordsCount + 1, 1)}">
                                         <apex:outputPanel rendered="{!row.showRadio}">
                                             <apex:inputHidden id="winner" value="{!row.selectedValue}"/>
                                         </apex:outputPanel>
                                         {!row.fieldLabel}
-                                    </td>
+                                    </td> 
                                     <apex:repeat var="col" value="{!row.values}">
-                                        <td>
-                                            <apex:outputPanel rendered="{!row.showRadio}">
-                                            	<input type="radio" name="{!row.fieldName}" onClick="updateHiddenInput('{!$Component.winner}', '{!col.objId}');"  {!IF(row.selectedValue == col.objId, 'checked', '')} />
+                                        <td width="{!IF (selectedRecordsCount == 2, '40%', '26%')}">
+                                            <apex:outputPanel rendered="{!(row.showRadio && row.selectedValue == col.objId)}">
+                                            	<input type="radio" name="{!row.fieldName}" checked="true" onClick="updateHiddenInput('{!$Component.winner}', '{!col.objId}');" />
+                                            </apex:outputPanel>
+                                            <apex:outputPanel rendered="{!(row.showRadio && row.selectedValue != col.objId)}">
+                                            	<input type="radio" name="{!row.fieldName}" onClick="updateHiddenInput('{!$Component.winner}', '{!col.objId}');"/>
                                             </apex:outputPanel>
                                             {!col.value}
                                             <apex:outputPanel rendered="{!row.styleClass == 'header'}">

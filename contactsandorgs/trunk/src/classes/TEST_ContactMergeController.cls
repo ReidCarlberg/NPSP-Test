@@ -55,7 +55,7 @@ private class TEST_ContactMergeController {
             FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
             LastName=Constants.CONTACT_LASTNAME_FOR_TESTS,
             MailingStreet = newContactMailingStreet,
-        	WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
+            WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
             Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
             WorkPhone__c = workphone,
             PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
@@ -68,7 +68,7 @@ private class TEST_ContactMergeController {
         Contact con2 = new Contact(
             FirstName=secondContactfirstName,
             LastName=secondContactLastName,
-        	WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
+            WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
             Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
             HomePhone = homephone,
             PreferredPhone__c = 'Home',
@@ -82,7 +82,7 @@ private class TEST_ContactMergeController {
             FirstName=thirdContactfirstName,
             LastName=thirdContactLastName,
             MailingStreet = thirdContactMailingStreet,
-        	WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
+            WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
             Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
             WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
             PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
@@ -117,9 +117,9 @@ private class TEST_ContactMergeController {
         system.assert(controller.displaySearchResults);
         
         //there should be 3 Contacts returned
-        system.assertEquals(3,controller.getSearchResults().size());
+        system.assertEquals(3,controller.searchResults.size());
         
-        controller.getSearchResults()[0].selected = true;
+        controller.searchResults[0].selected = true;
         
         controller.nextStep();
         
@@ -132,7 +132,10 @@ private class TEST_ContactMergeController {
         
         controller.cancelMessagePopup();
         
-        controller.getSearchResults()[1].selected = true; // Select second contact
+        controller.search();
+        controller.searchResults[0].selected = true;
+        controller.searchResults[1].selected = true; // Select second contact
+        String record1Id = controller.searchResults[1].con.id;
         
         controller.nextStep();
         
@@ -158,13 +161,12 @@ private class TEST_ContactMergeController {
         }
         
         // Test select all for a record
-        String selectedRecordId = controller.getSearchResults()[1].con.id;
-        ApexPages.currentPage().getParameters().put('recordId', selectedRecordId);
+        ApexPages.currentPage().getParameters().put('recordId', record1Id);
         controller.selectDefaultRecord();
         
         for (ContactMergeController.FieldRow row : fieldRows) {
             if (row.showRadio) {
-                System.assertEquals(selectedRecordId, row.selectedValue); // Since we selected all radios for contact 2, contact 2 id should be the selected value
+                System.assertEquals(record1Id, row.selectedValue); // Since we selected all radios for contact 2, contact 2 id should be the selected value
             }
         }
         
@@ -178,14 +180,12 @@ private class TEST_ContactMergeController {
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
         
         //set up 3 contacts for the merge interface to work with
-        
-        
         String newContactMailingStreet = '123 Elm St';
         Contact con = new Contact(
             FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
             LastName=Constants.CONTACT_LASTNAME_FOR_TESTS,
             MailingStreet = newContactMailingStreet,
-        	WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
+            WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
             Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
             WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
             PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
@@ -198,7 +198,7 @@ private class TEST_ContactMergeController {
             FirstName=secondContactfirstName,
             LastName=secondContactLastName,
             MailingStreet = secondContactMailingStreet,
-        	WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
+            WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
             Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
             WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
             PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
@@ -225,10 +225,10 @@ private class TEST_ContactMergeController {
         controller.search();
         
         //there should be 2 Contacts returned
-        system.assertEquals(2,controller.getSearchResults().size());
+        system.assertEquals(2,controller.searchResults.size());
         
-        controller.getSearchResults()[0].selected = true;
-        controller.getSearchResults()[1].selected = true;
+        controller.searchResults[0].selected = true;
+        controller.searchResults[1].selected = true;
         
         // delete 1 contact
         delete con;
@@ -252,14 +252,12 @@ private class TEST_ContactMergeController {
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
         
         //set up 3 contacts for the merge interface to work with
-        
-        
         String newContactMailingStreet = '123 Elm St';
         Contact con = new Contact(
             FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
             LastName=Constants.CONTACT_LASTNAME_FOR_TESTS,
             MailingStreet = newContactMailingStreet,
-        	WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
+            WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
             Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
             WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
             PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
@@ -272,7 +270,7 @@ private class TEST_ContactMergeController {
             FirstName=secondContactfirstName,
             LastName=secondContactLastName,
             MailingStreet = secondContactMailingStreet,
-        	WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
+            WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
             Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
             WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
             PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
@@ -299,10 +297,10 @@ private class TEST_ContactMergeController {
         controller.search();
         
         //there should be 2 Contacts returned
-        system.assertEquals(2,controller.getSearchResults().size());
+        system.assertEquals(2,controller.searchResults.size());
         
-        controller.getSearchResults()[0].selected = true;
-        controller.getSearchResults()[1].selected = true;
+        controller.searchResults[0].selected = true;
+        controller.searchResults[1].selected = true;
                 
         controller.nextStep();
         
@@ -326,14 +324,12 @@ private class TEST_ContactMergeController {
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
         
         //set up 3 contacts for the merge interface to work with
-        
-        
         String newContactMailingStreet = '123 Elm St';
         Contact con = new Contact(
             FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
             LastName=Constants.CONTACT_LASTNAME_FOR_TESTS,
             MailingStreet = newContactMailingStreet,
-        	WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
+            WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
             Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
             WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
             PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
@@ -353,7 +349,7 @@ private class TEST_ContactMergeController {
         //call the search method, which will return the bogus SOSL results
         controller.search();
         
-        controller.getSearchResults()[0].selected = true;
+        controller.searchResults[0].selected = true;
               
         controller.nextStep();
         
@@ -370,14 +366,12 @@ private class TEST_ContactMergeController {
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
         
         //set up 3 contacts for the merge interface to work with
-        
-        
         String newContactMailingStreet = '123 Elm St';
         Contact con = new Contact(
             FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
             LastName=Constants.CONTACT_LASTNAME_FOR_TESTS,
             MailingStreet = newContactMailingStreet,
-        	WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
+            WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
             Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
             WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
             PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
@@ -390,7 +384,7 @@ private class TEST_ContactMergeController {
             FirstName=secondContactfirstName,
             LastName=secondContactLastName,
             MailingStreet = secondContactMailingStreet,
-        	WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
+            WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
             Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
             WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
             PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
@@ -416,7 +410,7 @@ private class TEST_ContactMergeController {
             FirstName=fourthContactfirstName,
             LastName=fourthContactLastName,
             MailingStreet = fourthContactMailingStreet,
-        	WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
+            WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
             Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
             WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
             PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
@@ -439,10 +433,10 @@ private class TEST_ContactMergeController {
         //call the search method, which will return the bogus SOSL results
         controller.search();
         
-        controller.getSearchResults()[0].selected = true;
-        controller.getSearchResults()[1].selected = true;
-        controller.getSearchResults()[2].selected = true;
-        controller.getSearchResults()[3].selected = true;
+        controller.searchResults[0].selected = true;
+        controller.searchResults[1].selected = true;
+        controller.searchResults[2].selected = true;
+        controller.searchResults[3].selected = true;
         
         controller.nextStep();
         
@@ -482,8 +476,6 @@ private class TEST_ContactMergeController {
         
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
 
-        
-        
         String newContactMailingStreet = '123 Elm St';
         Contact con = new Contact(
             FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
@@ -526,8 +518,8 @@ private class TEST_ContactMergeController {
         //search for contacts
         controller.search();
         //select the two contacts and grab them
-        controller.getSearchResults()[0].selected = true;
-        controller.getSearchResults()[1].selected = true;
+        controller.searchResults[0].selected = true;
+        controller.searchResults[1].selected = true;
         
         controller.nextStep();
         
@@ -551,8 +543,6 @@ private class TEST_ContactMergeController {
         
         Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
 
-        
-        
         String newContactMailingStreet = '123 Elm St';
         Contact con = new Contact(
             FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
@@ -592,8 +582,8 @@ private class TEST_ContactMergeController {
         //search for contacts
         controller.search();
         //select the two contacts and grab them
-        controller.getSearchResults()[0].selected = true;
-        controller.getSearchResults()[1].selected = true;
+        controller.searchResults[0].selected = true;
+        controller.searchResults[1].selected = true;
         
         Opportunity o = new Opportunity(AccountId=con.accountId,Amount=500,Name='test',StageName='Closed Won',CloseDate=System.today());
         insert o;
@@ -633,8 +623,6 @@ private class TEST_ContactMergeController {
         );
         insert new Account[]{acc, acc2};
 
-        
-        
         String newContactMailingStreet = '123 Elm St';
         Contact con = new Contact(
             FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
@@ -679,8 +667,8 @@ private class TEST_ContactMergeController {
         //search for contacts
         controller.search();
         //select the two contacts and grab them
-        controller.getSearchResults()[0].selected = true;
-        controller.getSearchResults()[1].selected = true;
+        controller.searchResults[0].selected = true;
+        controller.searchResults[1].selected = true;
         
         controller.nextStep();
         
@@ -703,8 +691,6 @@ private class TEST_ContactMergeController {
     //the organization shouldn't be deleted
     static testMethod void merge2PrivateContacts() {
         
-        
-        
         String newContactMailingStreet = '123 Elm St';
         Contact con = new Contact(
             FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
@@ -749,8 +735,8 @@ private class TEST_ContactMergeController {
         //search for contacts
         controller.search();
         //select the two contacts and grab them
-        controller.getSearchResults()[0].selected = true;
-        controller.getSearchResults()[1].selected = true;
+        controller.searchResults[0].selected = true;
+        controller.searchResults[1].selected = true;
         
         controller.nextStep();
         
@@ -772,8 +758,6 @@ private class TEST_ContactMergeController {
         
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.BUCKET_PROCESSOR));
         
-        
-        
         String newContactMailingStreet = '123 Elm St';
         Contact con = new Contact(
             FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
@@ -816,8 +800,8 @@ private class TEST_ContactMergeController {
         //search for contacts
         controller.search();
         //select the two contacts and grab them
-        controller.getSearchResults()[0].selected = true;
-        controller.getSearchResults()[1].selected = true;
+        controller.searchResults[0].selected = true;
+        controller.searchResults[1].selected = true;
         
         controller.nextStep();
         
@@ -842,8 +826,6 @@ private class TEST_ContactMergeController {
         
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
         
-        
-        
         String newContactMailingStreet = '123 Elm St';
         Contact con = new Contact(
             FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
@@ -878,8 +860,8 @@ private class TEST_ContactMergeController {
         //search for contacts
         controller.search();
         //select the two contacts and grab them
-        controller.getSearchResults()[0].selected = true;
-        controller.getSearchResults()[1].selected = true;
+        controller.searchResults[0].selected = true;
+        controller.searchResults[1].selected = true;
 
         controller.nextStep();
         
@@ -904,8 +886,6 @@ private class TEST_ContactMergeController {
         
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.BUCKET_PROCESSOR));
         
-        
-        
         String newContactMailingStreet = '123 Elm St';
         Contact con = new Contact(
             FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
@@ -919,7 +899,9 @@ private class TEST_ContactMergeController {
         Contact con2 = new Contact(
             FirstName=secondContactfirstName,
             LastName=secondContactLastName,
-            MailingStreet = secondContactMailingStreet
+            MailingStreet = secondContactMailingStreet,
+            
+            SystemAccountProcessor__c = Constants.ONE_TO_ONE_PROCESSOR
         );
         insert new Contact[]{con, con2};
         
@@ -940,8 +922,8 @@ private class TEST_ContactMergeController {
         //search for contacts
         controller.search();
         //select the two contacts and grab them
-        controller.getSearchResults()[0].selected = true;
-        controller.getSearchResults()[1].selected = true;
+        controller.searchResults[0].selected = true;
+        controller.searchResults[1].selected = true;
         
         controller.nextStep();
         
@@ -970,8 +952,6 @@ private class TEST_ContactMergeController {
             Name = 'Test Account 1'
         );
         insert acc;
-        
-        
         
         String newContactMailingStreet = '123 Elm St';
         Contact con = new Contact(
@@ -1016,8 +996,8 @@ private class TEST_ContactMergeController {
         //search for contacts
         controller.search();
         //select the two contacts and grab them
-        controller.getSearchResults()[0].selected = true;
-        controller.getSearchResults()[1].selected = true;
+        controller.searchResults[0].selected = true;
+        controller.searchResults[1].selected = true;
         
         controller.nextStep();
         
@@ -1039,8 +1019,6 @@ private class TEST_ContactMergeController {
     static testMethod void merge3OneToOne() {
         
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
-
-        
         
         String newContactMailingStreet = '123 Elm St';
         Contact con = new Contact(
@@ -1100,9 +1078,9 @@ private class TEST_ContactMergeController {
         controller.search();
         
         //select the two contacts and grab them
-        controller.getSearchResults()[0].selected = true;
-        controller.getSearchResults()[1].selected = true;
-        controller.getSearchResults()[2].selected = true;
+        controller.searchResults[0].selected = true;
+        controller.searchResults[1].selected = true;
+        controller.searchResults[2].selected = true;
         
         controller.nextStep();
         
@@ -1129,8 +1107,6 @@ private class TEST_ContactMergeController {
         
         Contacts_and_Orgs_Settings__c contactSettingsForTests = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR));
 
-        
-        
         String newContactMailingStreet = '123 Elm St';
         Contact con = new Contact(
             FirstName=Constants.CONTACT_FIRSTNAME_FOR_TESTS,
@@ -1177,8 +1153,8 @@ private class TEST_ContactMergeController {
         //search for contacts
         controller.search();
         //select the two contacts and grab them
-        controller.getSearchResults()[0].selected = true;
-        controller.getSearchResults()[1].selected = true;
+        controller.searchResults[0].selected = true;
+        controller.searchResults[1].selected = true;
         
         controller.nextStep();
         
