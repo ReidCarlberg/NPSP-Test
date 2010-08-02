@@ -127,10 +127,7 @@ private class TEST_ContactMergeController {
         ApexPages.Message m = ApexPages.getMessages()[0];
         System.assertEquals(ApexPages.Severity.Error, m.getSeverity());
         System.assertEquals(Label.Contact_Merge_Error_Too_Few_Contacts, m.getDetail());
-        System.assert(controller.displayMessagePopup); // Check the rendered flag to show error messages when there are errors.
         System.assertEquals(1, controller.step); // We should still be on step 1
-        
-        controller.cancelMessagePopup();
         
         controller.search();
         controller.searchResults[0].selected = true;
@@ -140,7 +137,6 @@ private class TEST_ContactMergeController {
         controller.nextStep();
         
         System.assertEquals(2, controller.step); // We are on to next step now
-        System.assert(!controller.displayMessagePopup); // Check the rendered flag to show error messages when there are errors.
         
         List<ContactMergeController.FieldRow> fieldRows = controller.fieldRows;
         
@@ -239,7 +235,6 @@ private class TEST_ContactMergeController {
         ApexPages.Message m = ApexPages.getMessages()[0];
         System.assertEquals(ApexPages.Severity.Error, m.getSeverity());
         System.assertEquals(Label.Contact_Merge_Error_Query_Failed + ' ' + Label.Contact_Merge_Error_please_retry, m.getDetail());
-        System.assert(controller.displayMessagePopup); // Check the rendered flag to show error messages when there are errors.
         System.assertEquals(1, controller.step); // We should still be on step 1
         
         Test.stopTest();
@@ -312,8 +307,7 @@ private class TEST_ContactMergeController {
         System.assertEquals(1, ApexPages.getMessages().size()); // Selecting a deleted record must throw an error
         ApexPages.Message m = ApexPages.getMessages()[0];
         System.assertEquals(ApexPages.Severity.Error, m.getSeverity());
-        System.assertEquals('Failed to lock all the records for merging. Please retry from start.', m.getDetail());
-        System.assert(controller.displayMessagePopup); // Check the rendered flag to show error messages when there are errors.
+        System.assertEquals(Label.Contact_Merge_Error_Lock_failed + ' ' + Label.Contact_Merge_Error_please_retry, m.getDetail());
         
         Test.stopTest();
         
@@ -357,7 +351,6 @@ private class TEST_ContactMergeController {
         ApexPages.Message m = ApexPages.getMessages()[0];
         System.assertEquals(ApexPages.Severity.Error, m.getSeverity());
         System.assertEquals(Label.Contact_Merge_Error_Too_Few_Contacts, m.getDetail());
-        System.assert(controller.displayMessagePopup); // Check the rendered flag to show error messages when there are errors.
     }
     
     
@@ -444,22 +437,6 @@ private class TEST_ContactMergeController {
         ApexPages.Message m = ApexPages.getMessages()[0];
         System.assertEquals(ApexPages.Severity.Error, m.getSeverity());
         System.assertEquals(Label.Contact_Merge_Error_Too_Many_Contacts, m.getDetail());
-        System.assert(controller.displayMessagePopup); // Check the rendered flag to show error messages when there are errors.
-    }
-    
-    //test the visibilty of the popup messages
-    static testMethod void popupVisibility() {
-        //point to the VF page
-        Test.setCurrentPageReference(new PageReference('Page.ContactMerge'));
-        //instantiate the controller
-        ContactMergeController controller = new ContactMergeController();
-        //call methods
-        controller.showMessagePopup();
-        //the popup should be displayed
-        system.assert(controller.displayMessagePopup);
-        controller.cancelMessagePopup();
-        //the popup should be hidden
-        system.assert(!controller.displayMessagePopup);
     }
     
     private static void selectMasterRecord(ContactMergeController cont, Id masterId) {

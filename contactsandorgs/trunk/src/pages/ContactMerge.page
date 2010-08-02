@@ -1,20 +1,6 @@
 <apex:page controller="ContactMergeController" title="Merge Contacts" id="contactMergePage">
 
     <style type="text/css">
-        .messagepopup{
-            background-color:white;
-            border-style:solid;
-            border-width:1px;
-            position: absolute;
-            z-index: 9999;
-            /* These are the 4 css properties you will need to tweak so the
-            messagepopup displays in approximately the center of the screen. First
-            set the width and height then adjust the left and top.*/
-            width: 500px;
-            left:40%;
-            top:30%;
-            padding: 10px;
-        }
         .mergeTable{
            border:1px solid #BFCFD4; 
            width: 100%;
@@ -48,7 +34,6 @@
         </description>
     </apex:sectionHeader>
    
-	
     <apex:outputPanel rendered="{!step == 1}">
         <apex:outputPanel id="searchformPanel" layout="block">
             <apex:form id="searchForm"> 
@@ -76,6 +61,7 @@
             </apex:form>
         </apex:outputPanel>
         
+        <apex:pageMessages /> 
         <apex:outputPanel id="searchresults" layout="block">
             <apex:outputPanel id="nothingfound" layout="block" rendered="{!!displaySearchResults&&searchText!=''}">
             {!$Label.Contact_Merge_Error_Confirm_Message_Nothing_Found}
@@ -101,12 +87,6 @@
                         <apex:commandButton action="{!nextStep}" value="Next"/> 
                     </apex:pageBlockButtons>
                 </apex:pageBlock>
-                <apex:outputPanel id="messagepopup">
-			        <apex:outputPanel styleClass="messagepopup" layout="block" rendered="{!displayMessagePopup}">
-			            <apex:pageMessages id="pagemessages"/> 
-			            <br/><apex:commandButton value="Ok" action="{!cancelMessagePopup}" rerender="messagepopup"/><br/>
-			        </apex:outputPanel>
-			    </apex:outputPanel> 
             </apex:form>
         </apex:outputPanel>
     </apex:outputPanel>
@@ -117,6 +97,7 @@
                 document.getElementById(hiddenFieldId).value = value;
             }
         </script>
+        <apex:pageMessages /> 
         <apex:outputPanel id="selectedContacts" layout="block">
             <apex:form >
                 <apex:pageBlock title="Selected Contacts">
@@ -153,19 +134,9 @@
                         </table>
                     </apex:outputPanel>
                     <apex:pageBlockButtons id="mergebutton">
-                        <apex:commandButton action="{!showMessagePopup}" rerender="messagepopup" value="Merge"/> 
+                        <apex:commandButton onClick="return confirm('{!$Label.Contact_Merge_Error_Confirm_Message}');" action="{!mergeContacts}" value="Merge"/> 
                     </apex:pageBlockButtons>
                 </apex:pageBlock> 
-                
-                <apex:outputPanel id="messagepopup">
-			        <apex:outputPanel styleClass="messagepopup" layout="block" rendered="{!displayMessagePopup}">
-			            <apex:pageMessages id="pagemessages"/> 
-			            <br/><br/>
-			            <apex:commandButton value="Continue and Merge Contacts" action="{!mergeContacts}"/>
-			            <apex:commandButton value="Cancel" action="{!cancelMessagePopup}" rerender="messagepopup"/>
-			            <br/><br/>
-			        </apex:outputPanel>
-			    </apex:outputPanel>
             </apex:form>
         </apex:outputPanel>
     </apex:outputPanel>
