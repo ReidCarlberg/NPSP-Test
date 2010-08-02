@@ -400,13 +400,15 @@ global class IndividualAccounts
     //delete the accounts for contacts that have been deleted
     public void deleteContactAccounts(Contact[] contacts)
     {
-        List<Id> accountIds = new List<Id>();
+        Set<Id> accountIds = new Set<Id>();
         List<Account> accountsOnContacts = new List<Account>();
         List<Account> accountsForDeletion = new List<Account>();
         
         if (contacts.size()>0){
             for (Contact thisContact : contacts){
-                accountIds.add(thisContact.accountId);
+            	if(thisContact.accountId!=null){
+                	accountIds.add(thisContact.accountId);
+            	}
             }
 
             accountsOnContacts = [Select Id, Type,SYSTEM_AccountType__c,(Select Id from Opportunities limit 1),(select Id from Contacts limit 1) from Account where Id IN :accountIds];
@@ -465,6 +467,9 @@ global class IndividualAccounts
         String totalString = system.label.DefaultContactTransactionCurrency;
         
         totalString += String.valueOf(sum);
+        if(!totalString.contains('.')){
+        	totalString += '.00';
+        }
         return totalString;
     }
 
