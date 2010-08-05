@@ -36,7 +36,7 @@
 	                       <a href="javascript:viewLink();" title="View (New Window)">View</a>
 	                       <script type="text/javascript">
 	                           function viewLink() { 
-	                               var contactId = '{!con}';
+	                               var contactId = '{!HTMLENCODE(con)}';
 	                               if (contactId  == null || contactId  == "" ||  contactId  == 'NEW_CONTACT') { 
 	                                   alert("You can only view existing contacts."); 
 	                               }else{ 
@@ -44,7 +44,7 @@
 	                               }  
 	                           } 
 	                        </script>
-	                   </apex:outputPanel>
+	                   </apex:outputPanel> 
                         </apex:outputPanel>
                 </apex:pageBlockSectionItem>
                 <apex:pageBlockSectionItem >
