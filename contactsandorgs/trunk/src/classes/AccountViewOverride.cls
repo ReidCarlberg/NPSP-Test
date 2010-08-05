@@ -27,7 +27,7 @@
 	ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
 	POSSIBILITY OF SUCH DAMAGE.
 */
-public class AccountViewOverride {
+public with sharing class  AccountViewOverride {
 
     private final Account account;
 
