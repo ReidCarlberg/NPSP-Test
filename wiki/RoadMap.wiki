@@ -6,8 +6,10 @@
 This is a draft plan for future development of the Nonprofit Starter Pack.
 
 = Release Summer 10 - Planning = 
+ * This has been delayed due to staffing changes - Estimated release October 2010
  * [http://code.google.com/p/npsp/issues/list?can=1&q=label%3AMilestone-Summer10&colspec=ID+Type+Status+Priority+Milestone+Owner+Summary&sort=&mode=grid&y=Package&x=Status&cells=tiles&nobtn=Update Issues]
  * exception handing
+ * incorporation of DeveloperSprintSummer2010
  * Technical documentation v.2
  * Incorporation of Winter '10 advancements
 
