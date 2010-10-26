@@ -114,8 +114,8 @@
     <fields>
         <fullName>Last_Donation_Date__c</fullName>
         <description>This field is only used with the one-to-one Organization to Contact model.</description>
-        <formula>if( Account.npe01__One2OneContact__c = Id ,
-Account.LastDonationDate__c,
+        <formula>if( Account.npe01__One2OneContact__c = Id , 
+Account.npe01__LastDonationDate__c ,
 null
 )</formula>
         <label>Last Transaction Date</label>
@@ -614,8 +614,14 @@ if(ISPICKVAL(npe01__Secondary_Address_Type__c,&quot;Work&quot;),
     </fields>
     <listViews>
         <fullName>AllContacts</fullName>
+        <columns>CONTACT.FIRST_NAME</columns>
+        <columns>CONTACT.LAST_NAME</columns>
+        <columns>ACCOUNT.NAME</columns>
+        <columns>TotalOppAmount__c</columns>
+        <columns>OppAmountThisYear__c</columns>
         <filterScope>Everything</filterScope>
         <label>All Contacts</label>
+        <language>en_US</language>
     </listViews>
     <listViews>
         <fullName>BirthdaysThisMonth</fullName>

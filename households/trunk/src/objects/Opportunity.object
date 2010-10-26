@@ -20,7 +20,7 @@
     <fields>
         <fullName>CombinedRollupFieldset__c</fullName>
         <description>Concatenated fields used during rollups to locate the most recent opportunity.</description>
-        <formula>TEXT(CloseDate) + &apos;;|;&apos;+ TEXT(Amount) + &apos;;|;&apos;+ TEXT(Member_Level__c) + &apos;;|;&apos;+ TEXT(Membership_Origin__c)</formula>
+        <formula>TEXT(CloseDate) + &apos;;|;&apos;+ TEXT(Amount) + &apos;;|;&apos;+ TEXT(npe01__Member_Level__c) + &apos;;|;&apos;+ TEXT(npe01__Membership_Origin__c)</formula>
         <inlineHelpText>Concatenated fields used during rollups to locate the most recent opportunity.</inlineHelpText>
         <label>Combined Rollup Fieldset</label>
         <type>Text</type>
@@ -83,59 +83,6 @@
         <label>Main Competitor(s) - DEPRECATED</label>
         <length>100</length>
         <type>Text</type>
-    </fields>
-    <fields>
-        <fullName>Member_Level__c</fullName>
-        <label>Member Level</label>
-        <picklist>
-            <picklistValues>
-                <fullName>Gold</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Silver</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Bronze</fullName>
-                <default>false</default>
-            </picklistValues>
-            <sorted>false</sorted>
-        </picklist>
-        <type>Picklist</type>
-    </fields>
-    <fields>
-        <fullName>Membership_End_Date__c</fullName>
-        <inlineHelpText>Date membership period ends.</inlineHelpText>
-        <label>Membership End Date</label>
-        <type>Date</type>
-    </fields>
-    <fields>
-        <fullName>Membership_Origin__c</fullName>
-        <inlineHelpText>Is this a renewal, a new membership, or a membership with someone who lapsed and has returned.</inlineHelpText>
-        <label>Membership Origin</label>
-        <picklist>
-            <picklistValues>
-                <fullName>New</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Renewal</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Reacquire</fullName>
-                <default>false</default>
-            </picklistValues>
-            <sorted>false</sorted>
-        </picklist>
-        <type>Picklist</type>
-    </fields>
-    <fields>
-        <fullName>Membership_Start_Date__c</fullName>
-        <inlineHelpText>Date when membership period starts</inlineHelpText>
-        <label>Membership Start Date</label>
-        <type>Date</type>
     </fields>
     <fields>
         <fullName>OrderNumber__c</fullName>
@@ -257,6 +204,59 @@
         <type>Text</type>
     </fields>
     <fields>
+        <fullName>npe01__Member_Level__c</fullName>
+        <label>Member Level</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Gold</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Silver</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Bronze</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>npe01__Membership_End_Date__c</fullName>
+        <inlineHelpText>Date membership period ends.</inlineHelpText>
+        <label>Membership End Date</label>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>npe01__Membership_Origin__c</fullName>
+        <inlineHelpText>Is this a renewal, a new membership, or a membership with someone who lapsed and has returned.</inlineHelpText>
+        <label>Membership Origin</label>
+        <picklist>
+            <picklistValues>
+                <fullName>New</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Renewal</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Reacquire</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>npe01__Membership_Start_Date__c</fullName>
+        <inlineHelpText>Date when membership period starts</inlineHelpText>
+        <label>Membership Start Date</label>
+        <type>Date</type>
+    </fields>
+    <fields>
         <fullName>systemHouseholdContactRoleProcessor__c</fullName>
         <inlineHelpText>Controls if Household contact roles are created for Opportunities</inlineHelpText>
         <label>_SYSTEM: HOUSEHOLD CONTACT ROLEPROCESSOR</label>
@@ -359,10 +359,10 @@
         <label>Won</label>
     </listViews>
     <recordTypes>
-        <fullName>Gifty</fullName>
+        <fullName>gift</fullName>
         <active>true</active>
         <businessProcess>Gift</businessProcess>
-        <label>Gifty</label>
+        <label>gift</label>
         <picklistValues>
             <picklist>DeliveryInstallationStatus__c</picklist>
             <values>
@@ -440,6 +440,163 @@
             </values>
             <values>
                 <fullName>New Customer</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>npe01__Member_Level__c</picklist>
+            <values>
+                <fullName>Bronze</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Gold</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Silver</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>npe01__Membership_Origin__c</picklist>
+            <values>
+                <fullName>New</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Reacquire</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Renewal</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>systemHouseholdContactRoleProcessor__c</picklist>
+            <values>
+                <fullName>All Opportunities</fullName>
+                <default>true</default>
+            </values>
+            <values>
+                <fullName>No Opportunities</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+    </recordTypes>
+    <recordTypes>
+        <fullName>membership</fullName>
+        <active>true</active>
+        <businessProcess>Gift</businessProcess>
+        <label>membership</label>
+        <picklistValues>
+            <picklist>DeliveryInstallationStatus__c</picklist>
+            <values>
+                <fullName>Completed</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>In progress</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Yet to begin</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>ForecastCategoryName</picklist>
+            <values>
+                <fullName>Best Case</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Closed</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Commit</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Omitted</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Pipeline</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>LeadSource</picklist>
+            <values>
+                <fullName>Other</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Partner Referral</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Phone Inquiry</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Purchased List</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Web</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Type</picklist>
+            <values>
+                <fullName>Existing Customer - Downgrade</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Existing Customer - Replacement</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Existing Customer - Upgrade</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>New Customer</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>npe01__Member_Level__c</picklist>
+            <values>
+                <fullName>Bronze</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Gold</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Silver</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>npe01__Membership_Origin__c</picklist>
+            <values>
+                <fullName>New</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Reacquire</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Renewal</fullName>
                 <default>false</default>
             </values>
         </picklistValues>

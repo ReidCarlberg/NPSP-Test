@@ -51,24 +51,6 @@
         <type>Date</type>
     </fields>
     <fields>
-        <fullName>FirstDonationDate__c</fullName>
-        <label>First Donation Date</label>
-        <summarizedField>Opportunity.CloseDate</summarizedField>
-        <summaryFilterItems>
-            <field>Opportunity.IsWon</field>
-            <operation>equals</operation>
-            <value>TRUE</value>
-        </summaryFilterItems>
-        <summaryFilterItems>
-            <field>Opportunity.Amount</field>
-            <operation>greaterThan</operation>
-            <value>0</value>
-        </summaryFilterItems>
-        <summaryForeignKey>Opportunity.AccountId</summaryForeignKey>
-        <summaryOperation>min</summaryOperation>
-        <type>Summary</type>
-    </fields>
-    <fields>
         <fullName>Industry</fullName>
         <picklist>
             <picklistValues>
@@ -215,24 +197,6 @@
         <fullName>LastCloseDate__c</fullName>
         <label>Last Gift Date</label>
         <type>Date</type>
-    </fields>
-    <fields>
-        <fullName>LastDonationDate__c</fullName>
-        <label>Last Donation Date</label>
-        <summarizedField>Opportunity.CloseDate</summarizedField>
-        <summaryFilterItems>
-            <field>Opportunity.IsWon</field>
-            <operation>equals</operation>
-            <value>TRUE</value>
-        </summaryFilterItems>
-        <summaryFilterItems>
-            <field>Opportunity.Amount</field>
-            <operation>greaterThan</operation>
-            <value>0</value>
-        </summaryFilterItems>
-        <summaryForeignKey>Opportunity.AccountId</summaryForeignKey>
-        <summaryOperation>max</summaryOperation>
-        <type>Summary</type>
     </fields>
     <fields>
         <fullName>LastMembershipAmount__c</fullName>
