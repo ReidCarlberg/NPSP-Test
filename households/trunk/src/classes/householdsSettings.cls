@@ -66,12 +66,22 @@ public with sharing class householdsSettings {
             }
             
             if(!alreadyScheduled){
-                if(scheduledRollups.size()<scheduledJobLimit){      
+                if(scheduledRollups.size()<scheduledJobLimit){     
+                	
                     SCHED_OppRollup rollUp = new SCHED_OppRollup(); 
+                    //need to check for already scheduled job
                     String sch='17 11 2 * * ?'; 
-                    String jobId = system.schedule('Nightly Opportunity Roll Up', sch ,rollUp);
-                    pageSettings.Opp_Rollup_Scheduled_Job_Id__c = jobId;
+                    scheduledRollups.clear();
+					scheduledRollups = [SELECT Id FROM cronTrigger where cronExpression = :sch];
+					if (scheduledRollups.size()==0){
+                    	String jobId = system.schedule('Nightly Opportunity Roll Up', sch ,rollUp);
+                    	pageSettings.Opp_Rollup_Scheduled_Job_Id__c = jobId;
+	                	
+					} else {
+						pageSettings.Opp_Rollup_Scheduled_Job_Id__c = scheduledRollups[0].Id;
+					}
                     update pageSettings;
+                	
                 } else {
                     showMsg(Label.Opportunity_Rollup_Scheduling_Error_Text, ApexPages.Severity.FATAL);
                 }
@@ -175,7 +185,6 @@ public with sharing class householdsSettings {
         
         //pass the controller into the extension
         householdsSettings controller = new householdsSettings(); 
-        
         controller.getSettingsFirstTime();
         system.assertNotEquals(null,controller.getSettings());
         

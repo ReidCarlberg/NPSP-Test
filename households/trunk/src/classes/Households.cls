@@ -142,7 +142,9 @@ global class Households {
         List<Contact> contactUpdates = new List<Contact>();
         if (householdInserts.size() > 0)
         {
+        	
             Database.SaveResult[] lsr = Database.insert(householdInserts, false);
+            
             Integer i = 0;
             for (Contact c : contacts)
             {
@@ -156,6 +158,19 @@ global class Households {
                 }
                 i += 1;
             }
+            
+/*
+        	insert householdInserts;
+        	Integer i = 0;
+            for (Contact c : contacts)
+            {
+            	Contact clone = c.Clone(true,false);
+                    clone.Household__c = householdInserts[i].Id;
+                    contactUpdates.add(clone);
+            }
+  */
+            
+            
         }
         if (contactUpdates.size() > 0)
         {
@@ -401,7 +416,7 @@ global class Households {
     public static Households_Settings__c getHouseholdsSettingsForTests(Households_Settings__c mySettings) {
         
         //clear out whatever settings exist
-        delete [select id from Households_Settings__c];
+        delete [select id from Households_Settings__c limit 100]; 
         
         //create our own based on what's passed in from the test
         householdsSettings = new Households_Settings__c (

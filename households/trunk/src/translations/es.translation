@@ -1,24 +1,3 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Translations xmlns="http://soap.sforce.com/2006/04/metadata">
-    <reportTypes>
-        <description>Familias y Donaciones</description>
-        <label>Familias y Donaciones</label>
-        <name>Households_and_Donations</name>
-        <sections>
-            <label>Miembros de Familias</label>
-            <name>Household Members</name>
-        </sections>
-        <sections>
-            <label>Familias</label>
-            <name>Households</name>
-        </sections>
-        <sections>
-            <label>Oportunidades</label>
-            <name>Opportunities</name>
-        </sections>
-    </reportTypes>
-    <scontrols>
-        <label>HistorialTransaccionesFamilia</label>
-        <name>HouseholdTransactionHistory</name>
-    </scontrols>
-</Translations>
+<Translations xmlns="http://soap.sforce.com/2006/04/metadata"/>
+

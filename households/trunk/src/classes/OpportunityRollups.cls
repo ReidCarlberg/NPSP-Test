@@ -11,9 +11,9 @@ public class OpportunityRollups {
 	
 	static boolean recordTypesOnOpps;
 	
+	//determines if record types are enabled on opportunities
 	public static boolean areRecordTypesOnOpps(){
 		if (recordTypesOnOpps==null){
-
 			String giftRt = RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
 			if (giftRt!=null&&giftRt!=''){
 				recordTypesOnOpps = true;
