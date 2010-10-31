@@ -18,8 +18,23 @@ public with sharing class householdsSettings {
     //we can't do a DML in a getter, so I call it from the action of the page
     public PageReference getSettingsFirstTime() {
         pageSettings = Households.getHouseholdsSettings();
-        //look for the scheduled job and schedule it if necessary
+        //set the multi-select fields
+        if(pageSettings.npo02__Excluded_Account_Opp_Types__c!=null){
+        	acctTypes = pageSettings.npo02__Excluded_Account_Opp_Types__c.split(';',0);
+        }
         
+         if(pageSettings.npo02__Excluded_Contact_Opp_Types__c!=null){
+        	contactTypes = pageSettings.npo02__Excluded_Contact_Opp_Types__c.split(';',0);
+        }
+        
+         if(pageSettings.npo02__Excluded_Account_Opp_Rectypes__c!=null){
+        	acctRTs = pageSettings.npo02__Excluded_Account_Opp_Rectypes__c.split(';',0);
+        }
+        
+         if(pageSettings.npo02__Excluded_Contact_Opp_Rectypes__c!=null){
+        	contactRTs = pageSettings.npo02__Excluded_Contact_Opp_Rectypes__c.split(';',0);
+        }
+        //look for the scheduled job and schedule it if necessary
         scheduleRollups();
             
         return null;
@@ -121,6 +136,7 @@ public with sharing class householdsSettings {
         }
         return RTypes;
     }
+    
     public List<SelectOption> getTypes() {
         if(Types == null){
             Types = new List<SelectOption>();
@@ -211,5 +227,34 @@ public with sharing class householdsSettings {
         controller.updateSettings();
                 
     }
+    /*
+	static testMethod void testFirstRun()
+    {
+    	//get rid of settings
+    	delete [select id from Households_Settings__c limit 100];
+    	//get the default value
+		String defaultValue;
+        boolean aDefaultIsSelected = false;
+        Schema.DescribeFieldResult F = Schema.sObjectType.Contact.fields.SystemHouseholdProcessor__c; 
+        List<Schema.PicklistEntry> P = F.getPicklistValues();
+        for(Schema.PicklistEntry pe : P){
+            if (pe.isDefaultValue()){
+                    defaultValue = pe.getValue();
+                    break;
+            }
+        }
+         Test.setCurrentPageReference(new PageReference('Page.contactSettings'));
+        
+        //pass the controller into the extension
+        householdsSettings controller = new householdsSettings(); 
+        controller.getSettingsFirstTime();
+		if(defaultValue!=null){
+			system.assertEquals(controller.pageSettings.Household_Rules__c,defaultValue);
+		} else {
+			system.assertEquals(controller.pageSettings.Household_Rules__c,Households.NO_HOUSEHOLDS_PROCESSOR);
+		}
+
+    }
+    */
     
 }

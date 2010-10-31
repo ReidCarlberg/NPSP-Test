@@ -25,6 +25,11 @@ private class TEST_HouseholdOpportunity_bulk {
       /// <name> newIndContactAllContactsProcessor </name>
     /// <summary> test insert individual with all contacts processor </summary>
     static testMethod void newOpps() {
+    	
+    	Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(new Households_Settings__c (Household_Rules__c = Households.ALL_PROCESSOR));
+        
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR));
+                
         String street = '2345 Elm St.';
         String city = 'Seattle';
         String state = 'WA';

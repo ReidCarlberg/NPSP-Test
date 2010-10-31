@@ -368,14 +368,14 @@ global class Households {
         if (householdsSettings == null) {
             //first see if we already have settings
             householdsSettings = Households_Settings__c.getOrgDefaults();
-            system.debug(Households_Settings__c.getOrgDefaults());
+            //system.debug(Households_Settings__c.getOrgDefaults());
             if (householdsSettings == null) { 
                 //get the model they used to be in 
                 Schema.DescribeFieldResult F = Schema.sObjectType.Contact.fields.SystemHouseholdProcessor__c; 
                 List<Schema.PicklistEntry> P = F.getPicklistValues();
                 
                 for(Schema.PicklistEntry pe : P){
-                    system.debug(pe.getValue() + ' : ' + pe.isDefaultValue());
+                   // system.debug(pe.getValue() + ' : ' + pe.isDefaultValue());
                     if (pe.isDefaultValue()){
                         if(pe.getValue()==ALL_PROCESSOR){
                             oldProcessor = ALL_PROCESSOR;
@@ -384,6 +384,7 @@ global class Households {
                         } else if(pe.getValue()==NO_HOUSEHOLDS_PROCESSOR){
                             oldProcessor = NO_HOUSEHOLDS_PROCESSOR;
                         }
+                        break;
                     }
                 }
                 householdsSettings = new Households_Settings__c();
@@ -394,6 +395,8 @@ global class Households {
                     householdsSettings.Household_Rules__c = ALL_INDIVIDUALS_PROCESSOR;
                 } else if(oldProcessor==NO_HOUSEHOLDS_PROCESSOR){
                     householdsSettings.Household_Rules__c = NO_HOUSEHOLDS_PROCESSOR;
+                } else {
+                	householdsSettings.Household_Rules__c = NO_HOUSEHOLDS_PROCESSOR;
                 }
 
                 householdsSettings.Household_Member_Contact_Role__c = label.Household_Member_Contact_Role;
@@ -406,7 +409,7 @@ global class Households {
                 householdsSettings.Membership_Record_Types__c = null;
                 
                 householdsSettings.Setupownerid = UserInfo.getOrganizationId();
-                //this is not allowed...
+                
                 insert householdsSettings;
             }
         }
@@ -416,7 +419,7 @@ global class Households {
     public static Households_Settings__c getHouseholdsSettingsForTests(Households_Settings__c mySettings) {
         
         //clear out whatever settings exist
-        delete [select id from Households_Settings__c limit 100]; 
+        delete [select id from npo02__Households_Settings__c]; 
         
         //create our own based on what's passed in from the test
         householdsSettings = new Households_Settings__c (
