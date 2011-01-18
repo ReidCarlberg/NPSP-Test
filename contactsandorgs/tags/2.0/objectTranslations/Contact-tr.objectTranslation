@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <label>Alternatif Eposta</label>
+        <name>AlternateEmail__c</name>
+    </fields>
+    <fields>
+        <label>Şahsi Eposta</label>
+        <name>HomeEmail__c</name>
+    </fields>
+    <fields>
+        <label>Ev Adresi</label>
+        <name>Home_Address__c</name>
+    </fields>
+    <fields>
+        <label>Son İşlem Tarihi</label>
+        <name>Last_Donation_Date__c</name>
+    </fields>
+    <fields>
+        <name>LeadSource</name>
+        <picklistValues>
+            <masterLabel>Employee Referral</masterLabel>
+            <translation><!-- Employee Referral --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>External Referral</masterLabel>
+            <translation><!-- External Referral --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Other</masterLabel>
+            <translation>Diğer</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Partner</masterLabel>
+            <translation><!-- Partner --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Partner Referral</masterLabel>
+            <translation>Partner Vasıtasıyla</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Phone Inquiry</masterLabel>
+            <translation>Telefonla Arayıp Soranlar</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Public Relations</masterLabel>
+            <translation><!-- Public Relations --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Purchased List</masterLabel>
+            <translation>Satın Alınmış Liste</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Trade Show</masterLabel>
+            <translation><!-- Trade Show --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Web</masterLabel>
+            <translation>Internet</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Word of mouth</masterLabel>
+            <translation><!-- Word of mouth --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label>Bugüne Kadar İşlem Toplamı</label>
+        <name>Lifetime_Giving_History_Amount__c</name>
+    </fields>
+    <fields>
+        <label>Organizasyon Tipi</label>
+        <name>Organization_Type__c</name>
+    </fields>
+    <fields>
+        <label>Diğer Adres</label>
+        <name>Other_Address__c</name>
+    </fields>
+    <fields>
+        <label>Tercihi Telefon</label>
+        <name>PreferredPhone__c</name>
+        <picklistValues>
+            <masterLabel>Home</masterLabel>
+            <translation>Ev</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Household</masterLabel>
+            <translation><!-- Household --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Mobile</masterLabel>
+            <translation>Cep</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Other</masterLabel>
+            <translation>Diğer</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Work</masterLabel>
+            <translation>İş</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label>Tercihi Eposta</label>
+        <name>Preferred_Email__c</name>
+        <picklistValues>
+            <masterLabel>Alternate</masterLabel>
+            <translation>Diğer</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Household</masterLabel>
+            <translation><!-- Household --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Personal</masterLabel>
+            <translation>Ev</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Work</masterLabel>
+            <translation>İş</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label>Birincil Adres Tipi</label>
+        <name>Primary_Address_Type__c</name>
+        <picklistValues>
+            <masterLabel>Home</masterLabel>
+            <translation>Ev</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Household</masterLabel>
+            <translation><!-- Household --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Other</masterLabel>
+            <translation>Diğer</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Work</masterLabel>
+            <translation>İş</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label>Gizli</label>
+        <name>Private__c</name>
+    </fields>
+    <fields>
+        <label>İkincil Adres Tipi</label>
+        <name>Secondary_Address_Type__c</name>
+        <picklistValues>
+            <masterLabel>Home</masterLabel>
+            <translation>Ev</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Household</masterLabel>
+            <translation><!-- Household --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Other</masterLabel>
+            <translation>Diğer</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Work</masterLabel>
+            <translation>İş</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label>_SİSTEM: HESAP TÜRÜ</label>
+        <name>SystemAccountProcessor__c</name>
+        <picklistValues>
+            <masterLabel>Individual</masterLabel>
+            <translation>Birden fazla kişi hesabı</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>One-to-One</masterLabel>
+            <translation>Birkişilik hesap</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- This field is no longer used and should not be referenced. It has been replaced by Type_of_Account__c --></help>
+        <label>_SİSTEM: BireyMidir - KULLANMAYINIZ</label>
+        <name>SystemIsIndividual__c</name>
+    </fields>
+    <fields>
+        <help>Bu temasın bağlı olduğu hesabı gösterir.</help>
+        <label>Hesabın Tipi</label>
+        <name>Type_of_Account__c</name>
+    </fields>
+    <fields>
+        <label>İş Eposta</label>
+        <name>WorkEmail__c</name>
+    </fields>
+    <fields>
+        <label>İş Telefonu</label>
+        <name>WorkPhone__c</name>
+    </fields>
+    <fields>
+        <label>İş Adresi</label>
+        <name>Work_Address__c</name>
+    </fields>
+    <validationRules>
+        <errorMessage>Eposta değeri seçilen Tercihi Eposta alanıyla aynı olmalıdır, lütfen Eposta&apos;yı tercih edilen eposta alanına elden kopyalayınız</errorMessage>
+        <name>Populated_Email_Field_Warning</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage>Telefon değeri seçilen Tercihi Telefon alanıyla aynı olmalıdır, lütfen Telefon&apos;u tercih edilen telefon alanına elden kopyalayınız</errorMessage>
+        <name>Populated_Phone_Field_Warning</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage>Tercihi Eposta seçmeniz gerekiyor</errorMessage>
+        <name>Require_Preferred_Email</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage>Tercihi Telefon seçmeniz gerekiyor</errorMessage>
+        <name>Require_Preferred_Phone</name>
+    </validationRules>
+</CustomObjectTranslation>

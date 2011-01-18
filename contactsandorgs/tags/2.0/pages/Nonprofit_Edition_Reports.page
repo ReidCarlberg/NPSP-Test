@@ -1,0 +1,16 @@
+<apex:page >
+<style>
+.fewerMore { display: none;}
+</style>
+<apex:form >
+ <apex:pageMessages />
+ <apex:detail relatedList="true"></apex:detail>
+<apex:pageblock id="CustomList" title="Reports"  >
+   <apex:pageBlockTable value="{!reports}" var="r" rendered="{!NOT(ISNULL(reports))}">
+        <apex:column value="{!r}"/>
+        <apex:column value="{!r}"/>
+   </apex:pageBlockTable>
+   <apex:outputLabel value="No records to display" rendered="{!(ISNULL(oppz))}" styleClass="noRowsHeader"></apex:outputLabel>
+ </apex:pageblock>
+</apex:form>
+</apex:page>
