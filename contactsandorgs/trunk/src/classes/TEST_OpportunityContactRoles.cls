@@ -63,7 +63,6 @@ private class TEST_OpportunityContactRoles {
         
         result = [select OpportunityId, ContactId, Role from OpportunityContactRole where OpportunityId = :opp1.Id];
         system.assertEquals(con.Id, result[0].ContactId);
-        system.assertEquals(null, result[0].Role);
         
         //Now we make a direct call to simulate the trigger firing for a user interface entry.
         Map<Id, Opportunity> oppMap = new Map<Id, Opportunity> {opp1.Id => opp1};
@@ -122,7 +121,7 @@ private class TEST_OpportunityContactRoles {
        system.assertEquals(null, oppResult[0].AccountId);
     }
     
-	static testMethod void oppRolesForOneToOneContact() {
+    static testMethod void oppRolesForOneToOneContact() {
         String donorRoleforTest = 'Donor';
         Contacts_and_Orgs_Settings__c testSettings = Constants.getContactsSettingsForTests(new Contacts_and_Orgs_Settings__c (Account_Processor__c = Constants.ONE_TO_ONE_PROCESSOR,Enable_Opportunity_Contact_Role_Trigger__c = true, Opportunity_Contact_Role_Default_role__c = donorRoleforTest));
                 
@@ -313,7 +312,7 @@ private class TEST_OpportunityContactRoles {
             system.assertEquals(0, result.size());
             
             Opportunity[] oppResult = [select AccountId from Opportunity where Id = :opp1.Id];
-			//shouldn't be an account
+            //shouldn't be an account
             system.assertEquals(null, oppResult[0].AccountId);
         } catch (exception e) {
             system.assert(e.getMessage().contains(Label.Opportunity_Contact_Role_Error_Bad_Contact_Id));

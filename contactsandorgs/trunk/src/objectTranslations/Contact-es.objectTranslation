@@ -28,7 +28,7 @@
         </picklistValues>
         <picklistValues>
             <masterLabel>Other</masterLabel>
-            <translation>Otros</translation>
+            <translation><!-- Other --></translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Partner</masterLabel>
@@ -36,11 +36,11 @@
         </picklistValues>
         <picklistValues>
             <masterLabel>Partner Referral</masterLabel>
-            <translation>Referido</translation>
+            <translation><!-- Partner Referral --></translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Phone Inquiry</masterLabel>
-            <translation>Consulta telefónica</translation>
+            <translation><!-- Phone Inquiry --></translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Public Relations</masterLabel>
@@ -48,7 +48,7 @@
         </picklistValues>
         <picklistValues>
             <masterLabel>Purchased List</masterLabel>
-            <translation>Lista adquirida</translation>
+            <translation><!-- Purchased List --></translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Trade Show</masterLabel>
@@ -56,7 +56,7 @@
         </picklistValues>
         <picklistValues>
             <masterLabel>Web</masterLabel>
-            <translation>Web</translation>
+            <translation><!-- Web --></translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Word of mouth</masterLabel>
@@ -83,10 +83,6 @@
             <translation>Particular</translation>
         </picklistValues>
         <picklistValues>
-            <masterLabel>Household</masterLabel>
-            <translation><!-- Household --></translation>
-        </picklistValues>
-        <picklistValues>
             <masterLabel>Mobile</masterLabel>
             <translation>Móvil</translation>
         </picklistValues>
@@ -107,10 +103,6 @@
             <translation>Alternativo</translation>
         </picklistValues>
         <picklistValues>
-            <masterLabel>Household</masterLabel>
-            <translation><!-- Household --></translation>
-        </picklistValues>
-        <picklistValues>
             <masterLabel>Personal</masterLabel>
             <translation>Particular</translation>
         </picklistValues>
@@ -125,10 +117,6 @@
         <picklistValues>
             <masterLabel>Home</masterLabel>
             <translation>Particular</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Household</masterLabel>
-            <translation><!-- Household --></translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Other</masterLabel>
@@ -149,10 +137,6 @@
         <picklistValues>
             <masterLabel>Home</masterLabel>
             <translation>Particular</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Household</masterLabel>
-            <translation><!-- Household --></translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Other</masterLabel>
@@ -197,20 +181,4 @@
         <label>Dirección laboral</label>
         <name>Work_Address__c</name>
     </fields>
-    <validationRules>
-        <errorMessage>El campo Correo electrónico DEBE concordar con el campo que está designado por el campo Correo electrónico elegido. Para corregir esto, usted debe copiar el valor existente del campo Correo electrónico en un nuevo campo</errorMessage>
-        <name>Populated_Email_Field_Warning</name>
-    </validationRules>
-    <validationRules>
-        <errorMessage>El campo Teléfono DEBE concordar con el campo que está designado por el campo Correo Electrónico elegido. Para corregir esto, usted debe copiar el valor existente del campo Teléfono en el campo seleccionado en Telefono elegido</errorMessage>
-        <name>Populated_Phone_Field_Warning</name>
-    </validationRules>
-    <validationRules>
-        <errorMessage>Debe seleccionar el Correo electrónico elegido</errorMessage>
-        <name>Require_Preferred_Email</name>
-    </validationRules>
-    <validationRules>
-        <errorMessage>Debe seleccionar el Teléfono elegido</errorMessage>
-        <name>Require_Preferred_Phone</name>
-    </validationRules>
 </CustomObjectTranslation>

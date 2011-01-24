@@ -28,7 +28,7 @@
         </picklistValues>
         <picklistValues>
             <masterLabel>Other</masterLabel>
-            <translation>その他</translation>
+            <translation><!-- Other --></translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Partner</masterLabel>
@@ -36,11 +36,11 @@
         </picklistValues>
         <picklistValues>
             <masterLabel>Partner Referral</masterLabel>
-            <translation>パートナーの紹介</translation>
+            <translation><!-- Partner Referral --></translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Phone Inquiry</masterLabel>
-            <translation>電話問合せ</translation>
+            <translation><!-- Phone Inquiry --></translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Public Relations</masterLabel>
@@ -48,7 +48,7 @@
         </picklistValues>
         <picklistValues>
             <masterLabel>Purchased List</masterLabel>
-            <translation>購入した名簿</translation>
+            <translation><!-- Purchased List --></translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Trade Show</masterLabel>
@@ -56,7 +56,7 @@
         </picklistValues>
         <picklistValues>
             <masterLabel>Web</masterLabel>
-            <translation>Web</translation>
+            <translation><!-- Web --></translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Word of mouth</masterLabel>
@@ -83,10 +83,6 @@
             <translation>自宅</translation>
         </picklistValues>
         <picklistValues>
-            <masterLabel>Household</masterLabel>
-            <translation><!-- Household --></translation>
-        </picklistValues>
-        <picklistValues>
             <masterLabel>Mobile</masterLabel>
             <translation>携帯</translation>
         </picklistValues>
@@ -107,10 +103,6 @@
             <translation>その他</translation>
         </picklistValues>
         <picklistValues>
-            <masterLabel>Household</masterLabel>
-            <translation><!-- Household --></translation>
-        </picklistValues>
-        <picklistValues>
             <masterLabel>Personal</masterLabel>
             <translation>個人</translation>
         </picklistValues>
@@ -125,10 +117,6 @@
         <picklistValues>
             <masterLabel>Home</masterLabel>
             <translation>自宅</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Household</masterLabel>
-            <translation><!-- Household --></translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Other</masterLabel>
@@ -149,10 +137,6 @@
         <picklistValues>
             <masterLabel>Home</masterLabel>
             <translation>自宅</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Household</masterLabel>
-            <translation><!-- Household --></translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Other</masterLabel>
@@ -197,20 +181,4 @@
         <label>勤務先住所</label>
         <name>Work_Address__c</name>
     </fields>
-    <validationRules>
-        <errorMessage>電子メールは、メール連絡先の選択リストに入力されたメールアドレスと一致しなくてはなりません。電子メールにあるアドレスを対応する項目へとコピーしてください。</errorMessage>
-        <name>Populated_Email_Field_Warning</name>
-    </validationRules>
-    <validationRules>
-        <errorMessage>電話は、電話連絡先の選択リストに入力された電話番号と一致していなければなりません。電話にある番号を対応する項目へとコピーしてください。</errorMessage>
-        <name>Populated_Phone_Field_Warning</name>
-    </validationRules>
-    <validationRules>
-        <errorMessage>メール連絡先を選んでください。</errorMessage>
-        <name>Require_Preferred_Email</name>
-    </validationRules>
-    <validationRules>
-        <errorMessage>電話連絡先を選んでください。</errorMessage>
-        <name>Require_Preferred_Phone</name>
-    </validationRules>
 </CustomObjectTranslation>

@@ -1,24 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
-        <members>AccountViewOverride</members>
-        <members>Constants</members>
-        <members>ContactDeleteOverride</members>
-        <members>ContactDonationCredit_EXT</members>
-        <members>ContactMerge</members>
-        <members>ContactMergeController</members>
-        <members>IndividualAccounts</members>
-        <members>IndividualAccounts_Utils</members>
-        <members>LeadConvertOverride</members>
-        <members>OpportunityContactRoles</members>
-        <members>TEST_AccountViewOverride</members>
-        <members>TEST_ContactMergeController</members>
-        <members>TEST_IndividualAccounts</members>
-        <members>TEST_LeadConvertOverride</members>
-        <members>TEST_OpportunityContactRoles</members>
-        <members>bulkTests</members>
-        <members>bulkTests2</members>
-        <members>contactsSettings</members>
+        <members>*</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -26,49 +9,111 @@
         <name>ApexComponent</name>
     </types>
     <types>
-        <members>ContactDonationCredit</members>
-        <members>ContactMerge</members>
-        <members>accountViewOverride</members>
-        <members>contactDeleteOverride</members>
-        <members>contactsSettings</members>
-        <members>leadConvertOverride</members>
+        <members>*</members>
         <name>ApexPage</name>
     </types>
     <types>
-        <members>IndividualAccounts</members>
-        <members>OpportunityAccount</members>
-        <members>OpportunityContactRoles</members>
+        <members>*</members>
         <name>ApexTrigger</name>
     </types>
     <types>
+        <members>*</members>
+        <name>CustomApplication</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>CustomLabels</name>
+    </types>
+    <types>
+        <members>*</members>
         <members>Account</members>
+        <members>AccountContactRole</members>
+        <members>Activity</members>
+        <members>Asset</members>
+        <members>Campaign</members>
+        <members>CampaignMember</members>
+        <members>Case</members>
+        <members>CaseContactRole</members>
         <members>Contact</members>
-        <members>Contacts_And_Orgs_Settings__c</members>
+        <members>Contract</members>
+        <members>ContractContactRole</members>
+        <members>Event</members>
+        <members>Idea</members>
+        <members>Lead</members>
         <members>Opportunity</members>
+        <members>OpportunityContactRole</members>
+        <members>OpportunityLineItem</members>
+        <members>PartnerRole</members>
+        <members>Product2</members>
+        <members>Site</members>
+        <members>Solution</members>
+        <members>Task</members>
+        <members>User</members>
+        <members>UserLicense</members>
         <name>CustomObject</name>
     </types>
     <types>
-        <members>Account-es</members>
-        <members>Account-fr</members>
-        <members>Account-ja</members>
-        <members>Contact-es</members>
-        <members>Contact-fr</members>
-        <members>Contact-ja</members>
-        <members>Contacts_And_Orgs_Settings__c-en_US</members>
-        <members>Lead-fr</members>
-        <members>Lead-ja</members>
+        <members>*</members>
         <name>CustomObjectTranslation</name>
     </types>
     <types>
-        <members>Contact_Merge</members>
-        <members>Contacts_Settings</members>
+        <members>*</members>
+        <name>CustomPageWebLink</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>CustomSite</name>
+    </types>
+    <types>
+        <members>*</members>
         <name>CustomTab</name>
     </types>
     <types>
-        <members>es</members>
-        <members>fr</members>
-        <members>ja</members>
+        <members>*</members>
+        <name>DataCategoryGroup</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>HomePageComponent</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>HomePageLayout</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>Layout</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>Letterhead</name>
+    </types>
+    <types>
+        <members>Nonprofit_Edition_Reports</members>
+        <members>Nonprofit_Edition_Reports/Individual_Organization_LYBUNT_Report</members>
+        <members>Nonprofit_Edition_Reports/Individual_Organization_SYBUNT_Report</members>
+        <members>unfiled$public</members>
+        <name>Report</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>ReportType</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>Scontrol</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>StaticResource</name>
+    </types>
+    <types>
+        <members>*</members>
         <name>Translations</name>
     </types>
-    <version>19.0</version>
+    <types>
+        <members>*</members>
+        <name>Workflow</name>
+    </types>
+    <version>20.0</version>
 </Package>

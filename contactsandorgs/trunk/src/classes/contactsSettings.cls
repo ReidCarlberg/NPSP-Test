@@ -71,21 +71,34 @@ public with sharing class contactsSettings {
         controller.updateSettings();
         
     }
-    /*
-    static testMethod void testDefault()
+    
+    static testMethod void testFirstRun()
     {
-
+    	//get rid of settings
+    	delete [select id from Contacts_and_Orgs_Settings__c limit 100];
+    	//get the default value
+		String defaultValue;
         boolean aDefaultIsSelected = false;
         Schema.DescribeFieldResult F = Schema.sObjectType.Contact.fields.SystemAccountProcessor__c; 
-            List<Schema.PicklistEntry> P = F.getPicklistValues();
-            for(Schema.PicklistEntry pe : P){
-                system.debug(pe.getValue() + ' : ' + pe.isDefaultValue());
-                if (pe.isDefaultValue()){
-                        aDefaultIsSelected = true;
-                }
+        List<Schema.PicklistEntry> P = F.getPicklistValues();
+        for(Schema.PicklistEntry pe : P){
+            if (pe.isDefaultValue()){
+                    defaultValue = pe.getValue();
+                    break;
             }
-         system.assert(aDefaultIsSelected); 
+        }
+         Test.setCurrentPageReference(new PageReference('Page.contactSettings'));
+        
+        //pass the controller into the extension
+        contactsSettings controller = new contactsSettings(); 
+        controller.getSettingsFirstTime();
+		if(defaultValue!=null){
+			system.assertEquals(controller.pageSettings.Account_Processor__c,defaultValue);
+		} else {
+			system.assertEquals(controller.pageSettings.Account_Processor__c,Constants.BUCKET_PROCESSOR);
+		}
+
     }
-    */
+    
 
 }

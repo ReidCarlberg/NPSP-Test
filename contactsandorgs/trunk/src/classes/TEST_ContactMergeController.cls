@@ -537,7 +537,11 @@ private class TEST_ContactMergeController {
         Contact con2 = new Contact(
             FirstName=secondContactfirstName,
             LastName=secondContactLastName,
-            MailingStreet = secondContactMailingStreet
+            MailingStreet = secondContactMailingStreet,
+            WorkEmail__c = Constants.CONTACT_EMAIL_FOR_TESTS, 
+            Preferred_Email__c = Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            WorkPhone__c = Constants.CONTACT_PHONE_FOR_TESTS,
+            PreferredPhone__c = Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         insert new Contact[]{con, con2};
         

@@ -27,7 +27,7 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE.
 */
-global class IndividualAccounts
+global with sharing class IndividualAccounts
 {
 
     /// <name> IndividualAccounts </name>
@@ -400,15 +400,13 @@ global class IndividualAccounts
     //delete the accounts for contacts that have been deleted
     public void deleteContactAccounts(Contact[] contacts)
     {
-        Set<Id> accountIds = new Set<Id>();
+        List<Id> accountIds = new List<Id>();
         List<Account> accountsOnContacts = new List<Account>();
         List<Account> accountsForDeletion = new List<Account>();
         
         if (contacts.size()>0){
             for (Contact thisContact : contacts){
-            	if(thisContact.accountId!=null){
-                	accountIds.add(thisContact.accountId);
-            	}
+                accountIds.add(thisContact.accountId);
             }
 
             accountsOnContacts = [Select Id, Type,SYSTEM_AccountType__c,(Select Id from Opportunities limit 1),(select Id from Contacts limit 1) from Account where Id IN :accountIds];

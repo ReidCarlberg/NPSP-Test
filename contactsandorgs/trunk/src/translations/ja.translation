@@ -88,6 +88,18 @@
         <label>個人のマージ</label>
         <name>Contact_Merge</name>
     </customTabs>
+    <customTabs>
+        <label><!-- Contacts Settings --></label>
+        <name>Contacts_Settings</name>
+    </customTabs>
+    <scontrols>
+        <label><!-- AccountViewOverride --></label>
+        <name>AccountViewOverride</name>
+    </scontrols>
+    <scontrols>
+        <label><!-- ContactDonationCredit --></label>
+        <name>ContactDonationCredit</name>
+    </scontrols>
     <scontrols>
         <label><!-- OpportunityCreateMatching --></label>
         <name>OpportunityCreateMatching</name>

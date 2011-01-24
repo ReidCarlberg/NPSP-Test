@@ -1,35 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
     <businessProcesses>
-        <fullName>Donation</fullName>
+        <fullName>dummyBP</fullName>
+        <description>Dummy business process created for patch org.</description>
         <isActive>true</isActive>
-        <values>
-            <fullName>Closed Lost</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Closed Won</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Prospecting</fullName>
-            <default>false</default>
-        </values>
     </businessProcesses>
     <enableFeeds>true</enableFeeds>
     <fields>
         <fullName>Contact_Id_for_Role__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
         <inlineHelpText>Hidden field for passing a Contact Id for Contact Role creation.</inlineHelpText>
         <label>Contact Id for Role</label>
         <length>255</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
         <type>Text</type>
+        <unique>false</unique>
     </fields>
     <fields>
         <fullName>Is_Opp_From_Individual__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
         <formula>IF( Account.SYSTEMIsIndividual__c, &apos;true&apos;, &apos;false&apos; )</formula>
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
         <label>Is Opp From Individual</label>
+        <required>false</required>
         <type>Text</type>
+        <unique>false</unique>
     </fields>
     <fields>
         <fullName>LeadSource</fullName>
@@ -60,6 +58,8 @@
     </fields>
     <fields>
         <fullName>Member_Level__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
         <label>Member Level</label>
         <picklist>
             <picklistValues>
@@ -76,16 +76,23 @@
             </picklistValues>
             <sorted>false</sorted>
         </picklist>
+        <trackFeedHistory>false</trackFeedHistory>
         <type>Picklist</type>
     </fields>
     <fields>
         <fullName>Membership_End_Date__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
         <inlineHelpText>Date membership period ends.</inlineHelpText>
         <label>Membership End Date</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
         <type>Date</type>
     </fields>
     <fields>
         <fullName>Membership_Origin__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
         <inlineHelpText>Is this a renewal, a new membership, or a membership with someone who lapsed and has returned.</inlineHelpText>
         <label>Membership Origin</label>
         <picklist>
@@ -103,12 +110,17 @@
             </picklistValues>
             <sorted>false</sorted>
         </picklist>
+        <trackFeedHistory>false</trackFeedHistory>
         <type>Picklist</type>
     </fields>
     <fields>
         <fullName>Membership_Start_Date__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
         <inlineHelpText>Date when membership period starts</inlineHelpText>
         <label>Membership Start Date</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
         <type>Date</type>
     </fields>
     <fields>
@@ -116,51 +128,67 @@
         <picklist>
             <picklistValues>
                 <fullName>Prospecting</fullName>
+                <closed>false</closed>
                 <default>false</default>
                 <forecastCategory>Pipeline</forecastCategory>
                 <probability>10</probability>
+                <won>false</won>
             </picklistValues>
             <picklistValues>
                 <fullName>Qualification</fullName>
+                <closed>false</closed>
                 <default>false</default>
                 <forecastCategory>Pipeline</forecastCategory>
                 <probability>10</probability>
+                <won>false</won>
             </picklistValues>
             <picklistValues>
                 <fullName>Needs Analysis</fullName>
+                <closed>false</closed>
                 <default>false</default>
                 <forecastCategory>Pipeline</forecastCategory>
                 <probability>20</probability>
+                <won>false</won>
             </picklistValues>
             <picklistValues>
                 <fullName>Value Proposition</fullName>
+                <closed>false</closed>
                 <default>false</default>
                 <forecastCategory>Pipeline</forecastCategory>
                 <probability>50</probability>
+                <won>false</won>
             </picklistValues>
             <picklistValues>
                 <fullName>Id. Decision Makers</fullName>
+                <closed>false</closed>
                 <default>false</default>
                 <forecastCategory>Pipeline</forecastCategory>
                 <probability>60</probability>
+                <won>false</won>
             </picklistValues>
             <picklistValues>
                 <fullName>Perception Analysis</fullName>
+                <closed>false</closed>
                 <default>false</default>
                 <forecastCategory>Pipeline</forecastCategory>
                 <probability>70</probability>
+                <won>false</won>
             </picklistValues>
             <picklistValues>
                 <fullName>Proposal/Price Quote</fullName>
+                <closed>false</closed>
                 <default>false</default>
                 <forecastCategory>Pipeline</forecastCategory>
                 <probability>75</probability>
+                <won>false</won>
             </picklistValues>
             <picklistValues>
                 <fullName>Negotiation/Review</fullName>
+                <closed>false</closed>
                 <default>false</default>
                 <forecastCategory>Pipeline</forecastCategory>
                 <probability>90</probability>
+                <won>false</won>
             </picklistValues>
             <picklistValues>
                 <fullName>Closed Won</fullName>
@@ -176,6 +204,7 @@
                 <default>false</default>
                 <forecastCategory>Omitted</forecastCategory>
                 <probability>0</probability>
+                <won>false</won>
             </picklistValues>
             <sorted>false</sorted>
         </picklist>
@@ -289,221 +318,13 @@
         </filters>
         <label>Won</label>
     </listViews>
+    <recordTypeTrackFeedHistory>false</recordTypeTrackFeedHistory>
     <recordTypes>
-        <fullName>Donation</fullName>
+        <fullName>dummyRT</fullName>
         <active>true</active>
-        <businessProcess>Donation</businessProcess>
-        <label>Donation</label>
-        <picklistValues>
-            <picklist>ForecastCategoryName</picklist>
-            <values>
-                <fullName>Best Case</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Closed</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Commit</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Omitted</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Pipeline</fullName>
-                <default>false</default>
-            </values>
-        </picklistValues>
-        <picklistValues>
-            <picklist>LeadSource</picklist>
-            <values>
-                <fullName>Other</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Partner Referral</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Phone Inquiry</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Purchased List</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Web</fullName>
-                <default>false</default>
-            </values>
-        </picklistValues>
-        <picklistValues>
-            <picklist>Type</picklist>
-            <values>
-                <fullName>Existing Customer - Downgrade</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Existing Customer - Replacement</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Existing Customer - Upgrade</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>New Customer</fullName>
-                <default>false</default>
-            </values>
-        </picklistValues>
-    </recordTypes>
-    <recordTypes>
-        <fullName>Grant</fullName>
-        <active>true</active>
-        <label>Grant</label>
-        <picklistValues>
-            <picklist>ForecastCategoryName</picklist>
-            <values>
-                <fullName>Best Case</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Closed</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Commit</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Omitted</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Pipeline</fullName>
-                <default>false</default>
-            </values>
-        </picklistValues>
-        <picklistValues>
-            <picklist>LeadSource</picklist>
-            <values>
-                <fullName>Other</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Partner Referral</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Phone Inquiry</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Purchased List</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Web</fullName>
-                <default>false</default>
-            </values>
-        </picklistValues>
-        <picklistValues>
-            <picklist>Type</picklist>
-            <values>
-                <fullName>Existing Customer - Downgrade</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Existing Customer - Replacement</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Existing Customer - Upgrade</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>New Customer</fullName>
-                <default>false</default>
-            </values>
-        </picklistValues>
-    </recordTypes>
-    <recordTypes>
-        <fullName>Major_Gift</fullName>
-        <active>true</active>
-        <label>Major Gift</label>
-        <picklistValues>
-            <picklist>ForecastCategoryName</picklist>
-            <values>
-                <fullName>Best Case</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Closed</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Commit</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Omitted</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Pipeline</fullName>
-                <default>false</default>
-            </values>
-        </picklistValues>
-        <picklistValues>
-            <picklist>LeadSource</picklist>
-            <values>
-                <fullName>Other</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Partner Referral</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Phone Inquiry</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Purchased List</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Web</fullName>
-                <default>false</default>
-            </values>
-        </picklistValues>
-        <picklistValues>
-            <picklist>Type</picklist>
-            <values>
-                <fullName>Existing Customer - Downgrade</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Existing Customer - Replacement</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Existing Customer - Upgrade</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>New Customer</fullName>
-                <default>false</default>
-            </values>
-        </picklistValues>
-    </recordTypes>
-    <recordTypes>
-        <fullName>Matching_Donation</fullName>
-        <active>true</active>
-        <label>Matching Donation</label>
+        <businessProcess>dummyBP</businessProcess>
+        <description>Dummy Record Type created for patch org.</description>
+        <label>dummyRT</label>
         <picklistValues>
             <picklist>ForecastCategoryName</picklist>
             <values>
@@ -581,16 +402,6 @@
         <scontrol>OpportunityCreateMatching</scontrol>
     </webLinks>
     <webLinks>
-        <fullName>Create_Recurring_Donation</fullName>
-        <availability>online</availability>
-        <displayType>button</displayType>
-        <linkType>sControl</linkType>
-        <masterLabel>Create Recurring Donation</masterLabel>
-        <openType>replace</openType>
-        <protected>false</protected>
-        <scontrol>OpportunityCreateRecurring</scontrol>
-    </webLinks>
-    <webLinks>
         <fullName>New_Contact_Donation</fullName>
         <availability>online</availability>
         <description>Replaces the standard New Donation button on the Donations related list on the Contact Page Layout if you have Donation Record Types.</description>
@@ -599,11 +410,11 @@
         <masterLabel>New Contact Donation</masterLabel>
         <openType>replace</openType>
         <protected>false</protected>
+        <requireRowSelection>false</requireRowSelection>
         <url>/setup/ui/recordtypeselect.jsp?
 ent=Opportunity&amp;
 retURL=%2F{!Contact.Id}&amp;
-save_new_url=%2F006%2Fe%3Flookupcmpgn%3D1%26retURL%3D%252F{!Contact.Id}%26accid%3D{!Account.Id}%26conid%3D{!Contact.Id}%26opp6%3DExternal%2BReferral&amp;
-opp3={!Contact.Name}-%20Donation%20{!Today}</url>
+save_new_url=%2F006%2Fe%3Flookupcmpgn%3D1%26retURL%3D%252F{!Contact.Id}%26accid%3D{!Account.Id}%26conid%3D{!Contact.Id}&amp;opp3={!Contact.Name}-%20Donation%20{!Today}</url>
     </webLinks>
     <webLinks>
         <fullName>New_Organization_Donation</fullName>
@@ -614,10 +425,11 @@ opp3={!Contact.Name}-%20Donation%20{!Today}</url>
         <masterLabel>New Account Donation</masterLabel>
         <openType>replace</openType>
         <protected>false</protected>
+        <requireRowSelection>false</requireRowSelection>
         <url>/setup/ui/recordtypeselect.jsp?
 ent=Opportunity&amp;
 retURL=%2F{!Account.Id}&amp;
-save_new_url=%2F006%2Fe%3Flookupcmpgn%3D1%26retURL%3D%252F{!Account.Id}%26accid%3D{!Account.Id}%26opp6%3DExternal%2BReferral&amp;
+save_new_url=%2F006%2Fe%3Flookupcmpgn%3D1%26retURL%3D%252F{!Account.Id}%26accid%3D{!Account.Id}&amp;
 opp3={!Account.Name}-%20Donation%20{!Today}</url>
     </webLinks>
 </CustomObject>

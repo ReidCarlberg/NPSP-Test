@@ -1,4 +1,4 @@
-public class LeadConvertOverride {
+public with sharing class LeadConvertOverride {
 // Controller for lead conversion of one-to-one contacts
  
 // Written by jason venable and evan callahan

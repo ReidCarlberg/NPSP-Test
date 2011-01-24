@@ -3,16 +3,28 @@
     <enableFeeds>true</enableFeeds>
     <fields>
         <fullName>AlternateEmail__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
         <label>Alternate Email</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
         <type>Email</type>
+        <unique>false</unique>
     </fields>
     <fields>
         <fullName>HomeEmail__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
         <label>Personal Email</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
         <type>Email</type>
+        <unique>false</unique>
     </fields>
     <fields>
         <fullName>Home_Address__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
         <formula>if(
   ISPICKVAL(Primary_Address_Type__c,&quot;Home&quot;),
   if(LEN(MailingStreet)&gt;0, MailingStreet &amp; &quot;, &quot; , &quot;&quot; ) &amp; 
@@ -32,16 +44,21 @@ if(ISPICKVAL(Secondary_Address_Type__c,&quot;Home&quot;),
 )</formula>
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
         <label>Home Address</label>
+        <required>false</required>
         <type>Text</type>
+        <unique>false</unique>
     </fields>
     <fields>
         <fullName>Last_Donation_Date__c</fullName>
+        <deprecated>false</deprecated>
         <description>This field is only used with the one-to-one Organization to Contact model.</description>
+        <externalId>false</externalId>
         <formula>if( Account.One2OneContact__c = Id ,
 Account.LastDonationDate__c,
 null
 )</formula>
         <label>Last Transaction Date</label>
+        <required>false</required>
         <type>Date</type>
     </fields>
     <fields>
@@ -73,7 +90,9 @@ null
     </fields>
     <fields>
         <fullName>Lifetime_Giving_History_Amount__c</fullName>
+        <deprecated>false</deprecated>
         <description>This field is only used with the one-to-one Organization to Contact model.</description>
+        <externalId>false</externalId>
         <formula>IF( Account.One2OneContact__c = Id ,
 Account.LifetimeDonationHistory_Amount__c,
 null
@@ -81,18 +100,25 @@ null
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
         <label>Lifetime Transaction Total</label>
         <precision>18</precision>
+        <required>false</required>
         <scale>2</scale>
         <type>Currency</type>
     </fields>
     <fields>
         <fullName>Organization_Type__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
         <formula>NULLVALUE(IF( Account.SYSTEM_AccountType__c==&quot;&quot;, TEXT(Account.Type),Account.SYSTEM_AccountType__c),&quot;Organization&quot; )</formula>
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
         <label>Organization Type</label>
+        <required>false</required>
         <type>Text</type>
+        <unique>false</unique>
     </fields>
     <fields>
         <fullName>Other_Address__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
         <formula>if(
   ISPICKVAL(Primary_Address_Type__c,&quot;Other&quot;),
   if(LEN(MailingStreet)&gt;0, MailingStreet &amp; &quot;, &quot; , &quot;&quot; ) &amp; 
@@ -112,10 +138,14 @@ if(ISPICKVAL(Secondary_Address_Type__c,&quot;Other&quot;),
 )</formula>
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
         <label>Other Address</label>
+        <required>false</required>
         <type>Text</type>
+        <unique>false</unique>
     </fields>
     <fields>
         <fullName>PreferredPhone__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
         <label>Preferred Phone</label>
         <picklist>
             <picklistValues>
@@ -136,10 +166,13 @@ if(ISPICKVAL(Secondary_Address_Type__c,&quot;Other&quot;),
             </picklistValues>
             <sorted>false</sorted>
         </picklist>
+        <trackFeedHistory>false</trackFeedHistory>
         <type>Picklist</type>
     </fields>
     <fields>
         <fullName>Preferred_Email__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
         <label>Preferred Email</label>
         <picklist>
             <picklistValues>
@@ -156,10 +189,13 @@ if(ISPICKVAL(Secondary_Address_Type__c,&quot;Other&quot;),
             </picklistValues>
             <sorted>false</sorted>
         </picklist>
+        <trackFeedHistory>false</trackFeedHistory>
         <type>Picklist</type>
     </fields>
     <fields>
         <fullName>Primary_Address_Type__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
         <label>Primary Address Type</label>
         <picklist>
             <picklistValues>
@@ -176,16 +212,22 @@ if(ISPICKVAL(Secondary_Address_Type__c,&quot;Other&quot;),
             </picklistValues>
             <sorted>false</sorted>
         </picklist>
+        <trackFeedHistory>false</trackFeedHistory>
         <type>Picklist</type>
     </fields>
     <fields>
         <fullName>Private__c</fullName>
         <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
         <label>Private</label>
+        <trackFeedHistory>false</trackFeedHistory>
         <type>Checkbox</type>
     </fields>
     <fields>
         <fullName>Secondary_Address_Type__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
         <label>Secondary Address Type</label>
         <picklist>
             <picklistValues>
@@ -202,10 +244,13 @@ if(ISPICKVAL(Secondary_Address_Type__c,&quot;Other&quot;),
             </picklistValues>
             <sorted>false</sorted>
         </picklist>
+        <trackFeedHistory>false</trackFeedHistory>
         <type>Picklist</type>
     </fields>
     <fields>
         <fullName>SystemAccountProcessor__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
         <label>_SYSTEM: ACCOUNT PROCESSOR</label>
         <picklist>
             <picklistValues>
@@ -218,35 +263,54 @@ if(ISPICKVAL(Secondary_Address_Type__c,&quot;Other&quot;),
             </picklistValues>
             <sorted>false</sorted>
         </picklist>
+        <trackFeedHistory>false</trackFeedHistory>
         <type>Picklist</type>
     </fields>
     <fields>
         <fullName>SystemIsIndividual__c</fullName>
         <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
         <inlineHelpText>This field is no longer used and should not be referenced. It has been replaced by Type_of_Account__c</inlineHelpText>
         <label>_SYSTEM: IsIndividual - DEPRECATED</label>
+        <trackFeedHistory>false</trackFeedHistory>
         <type>Checkbox</type>
     </fields>
     <fields>
         <fullName>Type_of_Account__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
         <formula>IF(Account.SYSTEMIsIndividual__c,&quot;Individual&quot;,&quot;Organization&quot;)</formula>
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
         <inlineHelpText>Shows the type of Account this Contact is connected to.</inlineHelpText>
         <label>Type of Account</label>
+        <required>false</required>
         <type>Text</type>
+        <unique>false</unique>
     </fields>
     <fields>
         <fullName>WorkEmail__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
         <label>Work Email</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
         <type>Email</type>
+        <unique>false</unique>
     </fields>
     <fields>
         <fullName>WorkPhone__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
         <label>Work Phone</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
         <type>Phone</type>
     </fields>
     <fields>
         <fullName>Work_Address__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
         <formula>if(
   ISPICKVAL(Primary_Address_Type__c,&quot;Work&quot;),
   if(LEN(MailingStreet)&gt;0, MailingStreet &amp; &quot;, &quot; , &quot;&quot; ) &amp; 
@@ -266,7 +330,9 @@ if(ISPICKVAL(Secondary_Address_Type__c,&quot;Work&quot;),
 )</formula>
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
         <label>Work Address</label>
+        <required>false</required>
         <type>Text</type>
+        <unique>false</unique>
     </fields>
     <listViews>
         <fullName>AllContacts</fullName>
@@ -308,79 +374,4 @@ if(ISPICKVAL(Secondary_Address_Type__c,&quot;Work&quot;),
         </filters>
         <label>New This Week</label>
     </listViews>
-    <validationRules>
-        <fullName>Populated_Email_Field_Warning</fullName>
-        <active>true</active>
-        <description>This validation rule is only necessary for organizations that have data in the Email field before installing this package.  You don&apos;t need for this validation rule if you move all of the data from the Email field in to the NEW Work Email field.</description>
-        <errorConditionFormula>AND(
-NOT(ISCHANGED(Email)),
-LEN(PRIORVALUE(Email))&gt;0,
-ISCHANGED(Preferred_Email__c),
-NOT(OR(
-PRIORVALUE( Email) = PRIORVALUE( WorkEmail__c),
-PRIORVALUE( Email) = PRIORVALUE( HomeEmail__c),
-PRIORVALUE( Email) = PRIORVALUE( AlternateEmail__c),
-PRIORVALUE( Email) = WorkEmail__c,
-PRIORVALUE( Email) = HomeEmail__c,
-PRIORVALUE( Email) = AlternateEmail__c
-)
-)
-)</errorConditionFormula>
-        <errorDisplayField>Email</errorDisplayField>
-        <errorMessage>The Email field MUST match the field that is designated by the Preferred Email picklist. To correct this, you must copy the existing value in the Email field to a new field.</errorMessage>
-    </validationRules>
-    <validationRules>
-        <fullName>Populated_Phone_Field_Warning</fullName>
-        <active>true</active>
-        <description>This validation rule is only necessary for organizations that have data in the Phone field before installing this package.  You don&apos;t need this validation rule if move all of the data from the Phone field in to the NEW Work Phone field.</description>
-        <errorConditionFormula>AND(
-NOT(ISCHANGED(Phone)),
-LEN(PRIORVALUE(Phone ))&gt;0,
-ISCHANGED( PreferredPhone__c ),
-NOT(OR( 
-PRIORVALUE( Phone) = PRIORVALUE( WorkPhone__c ), 
-PRIORVALUE( Phone) = PRIORVALUE( HomePhone), 
-PRIORVALUE( Phone) = PRIORVALUE( MobilePhone ), 
-PRIORVALUE( Phone) = PRIORVALUE( OtherPhone), 
-PRIORVALUE( Phone) = WorkPhone__c, 
-PRIORVALUE( Phone) = HomePhone, 
-PRIORVALUE( Phone) = MobilePhone, 
-PRIORVALUE( Phone) = OtherPhone 
-) 
-) 
-)</errorConditionFormula>
-        <errorDisplayField>Phone</errorDisplayField>
-        <errorMessage>The Phone field MUST match the filed that is designated by the Preferred Phone picklist. To correct this, you must copy the existing value in the Phone field to the designated preferred phone field.</errorMessage>
-    </validationRules>
-    <validationRules>
-        <fullName>Require_Preferred_Email</fullName>
-        <active>true</active>
-        <description>Requires the user to select a value in the Preferred Email picklist when email addresses are entered into the email fields.</description>
-        <errorConditionFormula>AND(
-ISPICKVAL(  Preferred_Email__c ,&quot;&quot;),
-OR(
-LEN(  HomeEmail__c  )&gt;0,
-LEN(  WorkEmail__c  )&gt;0,
-LEN(  AlternateEmail__c  )&gt;0
-)
-)</errorConditionFormula>
-        <errorDisplayField>Preferred_Email__c</errorDisplayField>
-        <errorMessage>You must select a Preferred Email</errorMessage>
-    </validationRules>
-    <validationRules>
-        <fullName>Require_Preferred_Phone</fullName>
-        <active>true</active>
-        <description>Requires the user to select a value in the Preferred Phone picklist when phone numbers are entered into the phone number fields.</description>
-        <errorConditionFormula>AND(
-ISPICKVAL( PreferredPhone__c ,&quot;&quot;),
-OR(
-LEN( HomePhone )&gt;0,
-LEN( MobilePhone )&gt;0,
-LEN( OtherPhone )&gt;0,
-LEN( WorkPhone__c )&gt;0
-)
-)</errorConditionFormula>
-        <errorDisplayField>PreferredPhone__c</errorDisplayField>
-        <errorMessage>You must select a Preferred Phone</errorMessage>
-    </validationRules>
 </CustomObject>

@@ -31,7 +31,7 @@
 /*
     Constants for use in other IndividualAccounts.cls
 */
-global class Constants {
+global with sharing class Constants {
     //One-to-One value for system processor field
     global static final String ONE_TO_ONE_PROCESSOR = 'One-to-One';
     //One-to-One org type value
@@ -72,15 +72,15 @@ global class Constants {
                 List<Schema.PicklistEntry> P = F.getPicklistValues();
                 
                 for(Schema.PicklistEntry pe : P){
-                	system.debug(pe.getValue() + ' : ' + pe.isDefaultValue());
-                	system.debug('default value: ' + Constants.ONE_TO_ONE_PROCESSOR);
+
                     if (pe.isDefaultValue()){
                         if(pe.getValue()==Constants.ONE_TO_ONE_PROCESSOR){
                             usedToBeOneToOne = true;
+                            break;
                         }
                     }
                 }
-                system.debug(usedToBeOneToOne);
+
                 ContactsSettings = new Contacts_and_Orgs_Settings__c();
                 //set them up with their old setting in the new settings object
                 if(usedToBeOneToOne){

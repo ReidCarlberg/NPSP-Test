@@ -198,10 +198,6 @@
     <fields>
         <name>Type</name>
         <picklistValues>
-            <masterLabel>Bucket Individual</masterLabel>
-            <translation><!-- Bucket Individual --></translation>
-        </picklistValues>
-        <picklistValues>
             <masterLabel>Channel Partner / Reseller</masterLabel>
             <translation><!-- Channel Partner / Reseller --></translation>
         </picklistValues>
@@ -216,10 +212,6 @@
         <picklistValues>
             <masterLabel>Installation Partner</masterLabel>
             <translation><!-- Installation Partner --></translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>One-to-One Individual</masterLabel>
-            <translation><!-- One-to-One Individual --></translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Other</masterLabel>

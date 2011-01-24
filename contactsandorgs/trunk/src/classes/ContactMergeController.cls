@@ -27,7 +27,7 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE.
 */
-public class ContactMergeController {
+public with sharing class ContactMergeController {
     
     public ContactMergeController(){
         searchText='';
@@ -401,8 +401,10 @@ public class ContactMergeController {
         SObject master;
         // Find the master record based the selected value of the Master FieldRow
         for (FieldRow row : fieldRows) {
-            if (row.showRadio && row.fieldName.equals(MASTER_KEY)) {
+            if (row.showRadio && row.fieldName.equals(MASTER_KEY)) {                
+               
                 master = new Contact(id = row.selectedValue);
+               
                 break;
             }
         }

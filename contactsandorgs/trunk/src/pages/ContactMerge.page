@@ -39,7 +39,7 @@
             <apex:form id="searchForm"> 
             <script type="text/javascript">
                 function noenter(e){
-                   if(window.event){
+                   if(window.event){ 
                           key = window.event.keyCode;     //IE
                     } else{
                           key = e.which;     //firefox
