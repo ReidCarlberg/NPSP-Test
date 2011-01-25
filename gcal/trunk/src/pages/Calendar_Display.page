@@ -1,0 +1,35 @@
+<apex:page standardController="Resource__c" extensions="CalendarDisplayExtension" tabStyle="Calendar__tab" title="Calendar Display">
+<apex:form >
+<apex:pageBlock id="selectionBlock" >
+
+ <apex:outputLabel value="Select a Calendar" />
+        <apex:selectList id="selCal" value="{!calSelection}" multiselect="false" size="1">
+        <apex:actionSupport event="onchange" rerender="thePageBlock, infoBlock, selectionBlock" action="{!updateCalendarVals}" />
+            <apex:selectOptions value="{!CalList}"/> 
+        </apex:selectList> 
+<apex:commandButton rendered="{!(!needsResource)}" title="Create New Event For This Calendar" value="Create New Event" action="{!URLFOR($Action.Event.NewEvent, null)}&00N50000002GIGI={!selectCalendarName}" />
+</apex:pageBlock>
+
+<apex:pageBlock rendered="{!noCalendars}" >
+Invalid connection with the Google server, no calendars were retrieved. Possible causes include:
+<ul>
+<li>No available calendars for this user.</li>
+<li>Google Servers not Responding </li>
+<li>Remote Access for http://www.google.com is not available. Check Remote Access settings by going to: Setup->Develop->Remote Access. Add http://www.google.com as a remote site.</li>
+<li>Your session token has been revoked, expired, or was not created properly. See: <apex:outputLink rendered="{!noCalendars}" value="{!$Page.HelpCreatingGoogleAuthToken }">Help Authenticating</apex:outputLink> for more information.</li>
+</ul>
+</apex:pageBlock>
+
+
+<apex:pageBlock id="thePageBlock"  >
+<apex:iframe src="{!calFrame}" scrolling="false" height="600" width="800" frameborder="false" id="theIframe"/>
+<br/><apex:outputText style="font-size:7pt; " value="{!calFrame}" />
+</apex:pageBlock>
+
+<apex:pageblock id="infoBlock">
+<apex:outputText value="{!resourceStatus}"/><br />
+<apex:outputLink rendered="{!needsPrivateToken}" value="{!$Page.HelpPrivateToken}">Help Adding Private Token</apex:outputLink>
+<apex:commandLink action="{!addResourceCalendar}" rendered="{!needsResource}" >Add Matching Object in Salesforce</apex:commandLink>
+</apex:pageBlock>
+</apex:form>
+</apex:page>

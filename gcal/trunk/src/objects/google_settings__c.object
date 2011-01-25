@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customSettingsType>Hierarchy</customSettingsType>
+    <customSettingsVisibility>Public</customSettingsVisibility>
+    <description>Provides authentication settings and other preferences for Google Data API integrations.</description>
+    <enableEnhancedLookup>false</enableEnhancedLookup>
+    <enableFeeds>false</enableFeeds>
+    <fields>
+        <fullName>Admin_ID__c</fullName>
+        <description>The ID of the admin user to authenticate with if Administrator Authentication is set to true.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The ID of the admin user to authenticate with if Administrator Authentication is set to true.</inlineHelpText>
+        <label>Admin ID</label>
+        <length>20</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Administrator_Authentication__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>If true, Apex will authenticate to Google using only the admin user ID and Session token provided in the custom settings.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>If true, Apex will authenticate to Google using only the admin user ID and Session token provided in the custom settings.</inlineHelpText>
+        <label>Administrator Authentication</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Apps_Domain__c</fullName>
+        <description>The domain you&apos;re currently using for google apps. Will be used to generate proper URL links for calendaring.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The domain you&apos;re currently using for google apps. Will be used to generate proper URL links for calendaring.</inlineHelpText>
+        <label>Apps Domain</label>
+        <length>50</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Salesforce_Instance__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>The subdomain or &apos;instance&apos; that your Salesforce database resides on. This can be found by looking at the address in your browser, and copying the characters after &apos;http://&apos; and before the first dot. Examples: na3, na4, cs1</inlineHelpText>
+        <label>Salesforce Instance</label>
+        <length>5</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Session_Token__c</fullName>
+        <description>The session token provided by AuthSub for the admin ID assigned in the google sessions object.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The session token provided by AuthSub for the admin ID assigned in the google sessions object.</inlineHelpText>
+        <label>Session Token</label>
+        <length>50</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Use_Event_Trigger__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <inlineHelpText>This enables Google Calendar events to be created when a Salesforce Event is created, or deleted when a Salesforce Event is deleted.</inlineHelpText>
+        <label>Use Event Trigger</label>
+        <type>Checkbox</type>
+    </fields>
+    <label>Google Data Settings</label>
+</CustomObject>

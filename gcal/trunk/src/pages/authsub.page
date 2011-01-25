@@ -1,0 +1,39 @@
+<apex:page controller="AuthSubController">
+    <apex:form >
+        <!--  if we are missing a token, ask for one -->
+
+        <apex:outputPanel rendered="{!requestToken}">
+    <script> 
+    var scope = 'http://www.google.com/calendar/feeds/'; // change this to match the API you will use
+     
+    var forceReDirect = '/_ui/core/google/GoogleAuthSubCallback?url=' ;
+    var googleRedir = 'https://www.google.com/accounts/AuthSubRequest?next=';
+                    
+    // destination (relateive path) that will capture the token and store it for your app   
+    // you can pass your own query string parms
+    var myApp = encodeURIComponent( 
+                window.location.pathname + "?id={!$CurrentPage.parameters.id}" ) ;
+    
+    var nextUrl = window.location.protocol + '//' + window.location.host + 
+                forceReDirect + myApp ;  
+      
+    var tokenRequestUrl  = googleRedir + 
+                encodeURIComponent( nextUrl ) + 
+                "&session=1&secure=0&scope="+ scope;
+
+    // go there now
+    window.location.href = tokenRequestUrl;
+</script>
+        </apex:outputPanel>
+        <apex:outputPanel rendered="{!$CurrentPage.parameters.token != null}"> 
+Google has provided a one-time use token so we can confirm our identity:  <b>{!$CurrentPage.parameters.token}</b>
+            <br />
+Salesforce will now request a static token back from Google, in exchange for the one time use token. <br/>
+Identity will be confirmed, and a connection will be established.  The Salesforce record to update is   {!$CurrentPage.parameters.id}<br/>
+<br/>
+Click the button below to complete the process, this window will close when the process is complete.<br/>   
+<apex:commandbutton action="{!exchangeRequestToken}"
+                oncomplete="window.close();" value="Request Session token" />
+        </apex:outputPanel>
+    </apex:form>
+</apex:page>

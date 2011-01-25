@@ -1,0 +1,52 @@
+<apex:page title="Help: Creating a Google Authentication Token" standardStylesheets="true">
+<apex:PageBlock >
+<apex:SectionHeader title="gcal2SF - Help" subtitle="Creating a Google Authentication Token"/>
+<apex:PageBlockSection showHeader="true" title="Step One" columns="1" >
+<ul>
+<li>Click on your "Google Auth Token" tab, and click "New" to create a new token.</li>
+<li>Enter a Name for your token <i>(user choice)</i> and select "http://www.google.com/calendar/feeds/" as your "Scope".</li>
+<li>Click "Save" to save your token. </li>
+</ul> 
+<apex:image url="{!URLFOR($Resource.HelpImageFiles, 'gtoken1.jpg')}" />
+</apex:PageBlockSection>
+
+<apex:PageBlockSection showHeader="true" title="Step Two" columns="1" >
+<ul>
+<li>Click on "Request Token" in the detail view button at the top of your record. A new window should open. <i>(if a new window did not appear, you may need to disable your pop-up blocker for this site.)</i></li>
+<li>Login to your Google Apps account <i>(not shown below)</i> or, if you are current logged in to one or more accounts, select the account that has the calendars you wish to use. Alternately, you may sign in to a completely different account as needed.</li>
+</ul> 
+<apex:image url="{!URLFOR($Resource.HelpImageFiles, 'gtoken2.jpg')}"/>
+</apex:PageBlockSection>
+
+
+<apex:PageBlockSection showHeader="true" title="Step Three" columns="1">
+<ul>
+<li>If requested, click "Grant Access" to allow Salesforce and Google to communicate.</li>
+</ul> 
+<apex:image url="{!URLFOR($Resource.HelpImageFiles, 'gtoken3.jpg')}"/>
+</apex:PageBlockSection>
+
+
+<apex:PageBlockSection showHeader="true" title="Step Four" columns="1">
+<ul>
+<li>Click "Request Session Token". The window should close, leaving your Google Auth Token object in the original browser window.</li>
+<li>Refresh your browser window.</li>
+</ul>
+<apex:image url="{!URLFOR($Resource.HelpImageFiles, 'gtoken4.jpg')}"/>
+</apex:PageBlockSection>
+
+<apex:PageBlockSection showHeader="true" title="Step Five" columns="1">
+<ul>
+<li>Your Google Auth Session token should now have the AuthSubSessionToken field filled in.</li>
+<li>You should now be able to view your Google Calendar.</li>
+</ul>
+<apex:image url="{!URLFOR($Resource.HelpImageFiles, 'gtoken5.jpg')}"/>
+</apex:PageBlockSection>
+
+
+
+
+
+</apex:PageBlock>
+
+</apex:page>

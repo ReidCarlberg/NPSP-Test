@@ -1,0 +1,40 @@
+<apex:page title="Help: Adding a Private Token to Your Calendar" standardStylesheets="true">
+<apex:PageBlock >
+<apex:SectionHeader title="gcal2SF - Help" subtitle="Obtaining a Private Token"/>
+<apex:PageBlockSection showHeader="true" title="Step One" columns="1" >
+<ul>
+<li>Login to your Google Account, and navigate to the Calendar page of your account: <a href="http://calendar.google.com" target="_blank">Google Calendar</a></li>
+<li>Select "Settings" underneath your available list of calendars on the left hand side.</li>
+</ul> 
+<apex:image url="{!URLFOR($Resource.HelpImageFiles, 'pvttkn1.jpg')}" />
+</apex:PageBlockSection>
+
+<apex:PageBlockSection showHeader="true" title="Step Two" columns="1" >
+<ul>
+<li>Select the "Calendars" tab. </li>
+<li>Click the name of the calendar whose token you need.</li>
+</ul> 
+<apex:image url="{!URLFOR($Resource.HelpImageFiles, 'pvttkn2.jpg')}"/>
+</apex:PageBlockSection>
+
+
+<apex:PageBlockSection showHeader="true" title="Step Three" columns="1">
+<ul>
+<li>In the "Private Address" section, click on the button labeled "html".</li>
+<li>Highlight and copy <i>(ctrl+c)</i> the characters the follow "pvttkn=" at the end of the link that is displayed. This is your private token. </li>
+</ul> 
+<apex:image url="{!URLFOR($Resource.HelpImageFiles, 'pvttkn3.jpg')}"/>
+</apex:PageBlockSection>
+
+
+<apex:PageBlockSection showHeader="true" title="Step Four" columns="1">
+<ul>
+<li>Navigate to your "Resource" tab in your Salesforce.com account. <i>(This tab may not be visible. To view the tab, click the '+' at the far righthand side of your tab row.)</i></li>
+<li>Open and edit the Resource which matches the name of your Google Calendar. </li>
+<li>Paste the private token <i>(ctrl+v)</i> into the "pvttkn" field and save the Resource. </li>
+</ul>
+<apex:image url="{!URLFOR($Resource.HelpImageFiles, 'pvttkn4.jpg')}"/>
+</apex:PageBlockSection>
+</apex:PageBlock>
+
+</apex:page>
