@@ -41,6 +41,9 @@ public with sharing class ContactMergeController {
     private static final String MASTER_KEY = '$MASTER$';
     
     public boolean displaySearchResults {get; set;} 
+    
+    //set to true when the search string is invalid- ensures page messages are properly rendered
+    public boolean invalidSearchString {get; set;}
      
     //string of search text entered by user
     public String searchText { get { return searchText; } set { searchText = value; } }
@@ -351,12 +354,24 @@ public with sharing class ContactMergeController {
     //search for contacts
     public void search() {
         
-        if(searchText != null && searchText.length()>0){
-                        
+        if(searchText != null && ((searchText.length()>1 && !searchText.contains('*')) || (searchText.length() > 2))){
+            system.debug('======================valid text');
+            invalidSearchString = false;            
             this.searchResults = wrapSOSLResults(mySOSL());
             if (searchResults.size() > 0) {
                 displaySearchResults = true;
             }
+            system.debug('INVALID SEARCH STRING=======' + invalidSearchString);
+            system.debug('DISPLAYSEARCHRESULTS =======' + displaySearchResults);
+            system.debug('SEARCHTEXT =================' + searchText);
+        
+        }
+        else{
+        	system.debug('=========================invalid text');
+        	displaySearchResults = false;
+        	invalidSearchString = true;
+        	ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.FATAL,'Invalid Search String - Please use a minimum of two alphanumeric characters.');
+        	ApexPages.addMessage(myMsg);
         }
     }
     
@@ -364,6 +379,9 @@ public with sharing class ContactMergeController {
     public List<List<SObject>> mySOSL()
     {
         searchResults.clear();    
+        
+        //Issue 228 
+        searchText = string.escapeSingleQuotes(searchText);  
         
         //build the SOSL query and execute
         String searchquery = 'FIND \'' + searchText + '\' IN ALL FIELDS RETURNING Contact(id, name, accountId, account.name, title, email, phone, ownerId, owner.name ORDER BY LastName LIMIT ' + SOSL_LIMIT + ')';

@@ -13,7 +13,7 @@
 			padding:2px 6px;
 		} 
 		.header td{
-			background-color: #D8F1F9;
+			background-color: #D8F1F9; 
 			font-weight: bold;
 		}
 		.separator td{
@@ -52,18 +52,20 @@
                           return true;
                     }
                 }
-            </script>
+            </script> 
             
             	<apex:inputText value="{!searchText}" id="searchText" onkeypress="return noenter(event);"/> 
-    
                 <apex:commandButton id="searchButton" action="{!search}"  rerender="searchresults,selectedContacts,winnerpanel" value="Search" status="searchStatus"/> <apex:actionStatus startText="(searching...)" id="searchStatus"/> 
                 <br/><br/>
             </apex:form>
         </apex:outputPanel>
         
-        <apex:pageMessages /> 
+          
         <apex:outputPanel id="searchresults" layout="block">
-            <apex:outputPanel id="nothingfound" layout="block" rendered="{!!displaySearchResults&&searchText!=''}">
+            <apex:outputPanel id="invalidsearch" layout="block" rendered="{!invalidSearchString}">
+            <apex:pageMessages />
+            </apex:outputPanel>           
+            <apex:outputPanel id="nothingfound" layout="block" rendered="{!!displaySearchResults&&searchText!=''&&!invalidSearchString}">
             {!$Label.Contact_Merge_Error_Confirm_Message_Nothing_Found}
             </apex:outputPanel>
             <apex:form >
