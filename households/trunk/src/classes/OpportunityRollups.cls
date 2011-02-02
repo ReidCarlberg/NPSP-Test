@@ -208,7 +208,7 @@ public class OpportunityRollups {
                     //SUM(Total_Unpaid__c) TotalUnpaid, MAX(Amount) LargestAmount, 
                     //AVG(Amount) AverageAmount, MIN(Amount) SmallestAmount,
             soqlStatement += 'MAX(CloseDate) LastCloseDate, ';
-            soqlStatement += 'MIN(npe01__membership_start_date__c) FirstStartDate, MAX(npe01__membership_start_date__c) LastEndDate,  ';
+            soqlStatement += 'MIN(npe01__membership_start_date__c) FirstStartDate, MAX(npe01__membership_end_date__c) LastEndDate,  ';
             soqlStatement += 'COUNT_DISTINCT(Id) NumberOfClosedOpps, MAX(npo02__CombinedRollupFieldset__c) RollupFieldset  ';
             soqlStatement += 'FROM Opportunity ';
             soqlStatement += 'WHERE isWon=true  ';
