@@ -161,9 +161,9 @@ public class OpportunityRollups {
         soqlStatement += 'HAVING ( Calendar_Year(closeDate) = null OR Calendar_Year(closeDate) >= : startYear ) ';
         soqlStatement += 'AND accountId != null';
         
-        for (sobject r : Database.query(soqlStatement)){
-                    
-                    
+        list<sobject> objectList = Database.query(soqlStatement);
+        
+        for (sobject r : objectList){
                     
             //system.debug(Logginglevel.WARN, 'ROLLUP ROW: ' + r);
 
@@ -189,7 +189,9 @@ public class OpportunityRollups {
         soqlStatement += 'GROUP BY accountId '; 
         soqlStatement += 'HAVING accountId != null';
         
-        for (sobject r : Database.query(soqlStatement) ) {
+        objectList.clear();
+        objectList = database.query(soqlStatement);
+        for (sobject r : objectList ) {
             //system.debug(Logginglevel.WARN, 'ROLLUP ROW: ' + r);
             
             // get the ids
@@ -222,8 +224,11 @@ public class OpportunityRollups {
             soqlStatement += 'HAVING  ';
                     // ( Calendar_Year(closeDate) = null OR Calendar_Year(closeDate) >= : startYear ) AND
             soqlStatement += 'accountId != null';
-                    
-            for (sobject r : Database.query(soqlStatement) ) {
+            
+            objectList.clear();
+            objectList = database.query(soqlStatement);        
+            
+            for (sobject r : objectList ) {
                 //system.debug('ROLLUP ROW: ' + r);
     
                 // get the account id for this result row
@@ -390,6 +395,11 @@ public class OpportunityRollups {
         // copy all the rollups from each result row into the contact objects
         integer startYear = system.today().year() - 2; 
         
+        //generic object list for database query results
+        //resolves aggregrate querymore issue
+        list<sobject> objectList = new list<sobject>();
+        
+        
         if (alwaysRollupToPrimaryContact) {
             String soqlStatement = 'SELECT contact.npo02__household__c hhid, contactId, Calendar_Year(Opportunity.CloseDate) CalendarYr, ';
             soqlStatement += 'SUM(Opportunity.Amount) TotalOppAmount,  ';
@@ -408,8 +418,11 @@ public class OpportunityRollups {
             //soqlStatement += '(contact.npo02__household__c = null AND contactid IN :conids)) ';
             soqlStatement += 'GROUP BY CUBE(contact.npo02__household__c, contactId, Calendar_Year(opportunity.closeDate)) ';
             soqlStatement += 'HAVING (contactId IN : conIds OR contactId = null)';
+           
+             
+            objectList = database.query(soqlStatement);
             
-            for (sobject r : Database.query(soqlStatement) ) {
+            for (sobject r : objectList ) {
                 
                 // system.debug(Logginglevel.WARN, 'ROLLUP ROW: ' + r);
     
@@ -455,7 +468,10 @@ public class OpportunityRollups {
             soqlStatement += 'GROUP BY ROLLUP(contact.npo02__household__c, contactId) ';
             soqlStatement += 'HAVING (contactId IN : conIds OR contactId = null)  ';
             
-            for (sobject r : Database.query(soqlStatement)) {
+            objectList.clear();
+            objectList = database.query(soqlStatement);
+            
+            for (sobject r : objectList) {
     
                 //system.debug(Logginglevel.WARN, 'ROLLUP ROW: ' + r);
                 
@@ -495,7 +511,10 @@ public class OpportunityRollups {
                 soqlStatement += 'GROUP BY CUBE(contact.npo02__household__c, contactId) ';
                 soqlStatement += 'HAVING (contactId IN : conIds OR contactId = null) '; 
                 
-                for (sobject r : Database.query(soqlStatement)) {
+                objectList.clear();
+                objectList = database.query(soqlStatement);
+              
+                for (sobject r : objectList) {
                             
                     // get the ids
                     id cid = (id)(r.get('contactId'));
@@ -530,8 +549,11 @@ public class OpportunityRollups {
             //soqlStatement += '(contact.npo02__household__c = null AND contactid IN :conids)) ';
             soqlStatement += 'GROUP BY CUBE(contact.npo02__household__c, contactId, Calendar_Year(opportunity.closeDate)) ';
             soqlStatement += 'HAVING (contactId IN : conIds OR contactId = null) ';
-            
-            for (sobject r : Database.query(soqlStatement)) {
+                
+            objectList.clear();
+            objectList = database.query(soqlStatement);
+                
+            for (sobject r : objectList) {
                 
                 // system.debug(Logginglevel.WARN, 'ROLLUP ROW: ' + r);
     
@@ -578,7 +600,10 @@ public class OpportunityRollups {
             soqlStatement += 'GROUP BY ROLLUP(contact.npo02__household__c, contactId) ';
             soqlStatement += 'HAVING (contactId IN : conIds OR contactId = null) ';
             
-            for (sobject r : Database.query(soqlStatement)) {
+           objectList.clear();
+           objectList = database.query(soqlStatement);
+                
+           for (sobject r : objectList) {
     
                 //system.debug(Logginglevel.WARN, 'ROLLUP ROW: ' + r);
                 
@@ -618,8 +643,11 @@ public class OpportunityRollups {
                 //soqlStatement += '(contact.npo02__household__c = null AND contactid IN :conids)) ';
                 soqlStatement += 'GROUP BY CUBE(contact.npo02__household__c, contactId) ';
                 soqlStatement += 'HAVING (contactId IN : conIds OR contactId = null) ';
+               
+                objectList.clear();
+                objectList = database.query(soqlStatement);
                 
-                for (sobject r : Database.query(soqlStatement)) {
+                for (sobject r : objectList) {
                             
                     // get the ids
                     id cid = (id)(r.get('contactId'));
