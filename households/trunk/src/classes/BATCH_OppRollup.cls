@@ -1,5 +1,5 @@
 /**
- * @author Salesforce.com Foundation
+ * @author Salesforce.com Foundation 
  * @date 02/07/2010
  * @description Provides batch wrapper for opportunity rollups
  */
@@ -12,16 +12,30 @@ global class BATCH_OppRollup implements Database.Batchable<SObject> {
     * @author Salesforce.com Foundation
     * @date 02/07/2010
     * @description Constructor
-    * @param String - Contains query 
+    * @param Contains query string 
     */
 	public BATCH_OppRollup(string q) {    
 		query = q; 
 	}
-	
+		
+	/**    
+    * @author Salesforce.com Foundation
+    * @date 02/07/2010
+    * @description Start method for batch apex query locator
+    * @param bc contains context 
+    */
 	global database.Querylocator start(Database.BatchableContext bc) {
 		return Database.getQueryLocator(query);		 
 	}
 	
+	
+	/**    
+    * @author Salesforce.com Foundation
+    * @date 02/07/2010
+    * @description execute method of batch
+    * @param bc Contains results of the query locater
+    * @param result a list of sobjects 
+    */
 	global public void execute(Database.BatchableContext bc, Sobject[] result) {
 		
 		// run rollups for this batch		
@@ -34,10 +48,20 @@ global class BATCH_OppRollup implements Database.Batchable<SObject> {
  		}
  		
 	}
-
+    /**    
+    * @author Salesforce.com Foundation
+    * @date 02/07/2010
+    * @description finish method of batch  
+    * @param a batchable context for processing finish.    
+    */
 	global void finish(Database.BatchableContext bc) {
 	}
-
+    
+    /**    
+    * @author Salesforce.com Foundation
+    * @date 02/07/2010
+    * @description test method     
+    */
 	public static testMethod void testBatch() {
 		String giftRecordTypeNameForTests = RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
 		if(giftRecordTypeNameForTests!=''){
