@@ -1,4 +1,4 @@
-public with sharing class OpportunityContactRoles {
+public without sharing class OpportunityContactRoles {
 
     /// <name> ContactRoles </name>
     /// <summary> Default Constructor </summary>

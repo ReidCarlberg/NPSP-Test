@@ -27,7 +27,7 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE.
 */
-global with sharing class IndividualAccounts
+global without sharing class IndividualAccounts
 {
 
     /// <name> IndividualAccounts </name>
@@ -288,8 +288,8 @@ global with sharing class IndividualAccounts
                 
                 
             } else {
-                //construct the individul account for the Contact
-                Account a = new Account();
+                //construct the 1x1 account for the Contact
+                Account a = new Account(OwnerID = c.OwnerID);
                 String aName = '';
                 if (c.FirstName != null)
                 {
@@ -313,6 +313,7 @@ global with sharing class IndividualAccounts
                 a.ShippingCity = c.OtherCity;
                 a.ShippingState = c.OtherState;
                 a.ShippingCountry = c.OtherCountry;
+                
                 //flag the account as an individual account
                 //a.Type = Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
                 a.SYSTEM_AccountType__c = Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
@@ -371,7 +372,8 @@ global with sharing class IndividualAccounts
                 c.OtherCity != a.ShippingCity ||
                 c.OtherState != a.ShippingState ||
                 c.OtherPostalCode != a.ShippingPostalCode ||
-                c.OtherCountry != a.ShippingCountry ||
+                c.OtherCountry != a.ShippingCountry ||   
+              //  a.OwnerID != c.OwnerID ||              
                 c.FirstName + ' ' + c.LastName != a.Name)
             ) {
                 // Update Account fields
@@ -386,6 +388,7 @@ global with sharing class IndividualAccounts
                 a.ShippingPostalCode = c.OtherPostalCode;
                 a.ShippingCountry = c.OtherCountry;
                 a.Name = c.FirstName + ' ' + c.LastName;
+                //a.OwnerId = c.OwnerId;
                 
                 accountUpdates.add(a);
             }
