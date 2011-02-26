@@ -6,7 +6,7 @@
         <defaultValue>0</defaultValue>
         <label>Average Gift</label>
         <precision>16</precision>
-        <scale>2</scale>
+        <scale>2</scale> 
         <type>Currency</type>
     </fields>
     <fields>

@@ -1,4 +1,4 @@
-public class CTRL_OpportunityRollup {
+public class CTRL_OpportunityRollup { 
  
     // properties for page
     public boolean batching { get; set; }
@@ -7,7 +7,7 @@ public class CTRL_OpportunityRollup {
     // object id passed in via parameter
     string objectId;
     id oid;
-
+ 
     // constructor
     public CTRL_OpportunityRollup() {
         batchRunning = false;

@@ -4,5 +4,10 @@
         <members>OpportunityRollups</members>
         <name>ApexClass</name>
     </types>
+    <types>
+        <members>Household__c</members>
+        <members>Households_Settings__c</members>
+        <name>CustomObject</name>
+    </types>
     <version>20.0</version>
 </Package>

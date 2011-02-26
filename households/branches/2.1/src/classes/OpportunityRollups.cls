@@ -1,24 +1,35 @@
 public class OpportunityRollups {
-
+ 
     // settings
     boolean triggerRollupEnabled = true;
-    boolean alwaysRollupToPrimaryContact = false; 
+    boolean alwaysRollupToPrimaryContact = false;     
     set<id> recordTypesToExcludeAccts = new set<id>();
     set<id> recordTypesToExcludeCons = new set<id>();
     set<id> mbrRecordTypes = new set<id>(); 
     set<string> oppTypesToExcludeAccts = new set<string>();
     set<string> oppTypesToExcludeCons = new set<string>();  
+    //Modifiable ndays setting for 2.1    
+    string ndayrollup = '365';  //default to original 365 day value
+    
+    
+    
+    //user defined rollups in list settings
+    public static map<string, User_Rollup_Field_Settings__c> userRollups = new map<string, User_Rollup_Field_Settings__c>();
+    public boolean hasContactRollups;
+    public boolean hasHouseholdRollups;
+    public boolean hasAccountRollups;
+    
     
     static boolean recordTypesOnOpps;
     
-    //determines if record types are enabled on opportunities
+    //determines if record types are enabled on opportunities 
     public static boolean areRecordTypesOnOpps(){
         if (recordTypesOnOpps==null){
             String giftRt = RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
             if (giftRt!=null&&giftRt!=''){
                 recordTypesOnOpps = true;
             } else {
-                recordTypesOnOpps = false; 
+                recordTypesOnOpps = false;  
             }
         }
         return recordTypesOnOpps;
@@ -47,6 +58,9 @@ public class OpportunityRollups {
             if (rollupSettings.Excluded_Account_Opp_Types__c != null) {
                 oppTypesToExcludeAccts = new set<string>(rollupSettings.Excluded_Contact_Opp_Types__c.split(';'));
             }
+            if (rollupSettings.Rollup_N_Day_Value__c != null){
+            	ndayRollup = string.valueOf(rollupSettings.Rollup_N_Day_Value__c);
+            }
             if (rollupSettings.Membership_Record_Types__c != null) {
                 set<string> mbrRecordTypeNames = new set<string>(rollupSettings.Membership_Record_Types__c.split(';'));
                 mbrRecordTypes = RecordTypes.GetRecordTypeIdSet('Opportunity', mbrRecordTypeNames);
@@ -55,7 +69,22 @@ public class OpportunityRollups {
                 triggerRollupEnabled = false;
             if (rollupSettings.Always_Rollup_to_Primary_Contact__c == true)
                 alwaysRollupToPrimaryContact = true;
+                
         }
+        
+        //load user rollup settings - if they exist        
+        userRollups = User_Rollup_Field_Settings__c.getAll(); 
+        
+        //setup our object bools to demarcate which objects have user defined rollups
+        //this will save us some cycles later on
+        for (string s : userRollups.keySet()){
+        	User_Rollup_Field_Settings__c urfs = userRollups.get(s);
+        	if (urfs.Object_Name__c == 'Contact'){hasContactRollups = true;}      	
+        	if (urfs.Object_Name__c == 'Account'){hasAccountRollups = true;}
+        	if (urfs.Object_Name__c == 'Household'){hasHouseholdRollups = true;}
+        }
+        
+                
         /*
         if (isTest) {
             oppTypesToExcludeCons.add('In Kind');
@@ -129,25 +158,16 @@ public class OpportunityRollups {
 
         // copy all the rollups from each result row into the account objects
         integer startYear = system.today().year() - 2;
-        /*
-        for (sobject r : 
-            [SELECT accountId, Calendar_Year(CloseDate) CalendarYr,
-                SUM(Amount) TotalOppAmount, AVG(Amount) AverageAmount, MIN(Amount) SmallestAmount,
-                MAX(Amount) LargestAmount, MIN(CloseDate) FirstCloseDate, MAX(CloseDate) LastCloseDate, 
-                COUNT_DISTINCT(Id) NumberOfClosedOpps, MAX(npo02__CombinedRollupFieldset__c) RollupFieldset 
-                FROM Opportunity
-                WHERE isWon=true 
-                AND (Amount > 0 OR Amount < 0) 
-                AND RecordTypeId NOT IN : recordTypesToExcludeAccts
-                AND Type NOT IN : oppTypesToExcludeAccts
-                AND accountId IN : allAccts
-                GROUP BY ROLLUP (accountId, Calendar_Year(closeDate))
-                HAVING ( Calendar_Year(closeDate) = null OR Calendar_Year(closeDate) >= : startYear )
-                AND accountId != null ] ) {
-                    */
+     
         String soqlStatement = 'SELECT accountId, Calendar_Year(CloseDate) CalendarYr, ';
         soqlStatement += 'SUM(Amount) TotalOppAmount, AVG(Amount) AverageAmount, MIN(Amount) SmallestAmount, ';
-        soqlStatement += 'MAX(Amount) LargestAmount, MIN(CloseDate) FirstCloseDate, MAX(CloseDate) LastCloseDate, '; 
+        soqlStatement += 'MAX(Amount) LargestAmount, MIN(CloseDate) FirstCloseDate, MAX(CloseDate) LastCloseDate, ';
+        for (string s : userRollups.keyset()){
+        	if (userRollups.get(s).Object_Name__c == 'Account'){
+        	   User_Rollup_Field_Settings__c urfs = userRollups.get(s);
+        	   soqlStatement += urfs.Field_Action__c + '(' + urfs.Source_Field__c + ') ' + urfs.Name + ', '; 	
+        	}        	
+        }
         soqlStatement += 'COUNT_DISTINCT(Id) NumberOfClosedOpps, MAX(npo02__CombinedRollupFieldset__c) RollupFieldset '; 
         soqlStatement += 'FROM Opportunity ';
         soqlStatement += 'WHERE isWon=true '; 
@@ -161,9 +181,9 @@ public class OpportunityRollups {
         soqlStatement += 'HAVING ( Calendar_Year(closeDate) = null OR Calendar_Year(closeDate) >= : startYear ) ';
         soqlStatement += 'AND accountId != null';
         
-        for (sobject r : Database.query(soqlStatement)){
-                    
-                    
+        list<sobject> objectList = Database.query(soqlStatement);
+        
+        for (sobject r : objectList){
                     
             //system.debug(Logginglevel.WARN, 'ROLLUP ROW: ' + r);
 
@@ -185,11 +205,13 @@ public class OpportunityRollups {
         }
         soqlStatement += 'AND Type NOT IN : oppTypesToExcludeAccts '; 
         soqlStatement += 'AND accountId IN : allAccts '; 
-        soqlStatement += 'AND closeDate >= LAST_N_DAYS:365 '; 
+        soqlStatement += 'AND closeDate >= LAST_N_DAYS:' + ndayrollup + ' '; 
         soqlStatement += 'GROUP BY accountId '; 
         soqlStatement += 'HAVING accountId != null';
         
-        for (sobject r : Database.query(soqlStatement) ) {
+        objectList.clear();
+        objectList = database.query(soqlStatement);
+        for (sobject r : objectList ) {
             //system.debug(Logginglevel.WARN, 'ROLLUP ROW: ' + r);
             
             // get the ids
@@ -222,8 +244,11 @@ public class OpportunityRollups {
             soqlStatement += 'HAVING  ';
                     // ( Calendar_Year(closeDate) = null OR Calendar_Year(closeDate) >= : startYear ) AND
             soqlStatement += 'accountId != null';
-                    
-            for (sobject r : Database.query(soqlStatement) ) {
+            
+            objectList.clear();
+            objectList = database.query(soqlStatement);        
+            
+            for (sobject r : objectList ) {
                 //system.debug('ROLLUP ROW: ' + r);
     
                 // get the account id for this result row
@@ -390,12 +415,23 @@ public class OpportunityRollups {
         // copy all the rollups from each result row into the contact objects
         integer startYear = system.today().year() - 2; 
         
+        //generic object list for database query results
+        //resolves aggregrate querymore issue
+        list<sobject> objectList = new list<sobject>();
+        
+        
         if (alwaysRollupToPrimaryContact) {
             String soqlStatement = 'SELECT contact.npo02__household__c hhid, contactId, Calendar_Year(Opportunity.CloseDate) CalendarYr, ';
             soqlStatement += 'SUM(Opportunity.Amount) TotalOppAmount,  ';
             soqlStatement += 'AVG(Opportunity.Amount) AverageAmount, MIN(Opportunity.Amount) SmallestAmount, ';
             soqlStatement += 'MAX(Opportunity.Amount) LargestAmount, MIN(Opportunity.CloseDate) FirstCloseDate, '; 
             soqlStatement += 'MAX(Opportunity.CloseDate) LastCloseDate, COUNT_DISTINCT(Opportunity.Id) NumberOfClosedOpps, ';
+            for (string s : userRollups.keyset()){
+                if (userRollups.get(s).Object_Name__c == 'Contact'){
+                    User_Rollup_Field_Settings__c urfs = userRollups.get(s);
+                    soqlStatement += urfs.Field_Action__c + '(Opportunity.' + urfs.Source_Field__c + ') ' + urfs.Name + ', ';    
+                }           
+            }            
             soqlStatement += 'MAX(Opportunity.npo02__CombinedRollupFieldset__c) RollupFieldset ';
             soqlStatement += 'FROM OpportunityContactRole  ';
             soqlStatement += 'WHERE isPrimary=true AND opportunity.isWon=true '; 
@@ -408,8 +444,11 @@ public class OpportunityRollups {
             //soqlStatement += '(contact.npo02__household__c = null AND contactid IN :conids)) ';
             soqlStatement += 'GROUP BY CUBE(contact.npo02__household__c, contactId, Calendar_Year(opportunity.closeDate)) ';
             soqlStatement += 'HAVING (contactId IN : conIds OR contactId = null)';
+           
+             
+            objectList = database.query(soqlStatement);
             
-            for (sobject r : Database.query(soqlStatement) ) {
+            for (sobject r : objectList ) {
                 
                 // system.debug(Logginglevel.WARN, 'ROLLUP ROW: ' + r);
     
@@ -451,11 +490,14 @@ public class OpportunityRollups {
             soqlStatement += 'AND Opportunity.Type NOT IN : oppTypesToExcludeCons ';
             soqlStatement += 'AND (contact.npo02__household__c IN : hhIds) '; //OR  ';
             //soqlStatement += '(contact.npo02__household__c = null AND contactid IN :conids)) ';
-            soqlStatement += 'AND opportunity.closeDate >= LAST_N_DAYS:365 ';
+            soqlStatement += 'AND opportunity.closeDate >= LAST_N_DAYS:' + ndayrollup + ' ';
             soqlStatement += 'GROUP BY ROLLUP(contact.npo02__household__c, contactId) ';
             soqlStatement += 'HAVING (contactId IN : conIds OR contactId = null)  ';
             
-            for (sobject r : Database.query(soqlStatement)) {
+            objectList.clear();
+            objectList = database.query(soqlStatement);
+            
+            for (sobject r : objectList) {
     
                 //system.debug(Logginglevel.WARN, 'ROLLUP ROW: ' + r);
                 
@@ -482,6 +524,12 @@ public class OpportunityRollups {
                 soqlStatement += 'MIN(Opportunity.npe01__membership_start_date__c) FirstStartDate, '; 
                 soqlStatement += 'MAX(Opportunity.npe01__Membership_End_Date__c) LastEndDate,  ';
                 soqlStatement += 'COUNT_DISTINCT(Opportunity.Id) NumberOfClosedOpps, ';
+                for (string s : userRollups.keyset()){
+                    if (userRollups.get(s).Object_Name__c == 'Contact'){
+                        User_Rollup_Field_Settings__c urfs = userRollups.get(s);
+                        soqlStatement += urfs.Field_Action__c + '(Opportunity.' + urfs.Source_Field__c + ') ' + urfs.Name + ', ';    
+                    }           
+                } 
                 soqlStatement += 'MAX(Opportunity.npo02__CombinedRollupFieldset__c) RollupFieldset ';
                 soqlStatement += 'FROM OpportunityContactRole  ';
                 soqlStatement += 'WHERE isPrimary=true AND opportunity.isWon=true '; 
@@ -495,7 +543,10 @@ public class OpportunityRollups {
                 soqlStatement += 'GROUP BY CUBE(contact.npo02__household__c, contactId) ';
                 soqlStatement += 'HAVING (contactId IN : conIds OR contactId = null) '; 
                 
-                for (sobject r : Database.query(soqlStatement)) {
+                objectList.clear();
+                objectList = database.query(soqlStatement);
+              
+                for (sobject r : objectList) {
                             
                     // get the ids
                     id cid = (id)(r.get('contactId'));
@@ -517,6 +568,12 @@ public class OpportunityRollups {
             soqlStatement += 'AVG(Opportunity.Amount) AverageAmount, MIN(Opportunity.Amount) SmallestAmount, ';
             soqlStatement += 'MAX(Opportunity.Amount) LargestAmount, MIN(Opportunity.CloseDate) FirstCloseDate, '; 
             soqlStatement += 'MAX(Opportunity.CloseDate) LastCloseDate, COUNT_DISTINCT(Opportunity.Id) NumberOfClosedOpps, ';
+            for (string s : userRollups.keyset()){
+                if (userRollups.get(s).Object_Name__c == 'Contact'){
+                    User_Rollup_Field_Settings__c urfs = userRollups.get(s);
+                    soqlStatement += urfs.Field_Action__c + '(Opportunity.' + urfs.Source_Field__c + ') ' + urfs.Name + ', ';    
+                }           
+            } 
             soqlStatement += 'MAX(Opportunity.npo02__CombinedRollupFieldset__c) RollupFieldset ';
             soqlStatement += 'FROM OpportunityContactRole  ';
             soqlStatement += 'WHERE isPrimary=true AND opportunity.isWon=true '; 
@@ -530,8 +587,11 @@ public class OpportunityRollups {
             //soqlStatement += '(contact.npo02__household__c = null AND contactid IN :conids)) ';
             soqlStatement += 'GROUP BY CUBE(contact.npo02__household__c, contactId, Calendar_Year(opportunity.closeDate)) ';
             soqlStatement += 'HAVING (contactId IN : conIds OR contactId = null) ';
-            
-            for (sobject r : Database.query(soqlStatement)) {
+                
+            objectList.clear();
+            objectList = database.query(soqlStatement);
+                
+            for (sobject r : objectList) {
                 
                 // system.debug(Logginglevel.WARN, 'ROLLUP ROW: ' + r);
     
@@ -574,11 +634,14 @@ public class OpportunityRollups {
             soqlStatement += 'AND (opportunity.accountid = null OR opportunity.account.npe01__SYSTEMIsIndividual__c = true) ';   
             soqlStatement += 'AND (contact.npo02__household__c IN : hhIds ) ';// OR  ';
             //soqlStatement += '(contact.npo02__household__c = null AND contactid IN :conids)) ';
-            soqlStatement += 'AND opportunity.closeDate >= LAST_N_DAYS:365 ';
+            soqlStatement += 'AND opportunity.closeDate >= LAST_N_DAYS:' + ndayrollup + ' ';
             soqlStatement += 'GROUP BY ROLLUP(contact.npo02__household__c, contactId) ';
             soqlStatement += 'HAVING (contactId IN : conIds OR contactId = null) ';
             
-            for (sobject r : Database.query(soqlStatement)) {
+           objectList.clear();
+           objectList = database.query(soqlStatement);
+                
+           for (sobject r : objectList) {
     
                 //system.debug(Logginglevel.WARN, 'ROLLUP ROW: ' + r);
                 
@@ -618,8 +681,11 @@ public class OpportunityRollups {
                 //soqlStatement += '(contact.npo02__household__c = null AND contactid IN :conids)) ';
                 soqlStatement += 'GROUP BY CUBE(contact.npo02__household__c, contactId) ';
                 soqlStatement += 'HAVING (contactId IN : conIds OR contactId = null) ';
+               
+                objectList.clear();
+                objectList = database.query(soqlStatement);
                 
-                for (sobject r : Database.query(soqlStatement)) {
+                for (sobject r : objectList) {
                             
                     // get the ids
                     id cid = (id)(r.get('contactId'));
@@ -641,25 +707,25 @@ public class OpportunityRollups {
         for (id cid : conIds) {
             contact c1 = cmap.get(cid);
             contact c2 = contactsToUpdate.get(cid);
-            if (c1.npo02__TotalOppAmount__c == c2.npo02__TotalOppAmount__c &&
+            if ((c1.npo02__TotalOppAmount__c == c2.npo02__TotalOppAmount__c &&
                     c1.npo02__OppAmountLastYear__c == c2.npo02__OppAmountLastYear__c && 
                     c1.npo02__OppAmount2YearsAgo__c == c2.npo02__OppAmount2YearsAgo__c &&
                     c1.npo02__OppAmountLastNDays__c == c2.npo02__OppAmountLastNDays__c &&
                     c1.npo02__OppAmountThisYear__c == c2.npo02__OppAmountThisYear__c &&
                     c1.npo02__TotalMembershipOppAmount__c == c2.npo02__TotalMembershipOppAmount__c &&
-                    c1.npo02__LastCloseDate__c == c2.npo02__LastCloseDate__c)
+                    c1.npo02__LastCloseDate__c == c2.npo02__LastCloseDate__c) && hasContactRollups == false)
                 contactsToUpdate.remove(cid);
         }
         for (id hhid : hhIds) {
             npo02__household__c hh1 = hhmap.get(hhid); 
             npo02__household__c hh2 = householdsToUpdate.get(hhid);
-            if (hh1.npo02__TotalOppAmount__c == hh2.npo02__TotalOppAmount__c && 
+            if ((hh1.npo02__TotalOppAmount__c == hh2.npo02__TotalOppAmount__c && 
                     hh1.npo02__OppAmountLastNDays__c == hh2.npo02__OppAmountLastNDays__c &&
                     hh1.npo02__OppAmountThisYear__c == hh2.npo02__OppAmountThisYear__c &&
                     hh1.npo02__OppAmountLastYear__c == hh2.npo02__OppAmountLastYear__c &&
                     hh1.npo02__OppAmount2YearsAgo__c == hh2.npo02__OppAmount2YearsAgo__c &&
                     hh1.npo02__TotalMembershipOppAmount__c == hh2.npo02__TotalMembershipOppAmount__c &&
-                    hh1.npo02__LastCloseDate__c == hh2.npo02__LastCloseDate__c)
+                    hh1.npo02__LastCloseDate__c == hh2.npo02__LastCloseDate__c) && hasHouseholdRollups == false)
                 householdsToUpdate.remove(hhid);
         }
 
@@ -795,7 +861,7 @@ public class OpportunityRollups {
                 
                 boolean rollupNow = false;
                 map<id, account> amap;
-                if (acctsToReroll.size() == 1) {                	
+                if (acctsToReroll.size() == 1) {                    
                     amap = new map<id, account>(
                         [select id, npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastNDays__c, 
                         npo02__LastCloseDate__c, npo02__NumberOfClosedOpps__c, npo02__TotalMembershipOppAmount__c,
@@ -897,17 +963,28 @@ public class OpportunityRollups {
                 obj.put('npo02__OppsClosed2YearsAgo__c', cnt); 
             } 
                 
-        } else {
+        } else { 
 
             // fill in summary totals
             obj.put('npo02__TotalOppAmount__c', amt);
             obj.put('npo02__NumberOfClosedOpps__c', cnt);               
             obj.put('npo02__LastOppAmount__c', lastAmt);                
-            obj.put('npo02__AverageAmount__c', (decimal)(r.get('AverageAmount'))); 
-            obj.put('npo02__SmallestAmount__c', (decimal)(r.get('SmallestAmount'))); 
-            obj.put('npo02__LargestAmount__c', (decimal)(r.get('LargestAmount'))); 
-            obj.put('npo02__FirstCloseDate__c', (date)(r.get('FirstCloseDate'))); 
-            obj.put('npo02__LastCloseDate__c', (date)(r.get('LastCloseDate'))); 
+            obj.put('npo02__AverageAmount__c', r.get('AverageAmount')); //decimal
+            obj.put('npo02__SmallestAmount__c', r.get('SmallestAmount')); //decimal
+            obj.put('npo02__LargestAmount__c', r.get('LargestAmount')); //decimal
+            obj.put('npo02__FirstCloseDate__c', r.get('FirstCloseDate')); //date
+            obj.put('npo02__LastCloseDate__c', r.get('LastCloseDate')); //date
+        }
+        
+        //deal with user rollups
+        if (userRollups.size() > 0){
+            for (string s : userRollups.keyset()){
+                if (obj.getSObjectType().getDescribe().getName() == userRollups.get(s).Object_Name__c){
+                	User_Rollup_Field_Settings__c urfs = userRollups.get(s);
+                	string x = urfs.Name;
+                	obj.put(urfs.Target_Field__c, r.get(x));
+                }
+            }
         }
     }
 
