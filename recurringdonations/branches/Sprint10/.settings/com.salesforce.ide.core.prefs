@@ -1,0 +1,13 @@
+#Tue Mar 01 16:37:26 PST 2011
+eclipse.preferences.version=1
+endpointApiVersion=20.0
+endpointEnvironment=Production/Developer Edition
+endpointServer=www.salesforce.com
+httpsProtocol=true
+ideVersion=20.0
+keependpoint=false
+metadataFormatVersion=20.0
+namespacePrefix=saranpsp
+packageName=unpackaged
+readTimeout=400
+username=sarachieco@npspsprint.dev
