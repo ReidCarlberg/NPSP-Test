@@ -1,31 +1,79 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
     <deploymentStatus>Deployed</deploymentStatus>
+    <deprecated>false</deprecated>
     <description>Recurring Donations and Pledges</description>
+    <enableActivities>false</enableActivities>
+    <enableFeeds>false</enableFeeds>
     <enableHistory>true</enableHistory>
     <enableReports>true</enableReports>
     <fields>
         <fullName>Amount__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
         <label>Amount</label>
         <precision>18</precision>
+        <required>false</required>
         <scale>2</scale>
+        <trackHistory>false</trackHistory>
         <type>Currency</type>
     </fields>
     <fields>
         <fullName>Contact__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
         <label>Contact</label>
         <referenceTo>Contact</referenceTo>
         <relationshipName>R00N80000002bOmREAU</relationshipName>
+        <trackHistory>false</trackHistory>
         <type>Lookup</type>
     </fields>
     <fields>
         <fullName>Date_Established__c</fullName>
         <defaultValue>Today()</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
         <label>Date Established</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
         <type>Date</type>
     </fields>
     <fields>
         <fullName>Donor_Name__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
         <formula>if(
   LEN(Contact__c)&gt;0,
   Contact__r.FirstName  &amp; &quot; &quot; &amp; Contact__r.LastName,
@@ -33,19 +81,28 @@
 )</formula>
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
         <label>Donor Name</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
         <type>Text</type>
+        <unique>false</unique>
     </fields>
     <fields>
         <fullName>Installment_Amount__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
         <formula>IF( text(Schedule_Type__c)=$Label.RecurringDonationMultiplyValue , Amount__c , IF(Installments__c&gt;0,Amount__c / Installments__c,0))</formula>
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
         <label>Installment Amount</label>
         <precision>18</precision>
+        <required>false</required>
         <scale>2</scale>
+        <trackHistory>false</trackHistory>
         <type>Currency</type>
     </fields>
     <fields>
         <fullName>Installment_Period__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
         <label>Installment Period</label>
         <picklist>
             <picklistValues>
@@ -66,24 +123,46 @@
             </picklistValues>
             <sorted>false</sorted>
         </picklist>
+        <trackHistory>false</trackHistory>
         <type>Picklist</type>
     </fields>
     <fields>
         <fullName>Installments__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
         <label># of Installments</label>
         <precision>18</precision>
+        <required>false</required>
         <scale>0</scale>
+        <trackHistory>false</trackHistory>
         <type>Number</type>
+        <unique>false</unique>
     </fields>
     <fields>
         <fullName>Organization__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
         <label>Organization</label>
         <referenceTo>Account</referenceTo>
         <relationshipName>RecurringDonations</relationshipName>
+        <trackHistory>false</trackHistory>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Recurring_Donation_Campaign__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Campaign</label>
+        <referenceTo>Campaign</referenceTo>
+        <relationshipLabel>Recurring Donations &amp; Pledges</relationshipLabel>
+        <relationshipName>Recurring_Donations_Pledges</relationshipName>
+        <trackHistory>false</trackHistory>
         <type>Lookup</type>
     </fields>
     <fields>
         <fullName>Schedule_Type__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
         <label>Schedule Type</label>
         <picklist>
             <picklistValues>
@@ -96,10 +175,13 @@
             </picklistValues>
             <sorted>false</sorted>
         </picklist>
+        <trackHistory>false</trackHistory>
         <type>Picklist</type>
     </fields>
     <fields>
         <fullName>Total__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
         <formula>CASE(
  Schedule_Type__c ,
 &quot;Multiply By&quot;, Installments__c * Amount__c ,
@@ -109,22 +191,15 @@
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
         <label>Total</label>
         <precision>18</precision>
+        <required>false</required>
         <scale>2</scale>
-        <type>Currency</type>
-    </fields>
-    <fields>
-        <fullName>fake_amount__c</fullName>
-        <formula>IF(
-text(Schedule_Type__c)=$Label.RecurringDonationMultiplyValue , Amount__c , IF(Installments__c&gt;0,Amount__c / Installments__c,0))</formula>
-        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
-        <label>fake amount</label>
-        <precision>18</precision>
-        <scale>2</scale>
+        <trackHistory>false</trackHistory>
         <type>Currency</type>
     </fields>
     <label>Recurring Donation/Pledge</label>
     <nameField>
         <label>Recurring Donation Name</label>
+        <trackHistory>false</trackHistory>
         <type>Text</type>
     </nameField>
     <pluralLabel>Recurring Donations &amp; Pledges</pluralLabel>
@@ -163,6 +238,7 @@ text(Schedule_Type__c)=$Label.RecurringDonationMultiplyValue , Amount__c , IF(In
         <masterLabel>New Recurring Acct Donation</masterLabel>
         <openType>replace</openType>
         <protected>false</protected>
+        <requireRowSelection>false</requireRowSelection>
         <url>{!URLFOR($Action.Recurring_Donation__c.New, null, [Name=Account.Name,retURL=&quot;/&quot;&amp;Account.Id])}</url>
     </webLinks>
     <webLinks>
@@ -174,6 +250,7 @@ text(Schedule_Type__c)=$Label.RecurringDonationMultiplyValue , Amount__c , IF(In
         <masterLabel>New Recurring Contact Donation</masterLabel>
         <openType>replace</openType>
         <protected>false</protected>
+        <requireRowSelection>false</requireRowSelection>
         <url>{!URLFOR($Action.Recurring_Donation__c.New, null,  [Name  =  Contact.FirstName &amp; &quot; &quot;&amp; Contact.LastName&amp;&quot; Donation - &quot;&amp;   TEXT( TODAY()),retURL=&quot;/&quot;&amp;Contact.Id])}</url>
     </webLinks>
 </CustomObject>

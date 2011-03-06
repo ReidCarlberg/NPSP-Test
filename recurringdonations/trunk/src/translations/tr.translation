@@ -57,7 +57,7 @@
         <name>OpportunityCreateMatching</name>
     </scontrols>
     <scontrols>
-        <label>CréerOpportunitéRécurrente</label>
+        <label><!-- OpportunityCreateRecurring --></label>
         <name>OpportunityCreateRecurring</name>
     </scontrols>
 </Translations>

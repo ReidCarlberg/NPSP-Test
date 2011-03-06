@@ -15,11 +15,53 @@
         <value>Donor</value>
     </labels>
     <labels>
+        <fullName>RecurringDonationDivideValue</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RecurringDonationDivideValue</shortDescription>
+        <value>Divide By</value>
+    </labels>
+    <labels>
+        <fullName>RecurringDonationInstallmentPeriodMonthly</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RecurringDonationInstallmentPeriodMonthly</shortDescription>
+        <value>Monthly</value>
+    </labels>
+    <labels>
+        <fullName>RecurringDonationInstallmentPeriodQuarterly</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RecurringDonationInstallmentPeriodQuarterly</shortDescription>
+        <value>Quarterly</value>
+    </labels>
+    <labels>
+        <fullName>RecurringDonationInstallmentPeriodWeekly</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RecurringDonationInstallmentPeriodWeekly</shortDescription>
+        <value>Weekly</value>
+    </labels>
+    <labels>
+        <fullName>RecurringDonationInstallmentPeriodYearly</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RecurringDonationInstallmentPeriodYearly</shortDescription>
+        <value>Yearly</value>
+    </labels>
+    <labels>
         <fullName>RecurringDonationMissingDataError</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>RecurringDonationMissingDataError</shortDescription>
         <value>You must select an Organization or Contact</value>
+    </labels>
+    <labels>
+        <fullName>RecurringDonationMultiplyValue</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RecurringDonationMultiplyValue</shortDescription>
+        <value>Multiply By</value>
     </labels>
     <labels>
         <fullName>RecurringDonationPrefix</fullName>

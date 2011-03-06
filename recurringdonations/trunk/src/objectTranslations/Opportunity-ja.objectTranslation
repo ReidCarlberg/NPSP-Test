@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <fields>
-        <label>Contacto</label>
+        <label>個人</label>
         <name>Contact__c</name>
-        <relationshipLabel>Donaciones</relationshipLabel>
+        <relationshipLabel>支援</relationshipLabel>
     </fields>
     <fields>
         <name>LeadSource</name>
@@ -17,7 +17,7 @@
         </picklistValues>
         <picklistValues>
             <masterLabel>Other</masterLabel>
-            <translation><!-- Other --></translation>
+            <translation>その他</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Partner</masterLabel>
@@ -25,11 +25,11 @@
         </picklistValues>
         <picklistValues>
             <masterLabel>Partner Referral</masterLabel>
-            <translation><!-- Partner Referral --></translation>
+            <translation>パートナー紹介</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Phone Inquiry</masterLabel>
-            <translation><!-- Phone Inquiry --></translation>
+            <translation>電話問い合わせ</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Public Relations</masterLabel>
@@ -37,7 +37,7 @@
         </picklistValues>
         <picklistValues>
             <masterLabel>Purchased List</masterLabel>
-            <translation><!-- Purchased List --></translation>
+            <translation>購入した名簿</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Trade Show</masterLabel>
@@ -45,7 +45,7 @@
         </picklistValues>
         <picklistValues>
             <masterLabel>Web</masterLabel>
-            <translation><!-- Web --></translation>
+            <translation>Web</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Word of mouth</masterLabel>
@@ -53,9 +53,9 @@
         </picklistValues>
     </fields>
     <fields>
-        <label>Donación recurrente</label>
+        <label>継続支援</label>
         <name>Recurring_Donation__c</name>
-        <relationshipLabel>Donaciones</relationshipLabel>
+        <relationshipLabel>支援</relationshipLabel>
     </fields>
     <fields>
         <name>StageName</name>
@@ -108,25 +108,25 @@
         <name>Type</name>
         <picklistValues>
             <masterLabel>Existing Customer - Downgrade</masterLabel>
-            <translation><!-- Existing Customer - Downgrade --></translation>
+            <translation>既存顧客（ダウングレード）</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Existing Customer - Replacement</masterLabel>
-            <translation><!-- Existing Customer - Replacement --></translation>
+            <translation>既存顧客（更新・置換）</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Existing Customer - Upgrade</masterLabel>
-            <translation><!-- Existing Customer - Upgrade --></translation>
+            <translation>既存顧客（アップグレード）</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>New Customer</masterLabel>
-            <translation><!-- New Customer --></translation>
+            <translation>新規顧客</translation>
         </picklistValues>
     </fields>
     <layouts>
         <layout>Donation Layout</layout>
         <sections>
-            <label><!-- Donation Information --></label>
+            <label>支援情報</label>
             <section>Donation Information</section>
         </sections>
     </layouts>
@@ -147,11 +147,11 @@
         <name>Matching_Donation</name>
     </recordTypes>
     <webLinks>
-        <label>Agregar donación contrapartida</label>
+        <label>マッチング寄付の追加</label>
         <name>Add_Matching_Donation</name>
     </webLinks>
     <webLinks>
-        <label>Crear una donación recurrente</label>
+        <label>継続支援の作成</label>
         <name>Create_Recurring_Donation</name>
     </webLinks>
 </CustomObjectTranslation>
