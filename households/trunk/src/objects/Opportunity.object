@@ -1,38 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
     <businessProcesses>
-        <fullName>Gift</fullName>
+        <fullName>dummyBP</fullName>
+        <description>Dummy business process created for patch org.</description>
         <isActive>true</isActive>
-        <values>
-            <fullName>Closed Lost</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Closed Won</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Prospecting</fullName>
-            <default>false</default>
-        </values>
     </businessProcesses>
     <enableFeeds>true</enableFeeds>
     <fields>
         <fullName>CombinedRollupFieldset__c</fullName>
+        <deprecated>false</deprecated>
         <description>Concatenated fields used during rollups to locate the most recent opportunity.</description>
+        <externalId>false</externalId>
         <formula>TEXT(CloseDate) + &apos;;|;&apos;+ TEXT(Amount) + &apos;;|;&apos;+ TEXT(npe01__Member_Level__c) + &apos;;|;&apos;+ TEXT(npe01__Membership_Origin__c)</formula>
         <inlineHelpText>Concatenated fields used during rollups to locate the most recent opportunity.</inlineHelpText>
         <label>Combined Rollup Fieldset</label>
+        <required>false</required>
         <type>Text</type>
+        <unique>false</unique>
     </fields>
     <fields>
         <fullName>CurrentGenerators__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
         <label>Current Generator(s) - DEPRECATED</label>
         <length>100</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
         <type>Text</type>
+        <unique>false</unique>
     </fields>
     <fields>
         <fullName>DeliveryInstallationStatus__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
         <label>Delivery/Installation Status- DEPRECATED</label>
         <picklist>
             <picklistValues>
@@ -49,6 +49,7 @@
             </picklistValues>
             <sorted>false</sorted>
         </picklist>
+        <trackFeedHistory>false</trackFeedHistory>
         <type>Picklist</type>
     </fields>
     <fields>
@@ -80,66 +81,92 @@
     </fields>
     <fields>
         <fullName>MainCompetitors__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
         <label>Main Competitor(s) - DEPRECATED</label>
         <length>100</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
         <type>Text</type>
+        <unique>false</unique>
     </fields>
     <fields>
         <fullName>OrderNumber__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
         <label>Order Number - DEPRECATED</label>
         <length>8</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
         <type>Text</type>
+        <unique>false</unique>
     </fields>
     <fields>
         <fullName>StageName</fullName>
         <picklist>
             <picklistValues>
                 <fullName>Prospecting</fullName>
+                <closed>false</closed>
                 <default>false</default>
                 <forecastCategory>Pipeline</forecastCategory>
                 <probability>10</probability>
+                <won>false</won>
             </picklistValues>
             <picklistValues>
                 <fullName>Qualification</fullName>
+                <closed>false</closed>
                 <default>false</default>
                 <forecastCategory>Pipeline</forecastCategory>
                 <probability>10</probability>
+                <won>false</won>
             </picklistValues>
             <picklistValues>
                 <fullName>Needs Analysis</fullName>
+                <closed>false</closed>
                 <default>false</default>
                 <forecastCategory>Pipeline</forecastCategory>
                 <probability>20</probability>
+                <won>false</won>
             </picklistValues>
             <picklistValues>
                 <fullName>Value Proposition</fullName>
+                <closed>false</closed>
                 <default>false</default>
                 <forecastCategory>Pipeline</forecastCategory>
                 <probability>50</probability>
+                <won>false</won>
             </picklistValues>
             <picklistValues>
                 <fullName>Id. Decision Makers</fullName>
+                <closed>false</closed>
                 <default>false</default>
                 <forecastCategory>Pipeline</forecastCategory>
                 <probability>60</probability>
+                <won>false</won>
             </picklistValues>
             <picklistValues>
                 <fullName>Perception Analysis</fullName>
+                <closed>false</closed>
                 <default>false</default>
                 <forecastCategory>Pipeline</forecastCategory>
                 <probability>70</probability>
+                <won>false</won>
             </picklistValues>
             <picklistValues>
                 <fullName>Proposal/Price Quote</fullName>
+                <closed>false</closed>
                 <default>false</default>
                 <forecastCategory>Pipeline</forecastCategory>
                 <probability>75</probability>
+                <won>false</won>
             </picklistValues>
             <picklistValues>
                 <fullName>Negotiation/Review</fullName>
+                <closed>false</closed>
                 <default>false</default>
                 <forecastCategory>Pipeline</forecastCategory>
                 <probability>90</probability>
+                <won>false</won>
             </picklistValues>
             <picklistValues>
                 <fullName>Closed Won</fullName>
@@ -155,6 +182,7 @@
                 <default>false</default>
                 <forecastCategory>Omitted</forecastCategory>
                 <probability>0</probability>
+                <won>false</won>
             </picklistValues>
             <sorted>false</sorted>
         </picklist>
@@ -162,9 +190,14 @@
     </fields>
     <fields>
         <fullName>TrackingNumber__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
         <label>Tracking Number - DEPRECATED</label>
         <length>12</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
         <type>Text</type>
+        <unique>false</unique>
     </fields>
     <fields>
         <fullName>Type</fullName>
@@ -191,20 +224,31 @@
     </fields>
     <fields>
         <fullName>npe01__Contact_Id_for_Role__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
         <inlineHelpText>Hidden field for passing a Contact Id for Contact Role creation.</inlineHelpText>
         <label>Contact Id for Role</label>
         <length>255</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
         <type>Text</type>
+        <unique>false</unique>
     </fields>
     <fields>
         <fullName>npe01__Is_Opp_From_Individual__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
         <formula>IF( Account.npe01__SYSTEMIsIndividual__c, &apos;true&apos;, &apos;false&apos; )</formula>
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
         <label>Is Opp From Individual</label>
+        <required>false</required>
         <type>Text</type>
+        <unique>false</unique>
     </fields>
     <fields>
         <fullName>npe01__Member_Level__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
         <label>Member Level</label>
         <picklist>
             <picklistValues>
@@ -221,16 +265,23 @@
             </picklistValues>
             <sorted>false</sorted>
         </picklist>
+        <trackFeedHistory>false</trackFeedHistory>
         <type>Picklist</type>
     </fields>
     <fields>
         <fullName>npe01__Membership_End_Date__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
         <inlineHelpText>Date membership period ends.</inlineHelpText>
         <label>Membership End Date</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
         <type>Date</type>
     </fields>
     <fields>
         <fullName>npe01__Membership_Origin__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
         <inlineHelpText>Is this a renewal, a new membership, or a membership with someone who lapsed and has returned.</inlineHelpText>
         <label>Membership Origin</label>
         <picklist>
@@ -248,16 +299,23 @@
             </picklistValues>
             <sorted>false</sorted>
         </picklist>
+        <trackFeedHistory>false</trackFeedHistory>
         <type>Picklist</type>
     </fields>
     <fields>
         <fullName>npe01__Membership_Start_Date__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
         <inlineHelpText>Date when membership period starts</inlineHelpText>
         <label>Membership Start Date</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
         <type>Date</type>
     </fields>
     <fields>
         <fullName>systemHouseholdContactRoleProcessor__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
         <inlineHelpText>Controls if Household contact roles are created for Opportunities</inlineHelpText>
         <label>_SYSTEM: HOUSEHOLD CONTACT ROLEPROCESSOR</label>
         <picklist>
@@ -271,6 +329,7 @@
             </picklistValues>
             <sorted>false</sorted>
         </picklist>
+        <trackFeedHistory>false</trackFeedHistory>
         <type>Picklist</type>
     </fields>
     <listViews>
@@ -358,26 +417,13 @@
         </filters>
         <label>Won</label>
     </listViews>
+    <recordTypeTrackFeedHistory>false</recordTypeTrackFeedHistory>
     <recordTypes>
-        <fullName>gift</fullName>
+        <fullName>dummyRT</fullName>
         <active>true</active>
-        <businessProcess>Gift</businessProcess>
-        <label>gift</label>
-        <picklistValues>
-            <picklist>DeliveryInstallationStatus__c</picklist>
-            <values>
-                <fullName>Completed</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>In progress</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Yet to begin</fullName>
-                <default>false</default>
-            </values>
-        </picklistValues>
+        <businessProcess>dummyBP</businessProcess>
+        <description>Dummy Record Type created for patch org.</description>
+        <label>dummyRT</label>
         <picklistValues>
             <picklist>ForecastCategoryName</picklist>
             <values>
@@ -443,193 +489,7 @@
                 <default>false</default>
             </values>
         </picklistValues>
-        <picklistValues>
-            <picklist>npe01__Member_Level__c</picklist>
-            <values>
-                <fullName>Bronze</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Gold</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Silver</fullName>
-                <default>false</default>
-            </values>
-        </picklistValues>
-        <picklistValues>
-            <picklist>npe01__Membership_Origin__c</picklist>
-            <values>
-                <fullName>New</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Reacquire</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Renewal</fullName>
-                <default>false</default>
-            </values>
-        </picklistValues>
-        <picklistValues>
-            <picklist>systemHouseholdContactRoleProcessor__c</picklist>
-            <values>
-                <fullName>All Opportunities</fullName>
-                <default>true</default>
-            </values>
-            <values>
-                <fullName>No Opportunities</fullName>
-                <default>false</default>
-            </values>
-        </picklistValues>
     </recordTypes>
-    <recordTypes>
-        <fullName>membership</fullName>
-        <active>true</active>
-        <businessProcess>Gift</businessProcess>
-        <label>membership</label>
-        <picklistValues>
-            <picklist>DeliveryInstallationStatus__c</picklist>
-            <values>
-                <fullName>Completed</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>In progress</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Yet to begin</fullName>
-                <default>false</default>
-            </values>
-        </picklistValues>
-        <picklistValues>
-            <picklist>ForecastCategoryName</picklist>
-            <values>
-                <fullName>Best Case</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Closed</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Commit</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Omitted</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Pipeline</fullName>
-                <default>false</default>
-            </values>
-        </picklistValues>
-        <picklistValues>
-            <picklist>LeadSource</picklist>
-            <values>
-                <fullName>Other</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Partner Referral</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Phone Inquiry</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Purchased List</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Web</fullName>
-                <default>false</default>
-            </values>
-        </picklistValues>
-        <picklistValues>
-            <picklist>Type</picklist>
-            <values>
-                <fullName>Existing Customer - Downgrade</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Existing Customer - Replacement</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Existing Customer - Upgrade</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>New Customer</fullName>
-                <default>false</default>
-            </values>
-        </picklistValues>
-        <picklistValues>
-            <picklist>npe01__Member_Level__c</picklist>
-            <values>
-                <fullName>Bronze</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Gold</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Silver</fullName>
-                <default>false</default>
-            </values>
-        </picklistValues>
-        <picklistValues>
-            <picklist>npe01__Membership_Origin__c</picklist>
-            <values>
-                <fullName>New</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Reacquire</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Renewal</fullName>
-                <default>false</default>
-            </values>
-        </picklistValues>
-        <picklistValues>
-            <picklist>systemHouseholdContactRoleProcessor__c</picklist>
-            <values>
-                <fullName>All Opportunities</fullName>
-                <default>true</default>
-            </values>
-            <values>
-                <fullName>No Opportunities</fullName>
-                <default>false</default>
-            </values>
-        </picklistValues>
-    </recordTypes>
-    <webLinks>
-        <fullName>DeliveryStatus</fullName>
-        <availability>online</availability>
-        <displayType>link</displayType>
-        <hasMenubar>true</hasMenubar>
-        <hasScrollbars>true</hasScrollbars>
-        <hasToolbar>true</hasToolbar>
-        <height>600</height>
-        <isResizable>true</isResizable>
-        <linkType>url</linkType>
-        <masterLabel>Delivery Status</masterLabel>
-        <openType>newWindow</openType>
-        <position>none</position>
-        <protected>false</protected>
-        <showsLocation>true</showsLocation>
-        <showsStatus>true</showsStatus>
-        <url>http://www.fedex.com/cgi-bin/tracking?tracknumbers={!Opportunity_Tracking_Number}&amp;action=track&amp;language=english&amp;cntry_code=us</url>
-    </webLinks>
     <webLinks>
         <fullName>npe01__Add_Matching_Donation</fullName>
         <availability>online</availability>
@@ -649,11 +509,11 @@
         <masterLabel>New Contact Donation</masterLabel>
         <openType>replace</openType>
         <protected>false</protected>
+        <requireRowSelection>false</requireRowSelection>
         <url>/setup/ui/recordtypeselect.jsp?
 ent=Opportunity&amp;
 retURL=%2F{!Contact.Id}&amp;
-save_new_url=%2F006%2Fe%3Flookupcmpgn%3D1%26retURL%3D%252F{!Contact.Id}%26accid%3D{!Account.Id}%26conid%3D{!Contact.Id}%26opp6%3DExternal%2BReferral&amp;
-opp3={!Contact.Name}-%20Donation%20{!Today}</url>
+save_new_url=%2F006%2Fe%3Flookupcmpgn%3D1%26retURL%3D%252F{!Contact.Id}%26accid%3D{!Account.Id}%26conid%3D{!Contact.Id}&amp;opp3={!Contact.Name}-%20Donation%20{!Today}</url>
     </webLinks>
     <webLinks>
         <fullName>npe01__New_Organization_Donation</fullName>
@@ -664,10 +524,11 @@ opp3={!Contact.Name}-%20Donation%20{!Today}</url>
         <masterLabel>New Account Donation</masterLabel>
         <openType>replace</openType>
         <protected>false</protected>
+        <requireRowSelection>false</requireRowSelection>
         <url>/setup/ui/recordtypeselect.jsp?
 ent=Opportunity&amp;
 retURL=%2F{!Account.Id}&amp;
-save_new_url=%2F006%2Fe%3Flookupcmpgn%3D1%26retURL%3D%252F{!Account.Id}%26accid%3D{!Account.Id}%26opp6%3DExternal%2BReferral&amp;
+save_new_url=%2F006%2Fe%3Flookupcmpgn%3D1%26retURL%3D%252F{!Account.Id}%26accid%3D{!Account.Id}&amp;
 opp3={!Account.Name}-%20Donation%20{!Today}</url>
     </webLinks>
 </CustomObject>
