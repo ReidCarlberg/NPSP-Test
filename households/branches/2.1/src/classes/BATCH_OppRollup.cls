@@ -1,20 +1,10 @@
-/**
- * @author Salesforce.com Foundation
- * @date 02/07/2010
- * @description Provides batch wrapper for opportunity rollups
- */
 global class BATCH_OppRollup implements Database.Batchable<SObject> {
 // batch apex class to rollup opportunities
 	
 	public String query { get; set; }
 	
-	/**    
-    * @author Salesforce.com Foundation
-    * @date 02/07/2010
-    * @description Constructor
-    * @param String - Contains query 
-    */
-	public BATCH_OppRollup(string q) {    
+	// constructors
+	public BATCH_OppRollup(string q) {  
 		query = q; 
 	}
 	

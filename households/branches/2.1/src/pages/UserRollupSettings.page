@@ -1,0 +1,14 @@
+<apex:page id="UserRollupSettings" >
+<apex:sectionHeader title="User Rollup Settings" subtitle="Configure User Rollups">
+<description>
+Settings that control user defined rollups from the Opportunity/Donation to a Contact, Account or Household. Changing these will change how your Nonprofit Starter Pack behaves.
+</description>  
+</apex:sectionHeader>
+
+<apex:outputPanel layout="block">
+<apex:listViews type="User_Rollup_Field_Settings__c" >
+</apex:listViews>
+</apex:outputPanel> 
+ 
+ 
+</apex:page>

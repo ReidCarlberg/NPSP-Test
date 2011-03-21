@@ -410,7 +410,7 @@ private class TEST_Households {
         insert o;
         OpportunityContactRole ocr = new OpportunityContactRole(OpportunityId=o.Id,ContactId=c.Id,Role='Test');
         insert ocr;
-        system.assertEquals('$100.00',Households.getHouseholdTransactionTotal(h.id));
+        system.assertEquals(system.label.DefaultHouseholdTransactionCurrency + '100.00',Households.getHouseholdTransactionTotal(h.id));
     }
     
     /// <name> getHouseholdTransactionTotal </name>

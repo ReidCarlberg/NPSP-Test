@@ -398,7 +398,7 @@ global class Households {
                 } else {
                 	householdsSettings.Household_Rules__c = NO_HOUSEHOLDS_PROCESSOR;
                 }
-
+ 
                 householdsSettings.Household_Member_Contact_Role__c = label.Household_Member_Contact_Role;
                 householdsSettings.Always_Rollup_to_Primary_Contact__c = false;
                 householdsSettings.Enable_Opp_Rollup_Triggers__c = false;
@@ -407,12 +407,13 @@ global class Households {
                 householdsSettings.Excluded_Contact_Opp_Rectypes__c = null;
                 householdsSettings.Excluded_Contact_Opp_Types__c = null;
                 householdsSettings.Membership_Record_Types__c = null;
-                
+                householdsSettings.Rollup_N_Day_Value__c = 365;
+                householdsSettings.Membership_Grace_Period__c = 30;
                 householdsSettings.Setupownerid = UserInfo.getOrganizationId();
-                
                 insert householdsSettings;
             }
         }
+        
         return householdsSettings;
     }
     
@@ -432,6 +433,8 @@ global class Households {
             Excluded_Account_Opp_Types__c = mySettings.Excluded_Account_Opp_Types__c,
             Excluded_Contact_Opp_Rectypes__c = mySettings.Excluded_Contact_Opp_Rectypes__c,
             Excluded_Contact_Opp_Types__c = mySettings.Excluded_Contact_Opp_Types__c,
+            Membership_Grace_Period__c = mySettings.Membership_Grace_Period__c,
+            Rollup_N_Day_Value__c = mySettings.Rollup_N_Day_Value__c, 
             Membership_Record_Types__c = mySettings.Membership_Record_Types__c
             );
         insert householdsSettings;

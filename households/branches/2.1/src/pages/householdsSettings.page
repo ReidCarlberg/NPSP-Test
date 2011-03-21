@@ -34,6 +34,7 @@
 	       	<apex:pageBlockSection id="householdsettingssection3" title="Opportunity Rollups">
 				<apex:inputfield value="{!settings.Enable_Opp_Rollup_Triggers__c}"/>
 				<apex:inputfield value="{!settings.Always_Rollup_to_Primary_Contact__c}"/>
+				<apex:inputfield value="{!settings.Rollup_N_Day_Value__c}"/>
 			</apex:pageBlockSection>
 			
 			<apex:pageBlockSection id="householdsettingssection4" title="Opportunity Rollups Record Types">
@@ -62,12 +63,16 @@
 		            	<apex:selectOptions value="{!types}"/>
 		        	</apex:selectList>
 	        	</apex:pageBlockSectionItem>
+			</apex:pageBlockSection>
+						
+			<apex:pageBlockSection id="householdsettingssection5" title="Opportunity Membership Settings">
 				<apex:pageBlockSectionItem helpText="One Opportunity Record Type can be called out for Membership calculations.">
 		        	<apex:outputLabel value="Membership Record Type Names"/>
 		        	<apex:selectList value="{!settings.Membership_Record_Types__c}" multiselect="false" size="1">
 		            	<apex:selectOptions value="{!rtypes}"/>
 		        	</apex:selectList>
 	        	</apex:pageBlockSectionItem>
+	        	<apex:inputfield value="{!settings.Membership_Grace_Period__c}"/>
 			</apex:pageBlockSection>
 	       	
 			<apex:pageBlockButtons id="householdssettingsbuttons">

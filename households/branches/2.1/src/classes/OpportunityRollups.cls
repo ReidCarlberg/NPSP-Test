@@ -1,4 +1,4 @@
-public class OpportunityRollups {
+global virtual class OpportunityRollups {
  
     // settings
     boolean triggerRollupEnabled = true;
@@ -10,15 +10,12 @@ public class OpportunityRollups {
     set<string> oppTypesToExcludeCons = new set<string>();  
     //Modifiable ndays setting for 2.1    
     string ndayrollup = '365';  //default to original 365 day value
-    
-    
-    
+        
     //user defined rollups in list settings
     public static map<string, User_Rollup_Field_Settings__c> userRollups = new map<string, User_Rollup_Field_Settings__c>();
     public boolean hasContactRollups;
     public boolean hasHouseholdRollups;
     public boolean hasAccountRollups;
-    
     
     static boolean recordTypesOnOpps;
     
@@ -69,7 +66,6 @@ public class OpportunityRollups {
                 triggerRollupEnabled = false;
             if (rollupSettings.Always_Rollup_to_Primary_Contact__c == true)
                 alwaysRollupToPrimaryContact = true;
-                
         }
         
         //load user rollup settings - if they exist        
@@ -77,20 +73,36 @@ public class OpportunityRollups {
         
         //setup our object bools to demarcate which objects have user defined rollups
         //this will save us some cycles later on
+        //also check runtime field validity
+        
         for (string s : userRollups.keySet()){
         	User_Rollup_Field_Settings__c urfs = userRollups.get(s);
         	if (urfs.Object_Name__c == 'Contact'){hasContactRollups = true;}      	
-        	if (urfs.Object_Name__c == 'Account'){hasAccountRollups = true;}
-        	if (urfs.Object_Name__c == 'Household'){hasHouseholdRollups = true;}
-        }
+        	else if (urfs.Object_Name__c == 'Account'){hasAccountRollups = true;}
+        	else if (urfs.Object_Name__c == 'Household'){hasHouseholdRollups = true;}
+        	else userRollups.remove(s);
         
-                
-        /*
-        if (isTest) {
-            oppTypesToExcludeCons.add('In Kind');
-            mbrRecordTypes.add(RecordTypes.GetRecordTypeId('Opportunity', 'Membership'));
-        }
-        */
+            SobjectField targetField;
+            SobjectField sourceField;
+        
+            //check source field
+            sourceField = Schema.sObjectType.Opportunity.fields.getMap().get(urfs.Source_Field__c);
+            if (sourceField == null) userRollups.remove(s);
+                      
+            //check target fields            
+            if (urfs.Object_Name__c == 'Contact'){
+                targetField = Schema.sObjectType.Contact.fields.getMap().get(urfs.Target_Field__c); 
+                if (targetField == null) userRollups.remove(s);
+            }
+            else if (urfs.Object_Name__c == 'Account'){
+                targetField = Schema.sObjectType.Account.fields.getMap().get(urfs.Target_Field__c); 
+                if (targetField == null) userRollups.remove(s);               
+            }
+            else if (urfs.Object_Name__c == 'Household'){
+                targetField = Schema.sObjectType.Household__c.fields.getMap().get(urfs.Target_Field__c); 
+                if (targetField == null) userRollups.remove(s);
+            }
+        }       
     }           
 
     public void rollupAccount( id aid ) {
@@ -982,7 +994,9 @@ public class OpportunityRollups {
                 if (obj.getSObjectType().getDescribe().getName() == userRollups.get(s).Object_Name__c){
                 	User_Rollup_Field_Settings__c urfs = userRollups.get(s);
                 	string x = urfs.Name;
-                	obj.put(urfs.Target_Field__c, r.get(x));
+                	system.debug('HERE I AM=======' + urfs.Target_Field__c);
+                	if (r.get(x) != null)
+                	   obj.put(urfs.Target_Field__c, r.get(x));
                 }
             }
         }
@@ -1986,5 +2000,66 @@ public class OpportunityRollups {
             System.assertEquals (datClose,c.LastCloseDateHH__c );
             System.assertEquals (375,c.Total_Household_Gifts__c);
                 
+    }
+    
+    	
+    static testMethod void testUserDefinedRollup() {
+        isTest = true;
+
+        Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
+                new Households_Settings__c (
+                    Household_Rules__c = Households.ALL_PROCESSOR,
+                    Always_Rollup_to_Primary_Contact__c = false,
+                    Enable_Opp_Rollup_Triggers__c = true,
+                    Excluded_Account_Opp_Rectypes__c = null,
+                    Excluded_Account_Opp_Types__c = null,
+                    Excluded_Contact_Opp_Rectypes__c = null,
+                    Excluded_Contact_Opp_Types__c = null,
+                    Membership_Record_Types__c = null
+         ));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+                npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
+                npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
+                npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
+        ));
+    
+        //need to clear out any existing user fields
+        //otherwise we can't insert of stuff referenced by apex
+        list<User_Rollup_Field_Settings__c> deleteUserSettings = new list<User_Rollup_Field_Settings__c>();
+        deleteUserSettings = [select id from User_Rollup_Field_Settings__c];
+        delete deleteUserSettings;
+        
+                
+        User_Rollup_Field_Settings__c testUserRollup = new User_Rollup_Field_Settings__c();
+        testUserRollup.npo02__Target_Field__c = 'Birthdate'; 
+        testUserRollup.npo02__Source_Field__c = 'CloseDate';
+        testUserRollup.npo02__Object_Name__c = 'Contact'; 
+        testUserRollup.npo02__Field_Action__c = 'MAX';
+        testUserRollup.Name = 'TestRollup';
+        insert testUserRollup; 
+        
+        Contact c = new Contact(LastName = 'Lastname', BirthDate = system.today().addDays(-4));
+        insert c;
+        
+        id rtid = RecordTypes.GetRecordTypeId ('Opportunity',RecordTypes.getRecordTypeNameForGiftsTests('Opportunity'));
+        Opportunity newOpp = New Opportunity (
+                Name = 'Test Opp ',
+                Amount = 100,
+                CloseDate = system.today().adddays(-2),
+                StageName = UnitTestData.getClosedWonStage(),
+                npe01__Contact_Id_for_Role__c = c.Id                                
+            );  
+            if(rtid != null){
+                newOpp.put('RecordTypeId',rtid);
+            }
+         
+    Test.StartTest();
+    insert newOpp;
+    Test.StopTest();     
+    
+    Contact ct = [select Birthdate, OppAmountThisYearHH__c from Contact where id = :c.id];
+    system.assertEquals (100,ct.OppAmountThisYearHH__c);    
+    system.assertEquals(system.today().addDays(-2), ct.BirthDate);    
+    
     }
 }

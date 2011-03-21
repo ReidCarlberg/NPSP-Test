@@ -1,4 +1,4 @@
-public class CTRL_BatchJobsProgress { 
+public class CTRL_BatchJobsProgress {
  
     public List<BatchJob> batchJobs;
     public Integer numberOfJobs {get; set;}

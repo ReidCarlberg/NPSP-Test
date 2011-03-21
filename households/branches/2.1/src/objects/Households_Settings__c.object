@@ -3,11 +3,11 @@
     <customSettingsType>Hierarchy</customSettingsType>
     <customSettingsVisibility>Public</customSettingsVisibility>
     <description>Setting object for the Nonprofit Starter Pack Households Package</description>
-    <enableEnhancedLookup>false</enableEnhancedLookup>
     <enableFeeds>false</enableFeeds>
     <fields>
         <fullName>Always_Rollup_to_Primary_Contact__c</fullName>
         <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
         <externalId>false</externalId>
         <inlineHelpText>Always rollup to the primary contact, and corresponding household, on an opp. even if the opportunity is not from an individual (i.e. from a company, foundation, etc.)</inlineHelpText>
         <label>Always Rollup to Primary Contact</label>
@@ -16,6 +16,7 @@
     <fields>
         <fullName>Enable_Opp_Rollup_Triggers__c</fullName>
         <defaultValue>true</defaultValue>
+        <deprecated>false</deprecated>
         <externalId>false</externalId>
         <inlineHelpText>Check this box to update opportunity totals whenever opportunities are inserted or updated (as long as capacity allows).</inlineHelpText>
         <label>Roll Up Opps in Triggers</label>
@@ -23,6 +24,7 @@
     </fields>
     <fields>
         <fullName>Excluded_Account_Opp_Rectypes__c</fullName>
+        <deprecated>false</deprecated>
         <externalId>false</externalId>
         <inlineHelpText>Names of opportunity record types to exclude when rolling up account opportunities. Separate record type names with semicolons.</inlineHelpText>
         <label>Opp Rectypes Excluded for Account Rollup</label>
@@ -33,6 +35,7 @@
     </fields>
     <fields>
         <fullName>Excluded_Account_Opp_Types__c</fullName>
+        <deprecated>false</deprecated>
         <externalId>false</externalId>
         <inlineHelpText>Values for the opportunity Type field to exclude when rolling up account opportunities. Separate types with semicolons.</inlineHelpText>
         <label>Opp Types Excluded for Account Rollup</label>
@@ -43,6 +46,7 @@
     </fields>
     <fields>
         <fullName>Excluded_Contact_Opp_Rectypes__c</fullName>
+        <deprecated>false</deprecated>
         <externalId>false</externalId>
         <inlineHelpText>Names of opportunity record types to exclude when rolling up contact opportunities. Separate record type names with semicolons.</inlineHelpText>
         <label>Opp Rectypes Excluded for Contact Rollup</label>
@@ -53,6 +57,7 @@
     </fields>
     <fields>
         <fullName>Excluded_Contact_Opp_Types__c</fullName>
+        <deprecated>false</deprecated>
         <externalId>false</externalId>
         <inlineHelpText>Values for the opportunity Type field to exclude when rolling up contact opportunities. Separate types with semicolons.</inlineHelpText>
         <label>Opp Types Excluded for Contact Rollup</label>
@@ -64,6 +69,7 @@
     <fields>
         <fullName>Household_Contact_Roles_On__c</fullName>
         <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
         <externalId>false</externalId>
         <inlineHelpText>Check this field to create automatic Contact Roles for Household members of the Primary Contact</inlineHelpText>
         <label>Household Contact Roles On</label>
@@ -71,6 +77,7 @@
     </fields>
     <fields>
         <fullName>Household_Member_Contact_Role__c</fullName>
+        <deprecated>false</deprecated>
         <externalId>false</externalId>
         <inlineHelpText>Select the Contact Role for Household Members</inlineHelpText>
         <label>Household Member Contact Role</label>
@@ -81,6 +88,7 @@
     </fields>
     <fields>
         <fullName>Household_Rules__c</fullName>
+        <deprecated>false</deprecated>
         <externalId>false</externalId>
         <inlineHelpText>Select which Contacts get Households: All, only those related to an Individual Account, or none.</inlineHelpText>
         <label>Household Rules</label>
@@ -91,7 +99,7 @@
     </fields>
     <fields>
         <fullName>Membership_Record_Types__c</fullName>
-        <defaultValue>&quot;Membership&quot;</defaultValue>
+        <deprecated>false</deprecated>
         <externalId>false</externalId>
         <inlineHelpText>Name of record types, such as Membership, that you want to roll up separately from other types. Separate record type names with semicolons.</inlineHelpText>
         <label>Membership Record Type Names</label>
@@ -102,12 +110,25 @@
     </fields>
     <fields>
         <fullName>Opp_Rollup_Scheduled_Job_Id__c</fullName>
+        <deprecated>false</deprecated>
         <externalId>false</externalId>
         <inlineHelpText>Id for the currently scheduled Opportunity Rollup Job</inlineHelpText>
         <label>Opp Rollup Scheduled Job Id</label>
         <length>255</length>
         <required>false</required>
         <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Rollup_N_Day_Value__c</fullName>
+        <defaultValue>365</defaultValue>
+        <externalId>false</externalId>
+        <inlineHelpText>For rollups over N days. Allows custom number of days in the past. Defaults to Rollup over the past 365 days.</inlineHelpText>
+        <label>Rollup N Day Value</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <type>Number</type>
         <unique>false</unique>
     </fields>
     <label>Households Settings</label>
