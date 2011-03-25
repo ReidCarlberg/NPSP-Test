@@ -299,7 +299,14 @@ public with sharing class userRollupSettings {
     	return ApexPages.currentPage().setRedirect(true);
     }   
         
-    
+       public static testMethod void TEST_userRollupSettings() {
+        
+        Test.setCurrentPageReference(new PageReference('Page.userRollupSettings'));
+        
+        //pass the controller into the extension
+        userRollupSettings controller = new userRollupSettings();
+                
+    }
         
          
     
