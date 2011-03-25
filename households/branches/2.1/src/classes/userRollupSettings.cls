@@ -29,27 +29,32 @@
 */
 public with sharing class userRollupSettings {
     
+    //controls which types to display
     map<string, Schema.Displaytype> mapFieldTypes = new map<string, Schema.Displaytype>();
     map<string, Schema.Displaytype> targetFieldTypes = new map<string, Schema.Displaytype>();
-       
+        
+    //pickers for setting values   
     public list<SelectOption> sourcefields = new list<SelectOption>();
     public list<SelectOption> validoperators = new list<SelectOption>();
     public list<SelectOption> targetfields = new list<SelectOption>();
-    
+    public list<object> mylist = new list<object>();
     public list<SelectOption> targetobjects = new list<SelectOption>{
     new SelectOption('Account', 'Account'),
     new SelectOption('Contact', 'Contact'),
     new SelectOption('Household__c', 'Household__c')    
     }; 
     
+    //defines values for the final list setting
     public string operator{get; set;}    
     public string opptyfield{get; set;}
     public string targetfield{get; set;}
     public string targetobject{get; set;}
     
-    //the test string of the rollup
-    public string operationstring{get; private set;}
     
+    //the test string of the rollup
+    public string operationstring;
+    
+    //controls wizard steps
     public integer step{get; set;}
     
     //constructor
@@ -74,6 +79,7 @@ public with sharing class userRollupSettings {
         this.step--;
     }
     
+    //reset all instance variable and return to initial screen
     public void cancel(){
         this.sourcefields.clear();
         this.mapFieldTypes.clear();
@@ -88,8 +94,8 @@ public with sharing class userRollupSettings {
     
     //retrieve syntax for fields
     public string getOperationString(){
-        this.operationstring = 'Rollup the ' + this.operator + ' of the ' + this.opptyfield + ' field to the ' + this.targetfield + ' field on the ' + this.targetobject + '?';
-        return this.operationstring;
+        operationstring = 'Rollup the ' + this.operator + ' of the ' + this.opptyfield + ' field on opportunity and place the result in the ' + this.targetfield + ' field on ' + this.targetobject + '?';
+        return operationstring;
     }
     
     //retrieve target objects
@@ -111,6 +117,7 @@ public with sharing class userRollupSettings {
         return validoperators; 
     }
     
+    //retrieve possible target fields for the selected object
     public list<SelectOption> getTargetFields(){ 
         
         targetfields.clear();
@@ -186,10 +193,11 @@ public with sharing class userRollupSettings {
         return targetfields;    
     }
     
-    //retrieve valid source fields
+    //retrieve valid source fields from opportunity object
     public list<SelectOption> getSourceFields(){
         
-        set<string> knownOpptyFields = new set<string>{'Amount', 'CloseDate', 'ExpectedRevenue', 'Probability', 'TotalOpportunityQuantity', 'npe01__membership_start_date__c', 'npe01__membership_end_date__c'};
+        set<string> knownOpptyFields = new set<string>{'Amount', 'CloseDate', 'ExpectedRevenue', 
+        	'Probability', 'TotalOpportunityQuantity', 'npe01__membership_start_date__c', 'npe01__membership_end_date__c'};
         
         if (sourcefields.isEmpty()){
                        
@@ -264,12 +272,34 @@ public with sharing class userRollupSettings {
     return isValid;
     }           
         
-         
+    //used to render error messages on the VF interface
     private void showMsg(String arg, ApexPages.Severity severity){
         ApexPages.Message myMsg = new ApexPages.Message(severity,arg);
         ApexPages.addMessage(myMsg);
+    }    
+    
+    //save and commit rollup
+    public PageReference createRollup(){
+    	try{
+    		map<string, User_Rollup_Field_Settings__c> userRollups = User_Rollup_Field_Settings__c.getAll();
+            integer nameNumber = userRollups.size();
+    		 
+    		User_Rollup_Field_Settings__c newURFS = new User_Rollup_Field_Settings__c(Name = 'CustomRollup' + nameNumber, 
+    		Object_Name__c = targetobject, Target_Field__c = targetfield, Field_Action__c = operator,
+    		Source_Field__c = opptyfield
+    		);    		
+    		insert newURFS;    		
+    	}
+    	
+    	catch(Exception e){
+    		 showMsg('An unhandled exception has occurred. Please try again.',ApexPages.Severity.FATAL);
+    		 showMsg('Exception type' + e, ApexPages.Severity.INFO);    		 
+    	}
+    	
+    	return ApexPages.currentPage().setRedirect(true);
     }   
         
+    
         
          
     
