@@ -13,7 +13,7 @@
     * Neither the name of the Salesforce.com Foundation nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
-
+ 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
     LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -262,7 +262,7 @@ public with sharing class userRollupSettings {
                 targetField = Schema.sObjectType.Account.fields.getMap().get(urfs.Target_Field__c); 
                 if (targetField == null) isValid = false;               
             }
-            else if (urfs.Object_Name__c == 'Household'){
+            else if (urfs.Object_Name__c == 'Household__c'){
                 targetField = Schema.sObjectType.Household__c.fields.getMap().get(urfs.Target_Field__c); 
                 if (targetField == null) isValid = false;
             }
@@ -299,17 +299,102 @@ public with sharing class userRollupSettings {
     	return ApexPages.currentPage().setRedirect(true);
     }   
         
-       public static testMethod void TEST_userRollupSettings() {
+    public static testMethod void TEST_userRollupSettings() {
         
         Test.setCurrentPageReference(new PageReference('Page.userRollupSettings'));
         
         //pass the controller into the extension
         userRollupSettings controller = new userRollupSettings();
-                
-    }
         
-         
-    
-
-
+        //exercise basic operations
+        controller.next();
+        system.assertEquals(controller.step, 1);
+        controller.next();
+        system.assertEquals(controller.step, 2);
+        controller.back();
+        system.assertEquals(controller.step, 1);
+        controller.cancel();
+        system.assertEquals(controller.step, 0);
+        
+        //check settings returns a null pagereference
+        PageReference samePage = controller.checkSettings();
+        system.assertEquals(samePage, null);
+        
+        //call the major getter methods
+        list<SelectOption> oppyList = controller.getSourceFields();
+        controller.opptyfield = 'Amount';
+        list<SelectOption> operatorList = controller.getValidOperators();
+        
+        controller.opptyfield = 'CloseDate';
+        operatorList = controller.getValidOperators();
+        controller.operator = 'MAX';
+        
+        list<SelectOption> targetObjectList = controller.getTargetObjects();
+        controller.targetobject = 'Account';
+        list<SelectOption> targetFieldList = controller.getTargetFields();
+               
+        //change target object to test other options        
+        controller.targetobject = 'Household__c';
+        targetFieldList = controller.getTargetFields();
+        
+        controller.targetobject = 'Contact';
+        targetFieldList = controller.getTargetFields();
+        system.assertEquals(targetObjectList.size(), 3);
+        
+        controller.targetfield = 'Birthdate';
+        
+        string operationdescription = controller.getOperationString();
+        controller.createRollup();
+        
+        //existing invalid rollups will cause test failure
+        boolean isValid = controller.userRollupsValid();
+        system.assertEquals(isValid, true);
+        
+        //insert invalid rollup to test error handling methods
+        User_Rollup_Field_Settings__c badurfs = new User_Rollup_Field_Settings__c(
+        Name = 'Invalid Test Rollup',
+        npo02__Target_Field__c = 'InvalidTargetField__test',
+        npo02__Source_Field__c = 'InvalidSourceField__test',
+        npo02__Object_Name__c = 'Account',
+        npo02__Field_Action__c = 'TEST'         
+        );
+        
+        insert badurfs;
+        
+        isValid = controller.userRollupsValid();
+        system.assertEquals(false, isValid);
+        PageReference pr = controller.checkSettings();        
+        
+        //exercise household code
+        User_Rollup_Field_Settings__c HHurfs = new User_Rollup_Field_Settings__c(
+        Name = 'Household Test Rollup',
+        npo02__Target_Field__c = 'lastoppamount__c',
+        npo02__Source_Field__c = 'Amount',
+        npo02__Object_Name__c = 'Household__c',
+        npo02__Field_Action__c = 'MAX'         
+        );
+        
+        insert HHurfs; 
+                
+        isValid = controller.userRollupsValid();
+        system.assertEquals(false, isValid);
+        
+        //insert a bogus rollup using the createRollup() method
+        controller.operator = null;
+        pr = controller.createRollup();
+        
+        User_Rollup_Field_Settings__c badobject = new User_Rollup_Field_Settings__c(
+        Name = 'Invalid Object Rollup',
+        npo02__Target_Field__c = 'InvalidTargetField__test',
+        npo02__Source_Field__c = 'InvalidSourceField__test',
+        npo02__Object_Name__c = 'BadAccount',
+        npo02__Field_Action__c = 'TEST'
+        );
+        
+        insert badobject;
+        
+        isValid = controller.userRollupsValid();
+        system.assertEquals(false, isValid);
+        
+    }
 }
