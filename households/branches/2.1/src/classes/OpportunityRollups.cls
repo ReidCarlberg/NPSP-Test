@@ -299,7 +299,8 @@ global virtual class OpportunityRollups {
         list<contact> cc = [select id, npo02__household__c, npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, 
                 npo02__OppAmountLastNDays__c, npo02__TotalMembershipOppAmount__c, npo02__LastCloseDate__c, 
                 npo02__NumberOfClosedOpps__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c, 
-                npo02__LastOppAmount__c,  
+                npo02__LastOppAmount__c,  npo02__MembershipEndDate__c, npo02__Household__r.npo02__MembershipEndDate__c,
+                npo02__MembershipJoinDate__c, npo02__Household__r.npo02__MembershipJoinDate__c,
                 npo02__Household__r.npo02__OppsClosedThisYear__c, npo02__Household__r.npo02__OppsClosedLastYear__c, 
                 npo02__Household__r.npo02__OppsClosedLastNDays__c, npo02__Household__r.npo02__OppsClosed2YearsAgo__c, 
                 npo02__Household__r.npo02__OppAmountLastYear__c, npo02__Household__r.npo02__OppAmount2YearsAgo__c,
@@ -323,7 +324,8 @@ global virtual class OpportunityRollups {
             npo02__OppAmountLastNDays__c, npo02__LastCloseDate__c, npo02__NumberOfClosedOpps__c, npo02__TotalMembershipOppAmount__c,
             npo02__OppsClosedThisYear__c, npo02__OppsClosedLastYear__c, 
             npo02__OppsClosedLastNDays__c, npo02__OppsClosed2YearsAgo__c,
-            npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c
+            npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c,
+            npo02__MembershipEndDate__c, npo02__MembershipJoinDate__c
             from npo02__household__c where id = :hhid ];
         
         if (!hhs.isEmpty()) 
@@ -340,7 +342,7 @@ global virtual class OpportunityRollups {
             // get household contacts
             map<id, contact> cmap = new map<id, contact>([select id, npo02__household__c, npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, 
                 npo02__OppAmountLastNDays__c, npo02__TotalMembershipOppAmount__c, npo02__LastCloseDate__c, 
-                npo02__NumberOfClosedOpps__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c, 
+                npo02__NumberOfClosedOpps__c, npo02__MembershipEndDate__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c, npo02__MembershipJoinDate__c,
                 npo02__LastOppAmount__c from contact where npo02__household__c in :hhmap.keyset() ]);
             
             // roll up totals
@@ -367,7 +369,9 @@ global virtual class OpportunityRollups {
                         contact.npo02__household__r.npo02__LastCloseDate__c, contact.npo02__household__r.npo02__NumberOfClosedOpps__c,
                         contact.npo02__household__r.npo02__OppsClosedThisYear__c, contact.npo02__household__r.npo02__OppsClosedLastYear__c, 
                         contact.npo02__household__r.npo02__OppsClosedLastNDays__c, contact.npo02__household__r.npo02__OppsClosed2YearsAgo__c,
-                        contact.npo02__household__r.npo02__OppAmountLastYear__c, contact.npo02__household__r.npo02__OppAmount2YearsAgo__c
+                        contact.npo02__household__r.npo02__OppAmountLastYear__c, contact.npo02__household__r.npo02__OppAmount2YearsAgo__c,
+                        contact.npo02__MembershipEndDate__c, contact.npo02__household__r.npo02__MembershipEndDate__c,
+                        contact.npo02__MembershipJoinDate__c, contact.npo02__household__r.npo02__MembershipJoinDate__c
                         FROM OpportunityContactRole WHERE Opportunity.Id In : modifiedContactOpps and isPrimary = true ALL ROWS ] ) {       
                     
                     cmap.put(r.contactId, r.contact);
@@ -530,11 +534,12 @@ global virtual class OpportunityRollups {
             if (!mbrRecordTypes.isEmpty()) {
                 // also do rollups for membership
                 // if you need annual rollups for membership, uncomment the commented bits
-                soqlStatement = 'SELECT contact.npo02__household__c hhid, contactId, ';
+                soqlStatement = 'SELECT contact.npo02__household__c hhid, contactId, ';                
                 soqlStatement += 'SUM(Opportunity.Amount) TotalOppAmount,  ';
                 soqlStatement += 'MAX(Opportunity.CloseDate) LastCloseDate,  ';
                 soqlStatement += 'MIN(Opportunity.npe01__membership_start_date__c) FirstStartDate, '; 
                 soqlStatement += 'MAX(Opportunity.npe01__Membership_End_Date__c) LastEndDate,  ';
+                soqlStatement += 'MAX(contact.npo02__household__r.npo02__MembershipEndDate__c) HHMemberEndDate, ';
                 soqlStatement += 'COUNT_DISTINCT(Opportunity.Id) NumberOfClosedOpps, ';
                 for (string s : userRollups.keyset()){
                     if (userRollups.get(s).Object_Name__c == 'Contact'){
@@ -669,7 +674,7 @@ global virtual class OpportunityRollups {
                     // contact row  
                     updateRollupFromResultLastNDays((sobject)(contactsToUpdate.get(cid)), r);
                 }
-            }
+            } 
     
             if (!mbrRecordTypes.isEmpty()) {
                 // also do rollups for membership
@@ -679,6 +684,7 @@ global virtual class OpportunityRollups {
                 soqlStatement += 'MAX(Opportunity.CloseDate) LastCloseDate,  ';
                 soqlStatement += 'MIN(Opportunity.npe01__membership_start_date__c) FirstStartDate, '; 
                 soqlStatement += 'MAX(Opportunity.npe01__Membership_End_Date__c) LastEndDate,  ';
+                soqlStatement += 'MAX(contact.npo02__household__r.npo02__MembershipEndDate__c) HHMembershipEnddate, ';
                 soqlStatement += 'COUNT_DISTINCT(Opportunity.Id) NumberOfClosedOpps, ';
                 soqlStatement += 'MAX(Opportunity.npo02__CombinedRollupFieldset__c) RollupFieldset ';
                 soqlStatement += 'FROM OpportunityContactRole  ';
@@ -725,7 +731,10 @@ global virtual class OpportunityRollups {
                     c1.npo02__OppAmountLastNDays__c == c2.npo02__OppAmountLastNDays__c &&
                     c1.npo02__OppAmountThisYear__c == c2.npo02__OppAmountThisYear__c &&
                     c1.npo02__TotalMembershipOppAmount__c == c2.npo02__TotalMembershipOppAmount__c &&
-                    c1.npo02__LastCloseDate__c == c2.npo02__LastCloseDate__c) && hasContactRollups == false)
+                    c1.npo02__LastCloseDate__c == c2.npo02__LastCloseDate__c &&
+                    c1.npo02__MembershipEndDate__c == c2.npo02__MembershipEndDate__c &&
+                    c1.npo02__MembershipJoinDate__c == c2.npo02__MembershipJoinDate__c
+                    ) && hasContactRollups == false)
                 contactsToUpdate.remove(cid);
         }
         for (id hhid : hhIds) {
@@ -737,7 +746,10 @@ global virtual class OpportunityRollups {
                     hh1.npo02__OppAmountLastYear__c == hh2.npo02__OppAmountLastYear__c &&
                     hh1.npo02__OppAmount2YearsAgo__c == hh2.npo02__OppAmount2YearsAgo__c &&
                     hh1.npo02__TotalMembershipOppAmount__c == hh2.npo02__TotalMembershipOppAmount__c &&
-                    hh1.npo02__LastCloseDate__c == hh2.npo02__LastCloseDate__c) && hasHouseholdRollups == false)
+                    hh1.npo02__LastCloseDate__c == hh2.npo02__LastCloseDate__c &&
+                    hh1.npo02__MembershipEndDate__c == hh2.npo02__MembershipEndDate__c && 
+                    hh1.npo02__MembershipJoinDate__c == hh2.npo02__MembershipJoinDate__c
+                    ) && hasHouseholdRollups == false)
                 householdsToUpdate.remove(hhid);
         }
 
@@ -875,7 +887,7 @@ global virtual class OpportunityRollups {
                 map<id, account> amap;
                 if (acctsToReroll.size() == 1) {                    
                     amap = new map<id, account>(
-                        [select id, npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastNDays__c, 
+                        [select id, npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastNDays__c,                        
                         npo02__LastCloseDate__c, npo02__NumberOfClosedOpps__c, npo02__TotalMembershipOppAmount__c,
                         npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c, npo02__OppsClosedThisYear__c,
                         npo02__OppsClosedLastYear__c, npo02__OppsClosedLastNDays__c, npo02__OppsClosed2YearsAgo__c 
@@ -919,7 +931,7 @@ global virtual class OpportunityRollups {
         BATCH_OppRollup batch = new BATCH_OppRollup( 'SELECT id, npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastNDays__c, ' +  
         'npo02__LastCloseDate__c, npo02__NumberOfClosedOpps__c, npo02__TotalMembershipOppAmount__c, ' +
         'npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c, npo02__OppsClosedThisYear__c, ' +
-        'npo02__OppsClosedLastYear__c, npo02__OppsClosedLastNDays__c, npo02__OppsClosed2YearsAgo__c ' +
+        'npo02__OppsClosedLastYear__c, npo02__MembershipJoinDate__c, npo02__MembershipEndDate__c, npo02__OppsClosedLastNDays__c, npo02__OppsClosed2YearsAgo__c ' +
         'FROM account' + (isTest ? ' WHERE name like \'%test%\' LIMIT 200' : '') );
         id batchProcessId = database.executeBatch(batch, batchSize);        
     }   
@@ -941,7 +953,7 @@ global virtual class OpportunityRollups {
 
         BATCH_OppRollup batch = new BATCH_OppRollup( 'SELECT id, npo02__TotalOppAmount__c, ' +
             'npo02__OppAmountThisYear__c, npo02__TotalMembershipOppAmount__c, ' +
-            'npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c, ' +
+            'npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c, npo02__MembershipJoinDate__c, npo02__MembershipEndDate__c' +
             'npo02__OppAmountLastNDays__c, npo02__LastCloseDate__c, npo02__NumberOfClosedOpps__c FROM npo02__household__c' + 
             (isTest ? ' WHERE lastname like \'%doppleganger%\' LIMIT 200' : '') );
         id batchProcessId = database.executeBatch(batch, batchSize);        
@@ -1126,7 +1138,7 @@ global virtual class OpportunityRollups {
             rg.rollupContact(testcons[0].id);
             
             //also exercise the non-future methods to make sure the code runs
-            npo02__household__c[] hhs = [SELECT id, npo02__TotalOppAmount__c, npo02__LastCloseDate__c, npo02__TotalMembershipOppAmount__c, npo02__OppAmountLastNDays__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c FROM npo02__household__c WHERE id = :UpdatedCon.npo02__household__r.id LIMIT 1];
+            npo02__household__c[] hhs = [SELECT id, npo02__TotalOppAmount__c, npo02__LastCloseDate__c, npo02__TotalMembershipOppAmount__c, npo02__OppAmountLastNDays__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c, npo02__MembershipEndDate__c, npo02__MembershipJoinDate__c FROM npo02__household__c WHERE id = :UpdatedCon.npo02__household__r.id LIMIT 1];
             rg = new OpportunityRollups();
             rg.rollupHousehold(hhs[0].id);
             rg = new OpportunityRollups();
@@ -1187,7 +1199,7 @@ global virtual class OpportunityRollups {
             
             //now test that a contact has received the proper member stats from the trigger
             id FirstConId = TestCons[0].id;
-            Contact UpdatedCon = [SELECT id, account.npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__household__c, npo02__household__r.npo02__TotalOppAmount__c, npo02__TotalOppAmount__c FROM Contact WHERE Id = :FirstConId];
+            Contact UpdatedCon = [SELECT id, account.npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__household__c, npo02__household__r.npo02__TotalOppAmount__c, npo02__TotalOppAmount__c, npo02__household__r.npo02__MembershipEndDate__c, npo02__MembershipJoinDate__c FROM Contact WHERE Id = :FirstConId];
     
             System.AssertEquals ( 100 , UpdatedCon.npo02__TotalOppAmount__c );
             System.AssertEquals ( 100 , UpdatedCon.npo02__household__r.npo02__TotalOppAmount__c );      
@@ -1199,7 +1211,7 @@ global virtual class OpportunityRollups {
             rg.rollupContact(testcons[0].id);
             
             //also exercise the non-future methods to make sure the code runs
-            npo02__household__c[] hhs = [SELECT id, npo02__TotalOppAmount__c, npo02__LastCloseDate__c, npo02__TotalMembershipOppAmount__c, npo02__OppAmountLastNDays__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c FROM npo02__household__c WHERE id = :UpdatedCon.npo02__household__r.id LIMIT 1];
+            npo02__household__c[] hhs = [SELECT npo02__MembershipJoinDate__c, npo02__MembershipEndDate__c, id, npo02__TotalOppAmount__c, npo02__LastCloseDate__c, npo02__TotalMembershipOppAmount__c, npo02__OppAmountLastNDays__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c FROM npo02__household__c WHERE id = :UpdatedCon.npo02__household__r.id LIMIT 1];
             rg = new OpportunityRollups();
             rg.rollupHousehold(hhs[0].id);
             rg = new OpportunityRollups();
@@ -1272,7 +1284,7 @@ global virtual class OpportunityRollups {
             rg.rollupContact(testcons[0].id);
             
             //also exercise the non-future methods to make sure the code runs
-            npo02__household__c[] hhs = [SELECT id, npo02__TotalOppAmount__c, npo02__LastCloseDate__c, npo02__TotalMembershipOppAmount__c, npo02__OppAmountLastNDays__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c FROM npo02__household__c WHERE id = :UpdatedCon.npo02__household__r.id LIMIT 1];
+            npo02__household__c[] hhs = [SELECT id, npo02__MembershipJoinDate__c, npo02__MembershipEndDate__c, npo02__TotalOppAmount__c, npo02__LastCloseDate__c, npo02__TotalMembershipOppAmount__c, npo02__OppAmountLastNDays__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c FROM npo02__household__c WHERE id = :UpdatedCon.npo02__household__r.id LIMIT 1];
             rg = new OpportunityRollups();
             rg.rollupHousehold(hhs[0].id);
             rg = new OpportunityRollups();
@@ -1349,7 +1361,7 @@ global virtual class OpportunityRollups {
             rg.rollupContact(testcons[0].id);
             
             //also exercise the non-future methods to make sure the code runs
-            npo02__household__c[] hhs = [SELECT id, npo02__TotalOppAmount__c, npo02__LastCloseDate__c, npo02__TotalMembershipOppAmount__c, npo02__OppAmountLastNDays__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c FROM npo02__household__c WHERE id = :UpdatedCon.npo02__household__r.id LIMIT 1];
+            npo02__household__c[] hhs = [SELECT id, npo02__TotalOppAmount__c, npo02__LastCloseDate__c, npo02__TotalMembershipOppAmount__c, npo02__OppAmountLastNDays__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c, npo02__MembershipEndDate__c, npo02__MembershipJoinDate__c FROM npo02__household__c WHERE id = :UpdatedCon.npo02__household__r.id LIMIT 1];
             rg = new OpportunityRollups();
             rg.rollupHousehold(hhs[0].id);
             rg = new OpportunityRollups();
