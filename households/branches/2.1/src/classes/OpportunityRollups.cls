@@ -550,7 +550,7 @@ global virtual class OpportunityRollups {
                 soqlStatement += 'MAX(Opportunity.npo02__CombinedRollupFieldset__c) RollupFieldset ';
                 soqlStatement += 'FROM OpportunityContactRole  ';
                 soqlStatement += 'WHERE isPrimary=true AND opportunity.isWon=true '; 
-                soqlStatement += 'AND (Opportunity.Amount > 0 OR Opportunity.Amount < 0) '; 
+                soqlStatement += 'AND (Opportunity.Amount != null) '; 
                 if(areRecordTypesOnOpps()){
                     soqlStatement += 'AND Opportunity.RecordTypeId IN : mbrRecordTypes ';
                 }
@@ -689,7 +689,7 @@ global virtual class OpportunityRollups {
                 soqlStatement += 'MAX(Opportunity.npo02__CombinedRollupFieldset__c) RollupFieldset ';
                 soqlStatement += 'FROM OpportunityContactRole  ';
                 soqlStatement += 'WHERE isPrimary=true AND opportunity.isWon=true '; 
-                soqlStatement += 'AND (Opportunity.Amount > 0 OR Opportunity.Amount < 0) '; 
+                soqlStatement += 'AND (Opportunity.Amount != null) '; 
                 if(areRecordTypesOnOpps()){
                     soqlStatement += 'AND Opportunity.RecordTypeId IN : mbrRecordTypes ';
                 }
