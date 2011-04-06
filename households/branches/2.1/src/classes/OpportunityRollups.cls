@@ -992,8 +992,11 @@ global virtual class OpportunityRollups {
             // fill in summary totals
             obj.put('npo02__TotalOppAmount__c', amt);
             obj.put('npo02__NumberOfClosedOpps__c', cnt);               
-            obj.put('npo02__LastOppAmount__c', lastAmt);                
-            obj.put('npo02__AverageAmount__c', r.get('AverageAmount')); //decimal
+            obj.put('npo02__LastOppAmount__c', lastAmt);
+            
+            //sample runtime use of instanceof
+            if (r.get('AverageAmount') instanceof decimal)                             
+                obj.put('npo02__AverageAmount__c', r.get('AverageAmount')); //decimal
             obj.put('npo02__SmallestAmount__c', r.get('SmallestAmount')); //decimal
             obj.put('npo02__LargestAmount__c', r.get('LargestAmount')); //decimal
             obj.put('npo02__FirstCloseDate__c', r.get('FirstCloseDate')); //date
