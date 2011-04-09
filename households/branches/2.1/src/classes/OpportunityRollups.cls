@@ -3,6 +3,7 @@ global virtual class OpportunityRollups {
     // settings
     boolean triggerRollupEnabled = true;
     boolean alwaysRollupToPrimaryContact = false;     
+    boolean useFiscalYear = false;
     set<id> recordTypesToExcludeAccts = new set<id>();
     set<id> recordTypesToExcludeCons = new set<id>();
     set<id> mbrRecordTypes = new set<id>(); 
@@ -64,8 +65,23 @@ global virtual class OpportunityRollups {
             }
             if (rollupSettings.Enable_Opp_Rollup_Triggers__c == false && !isTest)
                 triggerRollupEnabled = false;
+            
             if (rollupSettings.Always_Rollup_to_Primary_Contact__c == true)
                 alwaysRollupToPrimaryContact = true;
+        
+            //check the settings, if they have the fiscal year set
+            //we still need to query to make sure its not a custom fiscal year
+            //or else we'll throw errors when calling Fiscal_Year in queries
+            if (rollupSettings.npo02__Use_Fiscal_Year_for_Rollups__c == true){
+            	integer hasCustomFYRecord = [select count() from FiscalYearSettings];
+            	
+            	//if org has customFY records, disable FY settings
+                if (hasCustomFYRecord > 0)
+            	   useFiscalYear = false;
+            	else
+            	   useFiscalYear = true;
+            }
+        
         }
         
         //load user rollup settings - if they exist        
@@ -171,7 +187,12 @@ global virtual class OpportunityRollups {
         // copy all the rollups from each result row into the account objects
         integer startYear = system.today().year() - 2;
      
-        String soqlStatement = 'SELECT accountId, Calendar_Year(CloseDate) CalendarYr, ';
+        String soqlStatement = '';
+        if (useFiscalYear)
+            soqlStatement += 'SELECT accountId, Fiscal_Year(CloseDate) CalendarYr, ';
+        else
+            soqlStatement += 'SELECT accountID, Calendar_Year(CloseDate) CalendarYr, ';
+        
         soqlStatement += 'SUM(Amount) TotalOppAmount, AVG(Amount) AverageAmount, MIN(Amount) SmallestAmount, ';
         soqlStatement += 'MAX(Amount) LargestAmount, MIN(CloseDate) FirstCloseDate, MAX(CloseDate) LastCloseDate, ';
         for (string s : userRollups.keyset()){
@@ -189,8 +210,14 @@ global virtual class OpportunityRollups {
         }
         soqlStatement += 'AND Type NOT IN : oppTypesToExcludeAccts ';
         soqlStatement += 'AND accountId IN : allAccts ';
-        soqlStatement += 'GROUP BY ROLLUP (accountId, Calendar_Year(closeDate)) ';
-        soqlStatement += 'HAVING ( Calendar_Year(closeDate) = null OR Calendar_Year(closeDate) >= : startYear ) ';
+        if (useFiscalYear){
+            soqlStatement += 'GROUP BY ROLLUP (accountId, Fiscal_Year(closeDate)) ';
+            soqlStatement += 'HAVING ( Fiscal_Year(closeDate) = null OR Fiscal_Year(closeDate) >= : startYear ) ';
+        }
+        else{
+        	soqlStatement += 'GROUP BY ROLLUP (accountId, Calendar_Year(closeDate)) ';
+            soqlStatement += 'HAVING ( Calendar_Year(closeDate) = null OR Calendar_Year(closeDate) >= : startYear ) ';
+        }
         soqlStatement += 'AND accountId != null';
         
         list<sobject> objectList = Database.query(soqlStatement);
@@ -252,7 +279,11 @@ global virtual class OpportunityRollups {
             }
             soqlStatement += 'AND Type NOT IN : oppTypesToExcludeAccts ';
             soqlStatement += 'AND accountId IN : allAccts ';
-            soqlStatement += 'GROUP BY ROLLUP (accountId, Calendar_Year(closeDate)) ';
+            
+            if (useFiscalYear)
+                soqlStatement += 'GROUP BY ROLLUP (accountId, Fiscal_Year(closeDate)) ';
+            else
+                soqlStatement += 'GROUP BY ROLLUP (accountId, Calendar_Year(closeDate)) ';
             soqlStatement += 'HAVING  ';
                     // ( Calendar_Year(closeDate) = null OR Calendar_Year(closeDate) >= : startYear ) AND
             soqlStatement += 'accountId != null';
@@ -437,7 +468,12 @@ global virtual class OpportunityRollups {
         
         
         if (alwaysRollupToPrimaryContact) {
-            String soqlStatement = 'SELECT contact.npo02__household__c hhid, contactId, Calendar_Year(Opportunity.CloseDate) CalendarYr, ';
+            String soqlStatement = ''; 
+            if (useFiscalYear)
+                soqlStatement += 'SELECT contact.npo02__household__c hhid, contactId, Fiscal_Year(Opportunity.CloseDate) CalendarYr, ';
+            else
+                soqlStatement += 'SELECT contact.npo02__household__c hhid, contactId, Calendar_Year(Opportunity.CloseDate) CalendarYr, ';
+            
             soqlStatement += 'SUM(Opportunity.Amount) TotalOppAmount,  ';
             soqlStatement += 'AVG(Opportunity.Amount) AverageAmount, MIN(Opportunity.Amount) SmallestAmount, ';
             soqlStatement += 'MAX(Opportunity.Amount) LargestAmount, MIN(Opportunity.CloseDate) FirstCloseDate, '; 
@@ -458,7 +494,11 @@ global virtual class OpportunityRollups {
             soqlStatement += 'AND Opportunity.Type NOT IN : oppTypesToExcludeCons  ';
             soqlStatement += 'AND (contact.npo02__household__c IN : hhIds) ';// OR  ';
             //soqlStatement += '(contact.npo02__household__c = null AND contactid IN :conids)) ';
-            soqlStatement += 'GROUP BY CUBE(contact.npo02__household__c, contactId, Calendar_Year(opportunity.closeDate)) ';
+            
+            if (useFiscalYear)
+                soqlStatement += 'GROUP BY CUBE(contact.npo02__household__c, contactId, Fiscal_Year(opportunity.closeDate)) ';
+            else
+                soqlStatement += 'GROUP BY CUBE(contact.npo02__household__c, contactId, Calendar_Year(opportunity.closeDate)) ';
             soqlStatement += 'HAVING (contactId IN : conIds OR contactId = null)';
            
              
@@ -602,7 +642,10 @@ global virtual class OpportunityRollups {
             soqlStatement += 'AND (opportunity.accountid = null OR opportunity.account.npe01__SYSTEMIsIndividual__c = true) ';   
             soqlStatement += 'AND (contact.npo02__household__c IN : hhIds ) ';// OR  ';
             //soqlStatement += '(contact.npo02__household__c = null AND contactid IN :conids)) ';
-            soqlStatement += 'GROUP BY CUBE(contact.npo02__household__c, contactId, Calendar_Year(opportunity.closeDate)) ';
+            if (useFiscalYear)
+                soqlStatement += 'GROUP BY CUBE(contact.npo02__household__c, contactId, Fiscal_Year(opportunity.closeDate)) ';
+            else
+                soqlStatement += 'GROUP BY CUBE(contact.npo02__household__c, contactId, Calendar_Year(opportunity.closeDate)) ';
             soqlStatement += 'HAVING (contactId IN : conIds OR contactId = null) ';
                 
             objectList.clear();
