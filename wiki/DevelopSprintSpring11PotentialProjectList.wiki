@@ -3,19 +3,19 @@
 
 = Introduction =
 
-This is a list of possible projects for the Spring 2011 NPSP Developer Sprint (4/27-29/11).  These are just _suggested_ projects. Please feel free to develop, discuss or otherwise build any code or project you're interested in exploring as an addition to the NPSP as part of the event. Please contact me directly if you have any questions!
+This is a list of possible projects for the Spring 2011 NPSP Developer Sprint (4/27-29/11).  These are just _suggested_ projects. Please feel free to develop, discuss or otherwise build *any* code or project you're interested in exploring as an addition to the NPSP as part of the event. Please contact me directly if you have any questions!
 -Kevin
 
 
-= Project List =
+= Potential Projects List =
 
 
 ==*1. Batch Gift Entry*==
 
-===_Introduction_===
+====_Introduction_====
  * Currently, there is not an easy way to batch enter gifts. This    functionality would allow organizations to easily enter multiple gifts and submit them in batch. 
 
-===_Current State_===
+====_Current State_====
  * Utilizing the Apex Data Loader is currently the only way to provide this functionality
 
 ===_Problems with Current State_===
