@@ -29,7 +29,7 @@ This is a list of possible projects for the Spring 2011 NPSP Developer Sprint (4
 ====_Implementation Details_====
  * Will be limited to Households or Contacts/Orgs package, which removes the possibility of utilizing relationships/affiliations along with the package
 
-****************************************
+<hr>
 
 ==*2. Interstitial Opportunity Pages/Wizard*==
 
@@ -51,7 +51,7 @@ This is a list of possible projects for the Spring 2011 NPSP Developer Sprint (4
 ====_Implementation Details_====
  * Variations of this exist in various other template, would need to be modeled for both 1x1 and bucket accounts
 
-****************************************
+<hr>
 
 ==*3. Lead Conversion Improvements*==
 
@@ -75,7 +75,7 @@ This is a list of possible projects for the Spring 2011 NPSP Developer Sprint (4
 ====_Implementation Details_====
  * Have a VF implementation in C& O. Some matching with existing Households would be a potentially cool feature, but would need to shift to HH package
 
-****************************************
+<hr>
 
 ==*4. Help & Resources Interface*==
 
@@ -101,7 +101,7 @@ provide a more intuitive and accessible interface for bug logging directly to Go
  * VF for page
  * Google Code API and OAuth for Issue Tracker authentication and posting
 
-****************************************
+<hr>
 
 ==*5. Update Notifications*==
 
@@ -126,6 +126,7 @@ provide a more intuitive and accessible interface for bug logging directly to Go
  * Pushable to existing orgs?
  * Should provide notification either in the org itself, or notify admin users via email
 
+<hr>
 
 ==*6. Multi-directional Relationships-Affiliations*==
 
@@ -146,7 +147,7 @@ provide a more intuitive and accessible interface for bug logging directly to Go
 
 ====_Implementation Details_====
 
-****************************************
+<hr>
 
 ==*7.  Membership Improvements*==
 
@@ -167,7 +168,7 @@ provide a more intuitive and accessible interface for bug logging directly to Go
 
 ====_Implementation Details_====
 
-****************************************
+<hr>
 
 ==*8.  User Defined Rollup Expansion*==
 
@@ -187,7 +188,7 @@ provide a more intuitive and accessible interface for bug logging directly to Go
 
 ====_Implementation Details_====
 
-****************************************
+<hr>
 
 ==*9.  Household Name/Greeting Customization*==
 
@@ -207,7 +208,7 @@ provide a more intuitive and accessible interface for bug logging directly to Go
 
 ====_Implementation Details_====
 
-****************************************
+<hr>
 
 ==*10.  Custom Validation Error Notification*==
 
@@ -231,7 +232,7 @@ provide a more intuitive and accessible interface for bug logging directly to Go
 
 ====_Implementation Details_====
 
-****************************************
+<hr>
 
 ==*11.  Recurring Donations Improvements & Recalculations*==
 
@@ -255,7 +256,7 @@ provide a more intuitive and accessible interface for bug logging directly to Go
 
 ====_Implementation Details_====
 
-****************************************
+<hr>
 
 ==*12.  Trigger Toggles*==
 
