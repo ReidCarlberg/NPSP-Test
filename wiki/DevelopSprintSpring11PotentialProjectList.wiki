@@ -1,6 +1,5 @@
-#summary One-sentence summary of this page.
 #labels 2011Sprint,Featured
-
+# Possible projects for the spring 2011 NPSP developer sprint
 = Introduction =
 
 This is a list of possible projects  (in no particular order) for the Spring 2011 NPSP Developer Sprint (4/27-29/11).  These are just _suggested_ projects. Please feel free to develop, discuss or otherwise build *any* code or project you're interested in exploring as an addition to the NPSP as part of the event. Please contact me directly if you have any questions!
