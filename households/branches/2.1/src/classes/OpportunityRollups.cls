@@ -20,6 +20,18 @@ global virtual class OpportunityRollups {
     
     static boolean recordTypesOnOpps;
     
+    //multi-currency vars
+    static boolean multiCurrency;
+    static SObjectField cfOppty;
+    static SObjectField cfAccount;
+    static SObjectField cfHousehold;
+    static SObjectField cfContact;
+    //exchangerate store
+    static map<string, decimal> exchangeRates = new map<string,decimal>();
+    //corporate currency
+    static string currCorporate;  
+    
+    
     //determines if record types are enabled on opportunities 
     public static boolean areRecordTypesOnOpps(){
         if (recordTypesOnOpps==null){
@@ -57,7 +69,7 @@ global virtual class OpportunityRollups {
                 oppTypesToExcludeAccts = new set<string>(rollupSettings.Excluded_Contact_Opp_Types__c.split(';'));
             }
             if (rollupSettings.Rollup_N_Day_Value__c != null){
-            	ndayRollup = string.valueOf(rollupSettings.Rollup_N_Day_Value__c);
+            	ndayRollup = string.valueOf(rollupSettings.Rollup_N_Day_Value__c.intValue());
             }
             if (rollupSettings.Membership_Record_Types__c != null) {
                 set<string> mbrRecordTypeNames = new set<string>(rollupSettings.Membership_Record_Types__c.split(';'));
@@ -67,7 +79,7 @@ global virtual class OpportunityRollups {
                 triggerRollupEnabled = false;
             
             if (rollupSettings.Always_Rollup_to_Primary_Contact__c == true)
-                alwaysRollupToPrimaryContact = true;
+                alwaysRollupToPrimaryContact = true;  
         
             //check the settings, if they have the fiscal year set
             //we still need to query to make sure its not a custom fiscal year
@@ -85,7 +97,7 @@ global virtual class OpportunityRollups {
         }
         
         //load user rollup settings - if they exist        
-        userRollups = User_Rollup_Field_Settings__c.getAll(); 
+        userRollups = User_Rollup_Field_Settings__c.getAll().clone(); 
         
         //setup our object bools to demarcate which objects have user defined rollups
         //this will save us some cycles later on
@@ -95,8 +107,12 @@ global virtual class OpportunityRollups {
         	User_Rollup_Field_Settings__c urfs = userRollups.get(s);
         	if (urfs.Object_Name__c == 'Contact'){hasContactRollups = true;}      	
         	else if (urfs.Object_Name__c == 'Account'){hasAccountRollups = true;}
-        	else if (urfs.Object_Name__c == 'Household'){hasHouseholdRollups = true;}
-        	else userRollups.remove(s);
+        	else if (urfs.Object_Name__c == 'Household__c'){hasHouseholdRollups = true;}
+        	else{
+        		hasContactRollups = false;
+                hasHouseholdRollups = false;
+                hasAccountRollups = false;
+        	} 
         
             SobjectField targetField;
             SobjectField sourceField;
@@ -114,7 +130,7 @@ global virtual class OpportunityRollups {
                 targetField = Schema.sObjectType.Account.fields.getMap().get(urfs.Target_Field__c); 
                 if (targetField == null) userRollups.remove(s);               
             }
-            else if (urfs.Object_Name__c == 'Household'){
+            else if (urfs.Object_Name__c == 'Household__c'){
                 targetField = Schema.sObjectType.Household__c.fields.getMap().get(urfs.Target_Field__c); 
                 if (targetField == null) userRollups.remove(s);
             }
@@ -124,13 +140,21 @@ global virtual class OpportunityRollups {
     public void rollupAccount( id aid ) {
     // roll up a single account's opps
         
-        map<id, account> amap = new map<id, account>(
+/*        map<id, account> amap = new map<id, account>(
             [select id, npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastNDays__c, 
                 npo02__TotalMembershipOppAmount__c, npo02__LastCloseDate__c, npo02__NumberOfClosedOpps__c,
                 npo02__OppsClosedThisYear__c,npo02__OppsClosedLastYear__c, npo02__OppsClosedLastNDays__c,
                 npo02__OppsClosed2YearsAgo__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c                           
                 from account where id = : aid AND npo02__NumberOfClosedOpps__c < 3000]);
-        
+*/
+        // switch to dynamic SOQL for multicurrency
+        map<id, account> amap = new map<id, account>((List<Account>)Database.query('select id, npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastNDays__c,'+ 
+                'npo02__TotalMembershipOppAmount__c, npo02__LastCloseDate__c, npo02__NumberOfClosedOpps__c,'+
+                'npo02__OppsClosedThisYear__c,npo02__OppsClosedLastYear__c, npo02__OppsClosedLastNDays__c,'+
+                'npo02__OppsClosed2YearsAgo__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c '+
+                (isMultiCurrency() ? ', CurrencyIsoCode ' : '')+             
+                'from account where id = :aid AND npo02__NumberOfClosedOpps__c < 3000'));
+      
         if (!amap.isEmpty()) 
             rollupAccounts( amap );
     }
@@ -140,12 +164,19 @@ global virtual class OpportunityRollups {
     // roll up a single account's opps
         
         if (acctIds != null && !acctIds.isEmpty()) { 
-            map<id, account> amap = new map<id, account>(
+   /*         map<id, account> amap = new map<id, account>(
                 [select id, npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastNDays__c, 
                     npo02__TotalMembershipOppAmount__c, npo02__LastCloseDate__c, npo02__NumberOfClosedOpps__c,
                     npo02__OppsClosedThisYear__c,npo02__OppsClosedLastYear__c, npo02__OppsClosedLastNDays__c,
                     npo02__OppsClosed2YearsAgo__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c  
-                    from account where id in :acctIds AND npo02__NumberOfClosedOpps__c < 3000 ]);
+                    from account where id in :acctIds AND npo02__NumberOfClosedOpps__c < 3000 ]); */
+        // switch to dynamic SOQL for multicurrency
+            map<id, account> amap = new map<id, account>((List<Account>) Database.query('select id, npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastNDays__c, '+
+                    'npo02__TotalMembershipOppAmount__c, npo02__LastCloseDate__c, npo02__NumberOfClosedOpps__c,'+
+                    'npo02__OppsClosedThisYear__c,npo02__OppsClosedLastYear__c, npo02__OppsClosedLastNDays__c,'+
+                    'npo02__OppsClosed2YearsAgo__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c '+  
+                    (isMultiCurrency() ? ', CurrencyIsoCode ' : '') +  
+                    'from account where id in :acctIds AND npo02__NumberOfClosedOpps__c < 3000'));           
             
             OpportunityRollups rg = new OpportunityRollups();
             rg.rollupAccounts( amap );
@@ -163,6 +194,9 @@ global virtual class OpportunityRollups {
     public void rollupAccounts( map<id, account> amap ) {
     // roll up opps for a map of accounts
     // only accounts that have changed will get updated 
+
+        //arg used by multi currency for rollup field currencies
+        map<Id,Opportunity> opptyCurrencies;
 
         // copy the accounts to a map of zerod out versions
         map<id, account> accountsToUpdate = new map<id, account>();
@@ -182,6 +216,10 @@ global virtual class OpportunityRollups {
                 npo02__MembershipJoinDate__c = null, npo02__MembershipEndDate__c = null,
                 npo02__LastOppAmount__c = null                  
             ));
+            
+            // map currency across if multicurrency
+            if(isMultiCurrency())
+                accountsToUpdate.get(aid).put(cfAccount,amap.get(aid).get(cfAccount));
         }
 
         // copy all the rollups from each result row into the account objects
@@ -221,6 +259,9 @@ global virtual class OpportunityRollups {
         soqlStatement += 'AND accountId != null';
         
         list<sobject> objectList = Database.query(soqlStatement);
+
+        // invokes code to get the currency of npo02__CombinedRollupFieldset__c oppty
+        opptyCurrencies = (isMultiCurrency() ? rcfFindCurrency(objectList) : null);
         
         for (sobject r : objectList){
                     
@@ -230,7 +271,7 @@ global virtual class OpportunityRollups {
             id aid = (id)(r.get('accountId'));
     
             // copy all the rollups from this result row into the account object    
-            updateRollupFromResult((sobject)(accountsToUpdate.get(aid)), r);
+            updateRollupFromResult((sobject)(accountsToUpdate.get(aid)), r, opptyCurrencies);
         }
 
         // also do rollups for last N days
@@ -250,6 +291,9 @@ global virtual class OpportunityRollups {
         
         objectList.clear();
         objectList = database.query(soqlStatement);
+        
+        
+        
         for (sobject r : objectList ) {
             //system.debug(Logginglevel.WARN, 'ROLLUP ROW: ' + r);
             
@@ -291,14 +335,17 @@ global virtual class OpportunityRollups {
             objectList.clear();
             objectList = database.query(soqlStatement);        
             
+            // invokes code to get the currency of npo02__CombinedRollupFieldset__c oppty
+            opptyCurrencies = (isMultiCurrency() ? rcfFindCurrency(objectList) : null);
+            
             for (sobject r : objectList ) {
                 //system.debug('ROLLUP ROW: ' + r);
     
                 // get the account id for this result row
                 id aid = (id)(r.get('accountId'));
-        
-                // copy all the rollups from this result row into the account object    
-                updateRollupFromResultMembership((sobject)(accountsToUpdate.get(aid)), r);
+                
+                // copy all the rollups from this result row into the account object  
+                updateRollupFromResultMembership((sobject)(accountsToUpdate.get(aid)), r, opptyCurrencies);
             }
         }
 
@@ -327,7 +374,7 @@ global virtual class OpportunityRollups {
 
     public void rollupContact( id cid ) {
         // roll up opps for one contact
-        list<contact> cc = [select id, npo02__household__c, npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, 
+ /*       list<contact> cc = [select id, npo02__household__c, npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, 
                 npo02__OppAmountLastNDays__c, npo02__TotalMembershipOppAmount__c, npo02__LastCloseDate__c, 
                 npo02__NumberOfClosedOpps__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c, 
                 npo02__LastOppAmount__c,  npo02__MembershipEndDate__c, npo02__Household__r.npo02__MembershipEndDate__c,
@@ -338,7 +385,21 @@ global virtual class OpportunityRollups {
                 npo02__household__r.npo02__TotalOppAmount__c, npo02__household__r.npo02__OppAmountThisYear__c, 
                 npo02__household__r.npo02__OppAmountLastNDays__c, npo02__household__r.npo02__TotalMembershipOppAmount__c,
                 npo02__household__r.npo02__LastCloseDate__c, npo02__household__r.npo02__NumberOfClosedOpps__c
-                from contact where id = :cid ];
+                from contact where id = :cid ]; */
+        // switch to dynamic SOQL for multicurrency
+        list<contact> cc = Database.query('select id, npo02__household__c, npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, '+
+                'npo02__OppAmountLastNDays__c, npo02__TotalMembershipOppAmount__c, npo02__LastCloseDate__c, '+
+                'npo02__NumberOfClosedOpps__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c, '+
+                'npo02__LastOppAmount__c, npo02__MembershipEndDate__c, npo02__Household__r.npo02__MembershipEndDate__c, '+ 
+                'npo02__MembershipJoinDate__c, npo02__Household__r.npo02__MembershipJoinDate__c, '+
+                'npo02__household__r.npo02__OppsClosedThisYear__c, npo02__household__r.npo02__OppsClosedLastYear__c, '+
+                'npo02__household__r.npo02__OppsClosedLastNDays__c, npo02__household__r.npo02__OppsClosed2YearsAgo__c, '+
+                'npo02__household__r.npo02__OppAmountLastYear__c, npo02__household__r.npo02__OppAmount2YearsAgo__c,'+
+                'npo02__household__r.npo02__TotalOppAmount__c, npo02__household__r.npo02__OppAmountThisYear__c, '+
+                'npo02__household__r.npo02__OppAmountLastNDays__c, npo02__household__r.npo02__TotalMembershipOppAmount__c,'+
+                'npo02__household__r.npo02__LastCloseDate__c, npo02__household__r.npo02__NumberOfClosedOpps__c '+
+                (isMultiCurrency() ? ', CurrencyIsoCode , npo02__household__r.CurrencyIsoCode ' : '')+  
+                'from contact where id = :cid ');     
     
         if (!cc.isEmpty()) { 
             map<id, npo02__household__c> hhmap = new map<id, npo02__household__c>();
@@ -350,14 +411,23 @@ global virtual class OpportunityRollups {
     }
     
     public void rollupHousehold( id hhid ) {
-        // roll up opps for one household
+/*        // roll up opps for one household
         list<npo02__household__c> hhs = [select id, npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, 
             npo02__OppAmountLastNDays__c, npo02__LastCloseDate__c, npo02__NumberOfClosedOpps__c, npo02__TotalMembershipOppAmount__c,
             npo02__OppsClosedThisYear__c, npo02__OppsClosedLastYear__c, 
             npo02__OppsClosedLastNDays__c, npo02__OppsClosed2YearsAgo__c,
             npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c,
             npo02__MembershipEndDate__c, npo02__MembershipJoinDate__c
-            from npo02__household__c where id = :hhid ];
+            from npo02__household__c where id = :hhid ]; */
+        // switch to dynamic SOQL for multicurrency
+        list<npo02__household__c> hhs = Database.query('select id, npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c,'+ 
+            'npo02__OppAmountLastNDays__c, npo02__LastCloseDate__c, npo02__NumberOfClosedOpps__c, npo02__TotalMembershipOppAmount__c,'+
+            'npo02__OppsClosedThisYear__c, npo02__OppsClosedLastYear__c,'+ 
+            'npo02__OppsClosedLastNDays__c, npo02__OppsClosed2YearsAgo__c,'+
+            'npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c, '+
+            'npo02__MembershipEndDate__c, npo02__MembershipJoinDate__c ' +
+            (isMultiCurrency() ? ', CurrencyIsoCode ' : '')+  
+            'from npo02__household__c where id = :hhid ');
         
         if (!hhs.isEmpty()) 
             rollupHouseholds( hhs );
@@ -369,12 +439,22 @@ global virtual class OpportunityRollups {
         if (hhs != null && !hhs.isEmpty()) {
             
             map<id, npo02__household__c> hhmap = new map<id, npo02__household__c>( hhs );
-        
+  
+            // extract keyset from map, as dynamic SOQL only handles single level binds
+            set<id> hhmapids =hhmap.keyset();       
+            
             // get household contacts
-            map<id, contact> cmap = new map<id, contact>([select id, npo02__household__c, npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, 
+                        
+/*            map<id, contact> cmap = new map<id, contact>([select id, npo02__household__c, npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, 
                 npo02__OppAmountLastNDays__c, npo02__TotalMembershipOppAmount__c, npo02__LastCloseDate__c, 
                 npo02__NumberOfClosedOpps__c, npo02__MembershipEndDate__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c, npo02__MembershipJoinDate__c,
-                npo02__LastOppAmount__c from contact where npo02__household__c in :hhmap.keyset() ]);
+                npo02__LastOppAmount__c from contact where npo02__household__c in :hhmap.keyset() ]); */            
+            // switch to dynamic SOQL for multicurrency
+            map<id, contact> cmap = new map<id, contact>((List<contact>) Database.query('select id, npo02__household__c, npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c,'+  
+                'npo02__OppAmountLastNDays__c, npo02__TotalMembershipOppAmount__c, npo02__LastCloseDate__c,'+  
+                'npo02__NumberOfClosedOpps__c, npo02__MembershipEndDate__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c, npo02__MembershipJoinDate__c, '+  
+                (isMultiCurrency() ? 'CurrencyIsoCode,' : '')+
+                'npo02__LastOppAmount__c from contact where npo02__household__c in :hhmapids '));
             
             // roll up totals
             rollupContacts( cmap, hhmap );
@@ -391,7 +471,7 @@ global virtual class OpportunityRollups {
             if (!modifiedContactOpps.isEmpty()) {
                 
                 for (OpportunityContactRole r : 
-                    [SELECT contactId, contact.npo02__household__c,
+/*[SELECT contactId, contact.npo02__household__c,
                         contact.npo02__TotalOppAmount__c, contact.npo02__OppAmountThisYear__c, contact.npo02__OppAmountLastNDays__c, 
                         contact.npo02__LastCloseDate__c, contact.npo02__NumberOfClosedOpps__c, contact.npo02__TotalMembershipOppAmount__c,
                         contact.npo02__OppAmountLastYear__c, contact.npo02__OppAmount2YearsAgo__c, contact.npo02__LastOppAmount__c,          
@@ -403,13 +483,28 @@ global virtual class OpportunityRollups {
                         contact.npo02__household__r.npo02__OppAmountLastYear__c, contact.npo02__household__r.npo02__OppAmount2YearsAgo__c,
                         contact.npo02__MembershipEndDate__c, contact.npo02__household__r.npo02__MembershipEndDate__c,
                         contact.npo02__MembershipJoinDate__c, contact.npo02__household__r.npo02__MembershipJoinDate__c
-                        FROM OpportunityContactRole WHERE Opportunity.Id In : modifiedContactOpps and isPrimary = true ALL ROWS ] ) {       
+                        FROM OpportunityContactRole WHERE Opportunity.Id In : modifiedContactOpps and isPrimary = true ALL ROWS ] ) { */
+                        	
+                    Database.query('SELECT contactId, contact.npo02__household__c, '+
+                        'contact.npo02__TotalOppAmount__c, contact.npo02__OppAmountThisYear__c, contact.npo02__OppAmountLastNDays__c, '+
+                        'contact.npo02__LastCloseDate__c, contact.npo02__NumberOfClosedOpps__c, contact.npo02__TotalMembershipOppAmount__c, '+
+                        'contact.npo02__OppAmountLastYear__c, contact.npo02__OppAmount2YearsAgo__c, contact.npo02__LastOppAmount__c, '+ 
+                        'contact.npo02__household__r.npo02__TotalOppAmount__c, contact.npo02__household__r.npo02__OppAmountThisYear__c, '+
+                        'contact.npo02__household__r.npo02__OppAmountLastNDays__c, contact.npo02__household__r.npo02__TotalMembershipOppAmount__c, '+ 
+                        'contact.npo02__household__r.npo02__LastCloseDate__c, contact.npo02__household__r.npo02__NumberOfClosedOpps__c, '+
+                        'contact.npo02__household__r.npo02__OppsClosedThisYear__c, contact.npo02__household__r.npo02__OppsClosedLastYear__c, '+ 
+                        'contact.npo02__household__r.npo02__OppsClosedLastNDays__c, contact.npo02__household__r.npo02__OppsClosed2YearsAgo__c, '+
+                        'contact.npo02__household__r.npo02__OppAmountLastYear__c, contact.npo02__household__r.npo02__OppAmount2YearsAgo__c, '+
+                        'contact.npo02__MembershipEndDate__c, contact.npo02__household__r.npo02__MembershipEndDate__c, ' +  
+                        'contact.npo02__MembershipJoinDate__c, contact.npo02__household__r.npo02__MembershipJoinDate__c ' + 
+                        (isMultiCurrency() ? ', contact.CurrencyIsoCode, contact.npo02__household__r.CurrencyIsoCode ' : '') +
+                        'FROM OpportunityContactRole WHERE Opportunity.Id In : modifiedContactOpps and isPrimary = true ALL ROWS ') ) {   
                     
                     cmap.put(r.contactId, r.contact);
                     if (r.contact.npo02__household__c != null) {
                         hhmap.put(r.contact.npo02__household__c, r.contact.npo02__household__r);
                     }
-                }   
+                }    
             }
             
             // roll up totals
@@ -422,6 +517,9 @@ global virtual class OpportunityRollups {
 
         set<id> conIds = cmap.keySet();
         set<id> hhIds = hhmap.keySet();
+        
+        //arg used by multi currency for rollup field currencies
+        map<Id,Opportunity> opptyCurrencies;
 
         // copy the contacts and households to a map of zerod out versions
         map<id, contact> contactsToUpdate = new map<id, contact>();
@@ -441,6 +539,9 @@ global virtual class OpportunityRollups {
                 npo02__MembershipJoinDate__c = null, npo02__MembershipEndDate__c = null,                
                 npo02__LastOppAmount__c = null
             ));
+            // map currency across if multicurrency
+            if(isMultiCurrency())
+                contactsToUpdate.get(cid).put(cfContact,cmap.get(cid).get(cfContact));            
         }
         for (id hhid : hhIds) {
             householdsToUpdate.put(hhid, new npo02__household__c(id = hhid, npo02__TotalOppAmount__c = 0, npo02__AverageAmount__c = 0, 
@@ -457,6 +558,9 @@ global virtual class OpportunityRollups {
                 npo02__MembershipJoinDate__c = null, npo02__MembershipEndDate__c = null,                
                 npo02__LastOppAmount__c = null
             ));
+        // map currency across if multicurrency
+            if(isMultiCurrency())
+                householdsToUpdate.get(hhid).put(cfHousehold,hhmap.get(hhid).get(cfHousehold));
         }
 
         // copy all the rollups from each result row into the contact objects
@@ -504,6 +608,9 @@ global virtual class OpportunityRollups {
              
             objectList = database.query(soqlStatement);
             
+            // invokes code to get the currency of npo02__CombinedRollupFieldset__c oppty
+            opptyCurrencies = (isMultiCurrency() ? rcfFindCurrency(objectList) : null);
+            
             for (sobject r : objectList ) {
                 
                 // system.debug(Logginglevel.WARN, 'ROLLUP ROW: ' + r);
@@ -516,7 +623,8 @@ global virtual class OpportunityRollups {
                 // MS: we only want to fully calc the row if it is from the last few years - older years are only for calcing Best Year for contacts
                 integer yr = (integer)r.get('CalendarYr');
                 if (cid == null) { 
-                    if (hhid != null && (yr >= startYear || yr==null) ) updateRollupFromResult((sobject)(householdsToUpdate.get(hhid)), r);
+                    /*if (hhid != null && (yr >= startYear || yr==null) ) updateRollupFromResult((sobject)(householdsToUpdate.get(hhid)), r);*/
+                    if (hhid != null && (yr >= startYear || yr==null) ) updateRollupFromResult((sobject)(householdsToUpdate.get(hhid)), r, opptyCurrencies);
                     // after doing regular processing, calc Best Contact Year stuff
                     // the rows are in year order, so just look start w/ the first yr, and increase as needed as we go
                     decimal yrAmt = (decimal)r.get('TotalOppAmount');
@@ -525,7 +633,8 @@ global virtual class OpportunityRollups {
                 } else {
                     // contact row
                     if ( yr >= startYear || yr==null) {
-                        updateRollupFromResult((sobject)(contactsToUpdate.get(cid)), r);
+                        /*updateRollupFromResult((sobject)(contactsToUpdate.get(cid)), r);*/
+                        updateRollupFromResult((sobject)(contactsToUpdate.get(cid)), r, opptyCurrencies);
                     }
                     // after doing regular processing, calc Best Contact Year stuff
                     // the rows are in year order, so just look start w/ the first yr, and increase as needed as we go
@@ -602,6 +711,9 @@ global virtual class OpportunityRollups {
                 
                 objectList.clear();
                 objectList = database.query(soqlStatement);
+                
+                // invokes code to get the currency of npo02__CombinedRollupFieldset__c oppty
+                opptyCurrencies = (isMultiCurrency() ? rcfFindCurrency(objectList) : null);
               
                 for (sobject r : objectList) {
                             
@@ -612,15 +724,21 @@ global virtual class OpportunityRollups {
                     // process the result row, copying it into the contact record(s)
                     if (cid == null) { 
                         if (hhid != null)
-                            updateRollupFromResultMembership((sobject)(householdsToUpdate.get(hhid)), r);
+                            /*updateRollupFromResultMembership((sobject)(householdsToUpdate.get(hhid)), r);*/
+                            updateRollupFromResultMembership((sobject)(householdsToUpdate.get(hhid)), r, opptyCurrencies);
                     } else {
                         // contact row  
-                        updateRollupFromResultMembership((sobject)(contactsToUpdate.get(cid)), r);
+                        /*updateRollupFromResultMembership((sobject)(contactsToUpdate.get(cid)), r);*/
+                        updateRollupFromResultMembership((sobject)(householdsToUpdate.get(hhid)), r, opptyCurrencies);
                     }
                 }
             }
         } else {
-            String soqlStatement = 'SELECT contact.npo02__household__c hhid, contactId, Calendar_Year(Opportunity.CloseDate) CalendarYr, ';
+            String soqlStatement = '';
+            if (useFiscalYear)
+                soqlStatement += 'SELECT contact.npo02__household__c hhid, contactId, Fiscal_Year(Opportunity.CloseDate) CalendarYr, ';
+            else            
+                soqlStatement += 'SELECT contact.npo02__household__c hhid, contactId, Calendar_Year(Opportunity.CloseDate) CalendarYr, ';
             soqlStatement += 'SUM(Opportunity.Amount) TotalOppAmount,  ';
             soqlStatement += 'AVG(Opportunity.Amount) AverageAmount, MIN(Opportunity.Amount) SmallestAmount, ';
             soqlStatement += 'MAX(Opportunity.Amount) LargestAmount, MIN(Opportunity.CloseDate) FirstCloseDate, '; 
@@ -650,6 +768,9 @@ global virtual class OpportunityRollups {
                 
             objectList.clear();
             objectList = database.query(soqlStatement);
+            
+            // invokes code to get the currency of npo02__CombinedRollupFieldset__c oppty
+            opptyCurrencies = (isMultiCurrency() ? rcfFindCurrency(objectList) : null);
                 
             for (sobject r : objectList) {
                 
@@ -663,7 +784,8 @@ global virtual class OpportunityRollups {
                 // MS: we only want to fully calc the row if it is from the last few years - older years are only for calcing Best Year for contacts
                 integer yr = (integer)r.get('CalendarYr');
                 if (cid == null) { 
-                    if (hhid != null && (yr >= startYear || yr==null) ) updateRollupFromResult((sobject)(householdsToUpdate.get(hhid)), r);
+                    /*if (hhid != null && (yr >= startYear || yr==null) ) updateRollupFromResult((sobject)(householdsToUpdate.get(hhid)), r);*/
+                    if (hhid != null && (yr >= startYear || yr==null) ) updateRollupFromResult((sobject)(householdsToUpdate.get(hhid)), r, opptyCurrencies);
                     // after doing regular processing, calc Best Contact Year stuff
                     // the rows are in year order, so just look start w/ the first yr, and increase as needed as we go
                     decimal yrAmt = (decimal)r.get('TotalOppAmount');
@@ -672,7 +794,8 @@ global virtual class OpportunityRollups {
                 } else {
                     // contact row
                     if ( yr >= startYear || yr==null) {
-                        updateRollupFromResult((sobject)(contactsToUpdate.get(cid)), r);
+                        /*updateRollupFromResult((sobject)(contactsToUpdate.get(cid)), r);*/
+                        updateRollupFromResult((sobject)(contactsToUpdate.get(cid)), r, opptyCurrencies);
                     }
                     // after doing regular processing, calc Best Contact Year stuff
                     // the rows are in year order, so just look start w/ the first yr, and increase as needed as we go
@@ -746,6 +869,9 @@ global virtual class OpportunityRollups {
                 objectList.clear();
                 objectList = database.query(soqlStatement);
                 
+                // invokes code to get the currency of npo02__CombinedRollupFieldset__c oppty
+                opptyCurrencies = (isMultiCurrency() ? rcfFindCurrency(objectList) : null);
+                
                 for (sobject r : objectList) {
                             
                     // get the ids
@@ -755,10 +881,12 @@ global virtual class OpportunityRollups {
                     // process the result row, copying it into the contact record(s)
                     if (cid == null) { 
                         if (hhid != null)
-                            updateRollupFromResultMembership((sobject)(householdsToUpdate.get(hhid)), r);
+                            /*updateRollupFromResultMembership((sobject)(householdsToUpdate.get(hhid)), r);*/
+                            updateRollupFromResultMembership((sobject)(householdsToUpdate.get(hhid)), r, opptyCurrencies);
                     } else {
                         // contact row  
-                        updateRollupFromResultMembership((sobject)(contactsToUpdate.get(cid)), r);
+                        /*updateRollupFromResultMembership((sobject)(contactsToUpdate.get(cid)), r);*/
+                        updateRollupFromResultMembership((sobject)(contactsToUpdate.get(cid)), r, opptyCurrencies);
                     }
                 }
             }
@@ -929,12 +1057,19 @@ global virtual class OpportunityRollups {
                 boolean rollupNow = false;
                 map<id, account> amap;
                 if (acctsToReroll.size() == 1) {                    
-                    amap = new map<id, account>(
+                    /*amap = new map<id, account>(
                         [select id, npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastNDays__c,                        
                         npo02__LastCloseDate__c, npo02__NumberOfClosedOpps__c, npo02__TotalMembershipOppAmount__c,
                         npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c, npo02__OppsClosedThisYear__c,
                         npo02__OppsClosedLastYear__c, npo02__OppsClosedLastNDays__c, npo02__OppsClosed2YearsAgo__c 
-                        from account where id in :acctsToReroll ]);
+                        from account where id in :acctsToReroll ]);*/
+                    amap = new map<id, account>((list<Account>)Database.query('select id, npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastNDays__c,'+ 
+                       'npo02__LastCloseDate__c, npo02__NumberOfClosedOpps__c, npo02__TotalMembershipOppAmount__c,'+
+                       'npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c, npo02__OppsClosedThisYear__c,'+
+                       'npo02__OppsClosedLastYear__c, npo02__OppsClosedLastNDays__c, npo02__OppsClosed2YearsAgo__c '+
+                       (isMultiCurrency() ? ', CurrencyIsoCode ' : '')+             
+                       'from account where id in :acctsToReroll'));
+                  
                     decimal oppCount = amap.values()[0].npo02__NumberOfClosedOpps__c;
                     //rollupNow = (oppCount == null || oppCount < 200);
                 }
@@ -975,6 +1110,7 @@ global virtual class OpportunityRollups {
         'npo02__LastCloseDate__c, npo02__NumberOfClosedOpps__c, npo02__TotalMembershipOppAmount__c, ' +
         'npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c, npo02__OppsClosedThisYear__c, ' +
         'npo02__OppsClosedLastYear__c, npo02__MembershipJoinDate__c, npo02__MembershipEndDate__c, npo02__OppsClosedLastNDays__c, npo02__OppsClosed2YearsAgo__c ' +
+        (isMultiCurrency() ? ', CurrencyIsoCode ' : '') + 
         'FROM account' + (isTest ? ' WHERE name like \'%test%\' LIMIT 200' : '') );
         id batchProcessId = database.executeBatch(batch, batchSize);        
     }   
@@ -996,13 +1132,15 @@ global virtual class OpportunityRollups {
 
         BATCH_OppRollup batch = new BATCH_OppRollup( 'SELECT id, npo02__TotalOppAmount__c, ' +
             'npo02__OppAmountThisYear__c, npo02__TotalMembershipOppAmount__c, ' +
-            'npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c, npo02__MembershipJoinDate__c, npo02__MembershipEndDate__c' +
-            'npo02__OppAmountLastNDays__c, npo02__LastCloseDate__c, npo02__NumberOfClosedOpps__c FROM npo02__household__c' + 
+            'npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c, npo02__MembershipJoinDate__c, npo02__MembershipEndDate__c, ' +
+            'npo02__OppAmountLastNDays__c, npo02__LastCloseDate__c, npo02__NumberOfClosedOpps__c ' +
+            (isMultiCurrency() ? ', CurrencyIsoCode ' : '')+              
+            ' FROM npo02__household__c ' + 
             (isTest ? ' WHERE lastname like \'%doppleganger%\' LIMIT 200' : '') );
         id batchProcessId = database.executeBatch(batch, batchSize);        
     }
 
-    public static void updateRollupFromResult(sobject obj, sobject r) {
+    public static void updateRollupFromResult(sobject obj, sobject r, map<id, Opportunity> opptyCurrencies) {
     // used for single and batch rollups, this maps query results to the right fields
 
         // get the fiscal year, total amount, and opp count for this result row     
@@ -1013,6 +1151,13 @@ global virtual class OpportunityRollups {
         // split the special field to get the last opp id and amount
         string[] rcf = ((string)(r.get('RollupFieldset'))).split(';\\|;',-4);
         decimal lastAmt = (rcf.size() > 1 && rcf[1] != '') ? decimal.valueOf(rcf[1]) : null;
+        
+        // calculate amounts into correct currency if needed
+        if(isMultiCurrency()){
+            amt = ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),amt);
+            if(lastAmt != null && rcf.size() > 4 && rcf[4] != '')
+                lastAmt = ConvertCurrency((string)opptyCurrencies.get((Id)rcf[4]).get('CurrencyISOCode'),(string)obj.get('CurrencyIsoCode'),lastAmt);           
+        }
         
         // check if this is an annual total or account total
         if (fy != null) {
@@ -1036,14 +1181,22 @@ global virtual class OpportunityRollups {
             obj.put('npo02__TotalOppAmount__c', amt);
             obj.put('npo02__NumberOfClosedOpps__c', cnt);               
             obj.put('npo02__LastOppAmount__c', lastAmt);
-            
-            //sample runtime use of instanceof
-            if (r.get('AverageAmount') instanceof decimal)                             
-                obj.put('npo02__AverageAmount__c', r.get('AverageAmount')); //decimal
-            obj.put('npo02__SmallestAmount__c', r.get('SmallestAmount')); //decimal
-            obj.put('npo02__LargestAmount__c', r.get('LargestAmount')); //decimal
             obj.put('npo02__FirstCloseDate__c', r.get('FirstCloseDate')); //date
             obj.put('npo02__LastCloseDate__c', r.get('LastCloseDate')); //date
+            
+            // calculate amounts into correct currency if needed
+            if(isMultiCurrency())
+            {
+               obj.put('npo02__AverageAmount__c', ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),(decimal)r.get('AverageAmount'))); 
+               obj.put('npo02__SmallestAmount__c', ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),(decimal)r.get('SmallestAmount'))); 
+               obj.put('npo02__LargestAmount__c', ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),(decimal)r.get('LargestAmount'))); 
+            }
+            else
+            {
+               obj.put('npo02__AverageAmount__c', (decimal)(r.get('AverageAmount'))); 
+               obj.put('npo02__SmallestAmount__c', (decimal)(r.get('SmallestAmount'))); 
+               obj.put('npo02__LargestAmount__c', (decimal)(r.get('LargestAmount'))); 
+            }
         }
         
         //deal with user rollups
@@ -1051,8 +1204,7 @@ global virtual class OpportunityRollups {
             for (string s : userRollups.keyset()){
                 if (obj.getSObjectType().getDescribe().getName() == userRollups.get(s).Object_Name__c){
                 	User_Rollup_Field_Settings__c urfs = userRollups.get(s);
-                	string x = urfs.Name;
-                	system.debug('HERE I AM=======' + urfs.Target_Field__c);
+                	string x = urfs.Name;                	
                 	if (r.get(x) != null)
                 	   obj.put(urfs.Target_Field__c, r.get(x));
                 }
@@ -1067,12 +1219,16 @@ global virtual class OpportunityRollups {
         decimal amt = (decimal)(r.get('TotalOppAmount'));
         integer cnt = (integer)(r.get('NumberOfClosedOpps'));               
         
+        // calculate amounts into correct currency if needed
+        if(isMultiCurrency())
+           amt = ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),amt);
+        
         // fill in totals
         obj.put('npo02__OppAmountLastNDays__c', amt);               
         obj.put('npo02__OppsClosedLastNDays__c', cnt);
     }
 
-    public static void updateRollupFromResultMembership(sobject obj, sobject r) {
+    public static void updateRollupFromResultMembership(sobject obj, sobject r, map<id, Opportunity> opptyCurrencies) {
     // used for single and batch rollups, this maps query results to the right fields
         
         // get the fiscal year, total amount, and opp count for this result row     
@@ -1085,7 +1241,13 @@ global virtual class OpportunityRollups {
         decimal lastAmt = (rcf.size() > 1 && rcf[1] != null) ? decimal.valueOf(rcf[1]) : null;
         string lastMemberLevel = (rcf.size() > 2) ? rcf[2] : null;
         string lastMemberOrigin = (rcf.size() > 3) ? rcf[3] : null;
-        
+        // calculate amounts into correct currency if needed
+        if(isMultiCurrency()){
+           amt = ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),amt);
+           if(lastAmt != null && rcf.size() > 4 && rcf[4] != '')
+               lastAmt = ConvertCurrency((string)opptyCurrencies.get((Id)rcf[4]).get('CurrencyISOCode'),(string)obj.get('CurrencyIsoCode'),lastAmt);           
+        }
+
         // check if this is an annual total or account total
 /* ADD FIELDS AND UNCOMMENT IF YOU NEED ANNUAL MEMBERSHIP TOTAL BREAKOUT
         if (fy != null) {
@@ -1115,6 +1277,86 @@ global virtual class OpportunityRollups {
             obj.put('npo02__MembershipJoinDate__c', (date)(r.get('FirstStartDate'))); 
             obj.put('npo02__MembershipEndDate__c', (date)(r.get('LastEndDate')));               
 //      }
+    }
+    
+    /*********** Multi-Currency Support Methods ***********/
+
+    //returns a boolean if we are in a multi-currency org or not.
+    //on first execution sets up static variables etc
+    public static boolean isMultiCurrency(){
+    	
+        if (multiCurrency==null){
+            //create currency field handles for later dynamic dml
+            cfOppty = Schema.sObjectType.Opportunity.fields.getMap().get('CurrencyIsoCode');
+            cfAccount = Schema.sObjectType.Account.fields.getMap().get('CurrencyIsoCode');
+            cfHousehold = Schema.sObjectType.npo02__household__c.fields.getMap().get('CurrencyIsoCode');
+            cfContact = Schema.sObjectType.Contact.fields.getMap().get('CurrencyIsoCode');
+
+            String queryExchangeRates = 'select IsoCode,ConversionRate,IsCorporate from CurrencyType';
+            SObjectType soCurrencyType = Schema.getGlobalDescribe().get('CurrencyType'); 
+
+            //are we in a multi-currency org?
+            if (cfOppty != null && cfAccount != null && cfHousehold != null && cfContact != null && soCurrencyType != null){
+                multiCurrency = true;
+ 
+                map<string,SObjectField> ctFields = soCurrencyType.getDescribe().fields.getMap();
+                SObjectField ctIsoCode = ctFields.get('IsoCode');
+                SObjectField ctConversionRate = ctFields.get('ConversionRate');
+                SObjectField ctCorporate = ctFields.get('IsCorporate');
+
+                //iterate over all the currencies in the org (inc. inactive ones as they may have been used previously)
+                //this allows us to put them in a map and use the ISO code as key and also set the corporate
+                for(sObject ct: Database.query(queryExchangeRates)){
+                    exchangeRates.put((string)ct.get(ctIsoCode),(decimal)ct.get(ctConversionRate));
+                    if((boolean)ct.get(ctCorporate))currCorporate=(string)ct.get(ctIsoCode);
+                }
+            }
+            else
+                multiCurrency = false; 
+        }
+        
+        return multiCurrency;
+        }
+
+    //do a conversion from amount in corporate currency to the currency specified by the ISO code
+    public static decimal ConvertFromCorporate(String ISO,Decimal amt){
+        if(currCorporate == ISO || currCorporate == null) // no need to convert
+            return amt;
+        else //return value to 2DP
+            return (amt * exchangeRates.get(ISO)).setScale(2) ;
+    }
+
+    public static decimal ConvertCurrency(String fromISO, String toISO, Decimal amt){
+        if(fromISO == toISO) // no need to convert
+            return amt;
+        else //return value to 2DP
+            return ((amt / exchangeRates.get(fromISO)) * exchangeRates.get(toISO)).setScale(2) ;
+    }
+ 
+    //takes the Ids of opptys in the npo02__CombinedRollupFieldset__c field, and looks up the currency of that record
+    //only used in multi currency orgs
+    //returns a map of those Ids and the associated oppty
+    public map<Id,Opportunity> rcfFindCurrency(list<sobject> objectList){
+        //new set to hold the opptys we need to query for
+        set<Id> opptysForCurrency = new set<Id>();
+
+        //iterate over objects provided to us
+        for (sobject r : objectList){
+            //pull Id from rollup field and add to set
+            string[] rcf = ((string)(r.get('RollupFieldset'))).split(';\\|;',-4);
+            if(rcf.size() > 1 && rcf[1] != '')
+                opptysForCurrency.add((Id)rcf[4]);
+        }
+        
+        if (!objectlist.isEmpty()){
+            //query for oppty and currencycode for all Ids in set.
+            string soqlStatement = 'SELECT Id,CurrencyIsoCode FROM Opportunity WHERE Id in :opptysForCurrency';
+            map<Id,Opportunity> opptyCurrencies = new map<Id,Opportunity>((list<Opportunity>)Database.query(soqlStatement));
+            return opptyCurrencies;
+        }
+        else
+            return null;
+        
     }
 
     /************ TESTS ***************/
@@ -1184,7 +1426,16 @@ global virtual class OpportunityRollups {
             rg.rollupContact(testcons[0].id);
             
             //also exercise the non-future methods to make sure the code runs
-            npo02__household__c[] hhs = [SELECT id, npo02__TotalOppAmount__c, npo02__LastCloseDate__c, npo02__TotalMembershipOppAmount__c, npo02__OppAmountLastNDays__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c, npo02__MembershipEndDate__c, npo02__MembershipJoinDate__c FROM npo02__household__c WHERE id = :UpdatedCon.npo02__household__r.id LIMIT 1];
+            /*npo02__household__c[] hhs = [SELECT id, npo02__TotalOppAmount__c, npo02__LastCloseDate__c, npo02__TotalMembershipOppAmount__c, npo02__OppAmountLastNDays__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c, npo02__MembershipEndDate__c, npo02__MembershipJoinDate__c FROM npo02__household__c WHERE id = :UpdatedCon.npo02__household__r.id LIMIT 1];*/
+            
+            id hhid = UpdatedCon.npo02__household__r.id;
+            
+            npo02__household__c[] hhs = database.query('SELECT id, npo02__TotalOppAmount__c, npo02__LastCloseDate__c, '+
+            'npo02__TotalMembershipOppAmount__c, npo02__OppAmountLastNDays__c, npo02__OppAmountThisYear__c, '+
+            'npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c, npo02__MembershipEndDate__c, npo02__MembershipJoinDate__c '+
+            (isMultiCurrency() ? ', CurrencyIsoCode ' : '')+      
+            'FROM npo02__household__c WHERE id = :hhid LIMIT 1');
+
             rg = new OpportunityRollups();
             rg.rollupHousehold(hhs[0].id);
             rg = new OpportunityRollups();
@@ -1257,7 +1508,15 @@ global virtual class OpportunityRollups {
             rg.rollupContact(testcons[0].id);
             
             //also exercise the non-future methods to make sure the code runs
-            npo02__household__c[] hhs = [SELECT npo02__MembershipJoinDate__c, npo02__MembershipEndDate__c, id, npo02__TotalOppAmount__c, npo02__LastCloseDate__c, npo02__TotalMembershipOppAmount__c, npo02__OppAmountLastNDays__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c FROM npo02__household__c WHERE id = :UpdatedCon.npo02__household__r.id LIMIT 1];
+            /*npo02__household__c[] hhs = [SELECT npo02__MembershipJoinDate__c, npo02__MembershipEndDate__c, id, npo02__TotalOppAmount__c, npo02__LastCloseDate__c, npo02__TotalMembershipOppAmount__c, npo02__OppAmountLastNDays__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c FROM npo02__household__c WHERE id = :UpdatedCon.npo02__household__r.id LIMIT 1];*/
+            
+            id hhid = UpdatedCon.npo02__household__r.id;
+            npo02__household__c[] hhs = database.query('SELECT id, npo02__TotalOppAmount__c, npo02__LastCloseDate__c, '+
+            'npo02__TotalMembershipOppAmount__c, npo02__OppAmountLastNDays__c, npo02__OppAmountThisYear__c, '+
+            'npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c, npo02__MembershipJoinDate__c, npo02__MembershipEndDate__c '+
+            (isMultiCurrency() ? ', CurrencyIsoCode ' : '')+      
+            'FROM npo02__household__c WHERE id = :hhid LIMIT 1');
+            
             rg = new OpportunityRollups();
             rg.rollupHousehold(hhs[0].id);
             rg = new OpportunityRollups();
@@ -1330,7 +1589,14 @@ global virtual class OpportunityRollups {
             rg.rollupContact(testcons[0].id);
             
             //also exercise the non-future methods to make sure the code runs
-            npo02__household__c[] hhs = [SELECT id, npo02__MembershipJoinDate__c, npo02__MembershipEndDate__c, npo02__TotalOppAmount__c, npo02__LastCloseDate__c, npo02__TotalMembershipOppAmount__c, npo02__OppAmountLastNDays__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c FROM npo02__household__c WHERE id = :UpdatedCon.npo02__household__r.id LIMIT 1];
+            /*npo02__household__c[] hhs = [SELECT id, npo02__MembershipJoinDate__c, npo02__MembershipEndDate__c, npo02__TotalOppAmount__c, npo02__LastCloseDate__c, npo02__TotalMembershipOppAmount__c, npo02__OppAmountLastNDays__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c FROM npo02__household__c WHERE id = :UpdatedCon.npo02__household__r.id LIMIT 1];*/
+            id hhid = UpdatedCon.npo02__household__r.id;
+            npo02__household__c[] hhs = database.query('SELECT id, npo02__TotalOppAmount__c, npo02__LastCloseDate__c, '+
+            'npo02__TotalMembershipOppAmount__c, npo02__OppAmountLastNDays__c, npo02__OppAmountThisYear__c, '+
+            'npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c, npo02__MembershipJoinDate__c, npo02__MembershipEndDate__c '+
+            (isMultiCurrency() ? ', CurrencyIsoCode ' : '')+      
+            'FROM npo02__household__c WHERE id = :hhid LIMIT 1');
+            
             rg = new OpportunityRollups();
             rg.rollupHousehold(hhs[0].id);
             rg = new OpportunityRollups();
@@ -1407,7 +1673,14 @@ global virtual class OpportunityRollups {
             rg.rollupContact(testcons[0].id);
             
             //also exercise the non-future methods to make sure the code runs
-            npo02__household__c[] hhs = [SELECT id, npo02__TotalOppAmount__c, npo02__LastCloseDate__c, npo02__TotalMembershipOppAmount__c, npo02__OppAmountLastNDays__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c, npo02__MembershipEndDate__c, npo02__MembershipJoinDate__c FROM npo02__household__c WHERE id = :UpdatedCon.npo02__household__r.id LIMIT 1];
+            /*npo02__household__c[] hhs = [SELECT id, npo02__TotalOppAmount__c, npo02__LastCloseDate__c, npo02__TotalMembershipOppAmount__c, npo02__OppAmountLastNDays__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c, npo02__MembershipEndDate__c, npo02__MembershipJoinDate__c FROM npo02__household__c WHERE id = :UpdatedCon.npo02__household__r.id LIMIT 1];*/
+            id hhid = UpdatedCon.npo02__household__r.id;
+            npo02__household__c[] hhs = database.query('SELECT id, npo02__TotalOppAmount__c, npo02__LastCloseDate__c, '+
+            'npo02__TotalMembershipOppAmount__c, npo02__OppAmountLastNDays__c, npo02__OppAmountThisYear__c, '+
+            'npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c, npo02__MembershipEndDate__c, npo02__MembershipJoinDate__c '+
+            (isMultiCurrency() ? ', CurrencyIsoCode ' : '')+      
+            'FROM npo02__household__c WHERE id = :hhid LIMIT 1');
+            
             rg = new OpportunityRollups();
             rg.rollupHousehold(hhs[0].id);
             rg = new OpportunityRollups();
@@ -2087,14 +2360,33 @@ global virtual class OpportunityRollups {
         deleteUserSettings = [select id from User_Rollup_Field_Settings__c];
         delete deleteUserSettings;
         
+        list<User_Rollup_Field_Settings__c> testURFS = new list<User_Rollup_Field_Settings__c>();
                 
-        User_Rollup_Field_Settings__c testUserRollup = new User_Rollup_Field_Settings__c();
-        testUserRollup.npo02__Target_Field__c = 'Birthdate'; 
-        testUserRollup.npo02__Source_Field__c = 'CloseDate';
-        testUserRollup.npo02__Object_Name__c = 'Contact'; 
-        testUserRollup.npo02__Field_Action__c = 'MAX';
-        testUserRollup.Name = 'TestRollup';
-        insert testUserRollup; 
+        User_Rollup_Field_Settings__c testUserRollup1 = new User_Rollup_Field_Settings__c();
+        testUserRollup1.npo02__Target_Field__c = 'Birthdate'; 
+        testUserRollup1.npo02__Source_Field__c = 'CloseDate';
+        testUserRollup1.npo02__Object_Name__c = 'Contact'; 
+        testUserRollup1.npo02__Field_Action__c = 'MAX';
+        testUserRollup1.Name = 'TestRollup1';
+        testURFS.add(TestUserRollup1);
+        
+        User_Rollup_Field_Settings__c TestUserRollup2 = new User_Rollup_Field_Settings__c();
+        testUserRollup2.npo02__Target_Field__c = 'npo02__MembershipEndDate__c'; 
+        testUserRollup2.npo02__Source_Field__c = 'CloseDate';
+        testUserRollup2.npo02__Object_Name__c = 'Account'; 
+        testUserRollup2.npo02__Field_Action__c = 'MAX';
+        testUserRollup2.Name = 'TestRollup2';
+        testURFS.add(TestUserRollup2);
+        
+        User_Rollup_Field_Settings__c testUserRollup3 = new User_Rollup_Field_Settings__c();
+        testUserRollup3.npo02__Target_Field__c = 'npo02__LastCloseDate__c'; 
+        testUserRollup3.npo02__Source_Field__c = 'CloseDate';
+        testUserRollup3.npo02__Object_Name__c = 'Household__c'; 
+        testUserRollup3.npo02__Field_Action__c = 'MAX';
+        testUserRollup3.Name = 'TestRollup3';
+        testURFS.add(TestUserRollup3);
+        
+        insert testURFS; 
         
         Contact c = new Contact(LastName = 'Lastname', BirthDate = system.today().addDays(-4));
         insert c;
@@ -2118,6 +2410,100 @@ global virtual class OpportunityRollups {
     Contact ct = [select Birthdate, OppAmountThisYearHH__c from Contact where id = :c.id];
     system.assertEquals (100,ct.OppAmountThisYearHH__c);    
     system.assertEquals(system.today().addDays(-2), ct.BirthDate);    
+    
+    }
+    
+    static testMethod void testMultiCurrencyMethods(){
+    	
+    	//exercise internal multicurrency helper methods, check currency conversion    	    	
+        decimal d = OpportunityRollups.ConvertFromCorporate('USD', 55.00);    	
+    	d = OpportunityRollups.ConvertCurrency('USD', 'USD', 55.00);
+
+
+        //create & insert second household member
+        Contact Con = new contact(
+                FirstName= npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+                LastName= npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
+                npe01__Private__c=false,
+                npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
+                npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+                npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
+                npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS                
+            );
+            insert Con;
+            
+        Contact[] TestCons = new Contact[] {Con}; 
+        
+        // create new opps
+        Opportunity o = new Opportunity(
+            Name = 'MyContactOpportunity',
+            StageName = 'Closed Won',
+            CloseDate = system.today(),
+            npe01__Contact_Id_for_Role__c = con.Id  
+        );        
+        insert o;
+        
+        list<sobject> sobjectlist = new list<sobject>();
+        //sobjectlist.add(o);
+        
+        OpportunityRollups opproll = new OpportunityRollups();
+    	map<Id, Opportunity> omap = opproll.rcfFindCurrency(sobjectList);
+    }
+    
+    static testMethod void testFiscalYearandCustomNDay () {
+        isTest = true;
+        String giftRecordTypeNameForTests = RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
+
+            Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
+                new Households_Settings__c (
+                    Household_Rules__c = Households.ALL_PROCESSOR,
+                    Always_Rollup_to_Primary_Contact__c = false,
+                    Enable_Opp_Rollup_Triggers__c = true,
+                    Excluded_Account_Opp_Rectypes__c = null,
+                    Excluded_Account_Opp_Types__c = null,
+                    Excluded_Contact_Opp_Rectypes__c = null,
+                    Excluded_Contact_Opp_Types__c = null,
+                    Membership_Record_Types__c = null,                     
+                    Use_Fiscal_Year_for_Rollups__c = true, 
+                    Rollup_N_Day_Value__c = 10
+                ));
+                
+            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+                npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
+                npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
+                npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
+            ));
+            
+            // for a single contact w/ no previous mbrships, add a new membership
+            // and test mbr stats are created
+        
+            // create & insert contact(s)
+            Contact[] TestCons = UnitTestData.CreateMultipleTestContacts ( 1 ) ;
+            insert TestCons;
+            
+            // create 2 new opps
+            Opportunity[] newOpps1 = new Opportunity[0];
+            
+            Opportunity newOpp1 = new opportunity(npe01__Contact_Id_for_Role__c = TestCons[0].id,
+                    name = 'test opp ', 
+                    stagename = UnitTestData.getClosedWonStage(), closedate = system.today(), amount = 100);
+               if(areRecordTypesOnOpps())
+                    newOpp1.put('RecordTypeId',RecordTypes.GetRecordTypeId('Opportunity', giftRecordTypeNameForTests));
+            newOpps1.add( newOpp1);
+            
+            Opportunity newOpp2 = new opportunity(npe01__Contact_Id_for_Role__c = TestCons[0].id,
+                    name = 'test opp 2', 
+                    stagename = UnitTestData.getClosedWonStage(), closedate = system.today().adddays(-40), amount = 100);
+               if(areRecordTypesOnOpps())
+                    newOpp2.put('RecordTypeId',RecordTypes.GetRecordTypeId('Opportunity', giftRecordTypeNameForTests));
+            newOpps1.add(newOpp2);
+           
+            // insert the opp(s)
+            Test.StartTest();
+            insert newOpps1;
+            Test.StopTest();
+    
+            system.assertEquals([select OppAmountLastNDays__c from Contact where id = :TestCons[0].id].OppAmountLastNDays__c, 100);
     
     }
 }
