@@ -18,10 +18,10 @@ Add your content here.  Format your content with:
 
 
 
-*1. Batch Gift Entry*
+==*1. Batch Gift Entry*==
 
 _Introduction_
-Currently, there is not an easy way to batch enter gifts. This functionality would allow organizations to easily enter multiple gifts and submit them in batch. 
+# Currently, there is not an easy way to batch enter gifts. This functionality would allow organizations to easily enter multiple gifts and submit them in batch. 
 
 _Current State_
 Utilizing the Apex Data Loader is currently the only way to provide this functionality
@@ -40,7 +40,7 @@ Will be limited to Households or Contacts/Orgs package, which removes the possib
 
 ****************************************
 
-*2. Interstitial Opportunity Pages/Wizard*
+==*2. Interstitial Opportunity Pages/Wizard*==
 
 _Introduction_
 Because a Contact ID is not known until Salesforce automatically adds the OCR to the Opp on insert, we cannot add OCRs for non 1x1 contact household members. This can be solved by created an interstitial new donation page, which then forwards a selected contact ID to the donation for proper household OCR creation and handling.
@@ -62,7 +62,7 @@ Variations of this exist in various other template, would need to be modeled for
 
 ****************************************
 
-*3. Lead Conversion Improvements*
+==*3. Lead Conversion Improvements*==
 
 _Introduction_
 Jason Venable and Evan Callahan created some awesome lead conversion code for the NPSP last year, can we take it to the next level?
@@ -86,7 +86,7 @@ Have a VF implementation in C& O. Some matching with existing Households would b
 
 ****************************************
 
-*4. Help & Resources Interface*
+==*4. Help & Resources Interface*==
 
 _Introduction_
 Creation of a new interface for basic help and issue logging 
@@ -113,7 +113,7 @@ Google Code API and OAuth for Issue Tracker authentication and posting
 
 ****************************************
 
-*5. Update Notifications*
+==*5. Update Notifications*==
 
 _Introduction_
 We need a way to notifiy end users that a new version of the NPSP or specific packages is available for download. 
@@ -138,7 +138,7 @@ Should provide notification either in the org itself, or notify admin users via 
 
 ****************************************
 
-*6. Multi-directional Relationships-Affiliations*
+==*6. Multi-directional Relationships-Affiliations*==
 
 _Introduction_
 Relationships between a Contact and another Contact are not directional--there is no way to track who referred the other besides using record auto-numbers
@@ -159,7 +159,7 @@ _Implementation Details_
 
 ****************************************
 
-*7.  Membership Improvements*
+==*7.  Membership Improvements*==
 
 _Introduction_
 You can call out a single opportunity record type as a membership type for seperate donation rollups 
@@ -180,7 +180,7 @@ _Implementation Details_
 
 ****************************************
 
-*8.  User Defined Rollup Expansion*
+==*8.  User Defined Rollup Expansion*==
 
 _Introduction_
 Version 2.1 will introduce user defined rollups for opportunities to households, accounts or contacts over the opportunity contact role. 
@@ -200,7 +200,7 @@ _Implementation Details_
 
 ****************************************
 
-*9.  Household Name/Greeting Customization*
+==*9.  Household Name/Greeting Customization*==
 
 _Introduction_
 Version 2.1 will introduce automatic household name and greetings (formal and informal)
@@ -220,7 +220,7 @@ _Implementation Details_
 
 ****************************************
 
-*10.  Custom Validation Error Notification*
+==*10.  Custom Validation Error Notification*==
 
 _Introduction_
 
@@ -245,7 +245,7 @@ _Implementation Details_
 
 ****************************************
 
-*11.  Recurring Donations Improvements & Recalculations*
+==*11.  Recurring Donations Improvements & Recalculations*==
 
 _Introduction_
 Recurring donations allow users to create a group of opportunities ‘under’ a common parent object.  Sara Chieco wrote some great payments code that has yet to be implemented. 
@@ -269,7 +269,7 @@ _Implementation Details_
 
 ****************************************
 
-*12.  Trigger Toggles*
+==*12.  Trigger Toggles*==
 
 _Introduction_
 This project would seek to add control over the record triggers in the NPSP for developers
