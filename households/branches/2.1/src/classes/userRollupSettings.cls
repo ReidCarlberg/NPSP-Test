@@ -49,8 +49,7 @@ public with sharing class userRollupSettings {
     public string opptyfield{get; set;}
     public string targetfield{get; set;}
     public string targetobject{get; set;}
-    
-    
+       
     //the test string of the rollup
     public string operationstring;
     
@@ -58,7 +57,7 @@ public with sharing class userRollupSettings {
     public integer step{get; set;}
     
     //constructor
-    public userRollupSettings(){       
+    public userRollupSettings(){
        step = 0;
     }    
     
@@ -80,7 +79,7 @@ public with sharing class userRollupSettings {
     }
     
     //reset all instance variable and return to initial screen
-    public void cancel(){
+    public void cancel(){    	
         this.sourcefields.clear();
         this.mapFieldTypes.clear();
         this.validoperators.clear();
@@ -189,7 +188,11 @@ public with sharing class userRollupSettings {
                 }
             }
         }
-    
+        
+        if (targetfields.size() < 1){            
+            targetfields.add(new SelectOption('NO VALID FIELD AVAILABLE', 'NO VALID FIELD AVAILABLE'));
+            showMsg('No valid target field was found for the type of rollup defined. Please add a custom field, or select a different object and try again.', ApexPages.Severity.INFO);                
+        }
         return targetfields;    
     }
     
@@ -234,6 +237,7 @@ public with sharing class userRollupSettings {
                     mapFieldTypes.put(knownfield, Schema.Displaytype.Double);   
            }
         }
+       
         return sourceFields;
     }
 

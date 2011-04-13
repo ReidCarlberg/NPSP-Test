@@ -79,14 +79,18 @@ global class Households {
             //AFTER UPDATE
             if ( ta==triggerAction.afterUpdate )
             {
-                if (c.Household__c == null && currentHouseholdsSettings.Household_Rules__c == ALL_PROCESSOR)
-                {
+                if (c.Household__c == null && currentHouseholdsSettings.Household_Rules__c == ALL_PROCESSOR){
                     householdInserts.add(c);
-                } else
-                if (c.Household__c == null && currentHouseholdsSettings.Household_Rules__c == ALL_INDIVIDUALS_PROCESSOR)
-                {
+                } 
+                else if (c.Household__c == null && currentHouseholdsSettings.Household_Rules__c == ALL_INDIVIDUALS_PROCESSOR){
                     contactEvaluations.add(c);
                 }
+                else if (c.Household__c != null){
+                	
+                	//handle the update scenario, somehow...
+                }
+                
+                
             }
 
             //AFTER DELETE
@@ -123,12 +127,16 @@ global class Households {
     public static void insertHousehold(Contact[] contacts)
     {
         List<Household__c> householdInserts = new List<Household__c>();
+        
+
+
         for(Contact c : contacts)
         {
             Household__c h = new Household__c();
             String hName = c.LastName;
             hName += ' ' + system.label.DefaultHouseholdName;
             h.Name = hName;
+
             //sync the primary address block
             h.MailingStreet__c = c.MailingStreet;
             h.MailingCity__c = c.MailingCity;
@@ -143,7 +151,10 @@ global class Households {
         if (householdInserts.size() > 0)
         {
         	
+        	//THIS NEEDS TO HANDLED -
             Database.SaveResult[] lsr = Database.insert(householdInserts, false);
+            
+            
             
             Integer i = 0;
             for (Contact c : contacts)
