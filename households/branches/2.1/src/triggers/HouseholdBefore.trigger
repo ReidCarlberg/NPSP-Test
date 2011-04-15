@@ -13,7 +13,7 @@
     * Neither the name of the Salesforce.com Foundation nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
-
+ 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
     LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -27,18 +27,25 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE.
 */
-trigger Households on Contact (after insert, after update, after delete) {
+trigger HouseholdBefore on npo02__Household__c (before update) {
+//updates household records to indicate where/if user changes to the household record are happening
+//and marks them as such so they won't be updated
 
-    
-    if( Trigger.isAfter && Trigger.isInsert ){
-        Households process = new Households(Trigger.new, Trigger.old, Households.triggerAction.afterInsert);
-    }
-    if( Trigger.isAfter && Trigger.isUpdate ){ 
-        //after update is going to call the version that takes a map as well
-        Households process = new Households(Trigger.new, Trigger.old, Households.triggerAction.afterUpdate, trigger.newMap, trigger.oldMap);
-    }
-    if( Trigger.isAfter && Trigger.isDelete ){
-        Households process = new Households(Trigger.old, null, Households.triggerAction.afterDelete);
-    }
-     
+//need to use a process control class to avoid recursion when async updates occur
+//in non async updates, this won't fire again, so we don't need to worry
+
+    if (!HouseholdProcessControl.inFutureContext){
+        for (Household__c h : trigger.new){
+        	if (h.npo02__SYSTEM_CUSTOM_NAMING__c == null)
+        	   h.npo02__SYSTEM_CUSTOM_NAMING__c = '';
+        	else
+        	   h.npo02__SYSTEM_CUSTOM_NAMING__c += ';';
+            if (h.Name != trigger.oldMap.get(h.id).Name)
+                h.npo02__SYSTEM_CUSTOM_NAMING__c += 'Name' + ';';
+            if (h.Formal_Greeting__c != trigger.oldmap.get(h.id).Formal_Greeting__c)
+                h.npo02__SYSTEM_CUSTOM_NAMING__c += 'Formal_Greeting__c' + ';';
+            if (h.Informal_Greeting__c != trigger.oldmap.get(h.id).Informal_Greeting__c)
+                h.npo02__SYSTEM_CUSTOM_NAMING__c += 'Informal_Greeting__c' + ';';
+        }
+    }   
 }

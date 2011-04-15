@@ -1,14 +1,46 @@
+/*
+    Copyright (c) 2009, Salesforce.com Foundation
+    All rights reserved.
+    
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+    
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of the Salesforce.com Foundation nor the names of
+      its contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+ 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    POSSIBILITY OF SUCH DAMAGE.
+*/
 global virtual without sharing class HouseholdNaming {
     
     @future 
     global static void FutureUpdateNames(list<id> hhids){    	
+    	//set our process control to avoid recursive updating on household records
+    	HouseholdProcessControl.inFutureContext = true;
+    	
     	//create a new instance of the HouseholdNaming class -
     	//and pass in our param
     	//this is b/c of the global visibility
     	HouseholdNaming hn = new HouseholdNaming();
     	hn.UpdateNames(hhids);    	
     }
-    
+    global virtual string getOtherName(list<Contact> ContactList){return null;}
     global virtual void UpdateNames(list<id> hhids){
             
         //get all of the contacts and their associated households
@@ -44,8 +76,7 @@ global virtual without sharing class HouseholdNaming {
                 h.Formal_Greeting__c = getFormalName(hhIDContactMap.get(h.id));
 
             if (!customnameparam.contains('Informal_Greeting__c'))
-                h.Informal_Greeting__c = getInformalName(hhIDContactMap.get(h.id));
-            
+                h.Informal_Greeting__c = getInformalName(hhIDContactMap.get(h.id));             
         }
         
         if (!hhupdatelist.isEmpty()) Database.update(hhupdatelist, false);
@@ -249,7 +280,7 @@ global virtual without sharing class HouseholdNaming {
         integer i;
         
         list<Contact> insertlist = new list<Contact>();
-    	for (i = 0; i < = 20; i++){
+    	for (i = 0; i < 200; i++){
     		Contact c = new Contact(LastName = 'LastName' + i, FirstName = 'FirstName' + i, Salutation = 'Mr.');
     		if (i == 1){
     			c.Naming_Exclusions__c = 'Household Name';
@@ -261,16 +292,17 @@ global virtual without sharing class HouseholdNaming {
     	insert insertlist;
     	list<id> householdids = new list<id>();
     	
-    	list<Contact> clist = [select Household__r.id, Household__r.Name, Household__r.Informal_Greeting__c, Household__r.Formal_Greeting__c from Contact where id IN :insertlist];
+    	list<Contact> clist = [select Household__r.id, Household__r.Name, Household__r.Informal_Greeting__c, Household__r.Formal_Greeting__c from Contact where id IN :insertlist limit 2000];
     	
     	for (Contact c : clist){
     		if (c.household__r.id != null)
     		  householdids.add(c.Household__r.id);    		
     	}
     	system.assert(householdids.size() > 0);
-    	Householdnaming hn = new HouseholdNaming();    	    	
+    	Householdnaming hn = new HouseholdNaming();
+    		  
     	hn.UpdateNames(householdids);
-    	
+    	    	
     	//test a single member household, lastname, firstname, householdname:
     	Contact con = [select Household__r.Name, Household__r.Informal_Greeting__c, Household__r.Formal_Greeting__c from Contact where FirstName = 'FirstName0'];
         system.assertEquals('LastName0 ' +  system.label.DefaultHouseholdName, con.Household__r.Name);	
@@ -292,9 +324,11 @@ global virtual without sharing class HouseholdNaming {
             else if (counter > 2 && counter < 8)
                 c.npo02__Household__c = clist[clist.size() - 3].npo02__Household__c;
             else if (counter < 20)
-                c.npo02__Household__c =clist[clist.size() - 4].npo02__Household__c;
+                c.npo02__Household__c = clist[clist.size() - 4].npo02__Household__c;
         	counter++;
         }
+        system.debug('WHAT IS CLIST SIZE======================' + clist.size());
+                
         update clist;
         
         list<id> newhhids = new list<id>();
@@ -302,41 +336,42 @@ global virtual without sharing class HouseholdNaming {
         newhhids.add(clist[clist.size() - 2].npo02__Household__r.id);
         newhhids.add(clist[clist.size() - 3].npo02__Household__r.id);
         newhhids.add(clist[clist.size() - 4].npo02__Household__r.id);
-               
+        
+        test.starttest();       
         HouseholdNaming.FutureUpdateNames(newhhids);
-    	/*
-    	map<id, Household__c> hhmap = new map<id, Household__c>([select id, Formal_Greeting__c, Name, Informal_Greeting__c from Household__c]);
-    	
-    	//refresh clist
-    	clist.clear();
-    	clist = [select Household__r.id, Household__r.Name, Household__r.Informal_Greeting__c, Household__r.Formal_Greeting__c from Contact where id IN :insertlist];
-    	
-    	//1 other family member
-    	id testingid = clist[clist.size() - 1].npo02__Household__r.id;
-        system.assertEquals(clist[clist.size() - 1].npo02__Household__r.Name, hhmap.get(testingid).Name);
-        system.assertEquals(clist[clist.size() - 1].npo02__Household__r.Informal_Greeting__c, hhmap.get(testingid).Informal_Greeting__c);
-        system.assertEquals(clist[clist.size() - 1].npo02__Household__r.Formal_Greeting__c, hhmap.get(testingid).Formal_Greeting__c);
+        test.stoptest();
+        //take teh list of contacts in each of the households in newhhids, and run them
+        //back through the global string calls to test them
         
-        testingid = clist[clist.size() - 2].npo02__Household__r.id;
-        system.assertEquals(clist[clist.size() - 2].npo02__Household__r.Name, hhmap.get(testingid).Name);
-        system.assertEquals(clist[clist.size() - 2].npo02__Household__r.Informal_Greeting__c, hhmap.get(testingid).Informal_Greeting__c);
-        system.assertEquals(clist[clist.size() - 2].npo02__Household__r.Formal_Greeting__c, hhmap.get(testingid).Formal_Greeting__c);
+        list<Household__c> hhlist = [select Name, Informal_greeting__c, Formal_greeting__c from Household__c where id IN :newhhids];
         
-        testingid = clist[clist.size() - 3].npo02__Household__r.id;
-        system.assertEquals(clist[clist.size() - 3].npo02__Household__r.Name, hhmap.get(testingid).Name);
-        system.assertEquals(clist[clist.size() - 3].npo02__Household__r.Informal_Greeting__c, hhmap.get(testingid).Informal_Greeting__c);
-        system.assertEquals(clist[clist.size() - 3].npo02__Household__r.Formal_Greeting__c, hhmap.get(testingid).Formal_Greeting__c);
+        list<Contact> lc = new list<contact>([select household__r.id, 
+        household__r.name, household__r.Informal_Greeting__c, FirstName, Salutation, LastName, 
+        household__r.Formal_Greeting__c from Contact where household__r.id IN :newhhids]);
         
-        testingid = clist[clist.size() - 4].npo02__Household__r.id;
-        system.assertEquals(clist[clist.size() - 4].npo02__Household__r.Name, hhmap.get(testingid).Name);
-        system.assertEquals(clist[clist.size() - 4].npo02__Household__r.Informal_Greeting__c, hhmap.get(testingid).Informal_Greeting__c);
-        system.assertEquals(clist[clist.size() - 4].npo02__Household__r.Formal_Greeting__c, hhmap.get(testingid).Formal_Greeting__c);
-    	
-    	//then update the households to cause different last name combinations and test
-    	  */  	
-    	
-    	
+        map<id,list <Contact>> hhidContactMap = new map<id, list <Contact>>();
+        for (Contact c : lc){
+            if(!hhIDContactMap.containskey(c.Household__r.id)){
+                hhIDContactMap.put(c.Household__r.id, new list<Contact>{c});
+            }
+            else{
+                list<Contact> conlist = hhIDContactMap.get(c.Household__r.id);
+                conlist.add(c);                
+            }
+        }
+        
+        //for each one, run its contact through the  test methods
+        //and compare it with the household values from teh first contact
+        //record       
+        for (id HHID : hhidContactMap.keySet()){
+        	
+        	
+        
+        
+        
+        }
+        
+        
+            
     }
- 
-
 }

@@ -65,8 +65,12 @@
                     </apex:selectList>
                 </apex:pageBlockSectionItem>
             </apex:pageBlockSection>
+            
+            <apex:pageBlockSection id="householdsettingssection5" title="Household Name Settings">
+                <apex:inputfield value="{!settings.Advanced_Household_Naming__c}"/>
+            </apex:pageBlockSection>
                         
-            <apex:pageBlockSection id="householdsettingssection5" title="Opportunity Membership Settings">
+            <apex:pageBlockSection id="householdsettingssection6" title="Opportunity Membership Settings">
                 <apex:pageBlockSectionItem helpText="One Opportunity Record Type can be called out for Membership calculations.">
                     <apex:outputLabel value="Membership Record Type Names"/>
                     <apex:selectList value="{!settings.Membership_Record_Types__c}" multiselect="false" size="1">
@@ -75,6 +79,7 @@
                 </apex:pageBlockSectionItem>
                 <apex:inputfield value="{!settings.Membership_Grace_Period__c}"/>
             </apex:pageBlockSection>
+             
             
             <apex:pageBlockButtons id="householdssettingsbuttons">
                 <apex:commandButton id="updatesettingsbutton" action="{!updateSettings}" value="Update the Households Settings" /> 
