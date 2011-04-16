@@ -9,6 +9,11 @@
         <name>ApexPage</name>
     </types>
     <types>
+        <members>HouseholdBefore</members>
+        <members>Households</members>
+        <name>ApexTrigger</name>
+    </types>
+    <types>
         <members>*</members>
         <name>CustomObject</name>
     </types>

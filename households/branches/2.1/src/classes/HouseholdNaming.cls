@@ -100,8 +100,8 @@ global virtual without sharing class HouseholdNaming {
                     contactnames.add(c);
                     
                     if (!commonlastnames.contains(c.LastName))
-                        commonlastnames.add(c.LastName);
-                }   
+                        commonlastnames.add(c.LastName);                   
+                }
             }
             
             //we lost our only contact - he/she's anonymous
@@ -254,6 +254,25 @@ global virtual without sharing class HouseholdNaming {
         return formalname;
     }
     
+    //interface for the batch jobs on advanced greeting activation
+    public void ActivateAdvancedGreetings(boolean isTest){
+        
+        
+        //shamelessly borrowed from opprollups    	
+        integer batchSize = 200;
+        
+        //start the activation batch process, used only once, on initial click
+        //to enable batch rollups
+        BATCH_HouseholdNaming batch = new BATCH_HouseholdNaming('SELECT id,Household__r.id, ' + 
+        'household__r.Name, Household__r.Informal_Greeting__c, Household__r.Formal_Greeting__c, ' +
+        'household__r.SYSTEM_CUSTOM_NAMING__c, Naming_Exclusions__c,  Firstname, lastname, ' +
+        'salutation ' +
+        'FROM Contact where Household__c != null ' +
+        (isTest ? ' and lastname=\'%LastName0%\' ' : '') + 
+        'LIMIT 200', true);
+        id batchProcessId = database.executeBatch(batch, batchSize);        
+    	
+    }
     
     
     /*** Test Methods ***/
@@ -292,17 +311,18 @@ global virtual without sharing class HouseholdNaming {
     	insert insertlist;
     	list<id> householdids = new list<id>();
     	
-    	list<Contact> clist = [select Household__r.id, Household__r.Name, Household__r.Informal_Greeting__c, Household__r.Formal_Greeting__c from Contact where id IN :insertlist limit 2000];
+    	list<Contact> clist = [select Naming_Exclusions__c, Household__r.id, Household__r.Name, Household__r.Informal_Greeting__c, Household__r.Formal_Greeting__c from Contact where id IN :insertlist limit 2000];
     	
     	for (Contact c : clist){
     		if (c.household__r.id != null)
     		  householdids.add(c.Household__r.id);    		
     	}
     	system.assert(householdids.size() > 0);
-    	Householdnaming hn = new HouseholdNaming();
-    		  
-    	hn.UpdateNames(householdids);
-    	    	
+    	
+        //use future to prevent the before HH trigger from firing    
+        test.starttest();		  
+    	Householdnaming.FutureUpdateNames(householdids);
+        test.stoptest();
     	//test a single member household, lastname, firstname, householdname:
     	Contact con = [select Household__r.Name, Household__r.Informal_Greeting__c, Household__r.Formal_Greeting__c from Contact where FirstName = 'FirstName0'];
         system.assertEquals('LastName0 ' +  system.label.DefaultHouseholdName, con.Household__r.Name);	
@@ -310,13 +330,10 @@ global virtual without sharing class HouseholdNaming {
         system.assertEquals('Mr. FirstName0 LastName0', con.Household__r.Formal_Greeting__c);
         
         //update some contacts and note the changes
-        
         //set first one to the last household, next two to the second, next five to the third, 
         //and next 10 to the forth to last
         integer counter = 0;
-                
         for (Contact c : clist){
-            
             if(counter == 0)
                 c.npo02__Household__c = clist[clist.size() - 1].npo02__Household__c;
             else if (counter > 0 && counter < 3)
@@ -327,8 +344,9 @@ global virtual without sharing class HouseholdNaming {
                 c.npo02__Household__c = clist[clist.size() - 4].npo02__Household__c;
         	counter++;
         }
-        system.debug('WHAT IS CLIST SIZE======================' + clist.size());
-                
+        //this should cause renaming to happen
+        //but not trigger the before household_update, since 
+        //since it will be in the same transaction                 
         update clist;
         
         list<id> newhhids = new list<id>();
@@ -337,16 +355,18 @@ global virtual without sharing class HouseholdNaming {
         newhhids.add(clist[clist.size() - 3].npo02__Household__r.id);
         newhhids.add(clist[clist.size() - 4].npo02__Household__r.id);
         
-        test.starttest();       
-        HouseholdNaming.FutureUpdateNames(newhhids);
-        test.stoptest();
+        //update our newly updated contact's households
+        Householdnaming hn = new Householdnaming();
+        hn.UpdateNames(newhhids);
+        
         //take teh list of contacts in each of the households in newhhids, and run them
         //back through the global string calls to test them
         
-        list<Household__c> hhlist = [select Name, Informal_greeting__c, Formal_greeting__c from Household__c where id IN :newhhids];
+        map<id, Household__c> hhmap = new map<id, Household__c>([select SYSTEM_CUSTOM_NAMING__c, Name, Informal_greeting__c, Formal_greeting__c from Household__c where id IN :newhhids]);
         
         list<Contact> lc = new list<contact>([select household__r.id, 
         household__r.name, household__r.Informal_Greeting__c, FirstName, Salutation, LastName, 
+        Naming_Exclusions__c, household__r.SYSTEM_CUSTOM_NAMING__c,
         household__r.Formal_Greeting__c from Contact where household__r.id IN :newhhids]);
         
         map<id,list <Contact>> hhidContactMap = new map<id, list <Contact>>();
@@ -362,16 +382,21 @@ global virtual without sharing class HouseholdNaming {
         
         //for each one, run its contact through the  test methods
         //and compare it with the household values from teh first contact
-        //record       
+        //record              
         for (id HHID : hhidContactMap.keySet()){
-        	
-        	
-        
-        
-        
+        	if (hhidcontactmap.get(hhid)[0].household__r.SYSTEM_CUSTOM_NAMING__c != null){
+            	system.assert(!hhidcontactmap.get(hhid)[0].household__r.SYSTEM_CUSTOM_NAMING__c.contains('Name'));
+            	system.assert(!hhidcontactmap.get(hhid)[0].household__r.SYSTEM_CUSTOM_NAMING__c.contains('Informal_Greeting__c'));
+            	system.assert(!hhidcontactmap.get(hhid)[0].household__r.SYSTEM_CUSTOM_NAMING__c.contains('Formal_Greeting__c'));
+        	}
+        	system.assertEquals(hhmap.get(hhid).Name, hn.getHHName(hhidcontactmap.get(hhid)));
+            system.assertEquals(hhmap.get(hhid).Informal_Greeting__c, hn.getInformalName(hhidcontactmap.get(hhid)));
+            system.assertEquals(hhmap.get(hhid).Formal_Greeting__c, hn.getFormalName(hhidcontactmap.get(hhid)));
         }
-        
-        
-            
+    
+     //test for coverage
+     hn.ActivateAdvancedGreetings(true);
+    
+    
     }
 }

@@ -68,6 +68,10 @@
             
             <apex:pageBlockSection id="householdsettingssection5" title="Household Name Settings">
                 <apex:inputfield value="{!settings.Advanced_Household_Naming__c}"/>
+                <apex:outputPanel >  
+                    <c:batchjobs batchComponentLabel="Naming Activation Progress" numberOfJobs="1" />
+                </apex:outputPanel>                   
+                                 
             </apex:pageBlockSection>
                         
             <apex:pageBlockSection id="householdsettingssection6" title="Opportunity Membership Settings">
