@@ -277,7 +277,6 @@ global virtual without sharing class HouseholdNaming {
     
     /*** Test Methods ***/
     static testMethod void HouseholdNamingTest(){
-      
       //settings
       Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
                 new Households_Settings__c (
@@ -329,6 +328,51 @@ global virtual without sharing class HouseholdNaming {
         system.assertEquals('FirstName0',con.Household__r.Informal_Greeting__c);
         system.assertEquals('Mr. FirstName0 LastName0', con.Household__r.Formal_Greeting__c);
         
+    }
+    
+    static testMethod void HouseholdNamingUpdateTest(){
+        //settings
+      Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
+                new Households_Settings__c (
+                    Household_Rules__c = Households.ALL_PROCESSOR,
+                    Always_Rollup_to_Primary_Contact__c = false,
+                    Enable_Opp_Rollup_Triggers__c = true,
+                    Excluded_Account_Opp_Rectypes__c = null,
+                    Excluded_Account_Opp_Types__c = null,
+                    Excluded_Contact_Opp_Rectypes__c = null,
+                    Excluded_Contact_Opp_Types__c = null                    
+                ));
+                
+            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+                npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
+                npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
+                npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
+            ));
+        
+        integer i;
+        
+        list<Contact> insertlist = new list<Contact>();
+        for (i = 0; i < 200; i++){
+            Contact c = new Contact(LastName = 'LastName' + i, FirstName = 'FirstName' + i, Salutation = 'Mr.');
+            if (i == 1){
+                c.Naming_Exclusions__c = 'Household Name';
+            }
+            
+            insertlist.add(c);
+        }  
+        
+        //turn off the before trigger via our processor:
+        HouseholdProcessControl.inFutureContext = true;        
+        insert insertlist;
+        list<id> householdids = new list<id>();
+        
+        list<Contact> clist = [select Naming_Exclusions__c, Household__r.id, Household__r.Name, Household__r.Informal_Greeting__c, Household__r.Formal_Greeting__c from Contact where id IN :insertlist limit 2000];
+        
+        for (Contact c : clist){
+            if (c.household__r.id != null)
+              householdids.add(c.Household__r.id);          
+        }
+        
         //update some contacts and note the changes
         //set first one to the last household, next two to the second, next five to the third, 
         //and next 10 to the forth to last
@@ -342,7 +386,7 @@ global virtual without sharing class HouseholdNaming {
                 c.npo02__Household__c = clist[clist.size() - 3].npo02__Household__c;
             else if (counter < 20)
                 c.npo02__Household__c = clist[clist.size() - 4].npo02__Household__c;
-        	counter++;
+            counter++;
         }
         //this should cause renaming to happen
         //but not trigger the before household_update, since 
@@ -357,8 +401,9 @@ global virtual without sharing class HouseholdNaming {
         
         //update our newly updated contact's households
         Householdnaming hn = new Householdnaming();
+        test.startTest();
         hn.UpdateNames(newhhids);
-        
+        test.stopTest();
         //take teh list of contacts in each of the households in newhhids, and run them
         //back through the global string calls to test them
         
@@ -384,19 +429,19 @@ global virtual without sharing class HouseholdNaming {
         //and compare it with the household values from teh first contact
         //record              
         for (id HHID : hhidContactMap.keySet()){
-        	if (hhidcontactmap.get(hhid)[0].household__r.SYSTEM_CUSTOM_NAMING__c != null){
-            	system.assert(!hhidcontactmap.get(hhid)[0].household__r.SYSTEM_CUSTOM_NAMING__c.contains('Name'));
-            	system.assert(!hhidcontactmap.get(hhid)[0].household__r.SYSTEM_CUSTOM_NAMING__c.contains('Informal_Greeting__c'));
-            	system.assert(!hhidcontactmap.get(hhid)[0].household__r.SYSTEM_CUSTOM_NAMING__c.contains('Formal_Greeting__c'));
-        	}
-        	system.assertEquals(hhmap.get(hhid).Name, hn.getHHName(hhidcontactmap.get(hhid)));
+            if (hhidcontactmap.get(hhid)[0].household__r.SYSTEM_CUSTOM_NAMING__c != null){
+                system.assert(!hhidcontactmap.get(hhid)[0].household__r.SYSTEM_CUSTOM_NAMING__c.contains('Name'));
+                system.assert(!hhidcontactmap.get(hhid)[0].household__r.SYSTEM_CUSTOM_NAMING__c.contains('Informal_Greeting__c'));
+                system.assert(!hhidcontactmap.get(hhid)[0].household__r.SYSTEM_CUSTOM_NAMING__c.contains('Formal_Greeting__c'));
+            }
+            system.assertEquals(hhmap.get(hhid).Name, hn.getHHName(hhidcontactmap.get(hhid)));
             system.assertEquals(hhmap.get(hhid).Informal_Greeting__c, hn.getInformalName(hhidcontactmap.get(hhid)));
             system.assertEquals(hhmap.get(hhid).Formal_Greeting__c, hn.getFormalName(hhidcontactmap.get(hhid)));
-        }
+        }    	
+    	
     
-     //test for coverage
-     hn.ActivateAdvancedGreetings(true);
-    
-    
-    }
+         //test for coverage
+         hn.ActivateAdvancedGreetings(true);	
+    	
+    }  
 }
