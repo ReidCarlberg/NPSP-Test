@@ -88,11 +88,11 @@ global class BATCH_HouseholdNaming implements Database.Batchable<SObject> {
                 else
                     h.SYSTEM_CUSTOM_NAMING__c = '';                                      
                 
-                if(h.Formal_Greeting__c != null){
+                if(h.Formal_Greeting__c != null && !h.SYSTEM_CUSTOM_NAMING__c.contains('Formal_Greeting__c')){
                     h.SYSTEM_CUSTOM_NAMING__c += 'Formal_Greeting__c' + ';';
                     needsupdate = true;                  	
                 }
-                if (h.Informal_Greeting__c != null){
+                if (h.Informal_Greeting__c != null && !h.SYSTEM_CUSTOM_NAMING__c.contains('Informal_Greeting__c')){
                 	h.SYSTEM_CUSTOM_NAMING__c += 'Informal_Greeting__c' + ';';
                 	needsupdate = true;                	
                 }    
@@ -111,7 +111,9 @@ global class BATCH_HouseholdNaming implements Database.Batchable<SObject> {
                 //if we never found a matching default name its been customized, so
                 //add them to the update list and mark the custom naming field accordingly
                 if (!hasnamematch){
-                	h.SYSTEM_CUSTOM_NAMING__c += 'Name' + ';';
+                	if (!h.SYSTEM_CUSTOM_NAMING__c.contains('Name'))
+                	   h.SYSTEM_CUSTOM_NAMING__c += 'Name' + ';';
+                	
                 	needsupdate = true;                	
                 }
                 

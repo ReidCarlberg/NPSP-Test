@@ -1,14 +1,15 @@
 public with sharing class householdsSettings {
     
     public Households_Settings__c pageSettings = new Households_Settings__c();
-    
+    public boolean runningBatch {get; set;}
     
     public householdsSettings(){
         acctRTs = new List<string>();
         acctTypes = new List<string>();
         contactRTs = new List<string>();
         contactTypes = new List<string>();
-        
+        if (runningbatch == null)
+            runningbatch = false;
     }
     
     public Households_Settings__c getSettings() {
@@ -192,6 +193,28 @@ public with sharing class householdsSettings {
         //schedule the rollup if need be
         scheduleRollups();
     }
+    
+    public void activateHouseholdNaming(){
+    	runningBatch = true; 
+    	    	
+    	pageSettings.Advanced_Household_Naming__c = true;
+    	update pageSettings;
+    	
+    	//call advanced rolup batch process
+    	HouseholdNaming hn = new Householdnaming();
+    	hn.ActivateAdvancedGreetings(false);
+    	
+    	/*
+    	//refresh page
+    	PageReference pr;// = new PageReference();
+        pr.setRedirect(true);
+        return pr;
+    	*/
+    	
+    }
+    
+    
+    
     
      public static testMethod void TEST_householdsSettings() {
         

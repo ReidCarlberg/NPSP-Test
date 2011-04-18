@@ -63,13 +63,15 @@
                     <apex:selectList value="{!contacttypes}" multiselect="true">
                         <apex:selectOptions value="{!types}"/>
                     </apex:selectList>
-                </apex:pageBlockSectionItem>
+                </apex:pageBlockSectionItem> 
             </apex:pageBlockSection>
             
             <apex:pageBlockSection id="householdsettingssection5" title="Household Name Settings">
-                <apex:inputfield value="{!settings.Advanced_Household_Naming__c}"/>
-                <apex:outputPanel >  
-                    <c:batchjobs batchComponentLabel="Naming Activation Progress" numberOfJobs="1" />
+                <apex:inputfield value="{!settings.Advanced_Household_Naming__c}" rendered="{!settings.Advanced_Household_Naming__c&&!runningbatch}"/>
+                <apex:outputtext value="Clicking this button will begin the Household Naming activation sequence. Once complete (100%), you may safely leave or refresh the page." rendered="{!!settings.Advanced_Household_Naming__c}" />
+                <apex:commandbutton id="launchactivation" value="Activate Advanced Household Naming" action="{!activateHouseholdNaming}" rerender="householdsettingssection5" rendered="{!!settings.Advanced_Household_Naming__c}"  />
+                <apex:outputPanel rendered="{!runningbatch}" >  
+                    <c:batchjobs batchComponentLabel="Naming Activation Progress" numberOfJobs="1" rerenderOnComplete="true" />
                 </apex:outputPanel>                   
                                  
             </apex:pageBlockSection>
