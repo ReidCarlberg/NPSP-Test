@@ -84,19 +84,19 @@ global without sharing class Households {
             //AFTER UPDATE
             if ( ta==triggerAction.afterUpdate )
             {
-            	//if we're doing an update, pile up all of the households into a list
-            	//and send it to our naming code for action
-            	//first contact's names to their old names, and see if anything changed
-            	//salutation
+                //if we're doing an update, pile up all of the households into a list
+                //and send it to our naming code for action
+                //first contact's names to their old names, and see if anything changed
+                //salutation
                 if (c.Household__c == null && currentHouseholdsSettings.Household_Rules__c == ALL_PROCESSOR)
                     householdInserts.add(c);
                 else if (c.Household__c == null && currentHouseholdsSettings.Household_Rules__c == ALL_INDIVIDUALS_PROCESSOR)
                     contactEvaluations.add(c);
                 
-            	if (newcmap.get(c.id).Salutation != oldcmap.get(c.id).Salutation)
-            	    householdnameupdates.add(c.Household__c);
-            	else if (newcmap.get(c.id).FirstName != oldcmap.get(c.id).Firstname )
-            	    householdnameupdates.add(c.Household__c);
+                if (newcmap.get(c.id).Salutation != oldcmap.get(c.id).Salutation)
+                    householdnameupdates.add(c.Household__c);
+                else if (newcmap.get(c.id).FirstName != oldcmap.get(c.id).Firstname )
+                    householdnameupdates.add(c.Household__c);
                 else if (newcmap.get(c.id).LastName != oldcmap.get(c.id).LastName)
                     householdnameupdates.add(c.Household__c);    
                 else if (newcmap.get(c.id).Household__c != oldcmap.get(c.id).Household__c)
@@ -128,14 +128,14 @@ global without sharing class Households {
         if (householdDeletes.size() > 0)        
             deleteHousehold(householdDeletes);
         
-        if (currentHouseholdsSettings.Advanced_Household_Naming__c = true && householdnameupdates.size() > 0){
-                        
-            if (currentHouseholdsSettings.Async_Household_Naming__c = true)
+        if (currentHouseholdsSettings.Advanced_Household_Naming__c == true && householdnameupdates.size() > 0){
+                          
+            if (currentHouseholdsSettings.Async_Household_Naming__c == true)
                 HouseholdNaming.FutureUpdateNames(householdnameupdates);
             else{
-            	HouseholdNaming hn = new HouseholdNaming();
-            	hn.UpdateNames(householdnameupdates);
-            }                	
+                HouseholdNaming hn = new HouseholdNaming();
+                hn.UpdateNames(householdnameupdates);
+            }                   
         }
     }
     
@@ -168,7 +168,7 @@ global without sharing class Households {
         
         if (householdInserts.size() > 0)
         {            
-        	//THIS NEEDS TO HANDLED -
+            //THIS NEEDS TO HANDLED -
             Database.SaveResult[] lsr = Database.insert(householdInserts, false);
                         
             Integer i = 0;
@@ -189,7 +189,7 @@ global without sharing class Households {
                 Database.SaveResult[] dbsr = Database.update(contactUpdates, false);
         
             //SETTING CHECK HERE!!!
-            if (currentHouseholdsSettings.Advanced_Household_Naming__c = true && isInsertTrigger){
+            if (currentHouseholdsSettings.Advanced_Household_Naming__c == true && isInsertTrigger){
                 list<id> hhidsfornaming = new list<id>();
                 
                 for (Database.SaveResult sr : lsr){
@@ -200,11 +200,11 @@ global without sharing class Households {
                 //send it all out for (re)naming
                 //secret setting for async processing... ooooooooh....
                 
-                if (currentHouseholdsSettings.Async_Household_Naming__c = true)
+                if (currentHouseholdsSettings.Async_Household_Naming__c == true)
                     HouseholdNaming.FutureUpdateNames(hhidsfornaming);
                 else{
-                	HouseholdNaming hn = new HouseholdNaming();
-                	hn.UpdateNames(hhidsfornaming);
+                    HouseholdNaming hn = new HouseholdNaming();
+                    hn.UpdateNames(hhidsfornaming);
                 }
                     
             }
@@ -253,7 +253,7 @@ global without sharing class Households {
     /// <summary> Deletes a Household record when no Contacts are related to it </summary>
     /// <param name="Contact"> List of contacts meeting trigger criteria </param>
         public static void deleteHousehold(Contact[] contacts){
-        	
+            
         list<Id> householdDeletes = new list<Id>();
         map<Id,Integer> householdCountMap = new map<Id,Integer>();
         list<id> householdrenames = new list<id>();
@@ -287,8 +287,8 @@ global without sharing class Households {
         if (householdDeletes.size() > 0)
             Database.DeleteResult[] lsr = Database.delete(householdDeletes, false);           
         
-        if (currentHouseholdsSettings.Advanced_Household_Naming__c = true && householdrenames.size() > 0){
-            if (currentHouseholdsSettings.Async_Household_Naming__c = true)
+        if (currentHouseholdsSettings.Advanced_Household_Naming__c == true && householdrenames.size() > 0){
+            if (currentHouseholdsSettings.Async_Household_Naming__c == true)
                 HouseholdNaming.FutureUpdateNames(householdrenames);
             else{
                 HouseholdNaming hn = new HouseholdNaming();
@@ -435,7 +435,7 @@ global without sharing class Households {
                 } else if(oldProcessor==NO_HOUSEHOLDS_PROCESSOR){
                     householdsSettings.Household_Rules__c = NO_HOUSEHOLDS_PROCESSOR;
                 } else {
-                	householdsSettings.Household_Rules__c = NO_HOUSEHOLDS_PROCESSOR;
+                    householdsSettings.Household_Rules__c = NO_HOUSEHOLDS_PROCESSOR;
                 }
  
                 householdsSettings.Household_Member_Contact_Role__c = label.Household_Member_Contact_Role;
@@ -462,7 +462,7 @@ global without sharing class Households {
         
         //clear out whatever settings exist
         delete [select id from npo02__Households_Settings__c]; 
-        
+         
         //create our own based on what's passed in from the test
         householdsSettings = new Households_Settings__c (
             Household_Rules__c = mySettings.Household_Rules__c,
