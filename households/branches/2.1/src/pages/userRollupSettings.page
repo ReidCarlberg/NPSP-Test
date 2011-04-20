@@ -15,9 +15,10 @@
         
         <apex:pageBlock id="step1" rendered="{!step==1}">
             <apex:pageBlockSection title="Select the Opportunity Field to be Rolled-up" collapsible="false" columns="2" >
-                    <apex:selectList title="Available Opportunity Fields" value="{!opptyfield}" multiselect="false"  size="1">
-                        <apex:selectOptions value="{!sourcefields}" />
+                    <apex:selectList rendered="{!NOT(ISNULL(sourcefields))}" title="Available Opportunity Fields" value="{!opptyfield}" multiselect="false"  size="1">
+                        <apex:selectOptions value="{!sourcefields}"  />
                     </apex:selectList>
+                    <apex:outputText rendered="{!ISNULL(sourcefields)}">No valid Opportunity fields found.</apex:outputText>
             </apex:pageBlockSection>
         </apex:pageBlock>
         
@@ -50,7 +51,7 @@
         <apex:pageBlock id="Step5" rendered="{!step==5}">
             <apex:pageBlockSection title="Confirm" collapsible="false" columns="1" >
                 <apex:outputText value="{!operationstring}" />
-                <apex:commandButton value="Confirm & Create Rollup" action="{!createRollup}"/>
+                <apex:commandButton value="Confirm & Create Rollup" action="{!createRollup}" rendered="{!NOT(CONTAINS(targetfield,'NO VALID FIELD AVAILABLE'))}"/>
             </apex:pageBlockSection>
         </apex:pageBlock>   
         

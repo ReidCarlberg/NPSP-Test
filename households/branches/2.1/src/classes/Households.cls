@@ -79,6 +79,8 @@ global without sharing class Households {
                 //add them all to a list for evaluation
                 else if (c.Household__c == null && currentHouseholdsSettings.Household_Rules__c == ALL_INDIVIDUALS_PROCESSOR)
                     contactEvaluations.add(c);
+                else if  (c.Household__c != null)
+                    householdnameupdates.add(c.Household__c);
             }
 
             //AFTER UPDATE
