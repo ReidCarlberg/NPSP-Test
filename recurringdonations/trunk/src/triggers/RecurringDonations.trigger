@@ -44,11 +44,29 @@ after insert, after update, after delete, after undelete) {
         RecurringDonations process = new RecurringDonations (Trigger.old, null, triggerAction.beforeDelete);
     }
     if(Trigger.isInsert && Trigger.isAfter){
-        Recurring_Donation__c[] updatedRecurringDonations = [select id,Organization__c,Contact__c,Installment_Amount__c,Installments__c,Amount__c,Total__c,Installment_Period__c,Date_Established__c,Donor_Name__c,Schedule_Type__c,Recurring_Donation_Campaign__c from Recurring_Donation__c where Id in :Trigger.new];
+    
+        //James Melville 05/03/2011 Dynamically build Recurring donation query to allow currency to be included if needed.
+        //build start of dynamic query
+        String queryRCD = 'select id,Organization__c,Contact__c,Installment_Amount__c,Installments__c,Amount__c,Total__c,Installment_Period__c,Date_Established__c,Donor_Name__c,Schedule_Type__c,Recurring_Donation_Campaign__c';
+       
+        //if currencyiso field exists add it to query for use later
+        if(Schema.sObjectType.Recurring_Donation__c.fields.getMap().get('CurrencyIsoCode') != null)
+            queryRCD = queryRCD + ',CurrencyIsoCode';
+       
+        //continue building query - dynamic apex does not allow nested binds (:Trigger.new) so we build a list
+        List<Id> ids = new List<Id>();
+        for(Recurring_Donation__c r : Trigger.new)
+        {
+            ids.add(r.Id);
+        }
+        //Trigger.new.Id;
+        queryRCD=queryRCD+' from Recurring_Donation__c where Id in :ids';
+        //execute query
+        Recurring_Donation__c[] updatedRecurringDonations = Database.query(queryRCD);
         RecurringDonations process = new RecurringDonations (updatedRecurringDonations, Trigger.old, triggerAction.afterInsert);
     }
+    
     if(Trigger.isUpdate && Trigger.isAfter){
         RecurringDonations process = new RecurringDonations (Trigger.new, Trigger.old, triggerAction.afterUpdate);
     }
-
 }

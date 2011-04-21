@@ -98,12 +98,13 @@ global class RecurringDonations {
 	/// <param name="recurringDonations"> RecurringDonation objects that are being triggered </param>
 	public static void insertOpptys( Recurring_Donation__c[] recurringDonations, String donorType )
 	{
-		
-		
 		//Lists used for final Insert
 		List<Opportunity> opportunityInserts = new List<Opportunity>();
 		
-
+		// James Melville 05/03/2011 Added to support multi-currency sfdc.  */
+        // CurrencyIsoCode doesn't exist in non-multi-currency orgs
+        SObjectField OppCurrencyField = Schema.sObjectType.Opportunity.fields.getMap().get('CurrencyIsoCode');
+		
 		//Create a list of ContactIds used in these RecurringDonations
 		List<Id> contactIds = new List<Id>();
 		Map<Id,Id> recConMap = new Map<Id,Id>();
@@ -123,7 +124,6 @@ global class RecurringDonations {
 		{
 			contactMap = new Map<Id,Contact>([Select Id, AccountId from Contact where Id in :contactIds and AccountId != null]);
 		}
-
 
 		//Loop through the Recurring Donations and create the appropriate number of Opportunities
 		for(Recurring_Donation__c r : recurringDonations)
@@ -145,6 +145,20 @@ global class RecurringDonations {
 					Contact c = contactMap.get(r.Contact__c);
 					opp.AccountId = c.AccountId;
 				}
+
+                // James Melville 05/03/2011 Added to support multi-currency sfdc.  
+                // we check currency iscode before entering the loop since it's a system check
+                if(OppCurrencyField != null)
+                {
+                    SObjectField RDCurrencyField = Schema.sObjectType.Recurring_Donation__c.fields.getMap().get('CurrencyIsoCode');
+                    //this should never return null as we have already found multicurrency on the oppty.
+                    if(RDCurrencyField != null)
+                    {
+                        //set the donation currency field to equal the recurring donation currency
+                        opp.put(OppCurrencyField,r.get(RDCurrencyField));
+                    }
+                }
+				
 				//add the remainder to the last installment, otherwise use the amount
 				if (j + 1 == installments && installments * r.Installment_Amount__c != r.Total__c)
 				{
@@ -260,7 +274,7 @@ global class RecurringDonations {
 			Database.SaveResult[] osr = Database.insert(contactRoleInserts, false);
 		}
 	}
-	
+	 
 
 	/// <name> deleteRecDonations </name>
 	/// <summary> Validates that a Recurring Donation can be deleted </summary>
