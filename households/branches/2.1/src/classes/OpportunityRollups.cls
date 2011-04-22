@@ -583,7 +583,7 @@ global virtual class OpportunityRollups {
             soqlStatement += 'MAX(Opportunity.Amount) LargestAmount, MIN(Opportunity.CloseDate) FirstCloseDate, '; 
             soqlStatement += 'MAX(Opportunity.CloseDate) LastCloseDate, COUNT_DISTINCT(Opportunity.Id) NumberOfClosedOpps, ';
             for (string s : userRollups.keyset()){
-                if (userRollups.get(s).Object_Name__c == 'Contact'){
+                if (userRollups.get(s).Object_Name__c == 'Contact' || userRollups.get(s).Object_Name__c == 'Household__c'){
                     User_Rollup_Field_Settings__c urfs = userRollups.get(s);
                     soqlStatement += urfs.Field_Action__c + '(Opportunity.' + urfs.Source_Field__c + ') ' + urfs.Name + ', ';    
                 }           
@@ -691,7 +691,7 @@ global virtual class OpportunityRollups {
                 soqlStatement += 'MAX(contact.npo02__household__r.npo02__MembershipEndDate__c) HHMemberEndDate, ';
                 soqlStatement += 'COUNT_DISTINCT(Opportunity.Id) NumberOfClosedOpps, ';
                 for (string s : userRollups.keyset()){
-                    if (userRollups.get(s).Object_Name__c == 'Contact'){
+                    if (userRollups.get(s).Object_Name__c == 'Contact' || userRollups.get(s).Object_Name__c == 'Household__c'){
                         User_Rollup_Field_Settings__c urfs = userRollups.get(s);
                         soqlStatement += urfs.Field_Action__c + '(Opportunity.' + urfs.Source_Field__c + ') ' + urfs.Name + ', ';    
                     }           
@@ -744,7 +744,7 @@ global virtual class OpportunityRollups {
             soqlStatement += 'MAX(Opportunity.Amount) LargestAmount, MIN(Opportunity.CloseDate) FirstCloseDate, '; 
             soqlStatement += 'MAX(Opportunity.CloseDate) LastCloseDate, COUNT_DISTINCT(Opportunity.Id) NumberOfClosedOpps, ';
             for (string s : userRollups.keyset()){
-                if (userRollups.get(s).Object_Name__c == 'Contact'){
+                if (userRollups.get(s).Object_Name__c == 'Contact' || userRollups.get(s).Object_Name__c == 'Household__c'){
                     User_Rollup_Field_Settings__c urfs = userRollups.get(s);
                     soqlStatement += urfs.Field_Action__c + '(Opportunity.' + urfs.Source_Field__c + ') ' + urfs.Name + ', ';    
                 }           
