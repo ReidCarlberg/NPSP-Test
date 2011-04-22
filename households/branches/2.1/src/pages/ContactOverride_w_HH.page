@@ -1,2 +1,3 @@
-<apex:page action="{!URLFOR($Action.Contact.NewContact, null, null, true)}" standardController="Household__c">
+<apex:page action="{!URLFOR($Action.Contact.NewContact, null, null, true)}"
+	standardController="Household__c">
 </apex:page>

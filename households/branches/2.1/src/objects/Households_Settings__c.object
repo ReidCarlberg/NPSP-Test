@@ -5,12 +5,28 @@
     <description>Setting object for the Nonprofit Starter Pack Households Package</description>
     <enableFeeds>false</enableFeeds>
     <fields>
+        <fullName>Advanced_Household_Naming__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <inlineHelpText>Activate advanced household naming functionality in version 2.1+.  This will provide dynamic naming for Household Names, Informal and Formal Greetings.</inlineHelpText>
+        <label>Advanced Household Naming</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>Always_Rollup_to_Primary_Contact__c</fullName>
         <defaultValue>false</defaultValue>
         <deprecated>false</deprecated>
         <externalId>false</externalId>
         <inlineHelpText>Always rollup to the primary contact, and corresponding household, on an opp. even if the opportunity is not from an individual (i.e. from a company, foundation, etc.)</inlineHelpText>
         <label>Always Rollup to Primary Contact</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Async_Household_Naming__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <inlineHelpText>This is a non-exposed setting to toggle household naming code to use an asynchronous version instead of the standard version.</inlineHelpText>
+        <label>Async Household Naming</label>
         <type>Checkbox</type>
     </fields>
     <fields>
@@ -98,6 +114,18 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Membership_Grace_Period__c</fullName>
+        <defaultValue>30</defaultValue>
+        <externalId>false</externalId>
+        <inlineHelpText>The length of the grace period (in days) after a membership expires (last end date) before the status moves from &apos;Grace Period&apos; to &apos;Expired&apos;.  Defaults to 30 days.</inlineHelpText>
+        <label>Membership Grace Period</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Membership_Record_Types__c</fullName>
         <deprecated>false</deprecated>
         <externalId>false</externalId>
@@ -123,13 +151,21 @@
         <fullName>Rollup_N_Day_Value__c</fullName>
         <defaultValue>365</defaultValue>
         <externalId>false</externalId>
-        <inlineHelpText>For rollups over N days. Allows custom number of days in the past. Defaults to Rollup over the past 365 days.</inlineHelpText>
+        <inlineHelpText>Provide a value for &apos;N day&apos; rollups, where &apos;N&apos; is the number of days from today into the past.  This value defaults to rollup over the past 365 days.</inlineHelpText>
         <label>Rollup N Day Value</label>
         <precision>18</precision>
         <required>false</required>
         <scale>0</scale>
         <type>Number</type>
         <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Use_Fiscal_Year_for_Rollups__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <inlineHelpText>Checking this box will cause opportunity rollup totals to respect fiscal year, instead of calendar years settings. To set Fiscal Year information, go to Setup-&gt;Company Profile-&gt;Fiscal Year.  NOTE: Custom Fiscal Year Settings are NOT supported.</inlineHelpText>
+        <label>Use Fiscal Year for Rollups</label>
+        <type>Checkbox</type>
     </fields>
     <label>Households Settings</label>
 </CustomObject>
