@@ -27,7 +27,7 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE.
 */
-trigger HouseholdBefore on npo02__Household__c (before update) {
+trigger HouseholdBefore on Household__c (before update) {
 //updates household records to indicate where/if user changes to the household record are happening
 //and marks them as such so they won't be updated
 
@@ -36,16 +36,24 @@ trigger HouseholdBefore on npo02__Household__c (before update) {
 
     if (!HouseholdProcessControl.inFutureContext){
         for (Household__c h : trigger.new){
-        	if (h.npo02__SYSTEM_CUSTOM_NAMING__c == null)
-        	   h.npo02__SYSTEM_CUSTOM_NAMING__c = '';
+        	
+        	string customname;
+        	if (h.SYSTEM_CUSTOM_NAMING__c == null)
+        	   customname = ';';
         	else
-        	   h.npo02__SYSTEM_CUSTOM_NAMING__c += ';';
-            if (h.Name != trigger.oldMap.get(h.id).Name)
-                h.npo02__SYSTEM_CUSTOM_NAMING__c += 'Name' + ';';
-            if (h.Formal_Greeting__c != trigger.oldmap.get(h.id).Formal_Greeting__c)
-                h.npo02__SYSTEM_CUSTOM_NAMING__c += 'Formal_Greeting__c' + ';';
-            if (h.Informal_Greeting__c != trigger.oldmap.get(h.id).Informal_Greeting__c)
-                h.npo02__SYSTEM_CUSTOM_NAMING__c += 'Informal_Greeting__c' + ';';
+        	   customname = h.SYSTEM_CUSTOM_NAMING__c;
+        	
+        	list<string> customnamelist = new list<string>();
+        	set<string> customnameset = new set<string>();
+        	customnamelist = customname.split(';');
+        	customnameset.addall(customnamelist);
+        	   
+            if (h.Name != trigger.oldMap.get(h.id).Name && !customnameset.contains('Name'))
+                h.SYSTEM_CUSTOM_NAMING__c += 'Name' + ';';
+            if (h.Formal_Greeting__c != trigger.oldmap.get(h.id).Formal_Greeting__c && !customnameset.contains('Formal_Greeting__c'))
+                h.SYSTEM_CUSTOM_NAMING__c += 'Formal_Greeting__c' + ';';
+            if (h.Informal_Greeting__c != trigger.oldmap.get(h.id).Informal_Greeting__c && !customnameset.contains('Informal_Greeting__c'))
+                h.SYSTEM_CUSTOM_NAMING__c += 'Informal_Greeting__c' + ';';
         }
     }   
 }
