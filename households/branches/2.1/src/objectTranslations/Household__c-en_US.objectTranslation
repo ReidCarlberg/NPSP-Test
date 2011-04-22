@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
+        <plural>false</plural>
         <value>Household</value>
     </caseValues>
     <caseValues>
@@ -24,6 +25,10 @@
         <name>FirstCloseDate__c</name>
     </fields>
     <fields>
+        <label><!-- Formal Greeting --></label>
+        <name>Formal_Greeting__c</name>
+    </fields>
+    <fields>
         <label><!-- Mailing Address --></label>
         <name>Formula_MailingAddress__c</name>
     </fields>
@@ -38,6 +43,10 @@
     <fields>
         <label><!-- Household ID --></label>
         <name>Household_ID__c</name>
+    </fields>
+    <fields>
+        <label><!-- Informal Greeting --></label>
+        <name>Informal_Greeting__c</name>
     </fields>
     <fields>
         <label><!-- Largest Gift --></label>
@@ -117,7 +126,7 @@
         <name>OppAmount2YearsAgo__c</name>
     </fields>
     <fields>
-        <label><!-- Total Gifts Last 365 Days --></label>
+        <label><!-- Total Gifts Last N Days --></label>
         <name>OppAmountLastNDays__c</name>
     </fields>
     <fields>
@@ -133,7 +142,7 @@
         <name>OppsClosed2YearsAgo__c</name>
     </fields>
     <fields>
-        <label><!-- Number of Gifts Last 365 Days --></label>
+        <label><!-- Number of Gifts Last N Days --></label>
         <name>OppsClosedLastNDays__c</name>
     </fields>
     <fields>
@@ -143,6 +152,34 @@
     <fields>
         <label><!-- Number of Gifts This Year --></label>
         <name>OppsClosedThisYear__c</name>
+    </fields>
+    <fields>
+        <label><!-- _SYSTEM: CUSTOM NAMING --></label>
+        <name>SYSTEM_CUSTOM_NAMING__c</name>
+        <picklistValues>
+            <masterLabel>FormalNameInformalName</masterLabel>
+            <translation><!-- FormalNameInformalName --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Formal_Greeting__c</masterLabel>
+            <translation><!-- Formal_Greeting__c --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>HouseholdNameFormalName</masterLabel>
+            <translation><!-- HouseholdNameFormalName --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Informal_Greeting__c</masterLabel>
+            <translation><!-- Informal_Greeting__c --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Name</masterLabel>
+            <translation><!-- Name --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>nullFormal_Greeting__c</masterLabel>
+            <translation><!-- nullFormal_Greeting__c --></translation>
+        </picklistValues>
     </fields>
     <fields>
         <label><!-- Smallest Gift --></label>
@@ -156,17 +193,6 @@
         <label><!-- Total Gifts --></label>
         <name>TotalOppAmount__c</name>
     </fields>
-    <layouts>
-        <layout>Household Layout</layout>
-        <sections>
-            <label><!-- Custom Links --></label>
-            <section>Custom Links</section>
-        </sections>
-        <sections>
-            <label><!-- Household Information --></label>
-            <section>Household Information</section>
-        </sections>
-    </layouts>
     <startsWith>Consonant</startsWith>
     <webLinks>
         <label><!-- New_Household_Member --></label>
