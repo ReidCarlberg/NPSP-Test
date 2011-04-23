@@ -13,7 +13,7 @@
     * Neither the name of the Salesforce.com Foundation nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
- 
+  
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
     LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -25,35 +25,54 @@
     CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
     LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
-    POSSIBILITY OF SUCH DAMAGE.
+    POSSIBILITY OF SUCH DAMAGE. 
 */
 trigger HouseholdBefore on Household__c (before update) {
 //updates household records to indicate where/if user changes to the household record are happening
 //and marks them as such so they won't be updated
-
 //need to use a process control class to avoid recursion when async updates occur
 //in non async updates, this won't fire again, so we don't need to worry
-
-    if (!HouseholdProcessControl.inFutureContext){
-        for (Household__c h : trigger.new){
-        	
-        	string customname;
-        	if (h.SYSTEM_CUSTOM_NAMING__c == null)
-        	   customname = ';';
-        	else
-        	   customname = h.SYSTEM_CUSTOM_NAMING__c;
-        	
-        	list<string> customnamelist = new list<string>();
-        	set<string> customnameset = new set<string>();
-        	customnamelist = customname.split(';');
-        	customnameset.addall(customnamelist);
-        	   
-            if (h.Name != trigger.oldMap.get(h.id).Name && !customnameset.contains('Name'))
-                h.SYSTEM_CUSTOM_NAMING__c += 'Name' + ';';
-            if (h.Formal_Greeting__c != trigger.oldmap.get(h.id).Formal_Greeting__c && !customnameset.contains('Formal_Greeting__c'))
-                h.SYSTEM_CUSTOM_NAMING__c += 'Formal_Greeting__c' + ';';
-            if (h.Informal_Greeting__c != trigger.oldmap.get(h.id).Informal_Greeting__c && !customnameset.contains('Informal_Greeting__c'))
-                h.SYSTEM_CUSTOM_NAMING__c += 'Informal_Greeting__c' + ';';
-        }
-    }   
+    if (!HouseholdProcessControl.inFutureContext && trigger.isBefore){
+    	
+    	Households_Settings__c hs = Households.getHouseholdsSettings();
+    	
+    	if (hs != null && hs.Advanced_Household_Naming__c == true){
+    	
+            for (Household__c h : trigger.new){
+                string customname = '';
+            
+                if (h.SYSTEM_CUSTOM_NAMING__c == null)
+                    customname = ';';
+                else  
+                    customname = h.SYSTEM_CUSTOM_NAMING__c + ';';
+                
+                list<string> customnamelist = new list<string>();
+                set<string> customnameset = new set<string>();
+                customnamelist = customname.split(';');
+                customnameset.addall(customnamelist);           
+                
+                if (h.Name != null && h.Name != trigger.oldmap.get(h.id).Name && !customnameset.contains('Name')){
+                    customname += 'Name' + ';';
+                }else if ((h.Name == null || h.Name == '') && customnameset.contains('Name')){
+                    customname = customname.replace('Name;', ';');
+                    h.Name = 'REPLACE';
+                }
+            
+                if (h.Informal_Greeting__c != null && h.Informal_Greeting__c != trigger.oldmap.get(h.id).Informal_Greeting__c && !customnameset.contains('Informal_Greeting__c')){
+                    customname += 'Informal_Greeting__c' + ';';
+                }else if ((h.Informal_Greeting__c == null || h.Informal_Greeting__c == '') && customnameset.contains('Informal_Greeting__c')){                
+                    customname = customname.replace('Informal_Greeting__c;', ';');
+                    h.Informal_Greeting__c = 'REPLACE';
+                }
+            
+                if (h.Formal_Greeting__c != null && h.Formal_Greeting__c != trigger.oldmap.get(h.id).Formal_Greeting__c && !customnameset.contains('Formal_Greeting__c')){
+                    customname += 'Formal_Greeting__c' + ';';
+                }else if ((h.Formal_Greeting__c == null || h.Formal_Greeting__c == '') && customnameset.contains('Formal_Greeting__c')){
+                    customname = customname.replace('Formal_Greeting__c;', ';');
+                    h.Formal_Greeting__c = 'REPLACE';
+                }
+                h.SYSTEM_CUSTOM_NAMING__c = customname;
+            }
+        }   
+    }
 }

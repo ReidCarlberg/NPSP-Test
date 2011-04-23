@@ -244,12 +244,11 @@ global virtual without sharing class HouseholdNaming {
             formalname += contactnames[0].LastName + ' and friends';
         }
         }
-        return formalname;
+        return formalname;  
     }
     
     //interface for the batch jobs on advanced greeting activation
     public void ActivateAdvancedGreetings(boolean isTest){
-        
         
         //shamelessly borrowed from opprollups      
         integer batchSize = 200;
@@ -263,10 +262,8 @@ global virtual without sharing class HouseholdNaming {
         'FROM Contact where Household__c != null ' +
         (isTest ? ' and lastname=\'%LastName0%\' ' : '') + 
         'LIMIT 200', true);
-        id batchProcessId = database.executeBatch(batch, batchSize);        
-        
+        id batchProcessId = database.executeBatch(batch, batchSize);                
     }
-    
     
     /*** Test Methods ***/
     static testMethod void HouseholdNamingTest(){
