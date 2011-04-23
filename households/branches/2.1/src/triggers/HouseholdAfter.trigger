@@ -27,7 +27,7 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE. 
 */
-trigger HouseholdAfter on npo02__Household__c (after update) {
+trigger HouseholdAfter on Household__c (after update) {
 
     Households_Settings__c hs = Households.getHouseholdsSettings();
     

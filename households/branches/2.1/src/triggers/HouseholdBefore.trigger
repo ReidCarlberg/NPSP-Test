@@ -53,21 +53,21 @@ trigger HouseholdBefore on Household__c (before update) {
                 
                 if (h.Name != null && h.Name != trigger.oldmap.get(h.id).Name && !customnameset.contains('Name')){
                     customname += 'Name' + ';';
-                }else if ((h.Name == null || h.Name == '') && customnameset.contains('Name')){
+                }else if ((h.Name == null || h.Name == '' || h.Name == 'REPLACE') && customnameset.contains('Name')){
                     customname = customname.replace('Name;', ';');
                     h.Name = 'REPLACE';
                 }
             
                 if (h.Informal_Greeting__c != null && h.Informal_Greeting__c != trigger.oldmap.get(h.id).Informal_Greeting__c && !customnameset.contains('Informal_Greeting__c')){
                     customname += 'Informal_Greeting__c' + ';';
-                }else if ((h.Informal_Greeting__c == null || h.Informal_Greeting__c == '') && customnameset.contains('Informal_Greeting__c')){                
+                }else if ((h.Informal_Greeting__c == null || h.Informal_Greeting__c == '' || h.Informal_Greeting__c == 'REPLACE') && customnameset.contains('Informal_Greeting__c')){                
                     customname = customname.replace('Informal_Greeting__c;', ';');
                     h.Informal_Greeting__c = 'REPLACE';
                 }
             
                 if (h.Formal_Greeting__c != null && h.Formal_Greeting__c != trigger.oldmap.get(h.id).Formal_Greeting__c && !customnameset.contains('Formal_Greeting__c')){
                     customname += 'Formal_Greeting__c' + ';';
-                }else if ((h.Formal_Greeting__c == null || h.Formal_Greeting__c == '') && customnameset.contains('Formal_Greeting__c')){
+                }else if ((h.Formal_Greeting__c == null || h.Formal_Greeting__c == '' || h.Formal_Greeting__c == 'REPLACE') && customnameset.contains('Formal_Greeting__c')){
                     customname = customname.replace('Formal_Greeting__c;', ';');
                     h.Formal_Greeting__c = 'REPLACE';
                 }
