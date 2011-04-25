@@ -1,5 +1,5 @@
+#summary Possible projects for the spring 2011 NPSP developer sprint
 #labels 2011Sprint,Featured
-#Possible projects for the spring 2011 NPSP developer sprint
 
 = Introduction =
 
