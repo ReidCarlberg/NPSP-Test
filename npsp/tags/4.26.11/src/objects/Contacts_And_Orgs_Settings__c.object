@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customSettingsType>Hierarchy</customSettingsType>
+    <customSettingsVisibility>Public</customSettingsVisibility>
+    <description>Application settings for the Contacts and Organizations package of the Nonprofit Starter Pack</description>
+    <enableEnhancedLookup>false</enableEnhancedLookup>
+    <enableFeeds>false</enableFeeds>
+    <fields>
+        <fullName>Account_Processor__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Setting for the Account model. Should be &quot;One-to-one&quot; or &quot;Individual&quot;. Replaces the custom field Contact.SystemAccountProcessor__c</inlineHelpText>
+        <label>Account Processor</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Disable_Account_Model_Trigger__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <inlineHelpText>Check this to turn off the Account Model trigger. Accounts will no longer be automatically created for Contacts. Only use this if you understand the ramifications. Turning off the account model could get your data into an inconsistent state.</inlineHelpText>
+        <label>Disable Account Model Trigger</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Enable_Opportunity_Contact_Role_Trigger__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <inlineHelpText>Check this to turn on the automatic creation of Opportunity Contact Roles for newly created Opportunities in the One-to-One model.</inlineHelpText>
+        <label>Enable Opportunity Contact Role Trigger</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Opportunity_Contact_Role_Default_role__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Default role for the primary Opportunity Contact Role</inlineHelpText>
+        <label>Opportunity Contact Role Default role</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <label>Contacts And Orgs Settings</label>
+</CustomObject>
