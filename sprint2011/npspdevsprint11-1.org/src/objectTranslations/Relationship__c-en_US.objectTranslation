@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Relationship</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Relationships</value>
+    </caseValues>
+    <fields>
+        <label><!-- Contact --></label>
+        <name>Contact__c</name>
+        <relationshipLabel><!-- Relationships --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Description --></label>
+        <name>Description__c</name>
+    </fields>
+    <fields>
+        <label><!-- Reciprocal Relationship --></label>
+        <name>ReciprocalRelationship__c</name>
+        <relationshipLabel><!-- Relationships --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Related Contact --></label>
+        <name>RelatedContact__c</name>
+        <relationshipLabel><!-- Hidden Relationships List --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Status --></label>
+        <name>Status__c</name>
+        <picklistValues>
+            <masterLabel>Current</masterLabel>
+            <translation><!-- Current --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Former</masterLabel>
+            <translation><!-- Former --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Type --></label>
+        <name>Type__c</name>
+        <picklistValues>
+            <masterLabel>Acquaintance</masterLabel>
+            <translation><!-- Acquaintance --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Coworker</masterLabel>
+            <translation><!-- Coworker --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Family</masterLabel>
+            <translation><!-- Family --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Friend</masterLabel>
+            <translation><!-- Friend --></translation>
+        </picklistValues>
+    </fields>
+    <startsWith>Consonant</startsWith>
+    <validationRules>
+        <errorMessage><!-- Rather than change the contacts in an existing relationship, delete this relationship and create a new on between the new contacts --></errorMessage>
+        <name>Related_Contact_Do_Not_Change</name>
+    </validationRules>
+</CustomObjectTranslation>
