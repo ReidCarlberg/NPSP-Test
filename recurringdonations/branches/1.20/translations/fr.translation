@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Translations xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customApplications>
+        <label><!-- NonprofitForce --></label>
+        <name>NonprofitForce</name>
+    </customApplications>
+    <customLabels>
+        <label>You must delete the related Donations before you can delete this recurring donation</label>
+        <name>RecurringDonationCantDeleteError</name>
+    </customLabels>
+    <customLabels>
+        <label>Donor</label>
+        <name>RecurringDonationContactRole</name>
+    </customLabels>
+    <customLabels>
+        <label>Divide By</label>
+        <name>RecurringDonationDivideValue</name>
+    </customLabels>
+    <customLabels>
+        <label>Monthly</label>
+        <name>RecurringDonationInstallmentPeriodMonthly</name>
+    </customLabels>
+    <customLabels>
+        <label>Quarterly</label>
+        <name>RecurringDonationInstallmentPeriodQuarterly</name>
+    </customLabels>
+    <customLabels>
+        <label>Weekly</label>
+        <name>RecurringDonationInstallmentPeriodWeekly</name>
+    </customLabels>
+    <customLabels>
+        <label>Yearly</label>
+        <name>RecurringDonationInstallmentPeriodYearly</name>
+    </customLabels>
+    <customLabels>
+        <label>You must select an Organization or Contact</label>
+        <name>RecurringDonationMissingDataError</name>
+    </customLabels>
+    <customLabels>
+        <label>Multiply By</label>
+        <name>RecurringDonationMultiplyValue</name>
+    </customLabels>
+    <customLabels>
+        <label>Donation</label>
+        <name>RecurringDonationPrefix</name>
+    </customLabels>
+    <customLabels>
+        <label>Pledged</label>
+        <name>RecurringDonationStageName</name>
+    </customLabels>
+    <customLabels>
+        <label>You must specify fewer than 50 installments</label>
+        <name>RecurringDonationTooManyInstallmentsError</name>
+    </customLabels>
+    <scontrols>
+        <label><!-- OpportunityCreateMatching --></label>
+        <name>OpportunityCreateMatching</name>
+    </scontrols>
+    <scontrols>
+        <label>CréerOpportunitéRécurrente</label>
+        <name>OpportunityCreateRecurring</name>
+    </scontrols>
+</Translations>
