@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <label>Correo electrónico alternativo</label>
+        <name>AlternateEmail__c</name>
+    </fields>
+    <fields>
+        <label>Correo electrónico particular</label>
+        <name>HomeEmail__c</name>
+    </fields>
+    <fields>
+        <label>Dirección particular</label>
+        <name>Home_Address__c</name>
+    </fields>
+    <fields>
+        <label>Fecha de la última transacción</label>
+        <name>Last_Donation_Date__c</name>
+    </fields>
+    <fields>
+        <name>LeadSource</name>
+        <picklistValues>
+            <masterLabel>Employee Referral</masterLabel>
+            <translation><!-- Employee Referral --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>External Referral</masterLabel>
+            <translation><!-- External Referral --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Other</masterLabel>
+            <translation>Otros</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Partner</masterLabel>
+            <translation><!-- Partner --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Partner Referral</masterLabel>
+            <translation>Referido</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Phone Inquiry</masterLabel>
+            <translation>Consulta telefónica</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Public Relations</masterLabel>
+            <translation><!-- Public Relations --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Purchased List</masterLabel>
+            <translation>Lista adquirida</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Trade Show</masterLabel>
+            <translation><!-- Trade Show --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Web</masterLabel>
+            <translation>Web</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Word of mouth</masterLabel>
+            <translation><!-- Word of mouth --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label>Monto total de transacciones</label>
+        <name>Lifetime_Giving_History_Amount__c</name>
+    </fields>
+    <fields>
+        <label>Tipo de organización</label>
+        <name>Organization_Type__c</name>
+    </fields>
+    <fields>
+        <label>Otra dirección</label>
+        <name>Other_Address__c</name>
+    </fields>
+    <fields>
+        <label>Teléfono elegido</label>
+        <name>PreferredPhone__c</name>
+        <picklistValues>
+            <masterLabel>Home</masterLabel>
+            <translation>Particular</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Household</masterLabel>
+            <translation><!-- Household --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Mobile</masterLabel>
+            <translation>Móvil</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Other</masterLabel>
+            <translation>Otro</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Work</masterLabel>
+            <translation>Laboral</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label>Correo electrónico elegido</label>
+        <name>Preferred_Email__c</name>
+        <picklistValues>
+            <masterLabel>Alternate</masterLabel>
+            <translation>Alternativo</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Household</masterLabel>
+            <translation><!-- Household --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Personal</masterLabel>
+            <translation>Particular</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Work</masterLabel>
+            <translation>Laboral</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label>Tipo de dirección de correo</label>
+        <name>Primary_Address_Type__c</name>
+        <picklistValues>
+            <masterLabel>Home</masterLabel>
+            <translation>Particular</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Household</masterLabel>
+            <translation><!-- Household --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Other</masterLabel>
+            <translation>Otro</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Work</masterLabel>
+            <translation>Laboral</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label>Privado</label>
+        <name>Private__c</name>
+    </fields>
+    <fields>
+        <label>Tipo de otra dirección</label>
+        <name>Secondary_Address_Type__c</name>
+        <picklistValues>
+            <masterLabel>Home</masterLabel>
+            <translation>Particular</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Household</masterLabel>
+            <translation><!-- Household --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Other</masterLabel>
+            <translation>Otro</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Work</masterLabel>
+            <translation>Laboral</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- _SYSTEM: ACCOUNT PROCESSOR --></label>
+        <name>SystemAccountProcessor__c</name>
+        <picklistValues>
+            <masterLabel>Individual</masterLabel>
+            <translation><!-- Individual --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>One-to-One</masterLabel>
+            <translation><!-- One-to-One --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- This field is no longer used and should not be referenced. It has been replaced by Type_of_Account__c --></help>
+        <label><!-- _SYSTEM: IsIndividual - DEPRECATED --></label>
+        <name>SystemIsIndividual__c</name>
+    </fields>
+    <fields>
+        <help>Muestra el tipo de Organización con el que este Contacto está relacionado</help>
+        <label>Tipo de cuenta</label>
+        <name>Type_of_Account__c</name>
+    </fields>
+    <fields>
+        <label>Correo electrónico laboral</label>
+        <name>WorkEmail__c</name>
+    </fields>
+    <fields>
+        <label>Teléfono laboral</label>
+        <name>WorkPhone__c</name>
+    </fields>
+    <fields>
+        <label>Dirección laboral</label>
+        <name>Work_Address__c</name>
+    </fields>
+    <validationRules>
+        <errorMessage>El campo Correo electrónico DEBE concordar con el campo que está designado por el campo Correo electrónico elegido. Para corregir esto, usted debe copiar el valor existente del campo Correo electrónico en un nuevo campo</errorMessage>
+        <name>Populated_Email_Field_Warning</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage>El campo Teléfono DEBE concordar con el campo que está designado por el campo Correo Electrónico elegido. Para corregir esto, usted debe copiar el valor existente del campo Teléfono en el campo seleccionado en Telefono elegido</errorMessage>
+        <name>Populated_Phone_Field_Warning</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage>Debe seleccionar el Correo electrónico elegido</errorMessage>
+        <name>Require_Preferred_Email</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage>Debe seleccionar el Teléfono elegido</errorMessage>
+        <name>Require_Preferred_Phone</name>
+    </validationRules>
+</CustomObjectTranslation>
