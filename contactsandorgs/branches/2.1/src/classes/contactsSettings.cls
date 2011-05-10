@@ -15,10 +15,6 @@ public with sharing class contactsSettings {
     public PageReference onPageLoad(){
         pageSettings = Constants.getContactsSettings();
         
-        if(pageSettings.Send_Update_Notifications__c == null || pageSettings.Send_Update_Notifications__c){
-            ScheduleUpgradeCheck();
-        }
-        
         return null;
     }
     
@@ -75,38 +71,6 @@ public with sharing class contactsSettings {
         system.assertNotEquals(null,conRoles);
         controller.updateSettings();
         
-    }
-    
-    public void ScheduleUpgradeCheck(){
-        boolean jobExists = false;
-        String jobId = null;
-        if(pageSettings.Upgrade_Check_Scheduled_Job_Id__c != null && pageSettings.Upgrade_Check_Scheduled_Job_Id__c != ''){
-            jobExists = true;
-            jobId = pageSettings.Upgrade_Check_Scheduled_Job_Id__c;
-        }    
-        //Check for a scheduled job of that id.
-        List<CronTrigger> jobs = [SELECT id FROM CronTrigger WHERE id = :jobId];
-        if(jobs.size() > 0){
-            //We already have the job scheduled, so we don't need to schedule it.  Bail.
-            return;
-        }
-        else if(jobs.size() < 10){
-            //We didn't find the job, therefore we need to schedule it.
-            String cronExpression = '0 0 12 ? * 4 *';
-            
-            //TODO: Drop the scheduled job here. 
-            try{
-            
-            }
-            catch(Exception e){
-                //They have screwed with the setting and we can't do it anymore.
-                return;
-            }
-        }
-    }
-    
-    public void foo(){
-        System.debug(Package.Version.1.1);
     }
     
     static testMethod void testFirstRun()
