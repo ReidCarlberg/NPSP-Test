@@ -1,0 +1,13 @@
+#Tue May 10 12:30:55 PDT 2011
+eclipse.preferences.version=1
+endpointApiVersion=20.0
+endpointEnvironment=Production/Developer Edition
+endpointServer=www.salesforce.com
+httpsProtocol=true
+ideVersion=20.0
+keependpoint=false
+metadataFormatVersion=20.0
+namespacePrefix=
+packageName=unpackaged
+readTimeout=400
+username=steve.andersen@npsp1.org
