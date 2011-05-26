@@ -116,10 +116,13 @@ global virtual class OpportunityRollups {
         
             SobjectField targetField;
             SobjectField sourceField;
-        
+            
+            set<string> SourceFieldNames = new set<string>();
             //check source field
             sourceField = Schema.sObjectType.Opportunity.fields.getMap().get(urfs.Source_Field__c);
-            if (sourceField == null) userRollups.remove(s);
+            
+            if (sourceField == null || SourceFieldNames.contains(urfs.Source_Field__c)) userRollups.remove(s);            
+            SourceFieldNames.add(urfs.Source_Field__c);
                       
             //check target fields            
             if (urfs.Object_Name__c == 'Contact'){
