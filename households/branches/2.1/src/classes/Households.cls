@@ -172,6 +172,8 @@ global without sharing class Households {
         {            
             //THIS NEEDS TO HANDLED -
             Database.SaveResult[] lsr = Database.insert(householdInserts, false);
+            
+            
                         
             Integer i = 0;
             for (Contact c : contacts)
@@ -183,6 +185,10 @@ global without sharing class Households {
                     Contact clone = c.Clone(true,false);
                     clone.Household__c = lsr[i].getId();
                     contactUpdates.add(clone);
+                }
+                else{
+                	Database.Error err = lsr[i].getErrors()[0];                	
+                	c.addError(err.getMessage());
                 }
                 i += 1;
             }
