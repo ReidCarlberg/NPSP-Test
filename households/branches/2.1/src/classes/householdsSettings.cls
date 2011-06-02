@@ -3,6 +3,30 @@ public with sharing class householdsSettings {
     public Households_Settings__c pageSettings = new Households_Settings__c();
     public boolean runningBatch {get; set;}
     
+     /********Vars for PKG Update Info *************/
+    public string getMyVersion(){return string.valueof(Package.Version.Request);}
+    public string getMaxVersion(){return pageSettings.Max_Package_Version__c;}
+    public string getLastUpdate(){      
+        DateTime d = pageSettings.Last_Update_Check__c;
+        string datestring = '';
+        if (d != null)
+            datestring = d.format('MMMMM dd, yyyy hh:mm:ss a');
+        return datestring;
+    }
+    public string getpkgupdatestatus(){
+        string status = pageSettings.Has_Package_Update__c;
+        if (status == 'true')
+           status = 'New Update Available';
+        else if (status == 'false')
+           status = 'No New Updates Available';
+        else
+           status = status;
+           
+        return status;
+    }
+    /*********************************************/
+    
+    
     public householdsSettings(){
         acctRTs = new List<string>();
         acctTypes = new List<string>();
@@ -35,6 +59,13 @@ public with sharing class householdsSettings {
          if(pageSettings.npo02__Excluded_Contact_Opp_Rectypes__c!=null){
         	contactRTs = pageSettings.npo02__Excluded_Contact_Opp_Rectypes__c.split(';',0);
         }
+        
+        if (pageSettings.Last_Update_Check__c == null){
+        	checkforupdates();
+        }
+        
+        
+        
         //look for the scheduled job and schedule it if necessary
         scheduleRollups();
             
@@ -213,8 +244,10 @@ public with sharing class householdsSettings {
     	
     }
     
-    
-    
+    public void checkForUpdates(){
+        NPSPPkgVersionCheck npvc = new NPSPPkgVersionCheck('npe01');        
+        npvc.NPSPCheckVersion(true);
+    }
     
      public static testMethod void TEST_householdsSettings() {
         
