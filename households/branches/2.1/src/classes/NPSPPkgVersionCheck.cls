@@ -173,7 +173,8 @@ global without sharing class NPSPPkgVersionCheck {
         pagesettings.Max_Package_Version__c = epr.maxversion;
         pagesettings.Package_Update_URL__c = epr.updateURL;
         
-        update pagesettings;
+        Database.Update(pagesettings);
+        
     }
     
     /*******************TEST METHODS****************************/
