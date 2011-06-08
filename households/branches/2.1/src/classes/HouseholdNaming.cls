@@ -103,7 +103,7 @@ global virtual without sharing class HouseholdNaming {
             
             //we lost our only contact - he/she's anonymous
             if (contactlastnames.isEmpty())
-                householdname = 'Anonymous ' + system.label.DefaultHouseholdName;
+                householdname = system.label.HouseholdAnonymousName + ' ' + system.label.DefaultHouseholdName;
                     
             //standard hh naming
             else if (contactlastnames.size() > 0 && contactlastnames.size() < 10){          
@@ -115,7 +115,7 @@ global virtual without sharing class HouseholdNaming {
                     if (x < contactlastnames.size() - 1)
                         householdname += ', ';
                     else if (x == contactlastnames.size() - 1)
-                        householdname += ' and ';
+                        householdname += ' ' + system.label.HouseholdNameConnector + ' ';
                     else
                         householdname += ' ' + system.label.DefaultHouseholdName;                                
                 }
@@ -125,7 +125,7 @@ global virtual without sharing class HouseholdNaming {
             //special case
             else{
                householdname = ContactList[0].LastName;
-               householdname += ' and friends ' + system.label.DefaultHouseholdname;
+               householdname += ' ' + system.label.HouseholdNameConnector + ' ' + system.label.HouseholdNameOverrun + ' ' + system.label.DefaultHouseholdname;
             }
         }
         return householdname;
@@ -152,13 +152,13 @@ global virtual without sharing class HouseholdNaming {
             listsize = contactnames.size();
         
         if (listsize == 0)
-            informalname = 'Sir or Madame';
+            informalname = system.label.HouseholdAnonymousGreeting;
         
         else if (listsize == 1)
             informalname = contactnames[0].FirstName;
         
         else if (listsize == 2)
-            informalname = contactnames[0].FirstName + ' and ' + contactnames[1].FirstName;
+            informalname = contactnames[0].FirstName + ' ' + system.label.HouseholdNameConnector + ' ' + contactnames[1].FirstName;
         
         //more than 2
         else{
@@ -170,7 +170,7 @@ global virtual without sharing class HouseholdNaming {
                     informalname += c.FirstName;
                 //if we're at the last name in the group
                 else if (counter == contactnames.size())
-                    informalname += ' and ' + c.FirstName;
+                    informalname += ' ' + system.label.HouseholdNameConnector + ' ' + c.FirstName;
                 //we're somewhere in the middle of the group
                 else
                     informalname += ', ' + c.Firstname;
@@ -223,7 +223,7 @@ global virtual without sharing class HouseholdNaming {
                 if(counter < (contactnames.size() - 1))
                     formalname += ', ';
                 else if (counter == (contactnames.size() - 1))
-                    formalname += ' and ';                          
+                    formalname += ' ' + system.label.HouseholdNameConnector + ' ';                          
                 //add the family name     
                 else
                     formalname += c.LastName;
@@ -240,7 +240,7 @@ global virtual without sharing class HouseholdNaming {
             if (contactnames[0].FirstName != null)
                 formalname += contactnames[0].FirstName + ' ';                    
             
-            formalname += contactnames[0].LastName + ' and friends';
+            formalname += contactnames[0].LastName + ' ' + system.Label.HouseholdNameConnector + ' ' + system.label.HouseholdNameOverrun;
         }
         }
         return formalname;  
