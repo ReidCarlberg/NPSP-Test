@@ -28,7 +28,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 global virtual without sharing class HouseholdNaming {
-    
+      
     @future 
     global static void FutureUpdateNames(list<id> hhids){       
         //set our process control to avoid recursive updating on household records
@@ -59,8 +59,7 @@ global virtual without sharing class HouseholdNaming {
             }
             else{
                 list<Contact> clist = hhIDContactMap.get(c.Household__r.id);
-                clist.add(c);
-                
+                clist.add(c);                
             }
         }
                 
