@@ -1,7 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
     <labels>
+        <fullName>AddressCopyFailure</fullName>
+        <categories>Households</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>AddressCopyFailure</shortDescription>
+        <value>An error occurred during the copying of the address.</value>
+    </labels>
+    <labels>
+        <fullName>AddressCopySuccess</fullName>
+        <categories>Households</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>AddressCopySuccess</shortDescription>
+        <value>Address copied successfully.</value>
+    </labels>
+    <labels>
+        <fullName>AddressCopyUnknownObject</fullName>
+        <categories>Households</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>AddressCopyUnknownObject</shortDescription>
+        <value>Address Copy is not supported for this object type.</value>
+    </labels>
+    <labels>
         <fullName>DefaultHouseholdName</fullName>
+        <categories>Households, Household Naming</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>DefaultHouseholdName</shortDescription>
