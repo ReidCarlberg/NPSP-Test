@@ -1,0 +1,16 @@
+<apex:page standardController="Campaign" extensions="HouseholdCampaignDedupe" title="Household Mailing List" >
+
+<apex:sectionHeader title="Household Mailing List Preparation" />
+    <apex:outputText >
+        This utility helps create a campaign mailing list without duplicate contacts from the same household.  Click below to begin.<br />
+    </apex:outputText>
+<apex:form >
+<apex:message id="errormsg"/>
+
+<apex:commandButton action="{!RunReport}" value="Run Report" title="Run Report"/>
+</apex:form>
+
+ 
+ 
+ 
+</apex:page>
