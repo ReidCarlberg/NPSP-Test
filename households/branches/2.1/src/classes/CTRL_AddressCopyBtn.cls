@@ -53,30 +53,27 @@ public with sharing class CTRL_AddressCopyBtn {
         	
             //there must be a more efficient way to do this,
             //but for now, this will work
-            c = [select Id, Household__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry From Contact where id = :c.id]; 
+            c = [select Id, Household__c, Household__r.MailingStreet__c, Household__r.MailingCity__c, Household__r.MailingState__c, Household__r.MailingPostalCode__c, 
+            Household__r.MailingCountry__c,             
+            MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry From Contact where id = :c.id]; 
             
             if (c.Household__c != null){
-                h = [select id, MailingStreet__c, MailingCity__c, MailingState__c, MailingPostalCode__c, MailingCountry__c from Household__c where id = :c.Household__c];
-            }
-            else{
-                resulttext = system.label.AddressCopyFailure;
-                redirectPage = false;
-                showMsg(resulttext, ApexPages.Severity.ERROR);
-            }
-            
-            if (h != null){
+            	
+            	//get a reference to the HH object for updating
+            	h = new Household__c(id = c.Household__r.id);
             	
             	Note n;
-            	//if there's a street already listed on teh household
+            	
+            	//if there's a street already listed on the household
             	//save the old address as a note on the household object            	
-            	if (h.MailingStreet__c != null){
+            	if (c.Household__r.MailingStreet__c != null){
                     string notebody = '';
-                    notebody += h.MailingStreet__c + '  ';
-                    notebody += h.MailingCity__c + '  '; 
-                    notebody += h.MailingState__c + '  ';
-                    notebody += h.MailingPostalCode__c + '  ';
-                    notebody += h.MailingCountry__c;
-            		n = new Note(Title = 'ADDRESS UPDATE FROM CONTACT: ' + system.today() + ' BY: ' + User.Alias, ParentId = h.id, Body = notebody);
+                    notebody += c.Household__r.MailingStreet__c + '  ';
+                    notebody += c.Household__r.MailingCity__c + '  '; 
+                    notebody += c.Household__r.MailingState__c + '  ';
+                    notebody += c.Household__r.MailingPostalCode__c + '  ';
+                    notebody += c.Household__r.MailingCountry__c;
+            		n = new Note(Title = 'ADDRESS UPDATE FROM CONTACT: ' + system.today() + ' BY: ' + UserInfo.getName(), ParentId = h.id, Body = notebody);
             	}
             	
                 h.MailingStreet__c = c.MailingStreet;
@@ -98,6 +95,11 @@ public with sharing class CTRL_AddressCopyBtn {
                     redirectPage = false;
                     showMsg(resulttext, ApexPages.Severity.ERROR);
                 }            
+            }
+            else{
+                resulttext = system.label.AddressCopyFailure + ': ' + 'NULL HOUSEHOLD';
+                redirectPage = false;
+                showMsg(resulttext, ApexPages.Severity.ERROR);
             }
         }
         
