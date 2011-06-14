@@ -39,6 +39,15 @@
         <type>Checkbox</type>
     </fields>
     <fields>
+        <fullName>Enable_Update_Check__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Controls if the package automatically checks for new updates and versions.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Controls if the package automatically checks for new updates and versions.</inlineHelpText>
+        <label>Enable Update Check</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>Excluded_Account_Opp_Rectypes__c</fullName>
         <deprecated>false</deprecated>
         <externalId>false</externalId>
@@ -83,6 +92,15 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Has_Package_Update__c</fullName>
+        <externalId>false</externalId>
+        <label>Has Package Update</label>
+        <length>40</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Household_Contact_Roles_On__c</fullName>
         <defaultValue>false</defaultValue>
         <deprecated>false</deprecated>
@@ -109,6 +127,22 @@
         <inlineHelpText>Select which Contacts get Households: All, only those related to an Individual Account, or none.</inlineHelpText>
         <label>Household Rules</label>
         <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Last_Update_Check__c</fullName>
+        <externalId>false</externalId>
+        <label>Last Update Check</label>
+        <required>false</required>
+        <type>DateTime</type>
+    </fields>
+    <fields>
+        <fullName>Max_Package_Version__c</fullName>
+        <externalId>false</externalId>
+        <label>Max Package Version</label>
+        <length>12</length>
         <required>false</required>
         <type>Text</type>
         <unique>false</unique>
@@ -148,11 +182,30 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Package_Update_URL__c</fullName>
+        <externalId>false</externalId>
+        <label>Package Update URL</label>
+        <required>false</required>
+        <type>Url</type>
+    </fields>
+    <fields>
         <fullName>Rollup_N_Day_Value__c</fullName>
         <defaultValue>365</defaultValue>
         <externalId>false</externalId>
         <inlineHelpText>Provide a value for &apos;N day&apos; rollups, where &apos;N&apos; is the number of days from today into the past.  This value defaults to rollup over the past 365 days.</inlineHelpText>
         <label>Rollup N Day Value</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Update_Check_Interval__c</fullName>
+        <description>The number of days between NPSP callouts to check for new versions of this package. The default value is 90 days.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The number of days between NPSP callouts to check for new versions of this package. The default value is 90 days.</inlineHelpText>
+        <label>Update Check Interval</label>
         <precision>18</precision>
         <required>false</required>
         <scale>0</scale>

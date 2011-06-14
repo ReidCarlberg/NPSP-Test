@@ -309,7 +309,7 @@ MailingCity__c &amp; &quot;, &quot; &amp; MailingState__c &amp; &quot;  &quot; &
         <deprecated>false</deprecated>
         <description>Grace period defaults to 30 days. This can be adjusted in the Households Settings tab.</description>
         <externalId>false</externalId>
-        <formula>if (  MembershipEndDate__c  &lt;today(), if ( MembershipEndDate__c  &gt; ( TODAY() - 
+        <formula>if ( MembershipEndDate__c  &lt;today(), if (MembershipEndDate__c  &gt; ( TODAY() - 
 IF(NOT(ISNULL($Setup.npo02__Households_Settings__c.npo02__Membership_Grace_Period__c)), $Setup.npo02__Households_Settings__c.npo02__Membership_Grace_Period__c, 30)) , &quot;Grace Period&quot; , &quot;Expired&quot;) , if(isnull(MembershipEndDate__c ),&quot;&quot;,&quot;Current&quot;))</formula>
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
         <inlineHelpText>Current, expired, or grace period</inlineHelpText>
@@ -536,6 +536,17 @@ IF(NOT(ISNULL($Setup.npo02__Households_Settings__c.npo02__Membership_Grace_Perio
         <searchResultsAdditionalFields>Formula_MailingAddress__c</searchResultsAdditionalFields>
     </searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
+    <webLinks>
+        <fullName>Copy_Household_Address_to_Contacts</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <height>600</height>
+        <linkType>page</linkType>
+        <masterLabel>Copy Household Address to Contacts</masterLabel>
+        <openType>sidebar</openType>
+        <page>BTNHouseholdAddressCopy</page>
+        <protected>false</protected>
+    </webLinks>
     <webLinks>
         <fullName>New_Household_Member</fullName>
         <availability>online</availability>
