@@ -56,10 +56,10 @@ public without sharing class CTRL_CampaignDedupeBtn {
         if ((CampaignMailingListReportId == null) || (CampaignMailingListReportId == '')){   
             //try looking it up by name...
             Report r = new Report();
-            try{r = [select id from Report where Name = 'Campaign Household Mailing List'];}
+            try{r = [select id from Report where DeveloperName = 'NPSP_Campaign_Household_Mailing_List'];}
             catch(QueryException e){
-            	haveReportID = false;
-            	showmsg(e.getMessage(), ApexPages.Severity.ERROR);
+                haveReportID = false;
+                showmsg(e.getMessage(), ApexPages.Severity.ERROR);
             }
             
             if(haveReportID){
@@ -88,7 +88,7 @@ public without sharing class CTRL_CampaignDedupeBtn {
         }
         
         if (!haveReportID){
-            string errormsg = 'Could not find report. Add the ID of the mailing list report in the Household Settings tab. NOTE: Report type should be Campaigns with Contacts. Filter for Member Status does not contain \'Duplicate\'';
+            string errormsg = 'Could not find report. Create a report with the Report Unique Name of \'NPSP_Campaign_Household_Mailing_List\'. NOTE: Report type should be Campaigns with Contacts. Filter for Member Status does not contain \'Duplicate\'';
             showMsg(errormsg, ApexPages.Severity.ERROR);
         }
         
@@ -132,6 +132,8 @@ public without sharing class CTRL_CampaignDedupeBtn {
             //do not want null status
             if (m.Status==null) m.Status = statuses[0].label;
       
+            string newStatus = null;
+      /*
             //if this contact's household is already in the set, its a dupe from this household
             //also filter any we've already marked 
             if (HouseholdIDSet.contains(m.Contact.Household__c) && !m.Status.endsWith(DupeText)) {
@@ -144,20 +146,50 @@ public without sharing class CTRL_CampaignDedupeBtn {
                     }
             }
             else{
-            	HouseholdIDSet.add(m.Contact.Household__c);
-            }            
+                HouseholdIDSet.add(m.Contact.Household__c);
+            }      
+        */
+            /*PATCH SUBMITTED PER ISSUE 256 */
+        
+            //mark it as a duplicate if not already marked
+            //if the HH id is not in the set, it's not a duplicate.  If it's marked as such,
+            //(e.g. from a previous time the report was run), unmark it.            
+            if(HouseholdIDSet.contains(m.Contact.Household__c)){
+                if (!m.Status.endsWith(DupeText)) {
+                    newStatus =  m.Status + DupeText;
+                }
+            }
+             
+            else{
+                HouseholdIDSet.add(m.Contact.Household__c);
+                
+                if (m.Status.endsWith(DupeText)) {
+                    newStatus =  m.Status.substring(0, m.status.length()-DupeText.length());                
+                }
+            }
+            
+            if (newStatus != null) {     
+                
+                dupeMembers.add(new CampaignMember(Id = m.Id, Status = newStatus)); 
+                
+                if (!StatusLabels.containsKey(newStatus)) {
+                    newStatuses.add(new CampaignMemberStatus(label=newStatus, campaignid=campaign.Id, hasResponded=StatusLabels.get(m.Status), sortorder=nextSortOrder));
+                    StatusLabels.put(newStatus, StatusLabels.get(m.Status));
+                    nextSortOrder++;
+                }
+            }
         }
         
         integer returnsize = 0;
         try{
             if (!newStatuses.isEmpty()) insert newStatuses;
             if (!dupeMembers.isEmpty()){
-            	 update dupeMembers;
-            	 returnsize = dupeMembers.size();            	 
+                 update dupeMembers;
+                 returnsize = dupeMembers.size();                
             }
         }            
         catch (Exception e){
-            showMsg(e.getMessage(), ApexPages.Severity.ERROR);	
+            showMsg(e.getMessage(), ApexPages.Severity.ERROR);  
         }
         
         return returnsize;
