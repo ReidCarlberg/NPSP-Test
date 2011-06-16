@@ -42,7 +42,33 @@ public with sharing class householdsSettings {
     }
     //we can't do a DML in a getter, so I call it from the action of the page
     public PageReference getSettingsFirstTime() {
-        pageSettings = Households.getHouseholdsSettings();
+    	   
+        //set a null page reference
+        PageReference pr = null;    	    	
+    	
+    	//if we don't have default settings
+    	if (Households_Settings__c.getOrgDefaults() == null){
+    	   pageSettings = Households.getHouseholdsSettings();
+    	   
+    	   //no point in scheduling a rollup, since the default
+    	   //has it disabled, just call a page refresh to get to the 
+    	   //callout    	   
+    	   pr = ApexPages.currentPage();
+    	}
+    	
+    	//we can safely call out to 
+    	else{
+    	   pageSettings = Households.getHouseholdsSettings();
+    	   pr = scheduleRollups();
+    	   if (pr == null){
+    	   	   //else if we don't need to update anything, we 
+                //can go ahead and callout for update checks
+                if (pageSettings.Last_Update_Check__c == null){
+                    checkforupdates();
+                }
+            }
+        }    	   
+    	        
         //set the multi-select fields
         if(pageSettings.npo02__Excluded_Account_Opp_Types__c!=null){
         	acctTypes = pageSettings.npo02__Excluded_Account_Opp_Types__c.split(';',0);
@@ -60,16 +86,12 @@ public with sharing class householdsSettings {
         	contactRTs = pageSettings.npo02__Excluded_Contact_Opp_Rectypes__c.split(';',0);
         }
         
-        if (pageSettings.Last_Update_Check__c == null){
-        	checkforupdates();
+        
+        if (pr != null){
+        	pr.setRedirect(true);
         }
-        
-        
-        
-        //look for the scheduled job and schedule it if necessary
-        scheduleRollups();
             
-        return null;
+        return pr;
     }
     
     public List<SelectOption> contactRoles = new List<SelectOption>();
@@ -96,10 +118,12 @@ public with sharing class householdsSettings {
     List<SelectOption> Types;
     List<SelectOption> oppStages = new List<SelectOption>();
    
-    public void scheduleRollups(){
+    public PageReference scheduleRollups(){
+    	PageReference pr = null;
+    	
         if(pageSettings.Enable_Opp_Rollup_Triggers__c){
             Integer scheduledJobLimit = 10;
-            boolean alreadyScheduled = false;
+            boolean alreadyScheduled = false;            
             
             List<cronTrigger> scheduledRollups = [SELECT Id FROM cronTrigger limit :scheduledJobLimit];
             
@@ -127,13 +151,16 @@ public with sharing class householdsSettings {
 					} else {
 						pageSettings.Opp_Rollup_Scheduled_Job_Id__c = scheduledRollups[0].Id;
 					}
+					//if we update page settings, we need to call a redirect
                     update pageSettings;
+                	pr = ApexPages.currentPage();
                 	
                 } else {
                     showMsg(Label.Opportunity_Rollup_Scheduling_Error_Text, ApexPages.Severity.FATAL);
                 }
-            }
+            }    
         }
+        return pr;
     }
 
     public List<SelectOption> gethouseholdrules() {
