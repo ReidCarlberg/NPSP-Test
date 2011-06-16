@@ -37,11 +37,11 @@ trigger HouseholdAfter on Household__c (after update) {
             
             list<id> hhlist = new list<id>();
             for (Household__c h : trigger.new){
-                if(h.Name == 'REPLACE')
+                if(h.Name == system.Label.NameReplacementText)
                    hhlist.add(h.id);
-                else if (h.Informal_Greeting__c == 'REPLACE')
+                else if (h.Informal_Greeting__c == system.Label.NameReplacementText)
                    hhlist.add(h.id);
-                else if (h.Formal_Greeting__c == 'REPLACE')
+                else if (h.Formal_Greeting__c == system.Label.NameReplacementText)
                     hhlist.add(h.id);       
                 else if (h.SYSTEM_CUSTOM_NAMING__c != trigger.oldmap.get(h.id).SYSTEM_CUSTOM_NAMING__c)
                     hhlist.add(h.id);

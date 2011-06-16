@@ -53,23 +53,23 @@ trigger HouseholdBefore on Household__c (before update) {
                 
                 if (h.Name != null && h.Name != trigger.oldmap.get(h.id).Name && !customnameset.contains('Name')){
                     customname += 'Name' + ';';
-                }else if ((h.Name == null || h.Name == '' || h.Name == 'REPLACE') && customnameset.contains('Name')){
+                }else if ((h.Name == null || h.Name == '' || h.Name == system.Label.NameReplacementText) && customnameset.contains('Name')){
                     customname = customname.replace('Name;', ';');
-                    h.Name = 'REPLACE';
+                    h.Name = system.Label.NameReplacementText;
                 }
             
                 if (h.Informal_Greeting__c != null && h.Informal_Greeting__c != trigger.oldmap.get(h.id).Informal_Greeting__c && !customnameset.contains('Informal_Greeting__c')){
                     customname += 'Informal_Greeting__c' + ';';
-                }else if ((h.Informal_Greeting__c == null || h.Informal_Greeting__c == '' || h.Informal_Greeting__c == 'REPLACE') && customnameset.contains('Informal_Greeting__c')){                
+                }else if ((h.Informal_Greeting__c == null || h.Informal_Greeting__c == '' || h.Informal_Greeting__c == system.Label.NameReplacementText) && customnameset.contains('Informal_Greeting__c')){                
                     customname = customname.replace('Informal_Greeting__c;', ';');
-                    h.Informal_Greeting__c = 'REPLACE';
+                    h.Informal_Greeting__c = system.Label.NameReplacementText;
                 }
             
                 if (h.Formal_Greeting__c != null && h.Formal_Greeting__c != trigger.oldmap.get(h.id).Formal_Greeting__c && !customnameset.contains('Formal_Greeting__c')){
                     customname += 'Formal_Greeting__c' + ';';
-                }else if ((h.Formal_Greeting__c == null || h.Formal_Greeting__c == '' || h.Formal_Greeting__c == 'REPLACE') && customnameset.contains('Formal_Greeting__c')){
+                }else if ((h.Formal_Greeting__c == null || h.Formal_Greeting__c == '' || h.Formal_Greeting__c == system.Label.NameReplacementText) && customnameset.contains('Formal_Greeting__c')){
                     customname = customname.replace('Formal_Greeting__c;', ';');
-                    h.Formal_Greeting__c = 'REPLACE';
+                    h.Formal_Greeting__c = system.Label.NameReplacementText;
                 }
                 h.SYSTEM_CUSTOM_NAMING__c = customname;
             }
