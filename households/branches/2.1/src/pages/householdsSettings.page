@@ -79,7 +79,7 @@
 				title="Household Name Settings">
 				<apex:inputfield value="{!settings.Advanced_Household_Naming__c}"
 					rendered="{!settings.Advanced_Household_Naming__c&&!runningbatch}" />
-				<apex:outputtext value="Clicking this button will activate advanced household naming, and populate your existing formal greeting, informal greeting and household name fields with new names. THIS IS AN IRREVERSIBLE PROCESS. While you can deactive household naming, the newly populated names will remain.  Toggling on, off, then on again may have unpredictable results.  Once complete (100%), you may safely leave or refresh the page."
+				<apex:outputtext value="Clicking this button will activate advanced household naming, and populate your existing formal greeting, informal greeting and household name fields with new names. THIS IS AN IRREVERSIBLE PROCESS. While you can deactive household naming, the newly populated names will remain.  Toggling on, off, then on again may have unpredictable results.  DISABLE ALL CUSTOM VALIDATION RULES ON HOUSEHOLDS BEFORE ACTIVATING. Once complete (100%), you may safely leave or refresh the page."
 					rendered="{!!settings.Advanced_Household_Naming__c}" />
 				<apex:commandbutton id="launchactivation"
 					value="Activate Advanced Household Naming"
@@ -112,11 +112,11 @@
  
                 
                 <br/><br/>
-                <apex:outputText value="My Contacts & Organizations version: {0}">
+                <apex:outputText value="My Households version: {0}">
                     <apex:param value="{!myversion}"/>
                 </apex:outputText>
                 <br/><br/>
-                <apex:outputText value="The latest Contacts & Organizations version: {0}">
+                <apex:outputText value="The latest Households version: {0}">
                     <apex:param value="{!maxversion}"/>
                 </apex:outputText>
                 <br/><br/>
