@@ -29,7 +29,7 @@
 */
 global virtual without sharing class HouseholdNaming {
       
-    @future 
+    @future  
     global static void FutureUpdateNames(list<id> hhids){       
         //set our process control to avoid recursive updating on household records
         HouseholdProcessControl.inFutureContext = true;
@@ -435,8 +435,6 @@ global virtual without sharing class HouseholdNaming {
             system.assertEquals(hhidcontactmap.get(hhid)[0].Household__r.Formal_Greeting__c, hn.getFormalName(hhidcontactmap.get(hhid)));
         }       
         */
-    test.stopTest();
-        
-        
+    test.stopTest();        
     }  
 }
