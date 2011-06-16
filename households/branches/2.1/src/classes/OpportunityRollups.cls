@@ -245,7 +245,7 @@ global virtual class OpportunityRollups {
         soqlStatement += 'COUNT_DISTINCT(Id) NumberOfClosedOpps, MAX(npo02__CombinedRollupFieldset__c) RollupFieldset '; 
         soqlStatement += 'FROM Opportunity ';
         soqlStatement += 'WHERE isWon=true '; 
-        soqlStatement += 'AND (Amount > 0 OR Amount < 0) '; 
+        soqlStatement += 'AND (Amount != null) '; 
         if(areRecordTypesOnOpps()){
             soqlStatement += 'AND RecordTypeId NOT IN : recordTypesToExcludeAccts ';
         }
@@ -282,7 +282,7 @@ global virtual class OpportunityRollups {
         soqlStatement += 'SUM(Amount) TotalOppAmount, COUNT_DISTINCT(Id) NumberOfClosedOpps '; 
         soqlStatement += 'FROM Opportunity  '; 
         soqlStatement += 'WHERE isWon=true  '; 
-        soqlStatement += 'AND (Amount > 0 OR Amount < 0) '; 
+        soqlStatement += 'AND (Amount != null) '; 
         if(areRecordTypesOnOpps()){ 
             soqlStatement += 'AND RecordTypeId NOT IN : recordTypesToExcludeAccts '; 
         }
@@ -320,7 +320,7 @@ global virtual class OpportunityRollups {
             soqlStatement += 'COUNT_DISTINCT(Id) NumberOfClosedOpps, MAX(npo02__CombinedRollupFieldset__c) RollupFieldset  ';
             soqlStatement += 'FROM Opportunity ';
             soqlStatement += 'WHERE isWon=true  ';
-            soqlStatement += 'AND (Amount > 0 OR Amount < 0)  ';
+            soqlStatement += 'AND (Amount != null)  ';
             if(areRecordTypesOnOpps()){
                 soqlStatement += 'AND RecordTypeId IN : mbrRecordTypes ';
             }
@@ -594,7 +594,7 @@ global virtual class OpportunityRollups {
             soqlStatement += 'MAX(Opportunity.npo02__CombinedRollupFieldset__c) RollupFieldset ';
             soqlStatement += 'FROM OpportunityContactRole  ';
             soqlStatement += 'WHERE isPrimary=true AND opportunity.isWon=true '; 
-            soqlStatement += 'AND (Opportunity.Amount > 0 OR Opportunity.Amount < 0) '; 
+            soqlStatement += 'AND (Opportunity.Amount != null) '; 
             if(areRecordTypesOnOpps()){
                 soqlStatement += 'AND Opportunity.RecordTypeId NOT IN : recordTypesToExcludeCons ';
             }
@@ -651,7 +651,7 @@ global virtual class OpportunityRollups {
             soqlStatement += 'SUM(Opportunity.Amount) TotalOppAmount, COUNT_DISTINCT(Opportunity.Id) NumberOfClosedOpps ';
             soqlStatement += 'FROM OpportunityContactRole  ';
             soqlStatement += 'WHERE isPrimary=true AND opportunity.isWon=true  ';
-            soqlStatement += 'AND (Opportunity.Amount > 0 OR Opportunity.Amount < 0)  ';
+            soqlStatement += 'AND (Opportunity.Amount != null)  ';
             if(areRecordTypesOnOpps()){
                 soqlStatement += 'AND Opportunity.RecordTypeId NOT IN : recordTypesToExcludeCons ';
             }
@@ -755,7 +755,7 @@ global virtual class OpportunityRollups {
             soqlStatement += 'MAX(Opportunity.npo02__CombinedRollupFieldset__c) RollupFieldset ';
             soqlStatement += 'FROM OpportunityContactRole  ';
             soqlStatement += 'WHERE isPrimary=true AND opportunity.isWon=true '; 
-            soqlStatement += 'AND (Opportunity.Amount > 0 OR Opportunity.Amount < 0) '; 
+            soqlStatement += 'AND (Opportunity.Amount != null) '; 
             if(areRecordTypesOnOpps()){
                 soqlStatement += 'AND Opportunity.RecordTypeId NOT IN : recordTypesToExcludeCons ';
             }
@@ -812,7 +812,7 @@ global virtual class OpportunityRollups {
             soqlStatement += 'SUM(Opportunity.Amount) TotalOppAmount, COUNT_DISTINCT(Opportunity.Id) NumberOfClosedOpps ';
             soqlStatement += 'FROM OpportunityContactRole  ';
             soqlStatement += 'WHERE isPrimary=true AND opportunity.isWon=true  ';
-            soqlStatement += 'AND (Opportunity.Amount > 0 OR Opportunity.Amount < 0) '; 
+            soqlStatement += 'AND (Opportunity.Amount != null) '; 
             if(areRecordTypesOnOpps()){
                 soqlStatement += 'AND Opportunity.RecordTypeId NOT IN : recordTypesToExcludeCons ';
             }
@@ -949,7 +949,7 @@ global virtual class OpportunityRollups {
                     opportunity o = oldOpps.get(oid);
                     
                     
-                    if (o.isWon && (o.Amount > 0 || o.Amount < 0)) {
+                    if (o.isWon && o.Amount != null) {
                         includedRecordType = false;
                         if (areRecordTypesOnOpps()){
                             includedRecordType = mbrRecordTypes.contains((id)o.get('recordTypeId')) ||
@@ -980,7 +980,7 @@ global virtual class OpportunityRollups {
                 for (id oid : (newOpps.keySet())) {
                     opportunity o = newOpps.get(oid);
                     
-                    if (o.isWon && (o.Amount > 0 || o.Amount < 0)) {
+                    if (o.isWon && o.Amount != null) {
                         if (areRecordTypesOnOpps()){
                             includedRecordType = false;
                             includedRecordType = !mbrRecordTypes.contains((id)o.get('recordTypeId')) ||
@@ -1212,7 +1212,7 @@ global virtual class OpportunityRollups {
                 	   obj.put(urfs.Target_Field__c, r.get(x));
                 }
             }
-        }
+        } 
     }
 
     public static void updateRollupFromResultLastNDays(sobject obj, sobject r) {
