@@ -13,7 +13,7 @@ global without sharing class NPSPPkgVersionCheck {
         
         if (!System.Test.isRunningTest()){
             NAMESPACE_TO_CHECK = namespace;
-            ENDPOINT = 'http://foundation.kbromer.cs0.force.com/packages/NPSPVersionCheck?orgid=' + UserInfo.getOrganizationId().substring(0, 15) + '&pkgname=' + namespace;   
+            ENDPOINT = 'http://foundation.force.com/packages/NPSPVersionCheck?orgid=' + UserInfo.getOrganizationId().substring(0, 15) + '&pkgname=' + namespace;   
         }
             
         else{    
