@@ -272,7 +272,7 @@ public with sharing class householdsSettings {
     }
     
     public void checkForUpdates(){
-        NPSPPkgVersionCheck npvc = new NPSPPkgVersionCheck('npe01');        
+        NPSPPkgVersionCheck npvc = new NPSPPkgVersionCheck('npo02');        
         npvc.NPSPCheckVersion(true);
     }
     
