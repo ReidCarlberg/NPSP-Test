@@ -123,6 +123,15 @@ public with sharing class userRollupSettings {
         set<string> knownfields;    
         map<string, Schema.Sobjectfield> targetTokenMap = new map<string, Schema.Sobjectfield>();
         
+        //need to load current settings to not allow the user to point to the same target field
+        //twice
+        map<string, User_Rollup_Field_Settings__c> currentURFSMap = User_Rollup_Field_Settings__c.getAll();
+        set<string> currentTargetFieldSet = new set<string>();
+        for (string s : currentURFSMap.keySet()){
+        	if (currentURFSMap.get(s).Object_Name__c == targetObject)
+        	   currentTargetFieldSet.add(currentURFSMap.get(s).Target_Field__c);
+        }
+        
         if (targetobject == 'Contact'){
             targetTokenMap = Schema.SObjectType.Contact.fields.getMap().clone();
             knownfields = new set<string>{
@@ -172,6 +181,9 @@ public with sharing class userRollupSettings {
                 'numberofclosedopps__c'
            };     
         }
+        
+        if(!currentTargetFieldSet.isEmpty())
+            knownfields.addAll(currentTargetFieldSet);
         
         //pop out the known fields
         for (string s : knownfields){
