@@ -128,10 +128,20 @@ public with sharing class userRollupSettings {
         map<string, User_Rollup_Field_Settings__c> currentURFSMap = User_Rollup_Field_Settings__c.getAll();
         set<string> currentTargetFieldSet = new set<string>();
         for (string s : currentURFSMap.keySet()){
-        	if (currentURFSMap.get(s).Object_Name__c == targetObject)
-        	   currentTargetFieldSet.add(currentURFSMap.get(s).Target_Field__c);
-        }
-        
+        	if (currentURFSMap.get(s).Object_Name__c == targetObject){
+        	   string fieldname = (currentURFSMap.get(s).Target_Field__c).toLowerCase();
+        	   //we need to strip out the namespace
+        	   if (fieldname.contains('npo02')){
+        	   	   fieldname = fieldname.replace('npo02__', '');
+        	   	
+        	   }
+        	   else if (fieldname.contains('npe01')){
+        	   	   fieldname = fieldname.replace('npe01__', '');
+        	   }
+        	   currentTargetFieldSet.add(fieldname);
+        	}
+        }  
+         
         if (targetobject == 'Contact'){
             targetTokenMap = Schema.SObjectType.Contact.fields.getMap().clone();
             knownfields = new set<string>{
@@ -148,7 +158,7 @@ public with sharing class userRollupSettings {
                 'oppamountlastndays__c', 'oppamountlastyear__c', 'oppamountthisyear__c',
                 'oppamount2yearsago__c', 'total_household_gifts__c', 'oppamountlastndayshh__c',
                 'oppamountlastyearhh__c', 'oppamountthisyearhh__c', 'totalmembershipoppamount__c',
-                'numberofclosedopps__c', 'systemhouseholdprocessor__c'};
+                'numberofclosedopps__c', 'systemhouseholdprocessor__c', 'naming_exclusions__c'};
         }
         else if(targetobject == 'Account'){
             targetTokenMap = Schema.SobjectType.Account.fields.getMap().clone();
@@ -178,7 +188,8 @@ public with sharing class userRollupSettings {
                 'oppsclosedthisyear__c','oppsclosed2yearsago__c','numberOfmembershipopps__c',   
                 'smallestamount__c','totaloppamount__c','oppamountlastndays__c','oppamountlastyear__c',    
                 'oppamountthisyear__c','oppamount2yearsago__c','totalmembershipoppamount__c',    
-                'numberofclosedopps__c'
+                'numberofclosedopps__c', 'formal_greeting__c', 'informal_greeting__c', 'averageamount__c',
+                'system_custom_naming__c'
            };     
         }
         
