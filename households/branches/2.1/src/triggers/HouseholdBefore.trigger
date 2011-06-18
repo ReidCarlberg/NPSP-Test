@@ -28,51 +28,56 @@
     POSSIBILITY OF SUCH DAMAGE. 
 */
 trigger HouseholdBefore on Household__c (before update) {
-//updates household records to indicate where/if user changes to the household record are happening
-//and marks them as such so they won't be updated
-//need to use a process control class to avoid recursion when async updates occur
-//in non async updates, this won't fire again, so we don't need to worry
-    if (!HouseholdProcessControl.inFutureContext && trigger.isBefore){
+    
+    Households_Settings__c hs = Households.getHouseholdsSettings();
+    
+    if (!hs.DISABLE_HouseholdBefore_trigger__c){
+    
+        //updates household records to indicate where/if user changes to the household record are happening
+        //and marks them as such so they won't be updated
+        //need to use a process control class to avoid recursion when async updates occur
+        //in non async updates, this won't fire again, so we don't need to worry
+        if (!HouseholdProcessControl.inFutureContext && trigger.isBefore){
+    		
+        	if (hs != null && hs.Advanced_Household_Naming__c == true){
     	
-    	Households_Settings__c hs = Households.getHouseholdsSettings();
-    	
-    	if (hs != null && hs.Advanced_Household_Naming__c == true){
-    	
-            for (Household__c h : trigger.new){
-                string customname = '';
+                for (Household__c h : trigger.new){
+                    string customname = '';
             
-                if (h.SYSTEM_CUSTOM_NAMING__c == null)
-                    customname = ';';
-                else  
-                    customname = h.SYSTEM_CUSTOM_NAMING__c + ';';
+                    if (h.SYSTEM_CUSTOM_NAMING__c == null)
+                        customname = ';';
+                    
+                    else  
+                        customname = h.SYSTEM_CUSTOM_NAMING__c + ';';
                 
-                list<string> customnamelist = new list<string>();
-                set<string> customnameset = new set<string>();
-                customnamelist = customname.split(';');
-                customnameset.addall(customnamelist);           
+                    list<string> customnamelist = new list<string>();
+                    set<string> customnameset = new set<string>();
+                    customnamelist = customname.split(';');
+                    customnameset.addall(customnamelist);           
                 
-                if (h.Name != null && h.Name != trigger.oldmap.get(h.id).Name && !customnameset.contains('Name')){
-                    customname += 'Name' + ';';
-                }else if ((h.Name == null || h.Name == '' || h.Name == system.Label.NameReplacementText) && customnameset.contains('Name')){
-                    customname = customname.replace('Name;', ';');
-                    h.Name = system.Label.NameReplacementText;
-                }
+                    if (h.Name != null && h.Name != trigger.oldmap.get(h.id).Name && !customnameset.contains('Name')){
+                        customname += 'Name' + ';';
+                    }else if ((h.Name == null || h.Name == '' || h.Name == system.Label.NameReplacementText) && customnameset.contains('Name')){
+                        customname = customname.replace('Name;', ';');
+                        h.Name = system.Label.NameReplacementText;
+                    }
             
-                if (h.Informal_Greeting__c != null && h.Informal_Greeting__c != trigger.oldmap.get(h.id).Informal_Greeting__c && !customnameset.contains('Informal_Greeting__c')){
-                    customname += 'Informal_Greeting__c' + ';';
-                }else if ((h.Informal_Greeting__c == null || h.Informal_Greeting__c == '' || h.Informal_Greeting__c == system.Label.NameReplacementText) && customnameset.contains('Informal_Greeting__c')){                
-                    customname = customname.replace('Informal_Greeting__c;', ';');
-                    h.Informal_Greeting__c = system.Label.NameReplacementText;
-                }
+                    if (h.Informal_Greeting__c != null && h.Informal_Greeting__c != trigger.oldmap.get(h.id).Informal_Greeting__c && !customnameset.contains('Informal_Greeting__c')){
+                        customname += 'Informal_Greeting__c' + ';';
+                    }else if ((h.Informal_Greeting__c == null || h.Informal_Greeting__c == '' || h.Informal_Greeting__c == system.Label.NameReplacementText) && customnameset.contains('Informal_Greeting__c')){                
+                        customname = customname.replace('Informal_Greeting__c;', ';');
+                        h.Informal_Greeting__c = system.Label.NameReplacementText;
+                    }
             
-                if (h.Formal_Greeting__c != null && h.Formal_Greeting__c != trigger.oldmap.get(h.id).Formal_Greeting__c && !customnameset.contains('Formal_Greeting__c')){
-                    customname += 'Formal_Greeting__c' + ';';
-                }else if ((h.Formal_Greeting__c == null || h.Formal_Greeting__c == '' || h.Formal_Greeting__c == system.Label.NameReplacementText) && customnameset.contains('Formal_Greeting__c')){
-                    customname = customname.replace('Formal_Greeting__c;', ';');
-                    h.Formal_Greeting__c = system.Label.NameReplacementText;
+                    if (h.Formal_Greeting__c != null && h.Formal_Greeting__c != trigger.oldmap.get(h.id).Formal_Greeting__c && !customnameset.contains('Formal_Greeting__c')){
+                        customname += 'Formal_Greeting__c' + ';';
+                    }else if ((h.Formal_Greeting__c == null || h.Formal_Greeting__c == '' || h.Formal_Greeting__c == system.Label.NameReplacementText) && customnameset.contains('Formal_Greeting__c')){
+                        customname = customname.replace('Formal_Greeting__c;', ';');
+                        h.Formal_Greeting__c = system.Label.NameReplacementText;
+                    }
+                    h.SYSTEM_CUSTOM_NAMING__c = customname;
                 }
-                h.SYSTEM_CUSTOM_NAMING__c = customname;
-            }
+        	}
         }   
     }
 }

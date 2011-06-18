@@ -31,25 +31,29 @@ trigger HouseholdAfter on Household__c (after update) {
 
     Households_Settings__c hs = Households.getHouseholdsSettings();
     
-    //sends household names to be updated if 
-    if (!HouseholdProcessControl.inFutureContext && trigger.isAfter){
-        if (hs != null && hs.Advanced_Household_Naming__c == true){
-            
-            list<id> hhlist = new list<id>();
-            for (Household__c h : trigger.new){
-                if(h.Name == system.Label.NameReplacementText)
-                   hhlist.add(h.id);
-                else if (h.Informal_Greeting__c == system.Label.NameReplacementText)
-                   hhlist.add(h.id);
-                else if (h.Formal_Greeting__c == system.Label.NameReplacementText)
-                    hhlist.add(h.id);       
-                else if (h.SYSTEM_CUSTOM_NAMING__c != trigger.oldmap.get(h.id).SYSTEM_CUSTOM_NAMING__c)
-                    hhlist.add(h.id);
-            }
+    if (!hs.DISABLE_HouseholdAfter_trigger__c){
     
-            if (!hhlist.isEmpty()){
-                Householdnaming hn = new HouseholdNaming();
-                hn.UpdateNames(hhlist);
+        //sends household names to be updated if 
+        if (!HouseholdProcessControl.inFutureContext && trigger.isAfter){
+            if (hs != null && hs.Advanced_Household_Naming__c == true){
+            
+                list<id> hhlist = new list<id>();
+                
+                for (Household__c h : trigger.new){
+                    if(h.Name == system.Label.NameReplacementText)
+                       hhlist.add(h.id);
+                    else if (h.Informal_Greeting__c == system.Label.NameReplacementText)
+                       hhlist.add(h.id);
+                    else if (h.Formal_Greeting__c == system.Label.NameReplacementText)
+                        hhlist.add(h.id);       
+                    else if (h.SYSTEM_CUSTOM_NAMING__c != trigger.oldmap.get(h.id).SYSTEM_CUSTOM_NAMING__c)
+                        hhlist.add(h.id);
+                }
+    
+               if (!hhlist.isEmpty()){
+                    Householdnaming hn = new HouseholdNaming();
+                    hn.UpdateNames(hhlist);
+                }
             }
         }
     }

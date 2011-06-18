@@ -29,16 +29,18 @@
 */
 trigger Households on Contact (after insert, after update, after delete) {
 
+    Households_Settings__c hs = Households.getHouseholdsSettings();
     
-    if( Trigger.isAfter && Trigger.isInsert ){
-        Households process = new Households(Trigger.new, Trigger.old, Households.triggerAction.afterInsert);
+    if (!hs.DISABLE_Households_trigger__c){
+        if( Trigger.isAfter && Trigger.isInsert ){
+            Households process = new Households(Trigger.new, Trigger.old, Households.triggerAction.afterInsert);
+        }
+        if( Trigger.isAfter && Trigger.isUpdate ){ 
+            //after update is going to call the version that takes a map as well
+            Households process = new Households(Trigger.new, Trigger.old, Households.triggerAction.afterUpdate, trigger.newMap, trigger.oldMap);
+        }
+        if( Trigger.isAfter && Trigger.isDelete ){
+            Households process = new Households(Trigger.old, null, Households.triggerAction.afterDelete);
+        }
     }
-    if( Trigger.isAfter && Trigger.isUpdate ){ 
-        //after update is going to call the version that takes a map as well
-        Households process = new Households(Trigger.new, Trigger.old, Households.triggerAction.afterUpdate, trigger.newMap, trigger.oldMap);
-    }
-    if( Trigger.isAfter && Trigger.isDelete ){
-        Households process = new Households(Trigger.old, null, Households.triggerAction.afterDelete);
-    }
-     
 }
