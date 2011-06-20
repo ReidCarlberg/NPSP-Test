@@ -126,7 +126,7 @@ public with sharing class CTRL_AddressCopyBtn {
                     notebody += con.MailingState + '  ';
                     notebody += con.MailingPostalCode + '  ';
                     notebody += con.MailingCountry;
-                    n = new Note(Title = 'Old address through: ' + system.today(), ParentId = con.id, Body = notebody);
+                    n = new Note(Title = 'ADDRESS UPDATE FROM HOUSEHOLD: ' + system.today() + ' BY: ' + UserInfo.getName(), ParentId = con.id, Body = notebody);
                 	notestoinsert.add(n);
                 }	
             	
