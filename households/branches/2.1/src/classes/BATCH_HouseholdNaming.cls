@@ -63,37 +63,37 @@ global class BATCH_HouseholdNaming implements Database.Batchable<SObject> {
             //sort contacts by household
             for (sobject s : result){               
             	Contact c = (Contact)s; 
-                if (!hhIDContactMap.containskey(c.Household__r.id))
-                    hhidContactMap.put(c.Household__r.id, new list<Contact>{c});
+                if (!hhIDContactMap.containskey(c.npo02__Household__r.id))
+                    hhidContactMap.put(c.npo02__Household__r.id, new list<Contact>{c});
                 else{
-                    list<Contact> clist = hhidContactMap.get(c.Household__r.id);
+                    list<Contact> clist = hhidContactMap.get(c.npo02__Household__r.id);
                     clist.add(c);
                 }
             }
         
             //get the actual household objects being operating on so we can update them if needed
-            map<id, Household__c> Householdsforupdate = new map<id, Household__c>([select id, SYSTEM_CUSTOM_NAMING__c, Name, Formal_Greeting__c, 
-            Informal_Greeting__c from Household__c where id IN :hhidContactMap.keyset()]);
+            map<id, npo02__Household__c> Householdsforupdate = new map<id, npo02__Household__c>([select id, npo02__SYSTEM_CUSTOM_NAMING__c, Name, npo02__Formal_Greeting__c, 
+            npo02__Informal_Greeting__c from npo02__Household__c where id IN :hhidContactMap.keyset()]);
             
-            list<Household__c> updatelist = new list<Household__c>();
+            list<npo02__Household__c> updatelist = new list<npo02__Household__c>();
         
             for (id hhid : hhidContactMap.keyset()){
             	boolean needsupdate = false;
             	
-            	Household__c h = new Household__c();
+            	npo02__Household__c h = new npo02__Household__c();
             	h = Householdsforupdate.get(hhid);
                 
-                if (h.SYSTEM_CUSTOM_NAMING__c != null)
-                    h.SYSTEM_CUSTOM_NAMING__c += ';';                              	         
+                if (h.npo02__SYSTEM_CUSTOM_NAMING__c != null)
+                    h.npo02__SYSTEM_CUSTOM_NAMING__c += ';';                              	         
                 else
-                    h.SYSTEM_CUSTOM_NAMING__c = '';                                      
+                    h.npo02__SYSTEM_CUSTOM_NAMING__c = '';                                      
                 
-                if(h.Formal_Greeting__c != null && !h.SYSTEM_CUSTOM_NAMING__c.contains('Formal_Greeting__c')){
-                    h.SYSTEM_CUSTOM_NAMING__c += 'Formal_Greeting__c' + ';';
+                if(h.npo02__Formal_Greeting__c != null && !h.npo02__SYSTEM_CUSTOM_NAMING__c.contains('Formal_Greeting__c')){
+                    h.npo02__SYSTEM_CUSTOM_NAMING__c += 'Formal_Greeting__c' + ';';
                     needsupdate = true;                  	
                 }
-                if (h.Informal_Greeting__c != null && !h.SYSTEM_CUSTOM_NAMING__c.contains('Informal_Greeting__c')){
-                	h.SYSTEM_CUSTOM_NAMING__c += 'Informal_Greeting__c' + ';';
+                if (h.npo02__Informal_Greeting__c != null && !h.npo02__SYSTEM_CUSTOM_NAMING__c.contains('Informal_Greeting__c')){
+                	h.npo02__SYSTEM_CUSTOM_NAMING__c += 'Informal_Greeting__c' + ';';
                 	needsupdate = true;                	
                 }    
 
@@ -111,8 +111,8 @@ global class BATCH_HouseholdNaming implements Database.Batchable<SObject> {
                 //if we never found a matching default name its been customized, so
                 //add them to the update list and mark the custom naming field accordingly
                 if (!hasnamematch){
-                	if (!h.SYSTEM_CUSTOM_NAMING__c.contains('Name'))
-                	   h.SYSTEM_CUSTOM_NAMING__c += 'Name' + ';';
+                	if (!h.npo02__SYSTEM_CUSTOM_NAMING__c.contains('Name'))
+                	   h.npo02__SYSTEM_CUSTOM_NAMING__c += 'Name' + ';';
                 	
                 	needsupdate = true;                	
                 }
@@ -130,7 +130,7 @@ global class BATCH_HouseholdNaming implements Database.Batchable<SObject> {
         set<id> hhids = new set<id>();
         for (sobject s : result){
             Contact c = (Contact)s;        
-            hhids.add(c.household__r.id);
+            hhids.add(c.npo02__household__r.id);
         }
         list<id> hhidlist = new list<id>();
         hhidlist.addall(hhids);

@@ -6,6 +6,7 @@ public with sharing class householdsSettings {
      /********Vars for PKG Update Info *************/
     public string getMyVersion(){return string.valueof(Package.Version.Request);}
     public string getMaxVersion(){return pageSettings.Max_Package_Version__c;}
+    public string getUpdateURL(){return pageSettings.Package_Update_URL__c;}
     public string getLastUpdate(){      
         DateTime d = pageSettings.Last_Update_Check__c;
         string datestring = '';

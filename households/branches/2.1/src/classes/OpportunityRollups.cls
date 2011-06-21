@@ -66,10 +66,10 @@ global virtual class OpportunityRollups {
                 oppTypesToExcludeCons = new set<string>(rollupSettings.Excluded_Contact_Opp_Types__c.split(';'));
             }
             if (rollupSettings.Excluded_Account_Opp_Types__c != null) {
-                oppTypesToExcludeAccts = new set<string>(rollupSettings.Excluded_Contact_Opp_Types__c.split(';'));
+                oppTypesToExcludeAccts = new set<string>(rollupSettings.Excluded_Account_Opp_Types__c.split(';'));
             }
             if (rollupSettings.Rollup_N_Day_Value__c != null){
-            	ndayRollup = string.valueOf(rollupSettings.Rollup_N_Day_Value__c.intValue());
+            	ndayRollup = string.valueOf(rollupSettings.Rollup_N_Day_Value__c.intValue()); 
             }
             if (rollupSettings.Membership_Record_Types__c != null) {
                 set<string> mbrRecordTypeNames = new set<string>(rollupSettings.Membership_Record_Types__c.split(';'));

@@ -254,11 +254,11 @@ global virtual without sharing class HouseholdNaming {
         
         //start the activation batch process, used only once, on initial click
         //to enable batch rollups
-        BATCH_HouseholdNaming batch = new BATCH_HouseholdNaming('SELECT id,Household__r.id, ' + 
-        'household__r.Name, Household__r.Informal_Greeting__c, Household__r.Formal_Greeting__c, ' +
-        'household__r.SYSTEM_CUSTOM_NAMING__c, Naming_Exclusions__c,  Firstname, lastname, ' +
+        BATCH_HouseholdNaming batch = new BATCH_HouseholdNaming('SELECT id, npo02__Household__r.id, ' + 
+        'npo02__household__r.Name, npo02__Household__r.npo02__Informal_Greeting__c, npo02__Household__r.npo02__Formal_Greeting__c, ' +
+        'npo02__household__r.npo02__SYSTEM_CUSTOM_NAMING__c, npo02__Naming_Exclusions__c,  Firstname, lastname, ' +
         'salutation ' +
-        'FROM Contact where Household__c != null ' +
+        'FROM Contact where npo02__Household__c != null ' +
         (isTest ? ' and lastname=\'%LastName0%\' ' : '') + 
         'LIMIT 200', true);
         id batchProcessId = database.executeBatch(batch, batchSize);                
