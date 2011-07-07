@@ -1620,7 +1620,7 @@ global virtual class OpportunityRollups {
         isTest = true;
         String giftRecordTypeNameForTests = RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
         String membershipRecordTypeNameForTests = RecordTypes.getRecordTypeNameForMembershipTests('Opportunity');
-        
+        if(membershipRecordTypeNameForTests!=''){
             Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
                 new Households_Settings__c (
                     Household_Rules__c = Households.ALL_PROCESSOR,
@@ -1709,7 +1709,7 @@ global virtual class OpportunityRollups {
             System.AssertEquals ( 200 , UpdatedCon.npo02__household__r.npo02__TotalOppAmount__c );      
             System.AssertEquals ( 200 , UpdatedCon.npo02__OppAmountThisYear__c);
             System.AssertEquals ( 0 , UpdatedCon.npo02__OppAmountLastYear__c);
-        
+        } 
     }
     
  static testMethod void testMemberRollup () {
