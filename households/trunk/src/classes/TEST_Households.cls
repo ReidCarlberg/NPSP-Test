@@ -412,7 +412,7 @@ private class TEST_Households {
         insert ocr;
         system.assertEquals(system.label.DefaultHouseholdTransactionCurrency + '100.00',Households.getHouseholdTransactionTotal(h.id));
     }
-     
+    
     /// <name> getHouseholdTransactionTotal </name>
     /// <summary>  </summary>
     static testMethod void getHouseholdLastTransaction_test()

@@ -81,6 +81,15 @@
         <type>Date</type>
     </fields>
     <fields>
+        <fullName>Formal_Greeting__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Formal Greeting</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>TextArea</type>
+    </fields>
+    <fields>
         <fullName>Formula_MailingAddress__c</fullName>
         <deprecated>false</deprecated>
         <externalId>false</externalId>
@@ -124,6 +133,15 @@ MailingCity__c &amp; &quot;, &quot; &amp; MailingState__c &amp; &quot;  &quot; &
         <trackHistory>false</trackHistory>
         <type>Number</type>
         <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Informal_Greeting__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Informal Greeting</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>TextArea</type>
     </fields>
     <fields>
         <fullName>LargestAmount__c</fullName>
@@ -291,9 +309,10 @@ MailingCity__c &amp; &quot;, &quot; &amp; MailingState__c &amp; &quot;  &quot; &
     <fields>
         <fullName>Membership_Status__c</fullName>
         <deprecated>false</deprecated>
-        <description>note: grace period term is hard coded as 1 month, may need to be changed for some clients</description>
+        <description>Grace period defaults to 30 days. This can be adjusted in the Households Settings tab.</description>
         <externalId>false</externalId>
-        <formula>if (  MembershipEndDate__c  &lt;today(), if ( MembershipEndDate__c  &gt; ( TODAY() - 31 ) , &quot;Grace Period&quot; , &quot;Expired&quot;) , if(isnull(MembershipEndDate__c ),&quot;&quot;,&quot;Current&quot;))</formula>
+        <formula>if ( MembershipEndDate__c  &lt;today(), if (MembershipEndDate__c  &gt; ( TODAY() - 
+IF(NOT(ISNULL($Setup.npo02__Households_Settings__c.npo02__Membership_Grace_Period__c)), $Setup.npo02__Households_Settings__c.npo02__Membership_Grace_Period__c, 30)) , &quot;Grace Period&quot; , &quot;Expired&quot;) , if(isnull(MembershipEndDate__c ),&quot;&quot;,&quot;Current&quot;))</formula>
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
         <inlineHelpText>Current, expired, or grace period</inlineHelpText>
         <label>Membership Status</label>
@@ -345,7 +364,7 @@ MailingCity__c &amp; &quot;, &quot; &amp; MailingState__c &amp; &quot;  &quot; &
         <defaultValue>0</defaultValue>
         <deprecated>false</deprecated>
         <externalId>false</externalId>
-        <label>Total Gifts Last 365 Days</label>
+        <label>Total Gifts Last N Days</label>
         <precision>16</precision>
         <required>false</required>
         <scale>2</scale>
@@ -394,7 +413,7 @@ MailingCity__c &amp; &quot;, &quot; &amp; MailingState__c &amp; &quot;  &quot; &
         <defaultValue>0</defaultValue>
         <deprecated>false</deprecated>
         <externalId>false</externalId>
-        <label>Number of Gifts Last 365 Days</label>
+        <label>Number of Gifts Last N Days</label>
         <precision>18</precision>
         <required>false</required>
         <scale>0</scale>
@@ -427,6 +446,30 @@ MailingCity__c &amp; &quot;, &quot; &amp; MailingState__c &amp; &quot;  &quot; &
         <trackHistory>false</trackHistory>
         <type>Number</type>
         <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>SYSTEM_CUSTOM_NAMING__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>_SYSTEM: CUSTOM NAMING</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Name</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Formal_Greeting__c</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Informal_Greeting__c</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackHistory>false</trackHistory>
+        <type>MultiselectPicklist</type>
+        <visibleLines>3</visibleLines>
     </fields>
     <fields>
         <fullName>SmallestAmount__c</fullName>
@@ -467,8 +510,13 @@ MailingCity__c &amp; &quot;, &quot; &amp; MailingState__c &amp; &quot;  &quot; &
     <label>Household</label>
     <listViews>
         <fullName>All</fullName>
+        <columns>NAME</columns>
+        <columns>Formal_Greeting__c</columns>
+        <columns>Informal_Greeting__c</columns>
+        <columns>SYSTEM_CUSTOM_NAMING__c</columns>
         <filterScope>Everything</filterScope>
         <label>All</label>
+        <language>en_US</language>
     </listViews>
     <nameField>
         <label>Household Name</label>
@@ -491,6 +539,17 @@ MailingCity__c &amp; &quot;, &quot; &amp; MailingState__c &amp; &quot;  &quot; &
         <searchResultsAdditionalFields>Formula_MailingAddress__c</searchResultsAdditionalFields>
     </searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
+    <webLinks>
+        <fullName>Copy_Household_Address_to_Contacts</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <height>600</height>
+        <linkType>page</linkType>
+        <masterLabel>Copy Household Address to Contacts</masterLabel>
+        <openType>sidebar</openType>
+        <page>BTNHouseholdAddressCopy</page>
+        <protected>false</protected>
+    </webLinks>
     <webLinks>
         <fullName>New_Household_Member</fullName>
         <availability>online</availability>

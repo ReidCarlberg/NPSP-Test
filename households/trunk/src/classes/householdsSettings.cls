@@ -1,6 +1,31 @@
 public with sharing class householdsSettings {
     
     public Households_Settings__c pageSettings = new Households_Settings__c();
+    public boolean runningBatch {get; set;}
+    
+     /********Vars for PKG Update Info *************/
+    public string getMyVersion(){return string.valueof(Package.Version.Request);}
+    public string getMaxVersion(){return pageSettings.Max_Package_Version__c;}
+    public string getUpdateURL(){return pageSettings.Package_Update_URL__c;}
+    public string getLastUpdate(){      
+        DateTime d = pageSettings.Last_Update_Check__c;
+        string datestring = '';
+        if (d != null)
+            datestring = d.format('MMMMM dd, yyyy hh:mm:ss a');
+        return datestring;
+    }
+    public string getpkgupdatestatus(){
+        string status = pageSettings.Has_Package_Update__c;
+        if (status == 'true')
+           status = 'New Update Available';
+        else if (status == 'false')
+           status = 'No New Updates Available';
+        else
+           status = status;
+           
+        return status;
+    }
+    /*********************************************/
     
     
     public householdsSettings(){
@@ -8,7 +33,8 @@ public with sharing class householdsSettings {
         acctTypes = new List<string>();
         contactRTs = new List<string>();
         contactTypes = new List<string>();
-        
+        if (runningbatch == null)
+            runningbatch = false;
     }
     
     public Households_Settings__c getSettings() {
@@ -17,7 +43,33 @@ public with sharing class householdsSettings {
     }
     //we can't do a DML in a getter, so I call it from the action of the page
     public PageReference getSettingsFirstTime() {
-        pageSettings = Households.getHouseholdsSettings();
+    	   
+        //set a null page reference
+        PageReference pr = null;    	    	
+    	
+    	//if we don't have default settings
+    	if (Households_Settings__c.getOrgDefaults() == null){
+    	   pageSettings = Households.getHouseholdsSettings();
+    	   
+    	   //no point in scheduling a rollup, since the default
+    	   //has it disabled, just call a page refresh to get to the 
+    	   //callout    	   
+    	   pr = ApexPages.currentPage();
+    	}
+    	
+    	//we can safely call out to 
+    	else{
+    	   pageSettings = Households.getHouseholdsSettings();
+    	   pr = scheduleRollups();
+    	   if (pr == null){
+    	   	   //else if we don't need to update anything, we 
+                //can go ahead and callout for update checks
+                if (pageSettings.Last_Update_Check__c == null){
+                    checkforupdates();
+                }
+            }
+        }    	   
+    	        
         //set the multi-select fields
         if(pageSettings.npo02__Excluded_Account_Opp_Types__c!=null){
         	acctTypes = pageSettings.npo02__Excluded_Account_Opp_Types__c.split(';',0);
@@ -34,10 +86,13 @@ public with sharing class householdsSettings {
          if(pageSettings.npo02__Excluded_Contact_Opp_Rectypes__c!=null){
         	contactRTs = pageSettings.npo02__Excluded_Contact_Opp_Rectypes__c.split(';',0);
         }
-        //look for the scheduled job and schedule it if necessary
-        scheduleRollups();
+        
+        
+        if (pr != null){
+        	pr.setRedirect(true);
+        }
             
-        return null;
+        return pr;
     }
     
     public List<SelectOption> contactRoles = new List<SelectOption>();
@@ -64,10 +119,12 @@ public with sharing class householdsSettings {
     List<SelectOption> Types;
     List<SelectOption> oppStages = new List<SelectOption>();
    
-    public void scheduleRollups(){
+    public PageReference scheduleRollups(){
+    	PageReference pr = null;
+    	
         if(pageSettings.Enable_Opp_Rollup_Triggers__c){
             Integer scheduledJobLimit = 10;
-            boolean alreadyScheduled = false;
+            boolean alreadyScheduled = false;            
             
             List<cronTrigger> scheduledRollups = [SELECT Id FROM cronTrigger limit :scheduledJobLimit];
             
@@ -95,13 +152,16 @@ public with sharing class householdsSettings {
 					} else {
 						pageSettings.Opp_Rollup_Scheduled_Job_Id__c = scheduledRollups[0].Id;
 					}
+					//if we update page settings, we need to call a redirect
                     update pageSettings;
+                	pr = ApexPages.currentPage();
                 	
                 } else {
                     showMsg(Label.Opportunity_Rollup_Scheduling_Error_Text, ApexPages.Severity.FATAL);
                 }
-            }
+            }    
         }
+        return pr;
     }
 
     public List<SelectOption> gethouseholdrules() {
@@ -191,6 +251,30 @@ public with sharing class householdsSettings {
         showMsg('Households Settings updated',ApexPages.Severity.INFO);
         //schedule the rollup if need be
         scheduleRollups();
+    }
+    
+    public void activateHouseholdNaming(){
+    	runningBatch = true; 
+    	    	
+    	pageSettings.Advanced_Household_Naming__c = true;
+    	update pageSettings;
+    	
+    	//call advanced rolup batch process
+    	HouseholdNaming hn = new Householdnaming();
+    	hn.ActivateAdvancedGreetings(false);
+    	
+    	/*
+    	//refresh page
+    	PageReference pr;// = new PageReference();
+        pr.setRedirect(true);
+        return pr;
+    	*/
+    	
+    }
+    
+    public void checkForUpdates(){
+        NPSPPkgVersionCheck npvc = new NPSPPkgVersionCheck('npo02');        
+        npvc.NPSPCheckVersion(true);
     }
     
      public static testMethod void TEST_householdsSettings() {

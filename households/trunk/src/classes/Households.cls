@@ -27,7 +27,7 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE.
 */
-global class Households {
+global without sharing class Households { 
     
     //One-to-One value for system processor field
     public static String ALL_PROCESSOR = 'All New or Edited Contacts';
@@ -44,85 +44,112 @@ global class Households {
     /// <summary> contains possible actions for a trigger </summary>
     public enum triggerAction {beforeInsert, beforeUpdate, beforeDelete, afterInsert, afterUpdate, afterDelete, afterUndelete}
 
+    //need a new constructor overload for updates that provides the maps as well, we can dump them
+    //in as null values for inserts/deletes
+    public Households(Contact[] contacts, Contact[] oldContacts, triggerAction ta){
+        //zoinks! call the newer version 
+        this(contacts, oldContacts, ta, null, null);
+    }
+    
     /// <name> Households </name>
     /// <summary> Overloads the Households object constructor to handle Household processing </summary>
     /// <param name="households"> Household objects that are being triggered </param>
     /// <param name="oldHouseholds"> Household object values before trigger event </param>
     /// <param name="ta"> Trigger action that is occuring </param>
-    public Households(Contact[] contacts, Contact[] oldContacts, triggerAction ta)
-    {
-        
+    public Households(Contact[] contacts, Contact[] oldContacts, triggerAction ta, map<id, Contact> newcmap, map<id, Contact> oldcmap)
+    {        
         Households_Settings__c currentHouseholdsSettings = getHouseholdsSettings();
         List<Contact> householdInserts = new List<Contact>();
         List<Contact> contactEvaluations = new List<Contact>();
         List<Contact> householdDeletes = new List<Contact>();
-
+        list<id> householdnameupdates = new list<id>();
+     
         Integer i = 0;
         for(Contact c : contacts) {
-            //AFTER INSERT
+            //AFTER INSERT - NOTE: naming has to be handled inside othe household inserts, 
+            //since we don't have the contact's household ids until after the insert
+            //we'll check the trigger action again there to make sure it doesn't run twice
             if ( ta==triggerAction.afterInsert )
             {
                 //If the user has chosen for all Contacts to have households, add them all to the list
                 //for Household creation
                 if (c.Household__c == null && currentHouseholdsSettings.Household_Rules__c == ALL_PROCESSOR)
-                {
                     householdInserts.add(c);
-                }
                 //If the user has chosen for only Contacts connected to Individual Accounts to have Households
                 //add them all to a list for evaluation
                 else if (c.Household__c == null && currentHouseholdsSettings.Household_Rules__c == ALL_INDIVIDUALS_PROCESSOR)
-                {
                     contactEvaluations.add(c);
-                }
+                else if  (c.Household__c != null)
+                    householdnameupdates.add(c.Household__c);
             }
 
             //AFTER UPDATE
             if ( ta==triggerAction.afterUpdate )
             {
+                //if we're doing an update, pile up all of the households into a list
+                //and send it to our naming code for action
+                //first contact's names to their old names, and see if anything changed
+                //salutation
                 if (c.Household__c == null && currentHouseholdsSettings.Household_Rules__c == ALL_PROCESSOR)
-                {
                     householdInserts.add(c);
-                } else
-                if (c.Household__c == null && currentHouseholdsSettings.Household_Rules__c == ALL_INDIVIDUALS_PROCESSOR)
-                {
+                else if (c.Household__c == null && currentHouseholdsSettings.Household_Rules__c == ALL_INDIVIDUALS_PROCESSOR)
                     contactEvaluations.add(c);
-                }
+                
+                if (newcmap.get(c.id).Salutation != oldcmap.get(c.id).Salutation)
+                    householdnameupdates.add(c.Household__c);
+                else if (newcmap.get(c.id).FirstName != oldcmap.get(c.id).Firstname )
+                    householdnameupdates.add(c.Household__c);
+                else if (newcmap.get(c.id).LastName != oldcmap.get(c.id).LastName)
+                    householdnameupdates.add(c.Household__c);    
+                else if (newcmap.get(c.id).Household__c != oldcmap.get(c.id).Household__c)
+                    householdnameupdates.add(c.Household__c);
+                else if (newcmap.get(c.id).Naming_Exclusions__c != oldcmap.get(c.id).Naming_Exclusions__c)
+                    householdnameupdates.add(c.Household__c);
             }
-
-            //AFTER DELETE
-            if ( ta==triggerAction.afterDelete )
-            {
-                if (c.Household__c != null )
-                {
-                    householdDeletes.add(c);
-                }
+           
+           
+            if ( ta==triggerAction.afterDelete ){
+                    if (c.Household__c != null )
+                        householdDeletes.add(c);
+                
             }
-
             i += 1;
         }
 
-        if (householdInserts.size() > 0)
-        {
-            insertHousehold(householdInserts);
-        }
-        if (contactEvaluations.size() > 0)
-        {
-            evaluateContacts(contactEvaluations);
-        }
-        if (householdDeletes.size() > 0)
-        {
+
+        if (householdInserts.size() > 0 && ta==triggerAction.afterInsert)        
+            insertHousehold(householdInserts, true);
+        else if (householdInserts.size() > 0 && ta==triggerAction.afterUpdate)
+            insertHousehold(householdInserts, false);
+        
+        if (contactEvaluations.size() > 0 && ta==triggerAction.afterInsert)        
+            evaluateContacts(contactEvaluations, true);
+        else if (contactEvaluations.size() > 0 && ta==triggerAction.afterUpdate)
+            evaluateContacts(contactEvaluations, false);
+        
+        if (householdDeletes.size() > 0)        
             deleteHousehold(householdDeletes);
+        
+        if (currentHouseholdsSettings.Advanced_Household_Naming__c == true && householdnameupdates.size() > 0){
+                          
+            if (currentHouseholdsSettings.Async_Household_Naming__c == true)
+                HouseholdNaming.FutureUpdateNames(householdnameupdates);
+            else{
+                HouseholdNaming hn = new HouseholdNaming();
+                hn.UpdateNames(householdnameupdates);
+            }                   
         }
-
     }
-
-
+    
     /// <name> insertHousehold </name>
     /// <summary> Creates a new Household record when a Contact does not have one </summary>
     /// <param name="Contact"> List of contacts meeting trigger criteria </param>
-    public static void insertHousehold(Contact[] contacts)
+    public static void insertHousehold(Contact[] contacts, boolean isInsertTrigger)
     {
         List<Household__c> householdInserts = new List<Household__c>();
+        //reload to evaluate insert criteria
+        Households_Settings__c currentHouseholdsSettings = getHouseholdsSettings();
+
         for(Contact c : contacts)
         {
             Household__c h = new Household__c();
@@ -140,11 +167,14 @@ global class Households {
             householdInserts.add(h);
         }
         List<Contact> contactUpdates = new List<Contact>();
+        
         if (householdInserts.size() > 0)
-        {
-        	
+        {            
+            //THIS NEEDS TO HANDLED -
             Database.SaveResult[] lsr = Database.insert(householdInserts, false);
             
+            
+                        
             Integer i = 0;
             for (Contact c : contacts)
             {
@@ -156,33 +186,43 @@ global class Households {
                     clone.Household__c = lsr[i].getId();
                     contactUpdates.add(clone);
                 }
+                else{
+                	Database.Error err = lsr[i].getErrors()[0];                	
+                	c.addError(err.getMessage());
+                }
                 i += 1;
             }
             
-/*
-        	insert householdInserts;
-        	Integer i = 0;
-            for (Contact c : contacts)
-            {
-            	Contact clone = c.Clone(true,false);
-                    clone.Household__c = householdInserts[i].Id;
-                    contactUpdates.add(clone);
+            if (contactUpdates.size() > 0)
+                Database.SaveResult[] dbsr = Database.update(contactUpdates, false);
+        
+            //SETTING CHECK HERE!!!
+            if (currentHouseholdsSettings.Advanced_Household_Naming__c == true && isInsertTrigger){
+                list<id> hhidsfornaming = new list<id>();
+                
+                for (Database.SaveResult sr : lsr){
+                    if (sr.isSuccess())
+                        hhidsfornaming.add(sr.getID());
+                }
+                
+                //send it all out for (re)naming
+                //secret setting for async processing... ooooooooh....
+                
+                if (currentHouseholdsSettings.Async_Household_Naming__c == true)
+                    HouseholdNaming.FutureUpdateNames(hhidsfornaming);
+                else{
+                    HouseholdNaming hn = new HouseholdNaming();
+                    hn.UpdateNames(hhidsfornaming);
+                }
+                    
             }
-  */
-            
-            
-        }
-        if (contactUpdates.size() > 0)
-        {
-            Database.SaveResult[] lsr = Database.update(contactUpdates, false);
         }
     }
     
-
     /// <name> insertHousehold </name>
     /// <summary> Determines if a Contact Should have a household created </summary>
     /// <param name="Contact"> List of contacts meeting trigger criteria </param>
-    public static void evaluateContacts(Contact[] contacts)
+    public static void evaluateContacts(Contact[] contacts, boolean isAfterInsert) 
     {
         List<Contact> householdInserts = new List<Contact>();
 
@@ -191,7 +231,7 @@ global class Households {
         {
             if (c.accountId != null)
             {
-                accountIds.add(c.AccountId);
+                accountIds.add(c.AccountId); 
             }
         }
         //get all the Accounts so we can test to see if they are individuals
@@ -212,7 +252,7 @@ global class Households {
         if ( householdInserts.size() > 0)
         {
             //hand any Contacts that need Households over to the insert method
-            insertHousehold(householdInserts);
+            insertHousehold(householdInserts, isAfterInsert);
         }
     }
 
@@ -220,18 +260,18 @@ global class Households {
     /// <name> deleteHousehold </name>
     /// <summary> Deletes a Household record when no Contacts are related to it </summary>
     /// <param name="Contact"> List of contacts meeting trigger criteria </param>
-    public static void deleteHousehold(Contact[] contacts)
-    {
-        List<Id> householdDeletes = new List<Id>();
-        Map<Id,Integer> householdCountMap = new Map<Id,Integer>();
+        public static void deleteHousehold(Contact[] contacts){
+            
+        list<Id> householdDeletes = new list<Id>();
+        map<Id,Integer> householdCountMap = new map<Id,Integer>();
+        list<id> householdrenames = new list<id>();
+        //reload to evaluate delete criteria
+        Households_Settings__c currentHouseholdsSettings = getHouseholdsSettings();
 
         //Generate a list of Household Ids
-        for(Contact c : contacts)
-        {
+        for(Contact c : contacts){
             if (c.Household__c != null)
-            {
                 householdCountMap.put(c.Household__c,0);
-            }
         }
 
         //Loop through all Contacts at one of the Household Ids
@@ -243,18 +283,25 @@ global class Households {
         }
 
         //Loop through all the contacts to determine if they can be deleted
-        for (Contact c : contacts)
-        {
+        for (Contact c : contacts){
             //If there are no other Contacts on the Account
-            if ( householdCountMap.get(c.Household__c) < 1 )
-            {
+            if (householdCountMap.get(c.Household__c) < 1 )
                 householdDeletes.add(c.Household__c);
-            }
+            //otherwise, we need to update the household
+            else     
+                householdrenames.add(c.Household__c);        
         }
 
         if (householdDeletes.size() > 0)
-        {
             Database.DeleteResult[] lsr = Database.delete(householdDeletes, false);           
+        
+        if (currentHouseholdsSettings.Advanced_Household_Naming__c == true && householdrenames.size() > 0){
+            if (currentHouseholdsSettings.Async_Household_Naming__c == true)
+                HouseholdNaming.FutureUpdateNames(householdrenames);
+            else{
+                HouseholdNaming hn = new HouseholdNaming();
+                hn.UpdateNames(householdrenames);
+            }
         }
     }
 
@@ -396,9 +443,9 @@ global class Households {
                 } else if(oldProcessor==NO_HOUSEHOLDS_PROCESSOR){
                     householdsSettings.Household_Rules__c = NO_HOUSEHOLDS_PROCESSOR;
                 } else {
-                	householdsSettings.Household_Rules__c = NO_HOUSEHOLDS_PROCESSOR;
+                    householdsSettings.Household_Rules__c = NO_HOUSEHOLDS_PROCESSOR;
                 }
-
+ 
                 householdsSettings.Household_Member_Contact_Role__c = label.Household_Member_Contact_Role;
                 householdsSettings.Always_Rollup_to_Primary_Contact__c = false;
                 householdsSettings.Enable_Opp_Rollup_Triggers__c = false;
@@ -407,12 +454,15 @@ global class Households {
                 householdsSettings.Excluded_Contact_Opp_Rectypes__c = null;
                 householdsSettings.Excluded_Contact_Opp_Types__c = null;
                 householdsSettings.Membership_Record_Types__c = null;
-                
+                householdsSettings.Rollup_N_Day_Value__c = 365;
+                householdsSettings.Membership_Grace_Period__c = 30;
+                householdsSettings.Advanced_Household_Naming__c = false;
+                householdsSettings.Async_Household_Naming__c = false;
                 householdsSettings.Setupownerid = UserInfo.getOrganizationId();
-                
                 insert householdsSettings;
             }
         }
+        
         return householdsSettings;
     }
     
@@ -420,7 +470,7 @@ global class Households {
         
         //clear out whatever settings exist
         delete [select id from npo02__Households_Settings__c]; 
-        
+         
         //create our own based on what's passed in from the test
         householdsSettings = new Households_Settings__c (
             Household_Rules__c = mySettings.Household_Rules__c,
@@ -432,7 +482,10 @@ global class Households {
             Excluded_Account_Opp_Types__c = mySettings.Excluded_Account_Opp_Types__c,
             Excluded_Contact_Opp_Rectypes__c = mySettings.Excluded_Contact_Opp_Rectypes__c,
             Excluded_Contact_Opp_Types__c = mySettings.Excluded_Contact_Opp_Types__c,
-            Membership_Record_Types__c = mySettings.Membership_Record_Types__c
+            Membership_Grace_Period__c = mySettings.Membership_Grace_Period__c,
+            Rollup_N_Day_Value__c = mySettings.Rollup_N_Day_Value__c, 
+            Membership_Record_Types__c = mySettings.Membership_Record_Types__c,
+            Advanced_Household_Naming__c = true
             );
         insert householdsSettings;
             
