@@ -63,6 +63,29 @@ global without sharing class Households {
         List<Contact> contactEvaluations = new List<Contact>();
         List<Contact> householdDeletes = new List<Contact>();
         list<id> householdnameupdates = new list<id>();
+        list<id> oldHouseholds = new list<id>();
+        map<id, integer> oldHouseholdSize = new map<id, integer>();
+        
+        //typically this is handled through the contact, but for old households
+        //being updated, we need to get the list here
+        list<id> blankHHDeletes = new list<id>();
+     
+        //if its an update, we need to get some data about their
+        //old Household for processing
+        if (ta==triggerAction.afterUpdate){
+            
+            for (Contact c : Contacts){
+                oldHouseholds.add(oldcmap.get(c.id).Household__c);
+            }        	 
+        	
+        	AggregateResult[] ar = [select Household__c oldhh, count(id) membercount from Contact where Household__c IN :oldHouseholds group by Household__c];
+        	
+        	//create a map from the old household id and its size
+        	
+        	for (AggregateResult a : ar){
+                oldHouseholdSize.put((id)a.get('oldhh'), (integer)a.get('membercount'));
+        	}
+        }
      
         Integer i = 0;
         for(Contact c : contacts) {
@@ -85,7 +108,7 @@ global without sharing class Households {
 
             //AFTER UPDATE
             if ( ta==triggerAction.afterUpdate )
-            {
+            {            
                 //if we're doing an update, pile up all of the households into a list
                 //and send it to our naming code for action
                 //first contact's names to their old names, and see if anything changed
@@ -106,37 +129,28 @@ global without sharing class Households {
                 //household to see if anybody is left, if so, send it for renaming
                 //if not, delete it.
                 else if (newcmap.get(c.id).Household__c != oldcmap.get(c.id).Household__c){
-                    
                     householdnameupdates.add(c.Household__c);
-                    
-                    integer oldHHSize = 0;
-                    oldHHSize = [select count() from Contact where Household__c = :oldcmap.get(c.id).Household__c];                        
-                    
-                    //fix for issue 260 and 261
-                    if (oldHHSize > 0){
-                        householdnameupdates.add(oldcmap.get(c.id).Household__c);
+                    if (oldHouseholdSize.get(oldcmap.get(c.id).Household__c) > 0){
+                    	householdnameupdates.add(oldcmap.get(c.id).Household__c);
                     }
                     else{
-                    	Household__c h = [select id from Household__c where id = :oldcmap.get(c.id).Household__c];
-                    	delete h;
-                    }
-                           
+                        blankHHDeletes.add(oldcmap.get(c.id).Household__c);
+                    }       
                 }                    
                 else if (newcmap.get(c.id).Naming_Exclusions__c != oldcmap.get(c.id).Naming_Exclusions__c)
                     householdnameupdates.add(c.Household__c);
             }
             
-            
-           
             if ( ta==triggerAction.afterDelete ){
-                    if (c.Household__c != null )
-                        householdDeletes.add(c);
-                
+                if (c.Household__c != null )
+                    householdDeletes.add(c);
             }
             i += 1;
         }
-
-
+        
+        if(!blankHHDeletes.isEmpty())
+            Database.delete(blankHHDeletes);
+        
         if (householdInserts.size() > 0 && ta==triggerAction.afterInsert)        
             insertHousehold(householdInserts, true);
         else if (householdInserts.size() > 0 && ta==triggerAction.afterUpdate)
