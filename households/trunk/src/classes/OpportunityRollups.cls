@@ -1619,6 +1619,8 @@ global virtual class OpportunityRollups {
     static testMethod void testGivingRollupAlwaysPrimary () {
         isTest = true;
         String giftRecordTypeNameForTests = RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
+        String membershipRecordTypeNameForTests = RecordTypes.getRecordTypeNameForMembershipTests('Opportunity');
+        
             Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
                 new Households_Settings__c (
                     Household_Rules__c = Households.ALL_PROCESSOR,
@@ -1628,9 +1630,8 @@ global virtual class OpportunityRollups {
                     Excluded_Account_Opp_Types__c = null,
                     Excluded_Contact_Opp_Rectypes__c = null,
                     Excluded_Contact_Opp_Types__c = null,
-                    Membership_Record_Types__c = null
+                    Membership_Record_Types__c = membershipRecordTypeNameForTests
                 ));
-            
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
@@ -1656,19 +1657,31 @@ global virtual class OpportunityRollups {
     
             // create new opps
             Opportunity[] newOpps = UnitTestData.OppsForContactList ( TestCons, null, UnitTestData.getClosedWonStage(), datClose, 100 , giftRecordTypeNameForTests ,null);
+            
+            Opportunity[] newOpps2 = UnitTestData.OppsForContactList (
+                TestCons,
+                null,
+                UnitTestData.getClosedWonStage(),
+                datClose,
+                100,
+                householdSettingsForTests.Membership_Record_Types__c,
+                null
+            );
+        
     
             // insert the opp(s)
             Test.StartTest();
             insert newOpps;
+            insert newOpps2;
             Test.StopTest();
             
             //now test that a contact has received the proper member stats from the trigger
             id FirstConId = TestCons[0].id;
             Contact UpdatedCon = [SELECT id, account.npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__household__c, npo02__household__r.npo02__TotalOppAmount__c, npo02__TotalOppAmount__c FROM Contact WHERE Id = :FirstConId];
     
-            System.AssertEquals ( 100 , UpdatedCon.npo02__TotalOppAmount__c );
-            System.AssertEquals ( 100 , UpdatedCon.npo02__household__r.npo02__TotalOppAmount__c );      
-            System.AssertEquals ( 100 , UpdatedCon.npo02__OppAmountThisYear__c);
+            System.AssertEquals ( 200 , UpdatedCon.npo02__TotalOppAmount__c );
+            System.AssertEquals ( 200 , UpdatedCon.npo02__household__r.npo02__TotalOppAmount__c );      
+            System.AssertEquals ( 200 , UpdatedCon.npo02__OppAmountThisYear__c);
             System.AssertEquals ( 0 , UpdatedCon.npo02__OppAmountLastYear__c);
     
             // now roll up manually
@@ -1692,14 +1705,14 @@ global virtual class OpportunityRollups {
             //make sure the values are still right
             UpdatedCon = [SELECT id, account.npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__household__c, npo02__household__r.npo02__TotalOppAmount__c, npo02__TotalOppAmount__c FROM Contact WHERE Id = :FirstConId];
     
-            System.AssertEquals ( 100 , UpdatedCon.npo02__TotalOppAmount__c );
-            System.AssertEquals ( 100 , UpdatedCon.npo02__household__r.npo02__TotalOppAmount__c );      
-            System.AssertEquals ( 100 , UpdatedCon.npo02__OppAmountThisYear__c);
+            System.AssertEquals ( 200 , UpdatedCon.npo02__TotalOppAmount__c );
+            System.AssertEquals ( 200 , UpdatedCon.npo02__household__r.npo02__TotalOppAmount__c );      
+            System.AssertEquals ( 200 , UpdatedCon.npo02__OppAmountThisYear__c);
             System.AssertEquals ( 0 , UpdatedCon.npo02__OppAmountLastYear__c);
         
     }
     
-    static testMethod void testMemberRollup () {
+ static testMethod void testMemberRollup () {
         isTest = true;
         String giftRecordTypeNameForTests = RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
         String membershipRecordTypeNameForTests = RecordTypes.getRecordTypeNameForMembershipTests('Opportunity');
