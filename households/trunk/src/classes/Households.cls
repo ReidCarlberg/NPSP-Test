@@ -101,12 +101,32 @@ global without sharing class Households {
                     householdnameupdates.add(c.Household__c);
                 else if (newcmap.get(c.id).LastName != oldcmap.get(c.id).LastName)
                     householdnameupdates.add(c.Household__c);    
-                else if (newcmap.get(c.id).Household__c != oldcmap.get(c.id).Household__c)
+                
+                //if they've changed households, we need to query the old
+                //household to see if anybody is left, if so, send it for renaming
+                //if not, delete it.
+                else if (newcmap.get(c.id).Household__c != oldcmap.get(c.id).Household__c){
+                    
                     householdnameupdates.add(c.Household__c);
+                    
+                    integer oldHHSize = 0;
+                    oldHHSize = [select count() from Contact where Household__c = :oldcmap.get(c.id).Household__c];                        
+                    
+                    //fix for issue 260 and 261
+                    if (oldHHSize > 0){
+                        householdnameupdates.add(oldcmap.get(c.id).Household__c);
+                    }
+                    else{
+                    	Household__c h = [select id from Household__c where id = :oldcmap.get(c.id).Household__c];
+                    	delete h;
+                    }
+                           
+                }                    
                 else if (newcmap.get(c.id).Naming_Exclusions__c != oldcmap.get(c.id).Naming_Exclusions__c)
                     householdnameupdates.add(c.Household__c);
             }
-           
+            
+            
            
             if ( ta==triggerAction.afterDelete ){
                     if (c.Household__c != null )
