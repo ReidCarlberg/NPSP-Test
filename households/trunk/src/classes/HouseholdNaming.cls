@@ -261,7 +261,7 @@ global virtual without sharing class HouseholdNaming {
         'FROM Contact where npo02__Household__c != null ' +
         (isTest ? ' and lastname=\'%LastName0%\' LIMIT 200' : '') + 
         '', true);
-        id batchProcessId = database.executeBatch(batch, batchSize);                
+        id batchProcessId = database.executeBatch(batch, batchSize);                 
     }
     
     /*** Test Methods ***/
