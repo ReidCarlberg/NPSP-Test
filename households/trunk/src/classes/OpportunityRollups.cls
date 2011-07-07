@@ -599,8 +599,8 @@ global virtual class OpportunityRollups {
                 soqlStatement += 'AND Opportunity.RecordTypeId NOT IN : recordTypesToExcludeCons ';
             }
             soqlStatement += 'AND Opportunity.Type NOT IN : oppTypesToExcludeCons  ';
-            soqlStatement += 'AND (contact.npo02__household__c IN : hhIds) ';// OR  ';
-            //soqlStatement += '(contact.npo02__household__c = null AND contactid IN :conids)) ';
+            soqlStatement += 'AND (contact.npo02__household__c IN : hhIds OR  ';
+            soqlStatement += '(contact.npo02__household__c = null AND contactid IN :conids)) ';
             
             if (useFiscalYear)
                 soqlStatement += 'GROUP BY CUBE(contact.npo02__household__c, contactId, Fiscal_Year(opportunity.closeDate)) ';
@@ -656,8 +656,8 @@ global virtual class OpportunityRollups {
                 soqlStatement += 'AND Opportunity.RecordTypeId NOT IN : recordTypesToExcludeCons ';
             }
             soqlStatement += 'AND Opportunity.Type NOT IN : oppTypesToExcludeCons ';
-            soqlStatement += 'AND (contact.npo02__household__c IN : hhIds) '; //OR  ';
-            //soqlStatement += '(contact.npo02__household__c = null AND contactid IN :conids)) ';
+            soqlStatement += 'AND (contact.npo02__household__c IN : hhIds OR  ';
+            soqlStatement += '(contact.npo02__household__c = null AND contactid IN :conids)) ';
             soqlStatement += 'AND opportunity.closeDate >= LAST_N_DAYS:' + ndayrollup + ' ';
             soqlStatement += 'GROUP BY ROLLUP(contact.npo02__household__c, contactId) ';
             soqlStatement += 'HAVING (contactId IN : conIds OR contactId = null)  ';
@@ -707,8 +707,8 @@ global virtual class OpportunityRollups {
                     soqlStatement += 'AND Opportunity.RecordTypeId IN : mbrRecordTypes ';
                 }
                 soqlStatement += 'AND Opportunity.Type NOT IN : oppTypesToExcludeCons ';
-                soqlStatement += 'AND (contact.npo02__household__c IN : hhIds) ';// OR  ';
-                //soqlStatement += '(contact.npo02__household__c = null AND contactid IN :conids)) ';
+                soqlStatement += 'AND (contact.npo02__household__c IN : hhIds OR  ';
+                soqlStatement += '(contact.npo02__household__c = null AND contactid IN :conids)) ';
                 soqlStatement += 'GROUP BY CUBE(contact.npo02__household__c, contactId) ';
                 soqlStatement += 'HAVING (contactId IN : conIds OR contactId = null) '; 
                 
@@ -761,8 +761,8 @@ global virtual class OpportunityRollups {
             }
             soqlStatement += 'AND Opportunity.Type NOT IN : oppTypesToExcludeCons ';
             soqlStatement += 'AND (opportunity.accountid = null OR opportunity.account.npe01__SYSTEMIsIndividual__c = true) ';   
-            soqlStatement += 'AND (contact.npo02__household__c IN : hhIds ) ';// OR  ';
-            //soqlStatement += '(contact.npo02__household__c = null AND contactid IN :conids)) ';
+            soqlStatement += 'AND (contact.npo02__household__c IN : hhIds OR  ';
+            soqlStatement += '(contact.npo02__household__c = null AND contactid IN :conids)) ';
             if (useFiscalYear)
                 soqlStatement += 'GROUP BY CUBE(contact.npo02__household__c, contactId, Fiscal_Year(opportunity.closeDate)) ';
             else
@@ -818,8 +818,8 @@ global virtual class OpportunityRollups {
             }
             soqlStatement += 'AND Opportunity.Type NOT IN : oppTypesToExcludeCons ';
             soqlStatement += 'AND (opportunity.accountid = null OR opportunity.account.npe01__SYSTEMIsIndividual__c = true) ';   
-            soqlStatement += 'AND (contact.npo02__household__c IN : hhIds ) ';// OR  ';
-            //soqlStatement += '(contact.npo02__household__c = null AND contactid IN :conids)) ';
+            soqlStatement += 'AND (contact.npo02__household__c IN : hhIds OR  ';
+            soqlStatement += '(contact.npo02__household__c = null AND contactid IN :conids)) ';
             soqlStatement += 'AND opportunity.closeDate >= LAST_N_DAYS:' + ndayrollup + ' ';
             soqlStatement += 'GROUP BY ROLLUP(contact.npo02__household__c, contactId) ';
             soqlStatement += 'HAVING (contactId IN : conIds OR contactId = null) ';
@@ -864,8 +864,8 @@ global virtual class OpportunityRollups {
                 }
                 soqlStatement += 'AND Opportunity.Type NOT IN : oppTypesToExcludeCons ';
                 soqlStatement += 'AND (opportunity.accountid = null OR opportunity.account.npe01__SYSTEMIsIndividual__c = true)  '; 
-                soqlStatement += 'AND (contact.npo02__household__c IN : hhIds ) '; //OR  ';
-                //soqlStatement += '(contact.npo02__household__c = null AND contactid IN :conids)) ';
+                soqlStatement += 'AND (contact.npo02__household__c IN : hhIds ) OR  ';
+                soqlStatement += '(contact.npo02__household__c = null AND contactid IN :conids)) ';
                 soqlStatement += 'GROUP BY CUBE(contact.npo02__household__c, contactId) ';
                 soqlStatement += 'HAVING (contactId IN : conIds OR contactId = null) ';
                
