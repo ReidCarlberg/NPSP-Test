@@ -78,7 +78,7 @@ global without sharing class Households {
                 oldHouseholds.add(oldcmap.get(c.id).Household__c);
             }        	 
         	
-        	AggregateResult[] ar = [select Household__c oldhh, count(id) membercount from Contact where Household__c IN :oldHouseholds group by Household__c];
+        	AggregateResult[] ar = [select Household__c oldhh, count(id) membercount from Contact where Household__c IN :oldHouseholds and Household__c != null group by Household__c];
         	
         	//create a map from the old household id and its size
         	
