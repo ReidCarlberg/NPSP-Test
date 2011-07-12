@@ -76,15 +76,15 @@ global without sharing class Households {
             
             for (Contact c : Contacts){
                 oldHouseholds.add(oldcmap.get(c.id).Household__c);
-            }        	 
-        	
-        	AggregateResult[] ar = [select Household__c oldhh, count(id) membercount from Contact where Household__c IN :oldHouseholds and Household__c != null group by Household__c];
-        	
-        	//create a map from the old household id and its size
-        	
-        	for (AggregateResult a : ar){
+            }            
+            
+            AggregateResult[] ar = [select Household__c oldhh, count(id) membercount from Contact where Household__c IN :oldHouseholds and Household__c != null group by Household__c];
+            
+            //create a map from the old household id and its size
+            
+            for (AggregateResult a : ar){
                 oldHouseholdSize.put((id)a.get('oldhh'), (integer)a.get('membercount'));
-        	}
+            }
         }
      
         Integer i = 0;
@@ -131,9 +131,9 @@ global without sharing class Households {
                 else if (newcmap.get(c.id).Household__c != oldcmap.get(c.id).Household__c){
                     householdnameupdates.add(c.Household__c);
                     if (oldHouseholdSize.get(oldcmap.get(c.id).Household__c) > 0){
-                    	householdnameupdates.add(oldcmap.get(c.id).Household__c);
+                        householdnameupdates.add(oldcmap.get(c.id).Household__c);
                     }
-                    else{
+                    else if(oldHouseholdSize.get(oldcmap.get(c.id).Household__c) == 0){
                         blankHHDeletes.add(oldcmap.get(c.id).Household__c);
                     }       
                 }                    
@@ -221,8 +221,8 @@ global without sharing class Households {
                     contactUpdates.add(clone);
                 }
                 else{
-                	Database.Error err = lsr[i].getErrors()[0];                	
-                	c.addError(err.getMessage());
+                    Database.Error err = lsr[i].getErrors()[0];                 
+                    c.addError(err.getMessage());
                 }
                 i += 1;
             }

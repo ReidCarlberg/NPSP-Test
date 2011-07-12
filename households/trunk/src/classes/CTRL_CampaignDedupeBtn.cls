@@ -232,13 +232,14 @@ public without sharing class CTRL_CampaignDedupeBtn {
     );
     insert con;
     id hhid = [select Household__r.id from Contact where id = :con.id].Household__r.id;
-    
+    system.debug('HHID IS===================' + hhid);
     Contact con2 = new Contact (
       FirstName = 'Amy',
       LastName = 'Test',
       AccountId = acct.id,            
       household__c = hhid
     );
+    system.debug('HHID IS NOW===================' + hhid);
     
     system.assert(con2.Household__c != null);
     insert con2;
