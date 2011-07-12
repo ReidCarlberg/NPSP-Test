@@ -102,17 +102,15 @@ global virtual class OpportunityRollups {
         //setup our object bools to demarcate which objects have user defined rollups
         //this will save us some cycles later on
         //also check runtime field validity
+        hasContactRollups = false;
+        hasHouseholdRollups = false;
+        hasAccountRollups = false;              
         
         for (string s : userRollups.keySet()){
         	User_Rollup_Field_Settings__c urfs = userRollups.get(s);
         	if (urfs.Object_Name__c == 'Contact'){hasContactRollups = true;}      	
         	else if (urfs.Object_Name__c == 'Account'){hasAccountRollups = true;}
         	else if (urfs.Object_Name__c == 'Household__c'){hasHouseholdRollups = true;}
-        	else{
-        		hasContactRollups = false;
-                hasHouseholdRollups = false;
-                hasAccountRollups = false;
-        	} 
         
             SobjectField targetField;
             SobjectField sourceField;
@@ -542,6 +540,13 @@ global virtual class OpportunityRollups {
                 npo02__MembershipJoinDate__c = null, npo02__MembershipEndDate__c = null,                
                 npo02__LastOppAmount__c = null
             ));
+            
+            
+            
+            
+            
+            
+            
             // map currency across if multicurrency
             if(isMultiCurrency())
                 contactsToUpdate.get(cid).put(cfContact,cmap.get(cid).get(cfContact));            
@@ -899,6 +904,7 @@ global virtual class OpportunityRollups {
         for (id cid : conIds) {
             contact c1 = cmap.get(cid);
             contact c2 = contactsToUpdate.get(cid);
+            
             if ((c1.npo02__TotalOppAmount__c == c2.npo02__TotalOppAmount__c &&
                     c1.npo02__OppAmountLastYear__c == c2.npo02__OppAmountLastYear__c && 
                     c1.npo02__OppAmount2YearsAgo__c == c2.npo02__OppAmount2YearsAgo__c &&
@@ -911,6 +917,7 @@ global virtual class OpportunityRollups {
                     ) && hasContactRollups == false)
                 contactsToUpdate.remove(cid);
         }
+        
         for (id hhid : hhIds) {
             npo02__household__c hh1 = hhmap.get(hhid); 
             npo02__household__c hh2 = householdsToUpdate.get(hhid);
