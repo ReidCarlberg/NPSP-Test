@@ -499,4 +499,51 @@ private class TEST_Households {
         
         system.assertEquals(String.valueOf(day) + '/' + String.valueOf(month) + '/' + String.valueOf(year),ext.getLastTransactionDate());
     }
+    
+    static testMethod void deleteEmptyHouseholds_test(){
+        
+        Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(new Households_Settings__c (Household_Rules__c = Households.ALL_PROCESSOR, Advanced_Household_Naming__c = true));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR));
+         
+        Contact c1 = new Contact(
+            FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
+            npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS            
+        );
+            
+    	insert c1;    	
+    	Contact c1t = [select id, Household__c from Contact where id = :c1.id];
+    	system.assert(c1t.Household__c != null);
+    	Contact c2 = new Contact(
+            FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName='c2test',
+            npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS            
+        );
+            
+        insert c2;       
+        Contact c2t = [select id, Household__c from Contact where id = :c2.id];
+        system.assert(c2t.Household__c != null);
+        
+        //move the c2 contact into c1's household
+        id c2thhid = c2t.Household__c;
+        c2t.Household__c = c1t.Household__c;
+        update c2t;
+        
+        //get c1s household
+        Household__c hh1 = [select Name from Household__c where id = :c1t.Household__c];
+        //assert the naming worked as c2t was moved into the c1 households
+        system.assert(hh1.Name.contains('c2test')); 
+    	
+    	//the second household should be deleted
+    	system.assertEquals(0, [select count() from Household__c where id = :c2thhid]);
+    	
+    }
+    
+    
 }

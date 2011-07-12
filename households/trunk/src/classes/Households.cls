@@ -75,16 +75,28 @@ global without sharing class Households {
         if (ta==triggerAction.afterUpdate){
             
             for (Contact c : Contacts){
-                oldHouseholds.add(oldcmap.get(c.id).Household__c);
+                
+                if (oldcmap.get(c.id).Household__c != null){
+                    oldHouseholds.add(oldcmap.get(c.id).Household__c);
+                    system.debug('ID ADDED================' + oldcmap.get(c.id).Household__c);
+                }
+                
             }            
             
-            AggregateResult[] ar = [select Household__c oldhh, count(id) membercount from Contact where Household__c IN :oldHouseholds and Household__c != null group by Household__c];
+            AggregateResult[] ar = [select Household__c oldhh, count(id) membercount from Contact where Household__c IN :oldHouseholds group by Household__c];
             
             //create a map from the old household id and its size
-            
             for (AggregateResult a : ar){
+            	system.debug('AR RESULTS=====ID: ' + (id)a.get('oldhh') + ' MEMBERCOUNT: ' + (integer)a.get('membercount'));
                 oldHouseholdSize.put((id)a.get('oldhh'), (integer)a.get('membercount'));
             }
+            
+            //an agg query doesn't pick empty HHs, so if we have an ID, and no
+            //HH in the ag, we know we have an empty hh
+            for (id hhid : oldHouseholds){
+            	if (!oldHouseholdSize.containskey(hhid))
+            	   oldHouseholdSize.put(hhid, 0);            	
+            }            
         }
      
         Integer i = 0;
