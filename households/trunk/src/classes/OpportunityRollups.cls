@@ -18,7 +18,7 @@ global virtual class OpportunityRollups {
     public boolean hasHouseholdRollups;
     public boolean hasAccountRollups;
     
-    static boolean recordTypesOnOpps;
+    static boolean recordTypesOnOpps; 
     
     //multi-currency vars
     static boolean multiCurrency;
@@ -737,7 +737,7 @@ global virtual class OpportunityRollups {
                     } else {
                         // contact row  
                         /*updateRollupFromResultMembership((sobject)(contactsToUpdate.get(cid)), r);*/
-                        updateRollupFromResultMembership((sobject)(householdsToUpdate.get(hhid)), r, opptyCurrencies);
+                        updateRollupFromResultMembership((sobject)(contactsToUpdate.get(cid)), r, opptyCurrencies);
                     }
                 }
             }
@@ -1097,7 +1097,7 @@ global virtual class OpportunityRollups {
 
     public void rollupAll() {
         rollupAllAccounts();
-        rollupAllContacts();
+        rollupAllContacts(); 
     }   
 
     public void rollupAllAccounts() {
@@ -1146,7 +1146,7 @@ global virtual class OpportunityRollups {
             'npo02__OppAmountLastNDays__c, npo02__LastCloseDate__c, npo02__NumberOfClosedOpps__c ' +
             (isMultiCurrency() ? ', CurrencyIsoCode ' : '')+              
             ' FROM npo02__household__c ' + 
-            (isTest ? ' WHERE lastname like \'%doppleganger%\' LIMIT 200' : '') );
+            (isTest ? ' WHERE name like \'%doppleganger%\' LIMIT 200' : '') );
         id batchProcessId = database.executeBatch(batch, batchSize);        
     }
 
@@ -2459,7 +2459,15 @@ global virtual class OpportunityRollups {
         OpportunityRollups opproll = new OpportunityRollups();
     	map<Id, Opportunity> omap = opproll.rcfFindCurrency(sobjectList);
     }
-    
+    static testMethod void testRollupAlls(){
+    	OpportunityRollups og = new OpportunityRollups();
+    	og.rollupAllContacts();
+    	og.rollupAllAccounts();
+    	
+    	boolean x = OpportunityRollups.isMultiCurrency();
+    	decimal y = OpportunityRollups.ConvertFromCorporate('USD', 500.00);
+    	decimal z = OpportunityRollups.ConvertCurrency('USD', 'USD', 6565.54);
+    }
     static testMethod void testFiscalYearandCustomNDay () {
         isTest = true;
         String giftRecordTypeNameForTests = RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
@@ -2514,6 +2522,5 @@ global virtual class OpportunityRollups {
             Test.StopTest();
     
             system.assertEquals([select OppAmountLastNDays__c from Contact where id = :TestCons[0].id].OppAmountLastNDays__c, 100);
-    
     }
 }
