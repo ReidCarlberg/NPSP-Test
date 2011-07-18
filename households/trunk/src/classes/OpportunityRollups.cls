@@ -506,7 +506,7 @@ global virtual class OpportunityRollups {
                         hhmap.put(r.contact.npo02__household__c, r.contact.npo02__household__r);
                     }
                 }    
-            }
+            } 
             
             // roll up totals
             OpportunityRollups rg = new OpportunityRollups();
@@ -953,8 +953,7 @@ global virtual class OpportunityRollups {
     
                 // it is a delete
                 for (id oid : oldOpps.keySet()) {
-                    opportunity o = oldOpps.get(oid);
-                    
+                    opportunity o = oldOpps.get(oid);                    
                     
                     if (o.isWon && o.Amount != null) {
                         includedRecordType = false;
@@ -964,7 +963,7 @@ global virtual class OpportunityRollups {
                         } else {
                             includedRecordType = true;
                         }
-                        if ((o.npe01__Is_Opp_From_Individual__c == 'true' || o.accountid == null) &&
+                        if (((o.npe01__Is_Opp_From_Individual__c == 'true' || o.accountid == null) || alwaysRollupToPrimaryContact) &&
                             includedRecordType &&
                             (!oppTypesToExcludeCons.contains(o.type))) {
                         
@@ -977,7 +976,7 @@ global virtual class OpportunityRollups {
                         } else {
                             includedRecordType = true;
                         }
-                        if (o.accountId != null && includedRecordType && (!oppTypesToExcludeAccts.contains(o.type))) {                              
+                        if (o.accountId != null && !alwaysRollupToPrimaryContact && includedRecordType && (!oppTypesToExcludeAccts.contains(o.type))) {                              
                             acctsToReroll.add(o.accountId);
                         }
                     }
@@ -995,7 +994,7 @@ global virtual class OpportunityRollups {
                         } else {
                             includedRecordType = true;
                         }
-                        if ((o.npe01__Is_Opp_From_Individual__c == 'true' || o.accountid == null) && includedRecordType
+                        if (((o.npe01__Is_Opp_From_Individual__c == 'true' || o.accountid == null) || (alwaysRollupToPrimaryContact)) && includedRecordType
                              && (!oppTypesToExcludeCons.contains(o.type))) {
                          
                             modifiedContactOpps.add(o.id);
@@ -1007,12 +1006,12 @@ global virtual class OpportunityRollups {
                         } else {
                             includedRecordType = true;
                         }
-                        if (o.accountId != null && includedRecordType && (!oppTypesToExcludeAccts.contains(o.type))) {
+                        if (o.accountId != null && !alwaysRolluptoPrimaryContact && includedRecordType && (!oppTypesToExcludeAccts.contains(o.type))) {
 
                             acctsToReroll.add(o.accountId);
                         }
                     }
-                }
+                } 
                 
             } else {
                 system.debug('In the Update block');
@@ -1036,11 +1035,11 @@ global virtual class OpportunityRollups {
                         (o.closeDate != oldOpp.closeDate) ||
                         (o.accountId != oldOpp.accountId)))) { 
                         system.debug('Passed Opp Change Check');
-                        if (o.npe01__Is_Opp_From_Individual__c == 'true' || o.accountid == null) {
+                        if (o.npe01__Is_Opp_From_Individual__c == 'true' || o.accountid == null || alwaysRollupToPrimaryContact) {
                             modifiedContactOpps.add(o.id);
 //                          system.debug('Added to Cons to Update List' + o);
                         }
-                        if (o.accountId != null) {
+                        if (o.accountId != null && !alwaysRollupToPrimaryContact) {
                             acctsToReroll.add(o.accountId); 
                         }
                     }       
