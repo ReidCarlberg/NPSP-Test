@@ -41,7 +41,7 @@ public with sharing class userRollupSettings {
     public list<SelectOption> targetobjects = new list<SelectOption>{
     new SelectOption('Account', 'Account'),
     new SelectOption('Contact', 'Contact'),
-    new SelectOption('Household__c', 'Household__c')    
+    new SelectOption('npo02__Household__c', 'npo02__Household__c')    
     }; 
     
     //defines values for the final list setting
@@ -289,7 +289,7 @@ public with sharing class userRollupSettings {
                 targetField = Schema.sObjectType.Account.fields.getMap().get(urfs.Target_Field__c); 
                 if (targetField == null) isValid = false;               
             }
-            else if (urfs.Object_Name__c == 'Household__c'){
+            else if (urfs.Object_Name__c == 'Household__c' || urfs.Object_Name__c == 'npo02__Household__c'){
                 targetField = Schema.sObjectType.Household__c.fields.getMap().get(urfs.Target_Field__c); 
                 if (targetField == null) isValid = false;
             }
