@@ -47,7 +47,7 @@ global virtual without sharing class HouseholdNaming {
         HouseholdProcessControl.inFutureContext = true;    
         
         //get all of the contacts and their associated households
-        list<Contact> contactlist = [select id, Firstname, Salutation, LastName, Household__r.id, Naming_Exclusions__c from Contact where Household__c IN :hhids];
+        list<Contact> contactlist = [select id, Firstname, Salutation, LastName, Household__r.id, Naming_Exclusions__c from Contact where Household__c IN :hhids and Household__c != null];
         list<Household__c> hhupdatelist = [select Name, SYSTEM_CUSTOM_NAMING__c from Household__c where id IN : hhids];
         
         map<id, list<Contact>> hhIDContactMap = new map<id, list<Contact>>();
