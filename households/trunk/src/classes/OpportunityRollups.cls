@@ -969,7 +969,7 @@ global virtual class OpportunityRollups {
                         } else {
                             includedRecordType = true;
                         }
-                        if (o.accountId != null && !alwaysRollupToPrimaryContact && includedRecordType && (!oppTypesToExcludeAccts.contains(o.type))) {                              
+                        if (o.accountId != null && includedRecordType && (!oppTypesToExcludeAccts.contains(o.type))) {                              
                             acctsToReroll.add(o.accountId);
                         }
                     }
@@ -991,7 +991,7 @@ global virtual class OpportunityRollups {
                              && (!oppTypesToExcludeCons.contains(o.type))) {
                          
                             modifiedContactOpps.add(o.id);
-                        }
+                        } 
                         if (areRecordTypesOnOpps()){
                             includedRecordType = false;
                             includedRecordType = !mbrRecordTypes.contains((id)o.get('recordTypeId')) ||
@@ -999,7 +999,7 @@ global virtual class OpportunityRollups {
                         } else {
                             includedRecordType = true;
                         }
-                        if (o.accountId != null && !alwaysRolluptoPrimaryContact && includedRecordType && (!oppTypesToExcludeAccts.contains(o.type))) {
+                        if (o.accountId != null && includedRecordType && (!oppTypesToExcludeAccts.contains(o.type))) {
 
                             acctsToReroll.add(o.accountId);
                         }
@@ -1032,7 +1032,7 @@ global virtual class OpportunityRollups {
                             modifiedContactOpps.add(o.id);
 //                          system.debug('Added to Cons to Update List' + o);
                         }
-                        if (o.accountId != null && !alwaysRollupToPrimaryContact) {
+                        if (o.accountId != null) {
                             acctsToReroll.add(o.accountId); 
                         }
                     }       
@@ -1837,7 +1837,7 @@ global virtual class OpportunityRollups {
             Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
                 new Households_Settings__c (
                     Household_Rules__c = Households.ALL_PROCESSOR,
-                    Always_Rollup_to_Primary_Contact__c = true,
+                    Always_Rollup_to_Primary_Contact__c = false,
                     Enable_Opp_Rollup_Triggers__c = true,
                     Excluded_Account_Opp_Rectypes__c = null,
                     Excluded_Account_Opp_Types__c = null,
