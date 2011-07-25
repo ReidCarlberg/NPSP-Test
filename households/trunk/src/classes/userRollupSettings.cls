@@ -175,7 +175,7 @@ public with sharing class userRollupSettings {
                 'oppamount2yearsago__c', 'totalmembershipoppamount__c', 'numberofclosedopps__c'
            };
         }
-        else if(targetobject == 'Household__c'){
+        else if(targetobject == 'Household__c' || targetobject == 'npo02__Household__c'){
             targetTokenMap = Schema.SobjectType.Household__c.fields.getMap().clone();
             knownfields = new set<string>{
                 'addressee__c', 'always_anonymous__c', 'averagemount__c', 'firstclosedate__c',   
@@ -361,7 +361,7 @@ public with sharing class userRollupSettings {
         list<SelectOption> targetFieldList = controller.getTargetFields();
                
         //change target object to test other options        
-        controller.targetobject = 'Household__c';
+        controller.targetobject = 'npo02__Household__c';
         targetFieldList = controller.getTargetFields();
         
         controller.targetobject = 'Contact';
@@ -397,7 +397,7 @@ public with sharing class userRollupSettings {
         Name = 'Household Test Rollup',
         npo02__Target_Field__c = 'lastoppamount__c',
         npo02__Source_Field__c = 'Amount',
-        npo02__Object_Name__c = 'Household__c',
+        npo02__Object_Name__c = 'npo02__Household__c',
         npo02__Field_Action__c = 'MAX'         
         );
         
