@@ -69,7 +69,7 @@ global virtual class OpportunityRollups {
                 oppTypesToExcludeAccts = new set<string>(rollupSettings.Excluded_Account_Opp_Types__c.split(';'));
             }
             if (rollupSettings.Rollup_N_Day_Value__c != null){
-            	ndayRollup = string.valueOf(rollupSettings.Rollup_N_Day_Value__c.intValue()); 
+                ndayRollup = string.valueOf(rollupSettings.Rollup_N_Day_Value__c.intValue()); 
             }
             if (rollupSettings.Membership_Record_Types__c != null) {
                 set<string> mbrRecordTypeNames = new set<string>(rollupSettings.Membership_Record_Types__c.split(';'));
@@ -85,13 +85,13 @@ global virtual class OpportunityRollups {
             //we still need to query to make sure its not a custom fiscal year
             //or else we'll throw errors when calling Fiscal_Year in queries
             if (rollupSettings.npo02__Use_Fiscal_Year_for_Rollups__c == true){
-            	integer hasCustomFYRecord = [select count() from FiscalYearSettings];
-            	
-            	//if org has customFY records, disable FY settings
+                integer hasCustomFYRecord = [select count() from FiscalYearSettings];
+                
+                //if org has customFY records, disable FY settings
                 if (hasCustomFYRecord > 0)
-            	   useFiscalYear = false;
-            	else
-            	   useFiscalYear = true;
+                   useFiscalYear = false;
+                else
+                   useFiscalYear = true;
             }
         
         }
@@ -107,10 +107,10 @@ global virtual class OpportunityRollups {
         hasAccountRollups = false;              
         
         for (string s : userRollups.keySet()){
-        	User_Rollup_Field_Settings__c urfs = userRollups.get(s);
-        	if (urfs.Object_Name__c == 'Contact'){hasContactRollups = true;}      	
-        	else if (urfs.Object_Name__c == 'Account'){hasAccountRollups = true;}
-        	else if (urfs.Object_Name__c == 'Household__c'){hasHouseholdRollups = true;}
+            User_Rollup_Field_Settings__c urfs = userRollups.get(s);
+            if (urfs.Object_Name__c == 'Contact'){hasContactRollups = true;}        
+            else if (urfs.Object_Name__c == 'Account'){hasAccountRollups = true;}
+            else if (urfs.Object_Name__c == 'Household__c' || urfs.Object_Name__c == 'npo02__Household__c'){hasHouseholdRollups = true;}
         
             SobjectField targetField;
             SobjectField sourceField;
@@ -131,7 +131,7 @@ global virtual class OpportunityRollups {
                 targetField = Schema.sObjectType.Account.fields.getMap().get(urfs.Target_Field__c); 
                 if (targetField == null) userRollups.remove(s);               
             }
-            else if (urfs.Object_Name__c == 'Household__c'){
+            else if (urfs.Object_Name__c == 'Household__c' || urfs.Object_Name__c == 'npo02__Household__c'){
                 targetField = Schema.sObjectType.Household__c.fields.getMap().get(urfs.Target_Field__c); 
                 if (targetField == null) userRollups.remove(s);
             }
@@ -235,10 +235,10 @@ global virtual class OpportunityRollups {
         soqlStatement += 'SUM(Amount) TotalOppAmount, AVG(Amount) AverageAmount, MIN(Amount) SmallestAmount, ';
         soqlStatement += 'MAX(Amount) LargestAmount, MIN(CloseDate) FirstCloseDate, MAX(CloseDate) LastCloseDate, ';
         for (string s : userRollups.keyset()){
-        	if (userRollups.get(s).Object_Name__c == 'Account'){
-        	   User_Rollup_Field_Settings__c urfs = userRollups.get(s);
-        	   soqlStatement += urfs.Field_Action__c + '(' + urfs.Source_Field__c + ') ' + urfs.Name + ', '; 	
-        	}        	
+            if (userRollups.get(s).Object_Name__c == 'Account'){
+               User_Rollup_Field_Settings__c urfs = userRollups.get(s);
+               soqlStatement += urfs.Field_Action__c + '(' + urfs.Source_Field__c + ') ' + urfs.Name + ', ';    
+            }           
         }
         soqlStatement += 'COUNT_DISTINCT(Id) NumberOfClosedOpps, MAX(npo02__CombinedRollupFieldset__c) RollupFieldset '; 
         soqlStatement += 'FROM Opportunity ';
@@ -254,7 +254,7 @@ global virtual class OpportunityRollups {
             soqlStatement += 'HAVING ( Fiscal_Year(closeDate) = null OR Fiscal_Year(closeDate) >= : startYear ) ';
         }
         else{
-        	soqlStatement += 'GROUP BY ROLLUP (accountId, Calendar_Year(closeDate)) ';
+            soqlStatement += 'GROUP BY ROLLUP (accountId, Calendar_Year(closeDate)) ';
             soqlStatement += 'HAVING ( Calendar_Year(closeDate) = null OR Calendar_Year(closeDate) >= : startYear ) ';
         }
         soqlStatement += 'AND accountId != null';
@@ -485,7 +485,7 @@ global virtual class OpportunityRollups {
                         contact.npo02__MembershipEndDate__c, contact.npo02__household__r.npo02__MembershipEndDate__c,
                         contact.npo02__MembershipJoinDate__c, contact.npo02__household__r.npo02__MembershipJoinDate__c
                         FROM OpportunityContactRole WHERE Opportunity.Id In : modifiedContactOpps and isPrimary = true ALL ROWS ] ) { */
-                        	
+                            
                     Database.query('SELECT contactId, contact.npo02__household__c, '+
                         'contact.npo02__TotalOppAmount__c, contact.npo02__OppAmountThisYear__c, contact.npo02__OppAmountLastNDays__c, '+
                         'contact.npo02__LastCloseDate__c, contact.npo02__NumberOfClosedOpps__c, contact.npo02__TotalMembershipOppAmount__c, '+
@@ -541,12 +541,6 @@ global virtual class OpportunityRollups {
                 npo02__LastOppAmount__c = null
             ));
             
-            
-            
-            
-            
-            
-            
             // map currency across if multicurrency
             if(isMultiCurrency())
                 contactsToUpdate.get(cid).put(cfContact,cmap.get(cid).get(cfContact));            
@@ -578,7 +572,6 @@ global virtual class OpportunityRollups {
         //resolves aggregrate querymore issue
         list<sobject> objectList = new list<sobject>();
         
-        
         if (alwaysRollupToPrimaryContact) {
             String soqlStatement = ''; 
             if (useFiscalYear)
@@ -591,7 +584,7 @@ global virtual class OpportunityRollups {
             soqlStatement += 'MAX(Opportunity.Amount) LargestAmount, MIN(Opportunity.CloseDate) FirstCloseDate, '; 
             soqlStatement += 'MAX(Opportunity.CloseDate) LastCloseDate, COUNT_DISTINCT(Opportunity.Id) NumberOfClosedOpps, ';
             for (string s : userRollups.keyset()){
-                if (userRollups.get(s).Object_Name__c == 'Contact' || userRollups.get(s).Object_Name__c == 'Household__c'){
+                if (userRollups.get(s).Object_Name__c == 'Contact' || userRollups.get(s).Object_Name__c == 'Household__c' || userRollups.get(s).Object_Name__c == 'npo02__Household__c'){
                     User_Rollup_Field_Settings__c urfs = userRollups.get(s);
                     soqlStatement += urfs.Field_Action__c + '(Opportunity.' + urfs.Source_Field__c + ') ' + urfs.Name + ', ';    
                 }           
@@ -699,7 +692,7 @@ global virtual class OpportunityRollups {
                 soqlStatement += 'MAX(contact.npo02__household__r.npo02__MembershipEndDate__c) HHMemberEndDate, ';
                 soqlStatement += 'COUNT_DISTINCT(Opportunity.Id) NumberOfClosedOpps, ';
                 for (string s : userRollups.keyset()){
-                    if (userRollups.get(s).Object_Name__c == 'Contact' || userRollups.get(s).Object_Name__c == 'Household__c'){
+                    if (userRollups.get(s).Object_Name__c == 'Contact' || userRollups.get(s).Object_Name__c == 'Household__c' || userRollups.get(s).Object_Name__c == 'npo02__Household__c'){
                         User_Rollup_Field_Settings__c urfs = userRollups.get(s);
                         soqlStatement += urfs.Field_Action__c + '(Opportunity.' + urfs.Source_Field__c + ') ' + urfs.Name + ', ';    
                     }           
@@ -752,7 +745,7 @@ global virtual class OpportunityRollups {
             soqlStatement += 'MAX(Opportunity.Amount) LargestAmount, MIN(Opportunity.CloseDate) FirstCloseDate, '; 
             soqlStatement += 'MAX(Opportunity.CloseDate) LastCloseDate, COUNT_DISTINCT(Opportunity.Id) NumberOfClosedOpps, ';
             for (string s : userRollups.keyset()){
-                if (userRollups.get(s).Object_Name__c == 'Contact' || userRollups.get(s).Object_Name__c == 'Household__c'){
+                if (userRollups.get(s).Object_Name__c == 'Contact' || userRollups.get(s).Object_Name__c == 'Household__c' || userRollups.get(s).Object_Name__c == 'npo02__Household__c'){
                     User_Rollup_Field_Settings__c urfs = userRollups.get(s);
                     soqlStatement += urfs.Field_Action__c + '(Opportunity.' + urfs.Source_Field__c + ') ' + urfs.Name + ', ';    
                 }           
@@ -1078,11 +1071,18 @@ global virtual class OpportunityRollups {
                        'npo02__OppsClosedLastYear__c, npo02__OppsClosedLastNDays__c, npo02__OppsClosed2YearsAgo__c '+
                        (isMultiCurrency() ? ', CurrencyIsoCode ' : '')+             
                        'from account where id in :acctsToReroll'));
-                  
-                    decimal oppCount = amap.values()[0].npo02__NumberOfClosedOpps__c;
-                    //rollupNow = (oppCount == null || oppCount < 200);
                 }
-                        
+               
+                //if there are any accounts with more than 25 opps, 
+                //default back to the @future method for rollups
+                
+                if (amap != null){
+                    rollupNow = true;   
+                    for (Account a : amap.values()){
+                        decimal oppCount = a.npo02__NumberOfClosedOpps__c;
+                        rollupNow = !(oppCount != null && oppCount > 25);
+                    }
+                }                        
                 // for a single account with fewer than 200 opps, roll up immediately - otherwise future
                 if (rollupNow)
                     rollupAccounts( amap );
@@ -1212,10 +1212,10 @@ global virtual class OpportunityRollups {
         if (userRollups.size() > 0){
             for (string s : userRollups.keyset()){
                 if (obj.getSObjectType().getDescribe().getName() == userRollups.get(s).Object_Name__c){
-                	User_Rollup_Field_Settings__c urfs = userRollups.get(s);
-                	string x = urfs.Name;                	
-                	if (r.get(x) != null)
-                	   obj.put(urfs.Target_Field__c, r.get(x));
+                    User_Rollup_Field_Settings__c urfs = userRollups.get(s);
+                    string x = urfs.Name;                   
+                    if (r.get(x) != null)
+                       obj.put(urfs.Target_Field__c, r.get(x));
                 }
             }
         } 
@@ -1293,7 +1293,7 @@ global virtual class OpportunityRollups {
     //returns a boolean if we are in a multi-currency org or not.
     //on first execution sets up static variables etc
     public static boolean isMultiCurrency(){
-    	
+        
         if (multiCurrency==null){
             //create currency field handles for later dynamic dml
             cfOppty = Schema.sObjectType.Opportunity.fields.getMap().get('CurrencyIsoCode');
@@ -2342,7 +2342,7 @@ global virtual class OpportunityRollups {
                 
     }
     
-    	
+        
     static testMethod void testUserDefinedRollup() {
         isTest = true;
 
@@ -2390,7 +2390,7 @@ global virtual class OpportunityRollups {
         User_Rollup_Field_Settings__c testUserRollup3 = new User_Rollup_Field_Settings__c();
         testUserRollup3.npo02__Target_Field__c = 'npo02__LastCloseDate__c'; 
         testUserRollup3.npo02__Source_Field__c = 'CloseDate';
-        testUserRollup3.npo02__Object_Name__c = 'Household__c'; 
+        testUserRollup3.npo02__Object_Name__c = 'npo02__Household__c'; 
         testUserRollup3.npo02__Field_Action__c = 'MAX';
         testUserRollup3.Name = 'TestRollup3';
         testURFS.add(TestUserRollup3);
@@ -2423,10 +2423,10 @@ global virtual class OpportunityRollups {
     }
     
     static testMethod void testMultiCurrencyMethods(){
-    	
-    	//exercise internal multicurrency helper methods, check currency conversion    	    	
-        decimal d = OpportunityRollups.ConvertFromCorporate('USD', 55.00);    	
-    	d = OpportunityRollups.ConvertCurrency('USD', 'USD', 55.00);
+        
+        //exercise internal multicurrency helper methods, check currency conversion             
+        decimal d = OpportunityRollups.ConvertFromCorporate('USD', 55.00);      
+        d = OpportunityRollups.ConvertCurrency('USD', 'USD', 55.00);
 
 
         //create & insert second household member
@@ -2453,19 +2453,21 @@ global virtual class OpportunityRollups {
         insert o;
         
         list<sobject> sobjectlist = new list<sobject>();
-        //sobjectlist.add(o);
+        //sobjectlist.add(o); 
         
         OpportunityRollups opproll = new OpportunityRollups();
-    	map<Id, Opportunity> omap = opproll.rcfFindCurrency(sobjectList);
+        map<Id, Opportunity> omap = opproll.rcfFindCurrency(sobjectList);
     }
     static testMethod void testRollupAlls(){
-    	OpportunityRollups og = new OpportunityRollups();
-    	og.rollupAllContacts();
-    	og.rollupAllAccounts();
-    	
-    	boolean x = OpportunityRollups.isMultiCurrency();
-    	decimal y = OpportunityRollups.ConvertFromCorporate('USD', 500.00);
-    	decimal z = OpportunityRollups.ConvertCurrency('USD', 'USD', 6565.54);
+        OpportunityRollups og = new OpportunityRollups();
+        
+        test.startTest();
+        og.rollupAllContacts();
+        og.rollupAllAccounts();     
+        boolean x = OpportunityRollups.isMultiCurrency();
+        decimal y = OpportunityRollups.ConvertFromCorporate('USD', 500.00);
+        decimal z = OpportunityRollups.ConvertCurrency('USD', 'USD', 6565.54);
+        test.stopTest();
     }
     static testMethod void testFiscalYearandCustomNDay () {
         isTest = true;
